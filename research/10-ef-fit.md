@@ -6,11 +6,22 @@
 **合う順は CROPS ＞ Anon-RPC ＞ Alt mempool。** チェーンは 0G のままでよい。
 **EF の賞は1プロジェクトにつき1つ**なので、CROPS と Anon-RPC の両方に出して、審査員に選んでもらう。
 
-| 順 | 賞 | 適合 | 必要な変更 |
-|---|---|---|---|
-| 1 | Best CROPS App $3.5k | 高 | README に CROPS 節（4文字それぞれ1〜2行。Private の行に Ledger・World・0G がそれぞれ何を知るかを書く）、OSS ライセンス、トラッカーなし、3分以内のデモ動画 |
-| 2 | Best Use of Anon-RPC $5k | 中〜高 | 星の読み取りを既定で Anon-RPC 経由にする。全件を取得して端末で絞り込む |
-| 3 | Alt mempool $5k | 低 | devnet で別に実装が要る。本筋から外れる（採らない） |
+**本命は CROPS。** 要件が「作り方」（公開リポジトリ・README の節・ライセンス・トラッカーなし・鍵は端末内）で、
+**すでにやっていることと重なる。追加工数はおよそ1時間。** Anon-RPC は #6 が30分で通ったときだけ足す。
+
+| 順 | 賞 | 総額 / 枠（**1位の額**） | 適合 | 必要な変更 |
+|---|---|---|---|---|
+| 1 | Best CROPS App | $3,500 / 3枠（**$2,000** / 1,000 / 500） | 高 | README に CROPS 節（4文字それぞれ1〜2行。Private の行に Ledger・World・0G がそれぞれ何を知るかを書く）、OSS ライセンス、トラッカーなし、3分以内のデモ動画 |
+| 2 | Best Use of Anon-RPC | $5,000 / 3枠（**$2,500** / 1,500 / 1,000） | 中〜高 | 星の読み取りを既定で Anon-RPC 経由にする。全件を取得して端末で絞り込む |
+| 3 | Alt mempool | $5,000 / 3枠（**$2,500** / 1,500 / 1,000） | 低 | devnet で別に実装が要る。本筋から外れる（採らない） |
+| — | CROPS Upgrade to Existing Project | $1,500 | 不適合 | 既存プロジェクトの改善が対象。ゼロから作るので該当しない |
+
+**2026-11-06 訂正（賞ページを再読）。** 上の金額は**総額を3枠で割った額**で、1プロジェクトが取れるのは1位でも $2,000（CROPS）/ $2,500（Anon-RPC）。
+**以前のノートは総額をそのまま書いていた。** → **CROPS と Anon-RPC の1位どうしの差は $500 しかない。**
+Anon-RPC に実装時間を賭ける価値は小さい。**#6 の30分時限はそのままでよい**（`plan.md` D4 を補強する）。
+
+**【確】公式の文言:** "One EF prize per project. You can submit to anon-rpc, the alt mempool and CROPS, but you will be placed in at most one."
+→ **3つ全部に出してよい。取れるのは1つ。** 出すこと自体にコストはない。
 
 ## Anon-RPC
 - 【確】specifier（ネットワーク指定用のコントラクト）を渡すと、匿名化された `fetch` が返る。null-origin の iframe 内の Worker で動く。https://ethereum.github.io/anon-rpc/

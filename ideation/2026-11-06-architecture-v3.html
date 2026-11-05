@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOMOSHIBI — Architecture in one page</title><style>
+:root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
+--hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff;--brick:#a33c2e}
+html{color-scheme:light}
+body{margin:0;background:var(--paper);color:var(--ink);
+font-family:"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic",Meiryo,sans-serif;
+font-size:15px;line-height:1.9;border-top:6px solid var(--accent);-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:56px clamp(24px,6vw,48px) 96px}
+.doc-header{padding-bottom:28px;border-bottom:1px solid var(--ink)}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin:0 0 20px}
+h1{font-size:27px;line-height:1.5;letter-spacing:.02em;margin:0 0 12px;font-feature-settings:"palt" 1}
+.lead{font-size:14px;color:var(--ink-2);margin:0 0 24px;max-width:38em}
+.doc-meta{font-size:12px;color:var(--ink-3);display:flex;gap:24px;flex-wrap:wrap}
+.page>section{border-top:1px solid var(--hairline);padding-top:44px;margin-top:64px}
+.page>section:first-of-type{border-top:0;padding-top:0;margin-top:56px}
+h2{font-size:19px;letter-spacing:.03em;margin:0;font-feature-settings:"palt" 1}
+h2 .no{color:var(--accent);margin-right:14px;font-variant-numeric:tabular-nums}
+.msg{font-size:16px;font-weight:600;line-height:1.8;margin:18px 0 24px;max-width:36em}
+h3{font-size:15px;margin:36px 0 8px}
+p{margin:0 0 16px;max-width:42em}
+ul,ol{margin:0 0 16px;padding-left:1.4em;max-width:41em}
+li{margin-bottom:6px}
+ul{list-style:none;padding-left:1.2em}
+ul li::before{content:"–";float:left;margin-left:-1.2em;color:var(--ink-3)}
+.summary{list-style:none;margin:24px 0 0;padding:0;counter-reset:s;max-width:44em}
+.summary li{counter-increment:s;position:relative;padding-left:2.4em;margin-bottom:14px}
+.summary li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:.4em;
+font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.kpis{display:flex;flex-wrap:wrap;row-gap:24px;margin:32px 0 8px}
+.kpi{padding:2px 32px}
+.kpi:first-child{padding-left:0}
+.kpi+.kpi{border-left:1px solid var(--hairline)}
+.kpi .v{font-size:30px;font-weight:700;color:var(--accent);line-height:1.3;
+font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.kpi .v small{font-size:14px;font-weight:600;margin-left:2px}
+.kpi .l{font-size:11.5px;color:var(--ink-3);letter-spacing:.06em;margin-top:6px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:28px 0 8px;font-size:13px;line-height:1.6}
+caption{text-align:left;font-size:12.5px;font-weight:600;margin-bottom:10px}
+th{font-size:12px;font-weight:600;text-align:left;padding:10px 12px;
+border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom}
+td{padding:10px 12px;border-bottom:1px solid var(--hairline);vertical-align:top}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-top:1px solid var(--ink);border-bottom:2px solid var(--ink);
+font-weight:600;background:var(--accent-tint)}
+figure{margin:32px 0 8px}
+figcaption{font-size:12.5px;font-weight:600;margin-bottom:14px}
+figure svg{width:100%;height:auto;display:block}
+svg text{font-family:inherit}
+.fig-scroll{overflow-x:auto}
+.src{font-size:11.5px;color:var(--ink-3);margin:6px 0 0}
+.note{font-size:12.5px;color:var(--ink-2);border-left:2px solid var(--hairline);
+padding:2px 0 2px 14px;margin:24px 0 16px;max-width:40em}
+.chevrons{display:flex;margin:28px 0 8px;min-width:560px}
+.chev{flex:1;padding:9px 10px 9px 22px;font-size:12px;font-weight:600;line-height:1.5;
+text-align:center;background:var(--fill-gray);margin-left:4px;
+clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%)}
+.chev:first-child{margin-left:0;
+clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%)}
+.chev.on{background:var(--accent);color:#fff}
+.chev small{display:block;font-size:10.5px;font-weight:500;opacity:.75}
+.matrix{display:grid;grid-template-columns:var(--mx-label,140px) repeat(var(--mx-cols,2),1fr);
+gap:18px 20px;margin:28px 0 8px;min-width:560px}
+.mx-h{font-size:11.5px;font-weight:600;color:var(--ink-2);text-align:center;
+align-self:end;padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.mx-label{background:var(--accent);color:#fff;display:flex;flex-direction:column;
+align-items:center;justify-content:center;text-align:center;gap:2px;
+font-size:12px;font-weight:700;line-height:1.5;padding:12px 10px}
+.mx-label small{font-size:10px;font-weight:600;opacity:.7;letter-spacing:.08em}
+.mx-label.alt{background:var(--fill-gray);color:var(--ink)}
+.mx-cell{font-size:12px;line-height:1.75}
+.mx-cell ul{margin:0}
+.mx-cell li{margin-bottom:5px}
+b,strong{font-weight:700}
+.em{color:var(--accent);font-weight:700}
+.mono{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:11.5px}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--hairline);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--accent)}
+.doc-footer{margin-top:88px;padding-top:20px;border-top:1px solid var(--hairline);
+font-size:11.5px;color:var(--ink-3);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media print{@page{size:A4;margin:16mm}
+body{border-top-width:4px}
+.page{max-width:none;padding:0}
+.page>section{margin-top:48px;padding-top:32px}
+table,figure,.kpis,.chevrons,.roadmap,.matrix{break-inside:avoid}
+a{text-decoration:none}}
+</style></head><body>
+<div class="page">
+
+<header class="doc-header">
+  <p class="eyebrow">ETHGlobal Mumbai 2026 &nbsp;/&nbsp; Architecture &nbsp;/&nbsp; v3</p>
+  <h1>TOMOSHIBI — an agent can use your keys without ever holding them</h1>
+  <p class="lead">The scope is signed on a device in your hand. How heavy a request is, is decided by a sealed
+  model that reads it so no one else has to. Anything outside the scope stops before it happens, and the stop
+  is recorded. This page is the whole system on one sheet.</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>Team uni</span><span>Prize tracks: 0G / World / Ethereum Foundation CROPS</span></div>
+</header>
+
+<section>
+  <h2>Executive summary</h2>
+  <ol class="summary">
+    <li><b>The key never reaches the skill.</b> The skill asks a broker to act. The broker holds a child
+    token and acts on its behalf, inside a scope the human signed on a Ledger device — which key, which
+    destination, which operation, how many times, until when.</li>
+    <li><b>Four different refusals, not one.</b> <span class="mono">DENIED</span> (you drew the line),
+    <span class="mono">STOPPED</span> (no one could decide), <span class="mono">NEEDS_PRESS</span> (a human
+    has not pressed yet) and <span class="mono">human_denied / proof_expired</span> (a person said no, or
+    nobody was there). Different stops mean different responsibility, so we never collapse them into
+    &ldquo;failed&rdquo;.</li>
+    <li><b>Stars are a flame, not a score.</b> A star means &ldquo;I, a verified human, use this version with
+    my own key.&rdquo; Change the version and every star goes out at once. Reviews never expire; a flame does.</li>
+  </ol>
+  <div class="kpis">
+    <div class="kpi"><div class="v">4</div><div class="l">KINDS OF REFUSAL</div></div>
+    <div class="kpi"><div class="v">50</div><div class="l">BROKER TESTS PASSING</div></div>
+    <div class="kpi"><div class="v">0</div><div class="l">PLAINTEXT KEYS LEAVING THE BROKER</div></div>
+    <div class="kpi"><div class="v">1</div><div class="l">TRUSTED POINT, NAMED OPENLY</div></div>
+  </div>
+  <p class="src">Source: <span class="mono">broker/</span> test suite, run 2026-11-06. Counts are measured, not estimated.</p>
+</section>
+
+<section>
+  <h2><span class="no">01</span>What happens in one call</h2>
+  <p class="msg">Every call passes two gates before the key is used: a scope the human signed, and a weight
+  the sealed model assigned after reading the request.</p>
+
+  <div class="fig-scroll"><div class="chevrons">
+    <div class="chev">Ask<small>skill calls <span class="mono">/use</span>, no key</small></div>
+    <div class="chev on">Scope<small>matched against the signature</small></div>
+    <div class="chev on">Weigh<small>0G reads the body, sealed</small></div>
+    <div class="chev on">Press<small>only if irreversible</small></div>
+    <div class="chev">Act<small>broker calls the API</small></div>
+    <div class="chev">Record<small>appended, root hash on 0G</small></div>
+  </div></div>
+  <p class="src">Figure 1. The three dark steps are the ones that can refuse. Implemented in
+  <span class="mono">broker/src/scope.js</span>, <span class="mono">weigh.js</span>, <span class="mono">tier.js</span>.</p>
+
+  <p>Issuing a star is a separate path and the only place a human identity is required: World ID verifies
+  &ldquo;a person, and the same person&rdquo; once per version, and nothing else about them.</p>
+</section>
+
+<section>
+  <h2><span class="no">02</span>Four refusals</h2>
+  <p class="msg">&ldquo;It stopped&rdquo; is not one event. Each stop names who stopped it, and that is the
+  substance of the design.</p>
+
+  <div class="fig-scroll"><div class="matrix" style="--mx-cols:2;--mx-label:150px">
+    <div class="mx-h"></div>
+    <div class="mx-h">Who stopped it</div>
+    <div class="mx-h">What is recorded</div>
+
+    <div class="mx-label"><small>HTTP 403</small>DENIED</div>
+    <div class="mx-cell"><b>You did, in advance.</b> The request falls outside the signed scope.</div>
+    <div class="mx-cell">The out-of-scope request <b>with the skill's own signature on it</b>. Nothing executes; no call is consumed.</div>
+
+    <div class="mx-label"><small>HTTP 503</small>STOPPED</div>
+    <div class="mx-cell"><b>Nobody. It could not be decided.</b> 0G was unreachable or its answer unreadable.</div>
+    <div class="mx-cell">The attempt and the reason. <b>No default verdict is invented</b> — a fabricated decision would be worse than no decision.</div>
+
+    <div class="mx-label"><small>HTTP 409</small>NEEDS_PRESS</div>
+    <div class="mx-cell"><b>A human has not pressed yet.</b> The model graded the request irreversible.</div>
+    <div class="mx-cell">The pending request and the 0G request id that graded it. A standing permit will not carry it.</div>
+
+    <div class="mx-label alt"><small>WORLD</small>human_denied<br>proof_expired</div>
+    <div class="mx-cell"><b>A person said no</b>, or <b>nobody was there.</b> Only on the star path.</div>
+    <div class="mx-cell">Two distinct events, from the protocol's own error codes. A refusal to vouch is kept, not discarded.</div>
+  </div></div>
+  <p class="src">Figure 2. Codes as returned by <span class="mono">broker/src/server.js</span>. World mappings from the OIDC error set (<span class="mono">access_denied</span>, <span class="mono">expired_token</span>).</p>
+</section>
+
+<section>
+  <h2><span class="no">03</span>The map</h2>
+  <p class="msg">The boundaries are the product: the key never crosses to the skill, the body never crosses
+  to us, and the identity never crosses to the trail.</p>
+
+  <figure>
+    <figcaption>Figure 3. What crosses each boundary</figcaption>
+    <div class="fig-scroll">
+    <svg viewBox="0 0 760 356" role="img" aria-label="Boundary diagram: your side, the broker, outside">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,1 L9,5 L0,9 z" fill="#8e8e8e"/>
+        </marker>
+        <marker id="ahd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,1 L9,5 L0,9 z" fill="#173f66"/>
+        </marker>
+      </defs>
+
+      <line x1="252" y1="34" x2="252" y2="346" stroke="#d9d9d9" stroke-dasharray="4 4"/>
+      <line x1="508" y1="34" x2="508" y2="346" stroke="#d9d9d9" stroke-dasharray="4 4"/>
+      <text x="0" y="20" font-size="10.5" font-weight="600" letter-spacing="1.6" fill="#8e8e8e">YOUR SIDE</text>
+      <text x="268" y="20" font-size="10.5" font-weight="600" letter-spacing="1.6" fill="#173f66">THE BROKER — THE ONE TRUSTED POINT</text>
+      <text x="524" y="20" font-size="10.5" font-weight="600" letter-spacing="1.6" fill="#8e8e8e">OUTSIDE</text>
+
+      <rect x="0" y="40" width="212" height="52" fill="#e7e9ec"/>
+      <text x="14" y="64" font-size="12.5" font-weight="700" fill="#1a1a1a">Skill / AI</text>
+      <text x="14" y="81" font-size="11" fill="#555555">untrusted. never holds the key</text>
+
+      <rect x="0" y="142" width="212" height="62" fill="#e7e9ec"/>
+      <text x="14" y="166" font-size="12.5" font-weight="700" fill="#1a1a1a">Ledger device</text>
+      <text x="14" y="183" font-size="11" fill="#555555">signs the scope, presses</text>
+      <text x="14" y="197" font-size="11" fill="#555555">for irreversible calls</text>
+
+      <rect x="0" y="262" width="212" height="52" fill="#e7e9ec"/>
+      <text x="14" y="286" font-size="12.5" font-weight="700" fill="#1a1a1a">Your phone</text>
+      <text x="14" y="303" font-size="11" fill="#555555">World ID — once per star</text>
+
+      <rect x="286" y="40" width="186" height="274" fill="#173f66"/>
+      <text x="300" y="66" font-size="13" font-weight="700" fill="#ffffff">Broker</text>
+      <text x="300" y="100" font-size="11.5" fill="#ffffff" opacity=".92">1 — check the scope</text>
+      <text x="300" y="124" font-size="11.5" fill="#ffffff" opacity=".92">2 — ask 0G for the weight</text>
+      <text x="300" y="148" font-size="11.5" fill="#ffffff" opacity=".92">3 — require a press if heavy</text>
+      <text x="300" y="172" font-size="11.5" fill="#ffffff" opacity=".92">4 — act with the child token</text>
+      <text x="300" y="196" font-size="11.5" fill="#ffffff" opacity=".92">5 — append to the trail</text>
+      <line x1="300" y1="218" x2="458" y2="218" stroke="#ffffff" opacity=".35"/>
+      <text x="300" y="242" font-size="11" fill="#ffffff" opacity=".8">holds the key material.</text>
+      <text x="300" y="258" font-size="11" fill="#ffffff" opacity=".8">not in a TEE today —</text>
+      <text x="300" y="274" font-size="11" fill="#ffffff" opacity=".8">see limits, section 06.</text>
+
+      <rect x="546" y="40" width="214" height="62" fill="#e7e9ec"/>
+      <text x="560" y="64" font-size="12.5" font-weight="700" fill="#1a1a1a">0G Private Computer</text>
+      <text x="560" y="81" font-size="11" fill="#555555">TeeML, Intel TDX. reads the</text>
+      <text x="560" y="95" font-size="11" fill="#555555">body sealed; we never do</text>
+
+      <rect x="546" y="132" width="214" height="46" fill="#e7e9ec"/>
+      <text x="560" y="155" font-size="12.5" font-weight="700" fill="#1a1a1a">The target API</text>
+      <text x="560" y="171" font-size="11" fill="#555555">reached only when allowed</text>
+
+      <rect x="546" y="208" width="214" height="46" fill="#e7e9ec"/>
+      <text x="560" y="231" font-size="12.5" font-weight="700" fill="#1a1a1a">0G Storage (Log)</text>
+      <text x="560" y="247" font-size="11" fill="#555555">append-only trail, root hash</text>
+
+      <rect x="546" y="284" width="214" height="46" fill="#e7e9ec"/>
+      <text x="560" y="307" font-size="12.5" font-weight="700" fill="#1a1a1a">World</text>
+      <text x="560" y="323" font-size="11" fill="#555555">a human, and the same one</text>
+
+      <line x1="212" y1="66" x2="282" y2="66" stroke="#8e8e8e" marker-end="url(#ah)"/>
+      <text x="216" y="58" font-size="10" fill="#555555">use() — no key</text>
+
+      <line x1="212" y1="172" x2="282" y2="172" stroke="#173f66" marker-end="url(#ahd)"/>
+      <text x="216" y="164" font-size="10" fill="#173f66">EIP-712 scope</text>
+
+      <line x1="212" y1="292" x2="282" y2="292" stroke="#8e8e8e" marker-end="url(#ah)"/>
+
+      <line x1="472" y1="76" x2="542" y2="76" stroke="#173f66" marker-end="url(#ahd)"/>
+      <text x="470" y="68" font-size="10" fill="#173f66">4 lines + body</text>
+      <line x1="542" y1="96" x2="476" y2="96" stroke="#173f66" marker-end="url(#ahd)"/>
+      <text x="470" y="113" font-size="10" fill="#173f66">weight + request id</text>
+
+      <line x1="472" y1="155" x2="542" y2="155" stroke="#8e8e8e" marker-end="url(#ah)"/>
+      <line x1="472" y1="231" x2="542" y2="231" stroke="#8e8e8e" marker-end="url(#ah)"/>
+      <line x1="542" y1="307" x2="476" y2="307" stroke="#8e8e8e" marker-end="url(#ah)"/>
+    </svg>
+    </div>
+    <p class="src">Figure 3. Dark arrows are the decision loop: the weight 0G returns changes what the broker does next.
+    Nothing that crosses to the right carries a plaintext key; nothing that crosses to the trail carries a request body.</p>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="no">04</span>Who knows what</h2>
+  <p class="msg">Each party is given the minimum that lets it do its one job — and the separation is
+  structural, not a policy we promise to follow.</p>
+
+  <div class="tbl"><table>
+    <caption>Table 1. Knowledge held by each party</caption>
+    <thead><tr><th>Party</th><th>Knows</th><th>Does not know</th></tr></thead>
+    <tbody>
+      <tr><td><b>Ledger device</b></td><td>The four displayed lines of the scope; whether you pressed</td><td>The body of any request</td></tr>
+      <tr><td><b>World</b></td><td>That you are a human, and the same human (sector-scoped pseudonym)</td><td>What you starred; which key; which skill</td></tr>
+      <tr><td><b>0G Private Computer</b></td><td>The request body — inside the enclave</td><td>The plaintext key. <b>And we cannot read what it read.</b></td></tr>
+      <tr><td><b>Broker</b></td><td>Scope, verdicts, trail, key material</td><td>&mdash; <b>This is the trusted point. We say so rather than hide it.</b></td></tr>
+      <tr class="total"><td><b>The public trail</b></td><td>Who permitted what, what was asked, whether it passed or stopped</td><td>No keys. No request bodies. No identities.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">Source: <span class="mono">spec/permit-signature.md</span>, <span class="mono">broker/src/</span>. Licence MIT, no trackers, no analytics (Ethereum Foundation CROPS).</p>
+</section>
+
+<section>
+  <h2><span class="no">05</span>What is built, and what is not</h2>
+  <p class="msg">Everything on the decision path runs today; what is waiting is credentials, not code.</p>
+
+  <div class="tbl"><table>
+    <caption>Table 2. Component status, 2026-11-06</caption>
+    <thead><tr><th>Component</th><th>Holds</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><b>Ledger app</b> (custom, Rust)</td><td>The root key</td><td><b>Runs on device.</b> Digest computed in-device from the displayed values — no blind signing</td></tr>
+      <tr><td><b>Broker</b> (Node, viem)</td><td>Child token, trail</td><td><b>Runs.</b> 50 tests, incl. a frozen cross-side EIP-712 test vector</td></tr>
+      <tr><td><b>0G Private Computer</b></td><td>Request body, sealed</td><td><b>Wired.</b> Waiting on an API key. Unreachable &rarr; <span class="mono">STOPPED</span>, verified</td></tr>
+      <tr><td><b>0G Storage</b> (Log layer)</td><td>The trail</td><td><b>Wired.</b> Transaction builds to the Flow contract; waiting on gas</td></tr>
+      <tr><td><b>World ID Agent Pass</b></td><td>Proof of a human</td><td><b>Wired.</b> OIDC device flow; waiting on client registration</td></tr>
+      <tr><td>Star / trail screens</td><td>&mdash;</td><td>In progress</td></tr>
+      <tr><td>VouchRegistry (on-chain stars)</td><td>&mdash;</td><td><b>Not deployed.</b> Stars live in the broker's append-only log</td></tr>
+      <tr><td>Anon-RPC (private star reads)</td><td>&mdash;</td><td><b>Designed only.</b> Not implemented</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">0G Galileo, chain id 16602. Flow contract <span class="mono">0x22E03a6A89B950F1c82ec5e74F8eCa321a105296</span>.
+  The <span class="mono">verifyingContract</span> in the EIP-712 domain is frozen at the zero address so the device and the
+  broker cannot drift apart mid-hackathon.</p>
+</section>
+
+<section>
+  <h2><span class="no">06</span>Limits, and what is next</h2>
+  <p class="msg">One trusted point remains, and we name it rather than let the diagram imply otherwise.</p>
+
+  <ul>
+    <li><b>The broker holds the key.</b> The honest next step is to run the broker itself inside 0G Private Computer. We have not done that.</li>
+    <li><b>Stars are not on chain yet.</b> They are in an append-only log; the registry is specified, not deployed.</li>
+    <li><b>Simulated modes exist for development</b> (<span class="mono">ZG_OFFLINE</span>, <span class="mono">WORLD_OFFLINE</span>). Every record they produce carries <span class="mono">simulated: true</span>, and they are off for the demo.</li>
+    <li><b>Version matching</b> — a star going out when the version changes — is enforced on the read side today, not inside the broker.</li>
+  </ul>
+
+  <div class="tbl"><table>
+    <caption>Table 3. Next actions</caption>
+    <thead><tr><th>Action</th><th>Owner</th><th>By</th></tr></thead>
+    <tbody>
+      <tr><td>Faucet gas &rarr; one real seal, capture tx and root hash</td><td>kou</td><td>11-06 evening IST</td></tr>
+      <tr><td>0G API key &rarr; a real request id on screen</td><td>kou</td><td>before filming</td></tr>
+      <tr><td>World client registration &rarr; live device flow</td><td>kou</td><td>before filming</td></tr>
+      <tr><td>Star screen and trail screen</td><td>minta</td><td>before filming</td></tr>
+      <tr class="total"><td><b>Turn off every simulated mode, then film</b></td><td><b>both</b></td><td><b>11-06 22:00 IST</b></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer class="doc-footer">
+  <span>TOMOSHIBI — Architecture v3</span>
+  <span>ETHGlobal Mumbai 2026 / github.com/kou-uni/ethglobal-mumbai</span>
+</footer>
+
+</div></body></html>

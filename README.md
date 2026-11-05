@@ -6,6 +6,7 @@ ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/
 
 | 場所 | 中身 |
 |---|---|
+| `ideation/2026-11-06-philosophy.md` | **思想。** なぜこれを作るのか（機能は削れても、ここは削らない） |
 | `ideation/2026-11-06-review.md` | **まず読む。** ストーリーと機能を1枚に（合意／提案の印つき） |
 | `ideation/2026-11-06-integrated.md` | 議論の統合版 |
 | `ideation/2026-11-06-architecture.md` | アーキテクチャ（叩き台 v2） |

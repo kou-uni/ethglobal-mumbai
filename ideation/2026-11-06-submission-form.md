@@ -11,8 +11,12 @@ tomoshibi
 **Security**（このまま）
 
 ## Emoji
-**🕯️**
-理由: 灯火そのもの。🪔（ディヤ）はディワリの灯で意味は近いが、**インドの語・象徴は借りないと決めている**ので外す。
+**🕯️**（フォームの絵文字欄はこれ。雫型の炎を持つ蝋燭で、灯火そのもの）
+🪔（ディヤ）はディワリの灯で意味は近いが、**インドの語・象徴は借りないと決めている**ので外す。
+
+## Cover image / ロゴ
+`assets/tomoshibi-mark.svg`（雫の炎＋丸い蝋燭）／ `assets/tomoshibi-cover.svg`（1200×630）
+絵文字では形を選べないので、**見た目は自前のマークで持つ。**
 
 ## Demo link
 暫定: `https://kou-uni.github.io/ethglobal-mumbai/`

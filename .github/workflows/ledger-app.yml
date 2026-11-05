@@ -19,34 +19,35 @@ jobs:
         run: docker run --rm -v "$PWD:/app" "$IMG" cargo ledger build flex
       - uses: actions/upload-artifact@v4
         with:
-          name: hoshi-flex
+          name: tomoshibi-flex
           if-no-files-found: error
           path: |
             ledger-app/target/flex/release/*.apdu
             ledger-app/target/flex/release/*.hex
-            ledger-app/target/flex/release/hoshi
+            ledger-app/target/flex/release/tomoshibi
       - name: Walk the review screens in Speculos
         run: |
           mkdir shots
-          docker run -d --name spec -p 5000:5000 -v "$PWD:/app" "$IMG" speculos --display headless --api-port 5000 --apdu-port 0 -m flex /app/target/flex/release/hoshi
+          docker run -d --name spec -p 5000:5000 -v "$PWD:/app" "$IMG" speculos --display headless --api-port 5000 --apdu-port 0 -m flex /app/target/flex/release/tomoshibi
           for i in $(seq 1 30); do curl -sf localhost:5000/screenshot -o shots/00-home.png && break; sleep 1; done
           sleep 3; curl -sf localhost:5000/screenshot -o shots/00-home.png
           python3 tools/apdus.py > apdus.txt
           curl -sf -X POST localhost:5000/apdu -H 'Content-Type: application/json' -d "{\"data\":\"$(sed -n 1p apdus.txt)\"}" | tee shots/apdu-path.txt
           (curl -s -m 60 -X POST localhost:5000/apdu -H 'Content-Type: application/json' -d "{\"data\":\"$(sed -n 2p apdus.txt)\"}" > shots/apdu-sign.txt || true) &
           sleep 3; curl -sf localhost:5000/screenshot -o shots/10-review.png
-          for i in 1 2 3; do
-            curl -sf -X POST localhost:5000/finger -H 'Content-Type: application/json' -d '{"action":"press-and-release","x":240,"y":560}' > /dev/null
+          for i in 1 2; do
+            curl -sf -X POST localhost:5000/finger -H 'Content-Type: application/json' -d '{"action":"press-and-release","x":430,"y":552}' > /dev/null
             sleep 2; curl -sf localhost:5000/screenshot -o "shots/1$i-next.png"
           done
-          curl -sf -X POST localhost:5000/finger -H 'Content-Type: application/json' -d '{"action":"press","x":420,"y":500}' > /dev/null
-          sleep 4; curl -sf localhost:5000/screenshot -o shots/20-holding.png
-          curl -sf -X POST localhost:5000/finger -H 'Content-Type: application/json' -d '{"action":"release","x":420,"y":500}' > /dev/null
-          sleep 3; curl -sf localhost:5000/screenshot -o shots/21-after.png
+          curl -sf -X POST localhost:5000/finger -H 'Content-Type: application/json' -d '{"action":"press","x":240,"y":450}' > /dev/null
+          sleep 1; curl -sf localhost:5000/screenshot -o shots/20-holding.png
+          sleep 3; curl -sf localhost:5000/screenshot -o shots/21-held.png
+          curl -sf -X POST localhost:5000/finger -H 'Content-Type: application/json' -d '{"action":"release","x":240,"y":450}' > /dev/null
+          sleep 3; curl -sf localhost:5000/screenshot -o shots/22-after.png
           wait; cat shots/apdu-sign.txt
           docker logs spec 2>&1 | tail -40 > shots/speculos.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: hoshi-speculos-shots
+          name: tomoshibi-speculos-shots
           path: ledger-app/shots/

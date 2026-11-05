@@ -1,5 +1,5 @@
 [package]
-name = "hoshi"
+name = "tomoshibi"
 version = "0.1.0"
 authors = ["kou-uni", "mintannn"]
 edition = "2021"
@@ -27,7 +27,7 @@ debug = ["ledger_device_sdk/debug"]
 curve = ["secp256k1"]
 flags = "0"
 path = ["44'/60'"]
-name = "Hoshi"
+name = "Tomoshibi"
 nanosplus = { icon = "icons/crab_14x14.gif" }
 nanox = { icon = "icons/crab_14x14.gif" }
 stax = { icon = "icons/crab_32x32.gif" }

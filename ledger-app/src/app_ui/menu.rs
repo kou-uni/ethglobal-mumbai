@@ -36,7 +36,7 @@ pub fn ui_menu_main(_: &mut Comm) -> NbglHomeAndSettings {
         "Add the skill version as a fifth line on the review screen.",
     ]];
     let mut settings: Settings = Default::default();
-    let title = "Hoshi";
+    let title = "Tomoshibi";
 
     // Display the home screen.
     NbglHomeAndSettings::new()

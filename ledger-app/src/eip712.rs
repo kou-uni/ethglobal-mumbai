@@ -12,7 +12,7 @@ pub const CHAIN_ID: u64 = 16602;
 /// the same default, and both must change together.
 pub const VERIFYING_CONTRACT: [u8; 20] = [0u8; 20];
 
-const DOMAIN_NAME: &[u8] = b"Hoshi";
+const DOMAIN_NAME: &[u8] = b"Tomoshibi";
 const DOMAIN_VERSION: &[u8] = b"1";
 const DOMAIN_TYPE: &[u8] =
     b"EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)";

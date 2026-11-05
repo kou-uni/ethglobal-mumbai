@@ -42,6 +42,6 @@ pub fn ui_display_pk(comm: &mut Comm, addr: &[u8]) -> Result<bool, AppSW> {
     // Display the address confirmation screen.
     Ok(NbglAddressReview::new()
         .glyph(&FERRIS)
-        .review_title("Verify Hoshi address")
+        .review_title("Verify Tomoshibi address")
         .show(comm, &addr_hex))
 }

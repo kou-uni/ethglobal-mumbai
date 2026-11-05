@@ -46,7 +46,7 @@ ledger_device_sdk::set_panic!(ledger_device_sdk::exiting_panic);
 // Required for using String, Vec, format!...
 extern crate alloc;
 
-use ledger_device_sdk::nbgl::{NbglReviewStatus, StatusType};
+use ledger_device_sdk::nbgl::{NbglReviewStatus, NbglStatus, StatusType};
 
 ledger_device_sdk::define_comm!(COMM);
 
@@ -153,9 +153,19 @@ fn show_status_and_home_if_needed(
 
     if show_status {
         let success = *status == AppSW::Ok;
-        NbglReviewStatus::new()
-            .status_type(status_type)
-            .show(comm, success);
+        if matches!(ins, Instruction::SignPermit { .. }) {
+            // Say what happened in the product's own words, not "Transaction signed".
+            let text = if success {
+                "Allowed.\nA light is lit."
+            } else {
+                "Not allowed.\nNothing was signed."
+            };
+            NbglStatus::new().text(text).show(comm, success);
+        } else {
+            NbglReviewStatus::new()
+                .status_type(status_type)
+                .show(comm, success);
+        }
 
         // call home.show_and_return() to show home and setting screen
         tx_ctx.home.show_and_return();

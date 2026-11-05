@@ -37,7 +37,8 @@ fn format_utc(ts: u64) -> String {
 
 /// Shows the permit and returns true if the person held the button.
 pub fn ui_display_permit(comm: &mut Comm, req: &PermitRequest) -> Result<bool, AppSW> {
-    let can_do = format!("{} (up to {} times)", req.scope, req.max_calls);
+    // Short enough to stay on one line: a wrapped line breaks in the middle of a word.
+    let can_do = format!("{}x {}", req.max_calls, req.scope);
     let until = format_utc(req.expiry);
 
     let fields = [
@@ -64,15 +65,15 @@ pub fn ui_display_permit(comm: &mut Comm, req: &PermitRequest) -> Result<bool, A
     ];
 
     #[cfg(any(target_os = "stax", target_os = "flex"))]
-    const STAR: NbglGlyph = NbglGlyph::from_include(include_gif!("glyphs/crab_64x64.gif", NBGL));
+    const FLAME: NbglGlyph = NbglGlyph::from_include(include_gif!("glyphs/flame_64x64.png", NBGL));
     #[cfg(target_os = "apex_p")]
-    const STAR: NbglGlyph = NbglGlyph::from_include(include_gif!("glyphs/crab_48x48.png", NBGL));
+    const FLAME: NbglGlyph = NbglGlyph::from_include(include_gif!("glyphs/crab_48x48.png", NBGL));
     #[cfg(any(target_os = "nanosplus", target_os = "nanox"))]
-    const STAR: NbglGlyph = NbglGlyph::from_include(include_gif!("icons/crab_14x14.gif", NBGL));
+    const FLAME: NbglGlyph = NbglGlyph::from_include(include_gif!("icons/crab_14x14.gif", NBGL));
 
     let review: NbglReview = NbglReview::new()
         .titles("Let this skill\nuse your key?", "", "Hold to allow")
-        .glyph(&STAR);
+        .glyph(&FLAME);
 
     // The first setting switch adds the skill version as a fifth line.
     let settings: Settings = Default::default();

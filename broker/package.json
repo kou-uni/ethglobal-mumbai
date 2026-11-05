@@ -1,0 +1,20 @@
+{
+  "name": "hoshi-broker",
+  "version": "1.0.0",
+  "description": "Hoshi Broker — 範囲チェックと代理実行。平文はPCを通らない。",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "viem": "^2.57.16"
+  }
+}

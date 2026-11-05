@@ -24,6 +24,7 @@ ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/
 | `ideation/2026-11-06-plan.md` | **実施方針と時間割。** 分担・関門・捨てるもの |
 | `ideation/2026-11-06-tech-value-review.md` | **World / Ledger / 0G の位置づけと、実装に載っているかの再評価** |
 | `research/11-prize-gap.md` | **賞ごとの「狙えるか・足りないもの・埋め方」**（上限 $11,250） |
+| **`broker/`** | **動くもの第1号。** `use` → 範囲チェック → 代理実行 → 系譜。`npm test` 14件 / `node demo.mjs` で通る2件・止まる5件 |
 | `spec/permit-signature.md` | **署名の契約。** 導出パス・EIP-712・Broker の検証。Ledger と Broker の境界 |
 | `spec/world-agent-pass.md` | **World Agent Pass の正体と入れ方**（OIDC / device flow） |
 

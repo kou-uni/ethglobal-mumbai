@@ -28,4 +28,4 @@
 - EF がパートナー枠3つのうち1つを使うか
 - Anon-RPC で 0G Galileo の RPC を実際に読めるか（仕組み上は読めるはず）
 - 自作アプリで `44'/60'` を導出できるか／端末内で keccak256 を回せるか
-- 0G Galileo の chainId（EIP-712 の domain に要る）
+- ~~0G Galileo の chainId~~ → **16602【確】**（`evmrpc-testnet.0g.ai` に `eth_chainId` で実測。16601 は古い項目なので使わない）

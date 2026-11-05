@@ -27,7 +27,7 @@ digest = keccak256( 0x19 ‖ 0x01 ‖ domainSeparator ‖ hashStruct(Permit) )
 EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)
   name              = "Hoshi"
   version           = "1"
-  chainId           = <0G Galileo の chainId。一次情報から確定させる — 未確認>
+  chainId           = 16602          // 0G Galileo Testnet【確】
   verifyingContract = <VouchRegistry のアドレス>
 
 Permit(address holder,bytes32 skill,string version,bytes32 key,
@@ -94,8 +94,21 @@ Permit(address holder,bytes32 skill,string version,bytes32 key,
 
 画面が出た・長押しが返った、では通さない。**Broker が同じアドレスを出すまでが関門1。**
 
+## chainId【確・2026-11-06 実測】
+
+| 名前 | chainId | RPC |
+|---|---|---|
+| **0G Galileo Testnet** | **16602** | `https://evmrpc-testnet.0g.ai` |
+| 0G Mainnet | 16661 | `https://evmrpc.0g.ai` |
+
+**根拠：** `https://evmrpc-testnet.0g.ai` に `eth_chainId` を投げて `0x40da` = **16602**。
+チェーン本体に聞いた値なので一次情報。
+
+**注意：** 一覧サイトには **16601**（`0G-Galileo-Testnet`、RPC なし）という古い項目も残っている。
+**16601 を使うと EIP-712 の domainSeparator が変わり、`ecrecover` が別のアドレスを返す。**
+使うのは **16602**。
+
 ## 未確認
 
-- 0G Galileo の chainId（一次情報から取る）
 - 自作アプリで `44'/60'` を導出できるか（`APP_LOAD_PARAMS`）
 - 雛形に端末内 keccak256 が入っているか

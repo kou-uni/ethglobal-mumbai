@@ -18,20 +18,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "app-boilerplate-rust"
-version = "1.9.1"
-dependencies = [
- "arrayvec",
- "gif",
- "hex",
- "ledger_device_sdk",
- "numtoa",
- "png",
- "serde",
- "serde-json-core",
-]
-
-[[package]]
 name = "arrayvec"
 version = "0.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -517,6 +503,21 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "tomoshibi"
+version = "0.1.0"
+dependencies = [
+ "arrayvec",
+ "gif",
+ "hex",
+ "ledger_device_sdk",
+ "ledger_secure_sdk_sys",
+ "numtoa",
+ "png",
+ "serde",
+ "serde-json-core",
 ]
 
 [[package]]

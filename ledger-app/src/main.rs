@@ -22,7 +22,7 @@ mod eip712;
 mod utils;
 mod app_ui {
     pub mod address;
-    pub mod menu;
+    pub mod screens;
     pub mod sign;
 }
 mod handlers {
@@ -31,33 +31,30 @@ mod handlers {
     pub mod sign_permit;
 }
 
-mod settings;
-
-use app_ui::menu::ui_menu_main;
+use alloc::string::String;
+use app_ui::screens;
 use handlers::{
     get_public_key::handler_get_public_key,
     get_version::handler_get_version,
     sign_permit::{handler_sign_permit, PermitContext},
 };
-use ledger_device_sdk::io::{self, init_comm, ApduHeader, Comm, Command, Reply, StatusWords};
+use ledger_device_sdk::io::{self, init_comm, ApduHeader, Command, Reply, StatusWords};
 
 ledger_device_sdk::set_panic!(ledger_device_sdk::exiting_panic);
 
 // Required for using String, Vec, format!...
 extern crate alloc;
 
-use ledger_device_sdk::nbgl::{NbglReviewStatus, NbglStatus, StatusType};
-
 ledger_device_sdk::define_comm!(COMM);
 
 // P2 for last APDU to receive.
-const P2_SIGN_TX_LAST: u8 = 0x00;
+const P2_SIGN_LAST: u8 = 0x00;
 // P2 for more APDU to receive.
-const P2_SIGN_TX_MORE: u8 = 0x80;
+const P2_SIGN_MORE: u8 = 0x80;
 // P1 for first APDU number.
-const P1_SIGN_TX_START: u8 = 0x00;
+const P1_SIGN_START: u8 = 0x00;
 // P1 for maximum APDU number.
-const P1_SIGN_TX_MAX: u8 = 0x03;
+const P1_SIGN_MAX: u8 = 0x03;
 
 // Application status words.
 #[repr(u16)]
@@ -92,6 +89,16 @@ impl From<io::CommError> for AppSW {
     }
 }
 
+/// What the host tells the device after the fact. These are notices, not
+/// requests: nothing is signed, and the person does not have to do anything.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Notice {
+    /// A request outside the allowed range was stopped by the Broker.
+    Blocked,
+    /// The skill changed after it was allowed, so its light went out.
+    WentOut,
+}
+
 /// Possible input commands received through APDUs.
 #[derive(Debug)]
 pub enum Instruction {
@@ -99,22 +106,12 @@ pub enum Instruction {
     GetAppName,
     GetPubkey { display: bool },
     SignPermit { chunk: u8, more: bool },
+    Notify(Notice),
 }
 
 impl TryFrom<ApduHeader> for Instruction {
     type Error = AppSW;
 
-    /// APDU parsing logic.
-    ///
-    /// Parses INS, P1 and P2 bytes to build an [`Instruction`]. P1 and P2 are translated to
-    /// strongly typed variables depending on the APDU instruction code. Invalid INS, P1 or P2
-    /// values result in errors with a status word, which are automatically sent to the host by the
-    /// SDK.
-    ///
-    /// This design allows a clear separation of the APDU parsing logic and commands handling.
-    ///
-    /// Note that CLA is not checked here. Instead the method [`Comm::set_expected_cla`] is used in
-    /// [`sample_main`] to have this verification automatically performed by the SDK.
     fn try_from(value: ApduHeader) -> Result<Self, Self::Error> {
         match (value.ins, value.p1, value.p2) {
             (3, 0, 0) => Ok(Instruction::GetVersion),
@@ -122,54 +119,25 @@ impl TryFrom<ApduHeader> for Instruction {
             (5, 0 | 1, 0) => Ok(Instruction::GetPubkey {
                 display: value.p1 != 0,
             }),
-            (6, P1_SIGN_TX_START, P2_SIGN_TX_MORE)
-            | (6, 1..=P1_SIGN_TX_MAX, P2_SIGN_TX_LAST | P2_SIGN_TX_MORE) => {
-                Ok(Instruction::SignPermit {
-                    chunk: value.p1,
-                    more: value.p2 == P2_SIGN_TX_MORE,
-                })
-            }
-            (3..=6, _, _) => Err(AppSW::WrongP1P2),
+            (6, P1_SIGN_START, P2_SIGN_MORE)
+            | (6, 1..=P1_SIGN_MAX, P2_SIGN_LAST | P2_SIGN_MORE) => Ok(Instruction::SignPermit {
+                chunk: value.p1,
+                more: value.p2 == P2_SIGN_MORE,
+            }),
+            (7, 1, 0) => Ok(Instruction::Notify(Notice::Blocked)),
+            (7, 2, 0) => Ok(Instruction::Notify(Notice::WentOut)),
+            (3..=7, _, _) => Err(AppSW::WrongP1P2),
             (_, _, _) => Err(AppSW::InsNotSupported),
         }
     }
 }
 
-fn show_status_and_home_if_needed(
-    comm: &mut Comm,
-    ins: &Instruction,
-    tx_ctx: &mut PermitContext,
-    status: &AppSW,
-) {
-    let (show_status, status_type) = match (ins, status) {
-        (Instruction::GetPubkey { display: true }, AppSW::Deny | AppSW::Ok) => {
-            (true, StatusType::Address)
-        }
-        (Instruction::SignPermit { .. }, AppSW::Deny | AppSW::Ok) if tx_ctx.finished() => {
-            (true, StatusType::Transaction)
-        }
-        (_, _) => (false, StatusType::Transaction),
-    };
-
-    if show_status {
-        let success = *status == AppSW::Ok;
-        if matches!(ins, Instruction::SignPermit { .. }) {
-            // Say what happened in the product's own words, not "Transaction signed".
-            let text = if success {
-                "Allowed.\nA light is lit."
-            } else {
-                "Not allowed.\nNothing was signed."
-            };
-            NbglStatus::new().text(text).show(comm, success);
-        } else {
-            NbglReviewStatus::new()
-                .status_type(status_type)
-                .show(comm, success);
-        }
-
-        // call home.show_and_return() to show home and setting screen
-        tx_ctx.home.show_and_return();
-    }
+/// The screen to show once the reply has gone back to the host.
+enum After {
+    Nothing,
+    Lit,
+    NotLit,
+    Notice(Notice, String),
 }
 
 #[no_mangle]
@@ -179,18 +147,22 @@ extern "C" fn sample_main(_arg0: u32) {
     comm.set_expected_cla(0xe0);
 
     let mut ctx = PermitContext::new();
-    ctx.home = ui_menu_main(comm);
-    ctx.home.show_and_return();
+    screens::show_idle();
 
     loop {
+        // Touches and ticks on the idle screen are served inside this call.
         let command = comm.next_command();
-        let decoded = command.decode::<Instruction>();
-        let Ok(ins) = decoded else {
-            let _ = comm.send(&[], decoded.unwrap_err());
-            continue;
+
+        let ins = match command.decode::<Instruction>() {
+            Ok(ins) => ins,
+            Err(sw) => {
+                let _ = command.reply(&[], sw);
+                continue;
+            }
         };
 
-        let status = match handle_apdu(command, &ins, &mut ctx) {
+        let mut after = After::Nothing;
+        let status = match handle_apdu(command, &ins, &mut ctx, &mut after) {
             Ok(reply) => {
                 let _ = reply.send(AppSW::Ok);
                 AppSW::Ok
@@ -200,7 +172,27 @@ extern "C" fn sample_main(_arg0: u32) {
                 sw
             }
         };
-        show_status_and_home_if_needed(comm, &ins, &mut ctx, &status);
+
+        if let Instruction::SignPermit { .. } = ins {
+            if ctx.finished() {
+                after = if status == AppSW::Ok { After::Lit } else { After::NotLit };
+            }
+        }
+        match after {
+            After::Nothing => {
+                // Chunks and read-only commands do not touch the screen.
+                if !matches!(ins, Instruction::GetPubkey { display: true }) {
+                    continue;
+                }
+            }
+            After::Lit => screens::lit(comm, ctx.summary.as_str()),
+            After::NotLit => screens::not_lit(comm),
+            After::Notice(Notice::Blocked, what) => screens::blocked(comm, what.as_str()),
+            After::Notice(Notice::WentOut, what) => {
+                let _ = screens::went_out(comm, what.as_str());
+            }
+        }
+        screens::show_idle();
     }
 }
 
@@ -208,6 +200,7 @@ fn handle_apdu<'a>(
     command: Command<'a>,
     ins: &Instruction,
     ctx: &mut PermitContext,
+    after: &mut After,
 ) -> Result<io::CommandResponse<'a>, AppSW> {
     match ins {
         Instruction::GetAppName => {
@@ -218,5 +211,12 @@ fn handle_apdu<'a>(
         Instruction::GetVersion => handler_get_version(command),
         Instruction::GetPubkey { display } => handler_get_public_key(command, *display),
         Instruction::SignPermit { chunk, more } => handler_sign_permit(command, *chunk, *more, ctx),
+        Instruction::Notify(notice) => {
+            // The text is shown as-is. It comes from the host, so it is a notice
+            // and nothing more: the device does not verify it yet.
+            let text = core::str::from_utf8(command.get_data()).map_err(|_| AppSW::TxParsingFail)?;
+            *after = After::Notice(*notice, String::from(text));
+            Ok(command.into_response())
+        }
     }
 }

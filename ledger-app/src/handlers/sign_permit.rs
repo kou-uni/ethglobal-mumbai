@@ -1,14 +1,15 @@
 //! SIGN_PERMIT: show the range a skill is asking for, and sign it only if the
 //! person holds the button. Derived from the boilerplate's sign_tx handler
 //! (Ledger SAS, Apache-2.0).
-use crate::app_ui::sign::ui_display_permit;
+use crate::app_ui::sign::{format_day, ui_display_permit};
 use crate::eip712::{self, Permit};
 use crate::utils::{get_address_hash_from_pubkey, get_pubkey_from_path, Bip32Path};
 use crate::AppSW;
+use alloc::format;
+use alloc::string::String;
 use alloc::vec::Vec;
 use ledger_device_sdk::ecc::{Secp256k1, SeedDerive};
 use ledger_device_sdk::io::{Command, CommandResponse};
-use ledger_device_sdk::nbgl::NbglHomeAndSettings;
 
 use serde::Deserialize;
 use serde_json_core::from_slice;
@@ -37,7 +38,8 @@ pub struct PermitContext {
     raw: Vec<u8>,
     path: Bip32Path,
     review_finished: bool,
-    pub home: NbglHomeAndSettings,
+    /// One line for the "A light is lit." screen, set when a permit is signed.
+    pub summary: String,
 }
 
 impl PermitContext {
@@ -46,7 +48,7 @@ impl PermitContext {
             raw: Vec::new(),
             path: Default::default(),
             review_finished: false,
-            home: Default::default(),
+            summary: String::new(),
         }
     }
 
@@ -112,6 +114,13 @@ pub fn handler_sign_permit<'a>(
     if !approved {
         return Err(AppSW::Deny);
     }
+
+    ctx.summary = format!(
+        "{}, {} uses, ends {}",
+        req.key,
+        req.max_calls,
+        format_day(req.expiry)
+    );
 
     let (sig, siglen, parity) = Secp256k1::derive_from_path(ctx.path.as_ref())
         .deterministic_sign(&digest)

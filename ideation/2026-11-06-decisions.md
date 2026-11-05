@@ -24,8 +24,25 @@
 6. **#10 の A・C・D・E を台本 v4 に採用。** B はピッチの口頭のみ（動画には入れない）。
    **F（灰色の星の体験）は採らない** — 会場の World は模擬証明で、体験が成立しないため
 
+## 11/6 未明〜朝（実装中）[kou が決めた・×なら直す]
+
+7. **「その場の一押し」＝ `maxCalls=1` の許可にした。**
+   0G が `決定的` と判定した要求は、立っている許可（`maxCalls>1`）では通さず `NEEDS_PRESS` を返す。
+   **署名の契約（`spec/permit-signature.md`）を増やさないため**にこうした。
+   新しい署名の型を足すと、minta さんの自作アプリ側も直すことになる。
+   **×なら Broker 側だけで変えられる**（`src/tier.js` の `needsPress` 1か所）
+8. **0G と World に「模擬モード」を付けた**（`ZG_OFFLINE=1` / `WORLD_OFFLINE=1`）。
+   API キーとクライアント登録が揃うまで開発を止めないため。
+   **記録に `simulated: true` が残り、/health と demo に「模擬」と出る。**
+   0G の賞に「決定を偽装するフォールバックは失格」とあるので、**撮影と提出では外す**
+9. **星は `(skill, version)` ごとに持つ。** 版が変われば前の版の星は数に入らない（＝一斉に消える）。
+   前の版に何個あったかは残す（消えたことが見えるように）
+
 ## まだ確かめていないこと
 - EF がパートナー枠3つのうち1つを使うか
 - Anon-RPC で 0G Galileo の RPC を実際に読めるか（仕組み上は読めるはず）
 - 自作アプリで `44'/60'` を導出できるか／端末内で keccak256 を回せるか
+- **World：`verification_uri_complete` が返るか**（QR の作りが変わる）／**sector 識別子の claim 名**
+  （いまは `sub` を仮名として扱っている）／会場の mock で device flow が最後まで回るか
+  → `ideation/2026-11-06-world-integration-notes.md`
 - ~~0G Galileo の chainId~~ → **16602【確】**（`evmrpc-testnet.0g.ai` に `eth_chainId` で実測。16601 は古い項目なので使わない）

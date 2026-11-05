@@ -1,0 +1,301 @@
+<title>保証と鍵のアーキテクチャ v2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; each diagram sits in its own horizontally scrollable plate, like a schematic sheet */
+:root{
+  --bg:#f6f7f5; --paper:#ffffff; --ink:#1c2322; --ink2:#55605e; --line:#c9d0cd;
+  --pc:#b4412f; --pc-tint:#f7e7e3;
+  --hand:#1f6f5c; --hand-tint:#e2f1ec;
+  --chain:#2d4f8a; --chain-tint:#e4ebf6;
+  --ext:#7a5a12; --ext-tint:#f5eedc;
+  --sans:"IBM Plex Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121615; --paper:#1a201f; --ink:#e6ecea; --ink2:#a3afac; --line:#38423f;
+  --pc:#e77b67; --pc-tint:#3a221d; --hand:#5cc3a6; --hand-tint:#16302a;
+  --chain:#86a8e6; --chain-tint:#1b2638; --ext:#d9b35a; --ext-tint:#30281a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121615; --paper:#1a201f; --ink:#e6ecea; --ink2:#a3afac; --line:#38423f;
+  --pc:#e77b67; --pc-tint:#3a221d; --hand:#5cc3a6; --hand-tint:#16302a;
+  --chain:#86a8e6; --chain-tint:#1b2638; --ext:#d9b35a; --ext-tint:#30281a; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.75}
+.wrap{max-width:1000px;margin:0 auto;padding-block:40px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:48px}
+header{display:grid;gap:10px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink2)}
+h1{font-size:clamp(24px,4vw,34px);line-height:1.35;margin:0;text-wrap:balance}
+h2{font-size:20px;margin:0;text-wrap:balance}
+p{margin:0;max-width:65ch}
+.lead{color:var(--ink2)}
+section{display:grid;gap:14px}
+.plate{background:var(--paper);border:1px solid var(--line);border-radius:6px;overflow-x:auto}
+.plate svg{display:block;min-width:820px;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:2px;display:inline-block}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.rule{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:14px 16px;min-width:0}
+.rule b{display:block;font-size:14px;margin-bottom:4px}
+.rule p{font-size:13.5px;color:var(--ink2)}
+.open{display:grid;gap:6px;padding-left:1.2em;margin:0;font-size:14px}
+.open li::marker{color:var(--ext)}
+code{font-family:var(--mono);font-size:.92em}
+svg text{font-family:var(--sans);fill:var(--ink)}
+svg .t2{fill:var(--ink2);font-size:11px}
+svg .mono{font-family:var(--mono)}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">ETHGlobal Mumbai 2026 · kou × minta · 2026-11-06 叩き台 v2（HW を Ledger に絞った版）</div>
+  <h1>AIが見られない場所を手元に持ち、AIには「誰が信頼したか」を持たせる</h1>
+  <p class="lead">信頼の薄いAIには鍵が細く短くしか渡らない。範囲外の要求は証拠付きで保証人に跳ね返る。疑わしいだけのものは知らせるだけ。</p>
+</header>
+
+<section>
+  <h2>全体図 — 3つの場所</h2>
+  <div class="legend">
+    <span><i class="sw" style="background:var(--pc)"></i>信頼しない（PC）</span>
+    <span><i class="sw" style="background:var(--hand)"></i>AIが届かない（手元）</span>
+    <span><i class="sw" style="background:var(--chain)"></i>誰でも検証できる（0G）</span>
+    <span><i class="sw" style="background:var(--ext)"></i>外部（World / ENS / API）</span>
+  </div>
+  <div class="plate">
+  <svg viewBox="0 0 960 600" role="img" aria-label="PC、手元、0G の3つの場所と部品のつながり">
+    <defs>
+      <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" style="fill:var(--ink2)"/></marker>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" style="fill:var(--pc)"/></marker>
+    </defs>
+    <!-- zones -->
+    <rect x="16" y="40" width="200" height="540" rx="8" style="fill:var(--pc-tint);stroke:var(--pc)" stroke-dasharray="5 4"/>
+    <text x="32" y="66" font-weight="700" style="fill:var(--pc)">PC（信頼しない）</text>
+    <text x="32" y="84" class="t2">AIは .env を読める</text>
+
+    <rect x="240" y="40" width="380" height="540" rx="8" style="fill:var(--hand-tint);stroke:var(--hand)"/>
+    <text x="256" y="66" font-weight="700" style="fill:var(--hand)">手元（AIが届かない）</text>
+
+    <rect x="644" y="190" width="300" height="390" rx="8" style="fill:var(--chain-tint);stroke:var(--chain)"/>
+    <text x="660" y="216" font-weight="700" style="fill:var(--chain)">0G（誰でも検証できる）</text>
+
+    <rect x="644" y="40" width="300" height="130" rx="8" style="fill:var(--ext-tint);stroke:var(--ext)"/>
+    <text x="660" y="66" font-weight="700" style="fill:var(--ext)">外部</text>
+
+    <!-- PC -->
+    <rect x="36" y="250" width="160" height="70" rx="6" style="fill:var(--paper);stroke:var(--pc)"/>
+    <text x="116" y="280" text-anchor="middle" font-weight="500">スキル／エージェント</text>
+    <text x="116" y="300" text-anchor="middle" class="t2">要求に署名する</text>
+
+    <!-- hand: broker center -->
+    <rect x="330" y="240" width="200" height="90" rx="6" style="fill:var(--paper);stroke:var(--hand)" stroke-width="2"/>
+    <text x="430" y="270" text-anchor="middle" font-weight="700">Broker（鍵解放側）</text>
+    <text x="430" y="290" text-anchor="middle" class="t2">範囲を突き合わせる</text>
+    <text x="430" y="306" text-anchor="middle" class="t2">自分でAPIを叩く・系譜を書く</text>
+    <text x="430" y="322" text-anchor="middle" class="t2" style="fill:var(--pc)">※どの機械で動かすか未決</text>
+
+    <rect x="262" y="100" width="160" height="58" rx="6" style="fill:var(--paper);stroke:var(--hand)"/>
+    <text x="342" y="125" text-anchor="middle" font-weight="500">Ledger</text>
+    <text x="342" y="144" text-anchor="middle" class="t2">元鍵・範囲を画面に出し立会</text>
+
+    <rect x="440" y="100" width="160" height="58" rx="6" style="fill:var(--paper);stroke:var(--hand)"/>
+    <text x="520" y="125" text-anchor="middle" font-weight="500">自分のつながり</text>
+    <text x="520" y="144" text-anchor="middle" class="t2">知り合いの仮名と濃さ</text>
+
+    <rect x="262" y="420" width="336" height="80" rx="6" style="fill:none;stroke:var(--hand)" stroke-dasharray="5 4"/>
+    <text x="430" y="446" text-anchor="middle" font-weight="500">アレンジ（任意）</text>
+    <text x="430" y="466" text-anchor="middle" class="t2">通知や立会ができる機器なら何でも足せる</text>
+    <text x="430" y="484" text-anchor="middle" class="t2">例: M5Stick（立会）／スタックチャン（声）／時計（寿命）</text>
+    <text x="430" y="540" text-anchor="middle" class="t2">平文の鍵はここから出ない／知り合いの一覧も外に出さない</text>
+
+    <!-- external -->
+    <rect x="660" y="84" width="130" height="70" rx="6" style="fill:var(--paper);stroke:var(--ext)"/>
+    <text x="725" y="110" text-anchor="middle" font-weight="500">World ID</text>
+    <text x="725" y="128" text-anchor="middle" class="t2">ZKの人間証明</text>
+    <text x="725" y="144" text-anchor="middle" class="t2">保証人の仮名</text>
+
+    <rect x="800" y="84" width="130" height="70" rx="6" style="fill:var(--paper);stroke:var(--ext)"/>
+    <text x="865" y="110" text-anchor="middle" font-weight="500">ENS</text>
+    <text x="865" y="128" text-anchor="middle" class="t2">スキルの名前</text>
+    <text x="865" y="144" text-anchor="middle" class="t2">宣言のハッシュ</text>
+
+    <!-- chain -->
+    <rect x="660" y="232" width="130" height="62" rx="6" style="fill:var(--paper);stroke:var(--chain)"/>
+    <text x="725" y="258" text-anchor="middle" font-weight="500">VouchRegistry</text>
+    <text x="725" y="278" text-anchor="middle" class="t2">仮名×AI×濃さ</text>
+
+    <rect x="800" y="232" width="130" height="62" rx="6" style="fill:var(--paper);stroke:var(--chain)"/>
+    <text x="865" y="258" text-anchor="middle" font-weight="500">ViolationRegistry</text>
+    <text x="865" y="278" text-anchor="middle" class="t2">違反の証拠</text>
+
+    <rect x="660" y="312" width="270" height="56" rx="6" style="fill:var(--paper);stroke:var(--chain)"/>
+    <text x="795" y="336" text-anchor="middle" font-weight="500">ERC-8004 Identity / Reputation</text>
+    <text x="795" y="354" text-anchor="middle" class="t2">既存・Galileo にデプロイ済み。評判は違反から自動で書く</text>
+
+    <rect x="660" y="390" width="270" height="56" rx="6" style="fill:var(--paper);stroke:var(--chain)"/>
+    <text x="795" y="414" text-anchor="middle" font-weight="500">0G Storage（Log層）</text>
+    <text x="795" y="432" text-anchor="middle" class="t2">系譜・追記専用。root hash を提出物に</text>
+
+    <rect x="660" y="468" width="270" height="56" rx="6" style="fill:var(--paper);stroke:var(--chain)"/>
+    <text x="795" y="492" text-anchor="middle" font-weight="500">0G Private Computer（TeeML）</text>
+    <text x="795" y="510" text-anchor="middle" class="t2">返答を読み、疑わしければ知らせる</text>
+
+    <!-- arrows -->
+    <path d="M196,285 L326,285" style="stroke:var(--ink2);fill:none" stroke-width="1.6" marker-end="url(#ar)"/>
+    <text x="261" y="276" text-anchor="middle" class="t2 mono">use()</text>
+
+    <path d="M366,162 L390,236" style="stroke:var(--ink2);fill:none" stroke-width="1.4" marker-start="url(#ar)" marker-end="url(#ar)"/>
+    <text x="318" y="205" class="t2">署名・立会</text>
+    <path d="M510,162 L480,238" style="stroke:var(--ink2);fill:none" stroke-width="1.4" marker-end="url(#ar)"/>
+    <text x="505" y="205" class="t2">重み</text>
+
+    <path d="M430,330 L430,416" style="stroke:var(--ink2);fill:none" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#ar)"/>
+
+    <path d="M530,270 C600,260 610,120 656,118" style="stroke:var(--ink2);fill:none" stroke-width="1.4" marker-end="url(#ar)"/>
+    <text x="585" y="180" class="t2">立会の証明</text>
+
+    <path d="M530,300 C600,300 610,418 656,418" style="stroke:var(--ink2);fill:none" stroke-width="1.4" marker-end="url(#ar)"/>
+    <text x="566" y="390" class="t2">系譜</text>
+    <path d="M530,316 C590,330 600,496 656,496" style="stroke:var(--ink2);fill:none" stroke-width="1.4" marker-end="url(#ar)"/>
+    <text x="578" y="470" class="t2">返答</text>
+
+    <path d="M530,252 C620,252 620,210 796,228" style="stroke:var(--pc);fill:none" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arr)"/>
+    <text x="700" y="222" class="t2" style="fill:var(--pc)">範囲外</text>
+
+    <path d="M800,262 L794,262" style="stroke:var(--pc)"/>
+    <path d="M800,270 L794,270" style="stroke:var(--pc);fill:none" stroke-width="1.6" marker-end="url(#arr)"/>
+    <text x="796" y="306" text-anchor="middle" class="t2" style="fill:var(--pc)">重み↓</text>
+
+    <path d="M725,154 L725,228" style="stroke:var(--ink2);fill:none" stroke-width="1.4" marker-end="url(#ar)"/>
+    <text x="732" y="196" class="t2">保証</text>
+  </svg>
+  </div>
+</section>
+
+<section>
+  <h2>流れ① 保証する（人 → AI）</h2>
+  <p class="lead">World ID を action「vouch」で出すと、アプリの中で固定の仮名になる。実名は誰にも渡らない。仮名は会ったときに交換し、手元に「会った」の記録が残る。</p>
+  <div class="plate"><svg viewBox="0 0 960 230" role="img" aria-label="保証の流れ">
+    <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--ink2)"/></marker></defs>
+    <g>
+      <rect x="20" y="40" width="160" height="80" rx="6" style="fill:var(--hand-tint);stroke:var(--hand)"/>
+      <text x="100" y="72" text-anchor="middle" font-weight="700">太郎さん</text>
+      <text x="100" y="94" text-anchor="middle" class="t2">「天気スキルを信頼する」</text>
+      <rect x="250" y="40" width="180" height="80" rx="6" style="fill:var(--ext-tint);stroke:var(--ext)"/>
+      <text x="340" y="70" text-anchor="middle" font-weight="700">World ID</text>
+      <text x="340" y="90" text-anchor="middle" class="t2 mono">action = vouch</text>
+      <text x="340" y="106" text-anchor="middle" class="t2 mono">signal = hash(AI, 濃さ)</text>
+      <rect x="500" y="40" width="200" height="80" rx="6" style="fill:var(--chain-tint);stroke:var(--chain)"/>
+      <text x="600" y="70" text-anchor="middle" font-weight="700">VouchRegistry</text>
+      <text x="600" y="90" text-anchor="middle" class="t2 mono">(仮名, AI, 濃さ)</text>
+      <text x="600" y="106" text-anchor="middle" class="t2">同じ組は1回だけ</text>
+      <rect x="770" y="40" width="170" height="80" rx="6" style="fill:var(--paper);stroke:var(--line)"/>
+      <text x="855" y="70" text-anchor="middle" font-weight="700">VC の書式</text>
+      <text x="855" y="90" text-anchor="middle" class="t2">持ち運べる形</text>
+      <text x="855" y="106" text-anchor="middle" class="t2">重みと罰はチェーン側</text>
+      <path d="M180,80 L246,80" style="stroke:var(--ink2);fill:none" stroke-width="1.6" marker-end="url(#a2)"/>
+      <path d="M430,80 L496,80" style="stroke:var(--ink2);fill:none" stroke-width="1.6" marker-end="url(#a2)"/>
+      <path d="M700,80 L766,80" style="stroke:var(--ink2);fill:none" stroke-width="1.6" marker-end="url(#a2)"/>
+      <text x="340" y="160" text-anchor="middle" class="t2">見えるのは「一意な人間」と仮名だけ</text>
+      <text x="600" y="160" text-anchor="middle" class="t2">1人1AIに1票はここで守る</text>
+      <text x="100" y="160" text-anchor="middle" class="t2">会ったときに仮名を交換（叩き台）</text>
+      <text x="100" y="178" text-anchor="middle" class="t2">→ 手元に「会った」が残る</text>
+    </g>
+  </svg></div>
+</section>
+
+<section>
+  <h2>流れ② 使う（正常系）と、1本の系譜</h2>
+  <p class="lead">1回の使用で生まれる5つの記録を、同じ要求ハッシュでつなぐ。これがそのまま 0G への提出物（request ID・root hash）になる。</p>
+  <div class="plate"><svg viewBox="0 0 960 300" role="img" aria-label="使用の流れと5つの系譜">
+    <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--chain)"/></marker></defs>
+    <line x1="60" y1="150" x2="900" y2="150" style="stroke:var(--chain)" stroke-width="2"/>
+    <text x="480" y="284" text-anchor="middle" class="t2 mono">同じ要求ハッシュ → 0G Storage Log層（追記専用）</text>
+    <g>
+      <circle cx="120" cy="150" r="16" style="fill:var(--paper);stroke:var(--chain)" stroke-width="2"/><text x="120" y="155" text-anchor="middle" font-weight="700" style="fill:var(--chain)">1</text>
+      <text x="120" y="100" text-anchor="middle" font-weight="500">誰が許したか</text>
+      <text x="120" y="120" text-anchor="middle" class="t2">World の仮名</text>
+      <text x="120" y="196" text-anchor="middle" class="t2">危ない操作は</text>
+      <text x="120" y="212" text-anchor="middle" class="t2">Ledger のボタンで立会</text>
+
+      <circle cx="300" cy="150" r="16" style="fill:var(--paper);stroke:var(--chain)" stroke-width="2"/><text x="300" y="155" text-anchor="middle" font-weight="700" style="fill:var(--chain)">2</text>
+      <text x="300" y="100" text-anchor="middle" font-weight="500">何を・どこへ・いつまで</text>
+      <text x="300" y="120" text-anchor="middle" class="t2">Ledger 署名の子トークン</text>
+      <text x="300" y="196" text-anchor="middle" class="t2">太さ＝知り合いの保証の重み</text>
+      <text x="300" y="212" text-anchor="middle" class="t2">範囲は Ledger の画面に出る</text>
+
+      <circle cx="480" cy="150" r="16" style="fill:var(--paper);stroke:var(--chain)" stroke-width="2"/><text x="480" y="155" text-anchor="middle" font-weight="700" style="fill:var(--chain)">3</text>
+      <text x="480" y="100" text-anchor="middle" font-weight="500">何を実行したか</text>
+      <text x="480" y="120" text-anchor="middle" class="t2">Broker が代理で API を叩く</text>
+      <text x="480" y="196" text-anchor="middle" class="t2">平文の鍵は PC を通らない</text>
+
+      <circle cx="660" cy="150" r="16" style="fill:var(--paper);stroke:var(--chain)" stroke-width="2"/><text x="660" y="155" text-anchor="middle" font-weight="700" style="fill:var(--chain)">4</text>
+      <text x="660" y="100" text-anchor="middle" font-weight="500">何が返ったか</text>
+      <text x="660" y="120" text-anchor="middle" class="t2">返却ハッシュ＋Broker 署名</text>
+      <text x="660" y="196" text-anchor="middle" class="t2">内容証明（自前署名。</text>
+      <text x="660" y="212" text-anchor="middle" class="t2">zkTLS は36hでは作らない）</text>
+
+      <circle cx="840" cy="150" r="16" style="fill:var(--paper);stroke:var(--chain)" stroke-width="2"/><text x="840" y="155" text-anchor="middle" font-weight="700" style="fill:var(--chain)">5</text>
+      <text x="840" y="100" text-anchor="middle" font-weight="500">AIがどう読んだか</text>
+      <text x="840" y="120" text-anchor="middle" class="t2">TeeML の request ID</text>
+      <text x="840" y="196" text-anchor="middle" class="t2">疑わしければ</text>
+      <text x="840" y="212" text-anchor="middle" class="t2">手元に警告を出す</text>
+    </g>
+    <text x="60" y="40" class="t2">時間 →</text>
+  </svg></div>
+</section>
+
+<section>
+  <h2>流れ③ 罰する／知らせるの線引き</h2>
+  <div class="plate"><svg viewBox="0 0 960 330" role="img" aria-label="範囲外の要求は自動で罰し、範囲内の疑わしい行動は警告だけ">
+    <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" style="fill:var(--ink2)"/></marker></defs>
+    <rect x="360" y="20" width="240" height="56" rx="6" style="fill:var(--paper);stroke:var(--line)"/>
+    <text x="480" y="44" text-anchor="middle" font-weight="700">スキルの要求</text>
+    <text x="480" y="64" text-anchor="middle" class="t2">宣言（鍵・宛先・回数・期限）と照合</text>
+    <path d="M420,76 L250,118" style="stroke:var(--ink2);fill:none" stroke-width="1.6" marker-end="url(#a4)"/>
+    <path d="M540,76 L710,118" style="stroke:var(--ink2);fill:none" stroke-width="1.6" marker-end="url(#a4)"/>
+    <text x="300" y="92" class="t2">範囲外</text>
+    <text x="620" y="92" class="t2">範囲内</text>
+
+    <rect x="30" y="122" width="430" height="190" rx="8" style="fill:var(--pc-tint);stroke:var(--pc)"/>
+    <text x="50" y="152" font-weight="700" style="fill:var(--pc)">罰する（自動・証拠あり）</text>
+    <text x="50" y="180">例: 天気スキルが Stripe の鍵を要求／evil.com へ送ろうとする</text>
+    <text x="50" y="208" class="t2">1. Broker が拒否（Ledger で誰も承認しなければ DENIED）</text>
+    <text x="50" y="228" class="t2">2. スキル署名付きの要求が ViolationRegistry に残る</text>
+    <text x="50" y="248" class="t2">3. 保証した太郎さんの仮名の重みが下がる</text>
+    <text x="50" y="268" class="t2">4. 太郎さんが保証した他のスキルも子トークンが細くなる</text>
+    <text x="50" y="294" class="t2" style="fill:var(--pc)">偽アカウントではこの証拠を作れない</text>
+
+    <rect x="500" y="122" width="430" height="190" rx="8" style="fill:var(--ext-tint);stroke:var(--ext)"/>
+    <text x="520" y="152" font-weight="700" style="fill:var(--ext)">知らせるだけ（判断・証明ではない）</text>
+    <text x="520" y="180">例: 正規の宛先にデータを紛れ込ませる／返答で扇動する</text>
+    <text x="520" y="208" class="t2">1. 宛先も回数も範囲内なので、Broker は通す</text>
+    <text x="520" y="228" class="t2">2. TeeML のAIが返ってきた中身を読む</text>
+    <text x="520" y="248" class="t2">3. 手元に警告「天気に関係ない話をしてるよ」（声で出す機器も足せる）</text>
+    <text x="520" y="268" class="t2">4. 重みは動かさない</text>
+    <text x="520" y="294" class="t2" style="fill:var(--ext)">証明できる裏切りだけを罰し、疑わしいものは知らせるだけ</text>
+  </svg></div>
+</section>
+
+<section>
+  <h2>何を、どこに置くか</h2>
+  <div class="rules">
+    <div class="rule"><b style="color:var(--hand)">手元だけ</b><p>元鍵と立会（Ledger）、平文の API キー（Broker）、自分のつながり（端末）</p></div>
+    <div class="rule"><b style="color:var(--chain)">0G に公開</b><p>保証（仮名×AI×濃さ）、違反の証拠、系譜の root hash。誰でも数え、検証できる</p></div>
+    <div class="rule"><b style="color:var(--pc)">どこにも置かない</b><p>人間の名前・顔。ゼロ知識の証明と仮名だけが動く</p></div>
+    <div class="rule"><b style="color:var(--ext)">ゼロ知識の使いどころ</b><p>使用の瞬間の人間証明と、保証人の仮名。どちらも World ID の流用で、新しく作らない</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>未決・未確認</h2>
+  <ul class="open">
+    <li>Broker をどの機械で動かすか（PC の外。Ledger だけでは担えない）</li>
+    <li>仮名と知り合いの対応づけ（会ったときに QR で交換する案。機器を足すアレンジもあり）</li>
+    <li>Ledger の EIP-712 表示で、範囲がどこまで読める形で出るか</li>
+    <li>子トークンの方式：Ledger で都度署名か、UCAN / Macaroon 型の減衰か</li>
+    <li>World ID の nullifier を action 固定で仮名に使う設計が、IDKit / Agent Pass で成り立つか。会場の Agent Pass は mock proof</li>
+    <li>重みの式（濃さ3段の点数、違反でどれだけ下げるか）</li>
+  </ul>
+</section>
+</div>

@@ -112,3 +112,38 @@ Permit(address holder,bytes32 skill,string version,bytes32 key,
 
 - 自作アプリで `44'/60'` を導出できるか（`APP_LOAD_PARAMS`）
 - 雛形に端末内 keccak256 が入っているか
+
+---
+
+## 6. 試験ベクタ（**先に合わせる。30時間目に直さない**）
+
+`verifyingContract` は **`0x0000000000000000000000000000000000000000` のまま凍結する。**
+レジストリを出しても、今回は domain を変えない。**変えると署名が全部変わり、両側を同時に直すことになる。**
+（Ledger 側 `ledger-app/src/eip712.rs` の `VERIFYING_CONTRACT` も同じ値。コメントで相互に縛ってある）
+
+```json
+{
+  "holder":   "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+  "skill":    "0x166b4a98f5f1c72f1e05921caf802eb07395b2afee302ceaef74b29657e641c5",
+  "version":  "1.0.0",
+  "key":      "0x6d5f7d408f4fb5f31403c52734dad9172da58198ab1599f5b0b9754e79d37148",
+  "target":   "api.stripe.com",
+  "scope":    "POST /v1/charges",
+  "maxCalls": 3,
+  "expiry":   1794009600,
+  "nonce":    42
+}
+```
+
+| | 値 |
+|---|---|
+| `domainSeparator` | `0x86aa93392bc42c203b5e25afa33e6d85df9f1a884ee0e74c4f1bd0d781d8a470` |
+| **`digest`（端末が署名する32バイト）** | **`0x8d63692146d1c78f08bfbe1ab6fa254130767260d83921f2d9ed8680a7889486`** |
+| 画面の4行 | `KEY   0x6d5f7d40…` / `TO    api.stripe.com` / `SCOPE POST /v1/charges x3` / `UNTIL 2026-11-07 00:00Z` |
+| 試験鍵 `0x11…11`（32バイト）の署名 | `0x9814354237a00bfe1d1b182f4a6d5974eb52c38b3d186f32bea0ca0a26341b981fd5acc30eac9f1eab839e75554a12d4ef726a4f120a6774b4dc92461ac812491c` |
+
+- `skill` は `keccak256("skill:mail-digest")`、`key` は `keccak256("STRIPE_SECRET")`。
+  **`key` は鍵そのものではなくラベルのハッシュ**
+- **Broker 側はこの値を試験で固定してある**（`broker/test/broker.test.js` の「試験ベクタ」）。
+  **Ledger 側も同じ digest が出ることを端末で1回確かめること。** ここが合えば、残りは配線
+- `UNTIL` は UTC。端末と Broker で同じ文字列になる

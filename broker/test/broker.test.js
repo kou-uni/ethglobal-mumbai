@@ -168,3 +168,38 @@ describe('画面の4行', () => {
     assert.ok(l[2].includes('POST /v1/charges x2'))
   })
 })
+
+// ── 固定の試験ベクタ（spec/permit-signature.md §6）──
+// **ここが動いたら、Ledger 側と食い違っている。** 片方だけ直さないこと。
+describe('試験ベクタ（Ledger と Broker の境界を固定する）', () => {
+  const VECTOR = {
+    permit: {
+      holder: '0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A',
+      skill: '0x166b4a98f5f1c72f1e05921caf802eb07395b2afee302ceaef74b29657e641c5',
+      version: '1.0.0',
+      key: '0x6d5f7d408f4fb5f31403c52734dad9172da58198ab1599f5b0b9754e79d37148',
+      target: 'api.stripe.com',
+      scope: 'POST /v1/charges',
+      maxCalls: 3,
+      expiry: 1794009600,
+      nonce: 42,
+    },
+    digest: '0x8d63692146d1c78f08bfbe1ab6fa254130767260d83921f2d9ed8680a7889486',
+    lines: ['KEY   0x6d5f7d40…', 'TO    api.stripe.com', 'SCOPE POST /v1/charges x3', 'UNTIL 2026-11-07 00:00Z'],
+    signature: '0x9814354237a00bfe1d1b182f4a6d5974eb52c38b3d186f32bea0ca0a26341b981fd5acc30eac9f1eab839e75554a12d4ef726a4f120a6774b4dc92461ac812491c',
+  }
+
+  test('digest が動かない', async () => {
+    const { digest } = await import('../src/permit.js')
+    assert.equal(digest(VECTOR.permit), VECTOR.digest)
+  })
+
+  test('端末に出る4行が動かない', () => {
+    assert.deepEqual(lines(VECTOR.permit), VECTOR.lines)
+  })
+
+  test('この署名から holder が戻る', async () => {
+    const { signer } = await import('../src/permit.js')
+    assert.equal((await signer(VECTOR.permit, VECTOR.signature)).toLowerCase(), VECTOR.permit.holder.toLowerCase())
+  })
+})

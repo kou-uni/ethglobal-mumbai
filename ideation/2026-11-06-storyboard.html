@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>画面とシーン v2 — ETHGlobal Mumbai 2026 デモ台本</title>
-<style>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>画面とシーン v3 — ETHGlobal Mumbai 2026</title><style>
 :root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
 --hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff;--brick:#a33c2e}
 html{color-scheme:light}
@@ -78,244 +76,233 @@ a:hover{text-decoration-color:var(--accent)}
 .page>section{margin-top:48px;padding-top:32px}table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;color:var(--ink-2)}
-</style></head><body>
-<div class="page">
+</style></head><body><div class="page">
 
 <header class="doc-header">
-  <p class="eyebrow">ETHGlobal Mumbai 2026 ／ kou-uni × mintannn ／ Draft v2</p>
-  <h1>画面とシーン — Ledger を主役に、0G を頭脳に</h1>
-  <p class="lead">v2 の変更点は2つ。Ledger を小道具ではなく「物」として撮る。0G を記録係ではなく「重さを決める頭脳」として見せる。</p>
-  <div class="doc-meta"><span>2026-11-06</span><span>ハック終了まで 33時間</span><span>ideation/2026-11-06-storyboard.md</span></div>
+<p class="eyebrow">ETHGlobal Mumbai 2026 ／ kou-uni × mintannn ／ Draft v3（統合）</p>
+<h1>画面とシーン — Ledger を「星が押される場所」に</h1>
+<p class="lead">v3 は issue #8（minta）の統合版。赤い DENIED は撤回し、白黒反転に置き換えた。実機は白黒の電子ペーパー。</p>
+<div class="doc-meta"><span>2026-11-06</span><span>ハック終了まで 32時間</span><span>ideation/2026-11-06-storyboard.md</span></div>
 </header>
 
 <section>
-  <h2>一言でいうと</h2>
-  <div class="copy">
-    <p class="jp">0G が重さを決める。Ledger が最後に止める。</p>
-    <p class="en">0G decides how much it matters. The Ledger decides whether it happens.</p>
-  </div>
-  <ol class="summary">
-    <li><b>審査員が覚えて帰る形は「3つの丸」。</b>その3つが、そのままスポンサー3社（World／Ledger／0G）になっている。</li>
-    <li><b>カメラの定位置は Ledger。</b>PC の画面は、つねに Ledger の奥でボケている。押す／押さない／<span class="em">押せない</span>の3状態を全部見せる。</li>
-    <li><b>0G 不達が、そのまま一番言いたい絵になる。</b>届かなければ Ledger が光って止まる。事故が実演に化ける。</li>
-  </ol>
+<h2>結論</h2>
+<div class="copy"><p class="jp">奥の黒い空に、買われた星が 1,284 個。手元の白い紙に、本物の星が 2 個。</p>
+<p class="en">1,284 stars on the screen. Two in your hand.</p></div>
+<ol class="summary">
+<li><b>色を使わずに、偽物と本物が反転して並ぶ。</b>PC の星空は黒地に白、Ledger の星座は白地に黒。これが冒頭 S1 の構図。</li>
+<li><b>Ledger は「範囲4行を出す板」から「星が押される場所」へ。</b>長押しで署名 → ★のハンコ → 同じ瞬間に奥の空に星が灯る（#8 を統合）。</li>
+<li><b>自作アプリが間に合わなくても台本は壊れない。</b>落とす順番を3段で決めてある。落とせないのは3つだけ：範囲が読める／押さないと通らない／<span class="em">拒否が手元に出る</span>。</li>
+</ol>
 </section>
 
 <section>
-  <h2><span class="no">01</span>3つの丸</h2>
-  <p class="msg">星1個は、3つそろったときだけ光る。1つでも欠けたら灰色のまま。</p>
-  <figure>
-    <figcaption>図表1　星が光る条件と、それぞれが防いでいる偽造</figcaption>
-    <div class="fig-scroll"><svg viewBox="0 0 760 210" role="img" aria-label="3つの丸">
-<circle cx="130" cy="78" r="30" fill="#173f66"/><text x="130" y="84" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">World</text>
-<circle cx="380" cy="78" r="30" fill="#173f66"/><text x="380" y="84" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Ledger</text>
-<circle cx="630" cy="78" r="30" fill="#173f66"/><text x="630" y="84" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">0G</text>
-<text x="130" y="132" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="700">人である</text>
-<text x="380" y="132" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="700">本人が押した</text>
-<text x="630" y="132" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="700">実際に使っている</text>
-<text x="130" y="152" font-size="11" fill="#555" text-anchor="middle">偽アカウントの量産を防ぐ</text>
-<text x="380" y="152" font-size="11" fill="#555" text-anchor="middle">PC の中の AI を防ぐ</text>
-<text x="630" y="152" font-size="11" fill="#555" text-anchor="middle">口だけの推薦を防ぐ</text>
-<line x1="20" y1="178" x2="740" y2="178" stroke="#d9d9d9"/>
-<text x="380" y="200" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="700">3つ揃ったときだけ、星が1個光る</text>
-</svg></div>
-    <p class="src">World だけでは PC の中の AI が代わりに星を出せる。Ledger だけでは1人が鍵を1000個作れる。役が重なっていない。</p>
-  </figure>
-</section>
-
-<section>
-  <h2><span class="no">02</span>Ledger をどう映すか</h2>
-  <p class="msg">Ledger が小道具に見えるうちは、この作品の主張は画に映っていない。物として主役に立てる。</p>
-
-  <figure>
-    <figcaption>図表2　S1「沈黙」— 冒頭14秒の構図</figcaption>
-    <div class="fig-scroll"><svg viewBox="0 0 760 300" role="img" aria-label="S1 沈黙の構図">
+<h2><span class="no">01</span>一番強い絵</h2>
+<p class="msg">一言も喋らずに、問題と答えが同じフレームに入る。</p>
+<figure><figcaption>図表1　S1「沈黙」— 冒頭14秒の構図</figcaption>
+<div class="fig-scroll"><svg viewBox="0 0 760 310" role="img" aria-label="S1 沈黙">
 <defs><filter id="bl"><feGaussianBlur stdDeviation="2.2"/></filter></defs>
-<rect x="0" y="0" width="760" height="300" fill="#f4f5f6"/>
+<rect x="0" y="0" width="760" height="310" fill="#f4f5f6"/>
 <g filter="url(#bl)">
-  <rect x="150" y="16" width="470" height="172" fill="#12161c"/>
-  <circle cx="363.4" cy="111.3" r="1.5" fill="#ffffff" opacity="0.52"/><circle cx="546.2" cy="53.6" r="1.9" fill="#ffffff" opacity="0.53"/><circle cx="436.7" cy="53.0" r="1.5" fill="#ffffff" opacity="0.41"/><circle cx="199.2" cy="150.3" r="0.8" fill="#ffffff" opacity="0.62"/><circle cx="337.9" cy="94.7" r="1.9" fill="#ffffff" opacity="0.66"/><circle cx="440.9" cy="153.7" r="0.8" fill="#ffffff" opacity="0.24"/><circle cx="244.4" cy="61.7" r="0.8" fill="#ffffff" opacity="0.74"/><circle cx="306.1" cy="116.2" r="1.0" fill="#ffffff" opacity="0.56"/><circle cx="448.7" cy="102.0" r="0.8" fill="#ffffff" opacity="0.52"/><circle cx="284.3" cy="179.6" r="0.8" fill="#ffffff" opacity="0.7"/><circle cx="301.1" cy="59.8" r="1.2" fill="#ffffff" opacity="0.22"/><circle cx="413.7" cy="40.8" r="0.8" fill="#ffffff" opacity="0.79"/><circle cx="333.5" cy="173.5" r="0.8" fill="#ffffff" opacity="0.35"/><circle cx="578.9" cy="32.2" r="1.5" fill="#ffffff" opacity="0.89"/><circle cx="338.4" cy="35.4" r="1.0" fill="#ffffff" opacity="0.74"/><circle cx="280.5" cy="37.6" r="1.2" fill="#ffffff" opacity="0.21"/><circle cx="344.2" cy="168.0" r="1.0" fill="#ffffff" opacity="0.37"/><circle cx="203.9" cy="33.3" r="1.5" fill="#ffffff" opacity="0.32"/><circle cx="411.9" cy="93.8" r="1.0" fill="#ffffff" opacity="0.89"/><circle cx="507.4" cy="89.4" r="1.5" fill="#ffffff" opacity="0.28"/><circle cx="349.0" cy="57.2" r="1.2" fill="#ffffff" opacity="0.81"/><circle cx="600.6" cy="116.5" r="0.8" fill="#ffffff" opacity="0.35"/><circle cx="337.0" cy="157.3" r="1.9" fill="#ffffff" opacity="0.27"/><circle cx="607.1" cy="57.3" r="1.2" fill="#ffffff" opacity="0.21"/><circle cx="435.1" cy="153.5" r="1.5" fill="#ffffff" opacity="0.25"/><circle cx="198.9" cy="114.9" r="1.0" fill="#ffffff" opacity="0.21"/><circle cx="325.4" cy="121.1" r="1.0" fill="#ffffff" opacity="0.87"/><circle cx="377.6" cy="113.6" r="1.5" fill="#ffffff" opacity="0.33"/><circle cx="228.0" cy="165.7" r="1.9" fill="#ffffff" opacity="0.37"/><circle cx="244.2" cy="139.4" r="1.9" fill="#ffffff" opacity="0.34"/><circle cx="589.4" cy="161.6" r="1.9" fill="#ffffff" opacity="0.25"/><circle cx="179.5" cy="41.0" r="1.9" fill="#ffffff" opacity="0.87"/><circle cx="266.2" cy="133.9" r="1.2" fill="#ffffff" opacity="0.49"/><circle cx="568.8" cy="100.6" r="1.9" fill="#ffffff" opacity="0.32"/><circle cx="485.0" cy="34.7" r="1.0" fill="#ffffff" opacity="0.54"/><circle cx="454.7" cy="120.1" r="0.8" fill="#ffffff" opacity="0.4"/><circle cx="574.5" cy="55.8" r="0.8" fill="#ffffff" opacity="0.25"/><circle cx="344.8" cy="62.9" r="0.8" fill="#ffffff" opacity="0.32"/><circle cx="325.4" cy="113.3" r="1.0" fill="#ffffff" opacity="0.26"/><circle cx="220.8" cy="94.3" r="1.2" fill="#ffffff" opacity="0.66"/><circle cx="471.8" cy="115.2" r="1.0" fill="#ffffff" opacity="0.61"/><circle cx="577.3" cy="98.1" r="1.2" fill="#ffffff" opacity="0.69"/><circle cx="595.1" cy="27.3" r="0.8" fill="#ffffff" opacity="0.54"/><circle cx="489.6" cy="73.7" r="0.8" fill="#ffffff" opacity="0.25"/><circle cx="405.9" cy="139.0" r="1.0" fill="#ffffff" opacity="0.76"/><circle cx="573.4" cy="78.9" r="1.5" fill="#ffffff" opacity="0.83"/><circle cx="553.5" cy="89.1" r="0.8" fill="#ffffff" opacity="0.8"/><circle cx="418.1" cy="121.5" r="1.5" fill="#ffffff" opacity="0.47"/><circle cx="163.7" cy="35.3" r="0.8" fill="#ffffff" opacity="0.65"/><circle cx="609.0" cy="161.2" r="1.2" fill="#ffffff" opacity="0.47"/><circle cx="491.7" cy="114.6" r="1.5" fill="#ffffff" opacity="0.52"/><circle cx="403.7" cy="104.9" r="1.9" fill="#ffffff" opacity="0.22"/><circle cx="431.0" cy="99.0" r="1.0" fill="#ffffff" opacity="0.87"/><circle cx="209.2" cy="145.7" r="1.5" fill="#ffffff" opacity="0.38"/><circle cx="163.1" cy="71.0" r="1.9" fill="#ffffff" opacity="0.34"/><circle cx="235.0" cy="165.3" r="1.5" fill="#ffffff" opacity="0.55"/><circle cx="267.6" cy="87.1" r="1.2" fill="#ffffff" opacity="0.34"/><circle cx="353.6" cy="149.7" r="1.0" fill="#ffffff" opacity="0.82"/><circle cx="332.5" cy="115.0" r="1.2" fill="#ffffff" opacity="0.35"/><circle cx="219.1" cy="78.7" r="0.8" fill="#ffffff" opacity="0.7"/><circle cx="589.3" cy="67.2" r="1.0" fill="#ffffff" opacity="0.28"/><circle cx="372.0" cy="168.4" r="1.5" fill="#ffffff" opacity="0.47"/><circle cx="394.1" cy="128.9" r="1.9" fill="#ffffff" opacity="0.52"/><circle cx="191.9" cy="28.9" r="1.9" fill="#ffffff" opacity="0.23"/><circle cx="479.7" cy="113.0" r="1.2" fill="#ffffff" opacity="0.65"/><circle cx="414.1" cy="124.0" r="1.5" fill="#ffffff" opacity="0.52"/><circle cx="169.2" cy="153.4" r="1.0" fill="#ffffff" opacity="0.75"/><circle cx="519.8" cy="177.5" r="0.8" fill="#ffffff" opacity="0.51"/><circle cx="444.0" cy="126.2" r="1.2" fill="#ffffff" opacity="0.87"/><circle cx="468.8" cy="55.1" r="1.5" fill="#ffffff" opacity="0.38"/><circle cx="482.3" cy="141.8" r="1.9" fill="#ffffff" opacity="0.7"/><circle cx="239.3" cy="66.5" r="1.2" fill="#ffffff" opacity="0.58"/><circle cx="587.9" cy="102.1" r="1.0" fill="#ffffff" opacity="0.48"/><circle cx="517.5" cy="165.4" r="0.8" fill="#ffffff" opacity="0.49"/><circle cx="563.3" cy="84.5" r="1.5" fill="#ffffff" opacity="0.52"/><circle cx="442.0" cy="166.0" r="1.5" fill="#ffffff" opacity="0.59"/><circle cx="454.3" cy="102.4" r="1.2" fill="#ffffff" opacity="0.52"/><circle cx="453.7" cy="56.0" r="0.8" fill="#ffffff" opacity="0.35"/><circle cx="566.6" cy="177.0" r="1.2" fill="#ffffff" opacity="0.58"/><circle cx="517.0" cy="74.0" r="0.8" fill="#ffffff" opacity="0.44"/><circle cx="195.6" cy="92.8" r="1.9" fill="#ffffff" opacity="0.49"/><circle cx="283.0" cy="167.5" r="1.0" fill="#ffffff" opacity="0.77"/><circle cx="187.1" cy="148.8" r="1.0" fill="#ffffff" opacity="0.57"/><circle cx="469.7" cy="166.9" r="1.5" fill="#ffffff" opacity="0.3"/><circle cx="392.5" cy="136.9" r="1.5" fill="#ffffff" opacity="0.86"/><circle cx="381.6" cy="172.1" r="0.8" fill="#ffffff" opacity="0.73"/><circle cx="357.5" cy="111.2" r="1.9" fill="#ffffff" opacity="0.65"/><circle cx="395.3" cy="155.6" r="1.9" fill="#ffffff" opacity="0.38"/><circle cx="462.8" cy="172.9" r="1.9" fill="#ffffff" opacity="0.35"/><circle cx="544.3" cy="175.1" r="1.9" fill="#ffffff" opacity="0.39"/><circle cx="383.9" cy="88.1" r="0.8" fill="#ffffff" opacity="0.55"/><circle cx="432.8" cy="28.3" r="0.8" fill="#ffffff" opacity="0.56"/><circle cx="339.9" cy="149.0" r="1.9" fill="#ffffff" opacity="0.29"/><circle cx="200.3" cy="50.0" r="1.9" fill="#ffffff" opacity="0.52"/><circle cx="576.0" cy="148.9" r="1.5" fill="#ffffff" opacity="0.39"/><circle cx="372.8" cy="43.8" r="1.5" fill="#ffffff" opacity="0.83"/><circle cx="582.8" cy="167.5" r="1.9" fill="#ffffff" opacity="0.42"/><circle cx="244.9" cy="120.4" r="1.2" fill="#ffffff" opacity="0.29"/><circle cx="511.8" cy="27.6" r="1.0" fill="#ffffff" opacity="0.31"/><circle cx="163.4" cy="68.3" r="1.2" fill="#ffffff" opacity="0.37"/><circle cx="384.5" cy="101.9" r="1.9" fill="#ffffff" opacity="0.29"/><circle cx="389.8" cy="63.1" r="1.0" fill="#ffffff" opacity="0.69"/><circle cx="556.9" cy="27.6" r="1.5" fill="#ffffff" opacity="0.78"/><circle cx="437.6" cy="108.0" r="1.9" fill="#ffffff" opacity="0.65"/><circle cx="398.4" cy="156.8" r="1.9" fill="#ffffff" opacity="0.61"/><circle cx="220.0" cy="166.7" r="1.2" fill="#ffffff" opacity="0.83"/><circle cx="301.4" cy="73.1" r="1.0" fill="#ffffff" opacity="0.35"/><circle cx="611.3" cy="162.5" r="1.0" fill="#ffffff" opacity="0.82"/><circle cx="218.2" cy="37.8" r="1.5" fill="#ffffff" opacity="0.27"/><circle cx="535.8" cy="89.8" r="1.0" fill="#ffffff" opacity="0.34"/><circle cx="443.1" cy="148.6" r="0.8" fill="#ffffff" opacity="0.34"/><circle cx="467.8" cy="166.2" r="1.2" fill="#ffffff" opacity="0.28"/><circle cx="387.6" cy="142.3" r="1.9" fill="#ffffff" opacity="0.9"/><circle cx="536.2" cy="149.2" r="1.5" fill="#ffffff" opacity="0.27"/><circle cx="175.0" cy="110.1" r="1.9" fill="#ffffff" opacity="0.83"/><circle cx="376.5" cy="53.6" r="0.8" fill="#ffffff" opacity="0.34"/><circle cx="539.5" cy="178.5" r="0.8" fill="#ffffff" opacity="0.61"/><circle cx="219.0" cy="130.2" r="0.8" fill="#ffffff" opacity="0.74"/><circle cx="306.4" cy="96.8" r="1.9" fill="#ffffff" opacity="0.45"/><circle cx="253.4" cy="82.2" r="0.8" fill="#ffffff" opacity="0.79"/><circle cx="240.3" cy="94.8" r="1.2" fill="#ffffff" opacity="0.48"/><circle cx="246.6" cy="49.8" r="1.9" fill="#ffffff" opacity="0.75"/><circle cx="305.0" cy="37.2" r="1.5" fill="#ffffff" opacity="0.6"/><circle cx="244.7" cy="115.2" r="1.2" fill="#ffffff" opacity="0.76"/><circle cx="275.3" cy="166.2" r="1.0" fill="#ffffff" opacity="0.77"/><circle cx="342.2" cy="163.9" r="1.9" fill="#ffffff" opacity="0.69"/><circle cx="506.3" cy="143.4" r="1.5" fill="#ffffff" opacity="0.34"/><circle cx="241.9" cy="148.4" r="1.2" fill="#ffffff" opacity="0.53"/><circle cx="162.8" cy="79.5" r="1.9" fill="#ffffff" opacity="0.23"/><circle cx="281.9" cy="174.0" r="1.2" fill="#ffffff" opacity="0.44"/><circle cx="457.5" cy="112.9" r="1.9" fill="#ffffff" opacity="0.25"/><circle cx="391.7" cy="101.6" r="1.0" fill="#ffffff" opacity="0.69"/><circle cx="503.8" cy="176.9" r="0.8" fill="#ffffff" opacity="0.28"/><circle cx="207.1" cy="61.0" r="1.5" fill="#ffffff" opacity="0.48"/><circle cx="180.9" cy="54.5" r="1.5" fill="#ffffff" opacity="0.21"/><circle cx="275.4" cy="67.0" r="1.2" fill="#ffffff" opacity="0.59"/><circle cx="388.6" cy="174.9" r="1.9" fill="#ffffff" opacity="0.79"/><circle cx="203.2" cy="93.3" r="0.8" fill="#ffffff" opacity="0.58"/><circle cx="461.5" cy="173.0" r="1.5" fill="#ffffff" opacity="0.85"/><circle cx="230.6" cy="97.6" r="1.0" fill="#ffffff" opacity="0.8"/><circle cx="404.0" cy="117.1" r="1.5" fill="#ffffff" opacity="0.86"/><circle cx="349.0" cy="106.2" r="1.9" fill="#ffffff" opacity="0.42"/><circle cx="398.8" cy="99.4" r="1.2" fill="#ffffff" opacity="0.59"/><circle cx="286.7" cy="135.8" r="1.2" fill="#ffffff" opacity="0.22"/><circle cx="508.7" cy="115.4" r="1.0" fill="#ffffff" opacity="0.49"/><circle cx="468.7" cy="32.2" r="1.2" fill="#ffffff" opacity="0.72"/><circle cx="180.8" cy="178.2" r="1.2" fill="#ffffff" opacity="0.25"/><circle cx="569.1" cy="91.0" r="1.5" fill="#ffffff" opacity="0.38"/><circle cx="501.0" cy="31.1" r="0.8" fill="#ffffff" opacity="0.86"/><circle cx="486.1" cy="97.1" r="1.0" fill="#ffffff" opacity="0.62"/><circle cx="210.3" cy="121.4" r="1.5" fill="#ffffff" opacity="0.28"/><circle cx="549.0" cy="79.6" r="1.0" fill="#ffffff" opacity="0.29"/><circle cx="359.1" cy="128.2" r="1.5" fill="#ffffff" opacity="0.62"/><circle cx="448.4" cy="130.4" r="1.2" fill="#ffffff" opacity="0.74"/><circle cx="399.0" cy="179.6" r="1.2" fill="#ffffff" opacity="0.71"/><circle cx="266.2" cy="41.8" r="1.2" fill="#ffffff" opacity="0.75"/><circle cx="441.7" cy="80.0" r="1.2" fill="#ffffff" opacity="0.63"/><circle cx="487.2" cy="133.1" r="1.0" fill="#ffffff" opacity="0.64"/><circle cx="500.0" cy="53.6" r="1.0" fill="#ffffff" opacity="0.55"/><circle cx="454.4" cy="54.6" r="0.8" fill="#ffffff" opacity="0.64"/><circle cx="162.3" cy="64.5" r="0.8" fill="#ffffff" opacity="0.64"/><circle cx="204.5" cy="108.5" r="0.8" fill="#ffffff" opacity="0.73"/><circle cx="572.5" cy="49.1" r="1.0" fill="#ffffff" opacity="0.64"/><circle cx="327.4" cy="98.7" r="1.0" fill="#ffffff" opacity="0.44"/><circle cx="382.5" cy="44.8" r="0.8" fill="#ffffff" opacity="0.76"/><circle cx="361.1" cy="152.2" r="1.0" fill="#ffffff" opacity="0.51"/><circle cx="497.3" cy="84.9" r="1.0" fill="#ffffff" opacity="0.46"/><circle cx="454.8" cy="178.3" r="1.2" fill="#ffffff" opacity="0.4"/><circle cx="502.6" cy="152.9" r="1.0" fill="#ffffff" opacity="0.5"/><circle cx="325.6" cy="39.1" r="1.2" fill="#ffffff" opacity="0.25"/><text x="199" y="113" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="357" y="131" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="284" y="144" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="196" y="63" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="427" y="44" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="286" y="136" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="439" y="73" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="222" y="84" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="452" y="85" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="212" y="134" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="390" y="164" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="536" y="164" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text>
-  <text x="166" y="36" font-size="9" fill="#8e8e8e">みんなの星</text>
-  <text x="556" y="36" font-size="9" fill="#e08b7c">1,284 個</text>
+ <rect x="150" y="14" width="470" height="168" fill="#12161c"/>
+ <circle cx="363.4" cy="107.1" r="1.5" fill="#ffffff" opacity="0.52"/><circle cx="546.2" cy="50.9" r="1.9" fill="#ffffff" opacity="0.53"/><circle cx="436.7" cy="50.3" r="1.5" fill="#ffffff" opacity="0.41"/><circle cx="199.2" cy="145.1" r="0.8" fill="#ffffff" opacity="0.62"/><circle cx="337.9" cy="90.9" r="1.9" fill="#ffffff" opacity="0.66"/><circle cx="440.9" cy="148.4" r="0.8" fill="#ffffff" opacity="0.24"/><circle cx="244.4" cy="58.8" r="0.8" fill="#ffffff" opacity="0.74"/><circle cx="306.1" cy="111.8" r="1.0" fill="#ffffff" opacity="0.56"/><circle cx="448.7" cy="98.0" r="0.8" fill="#ffffff" opacity="0.52"/><circle cx="284.3" cy="173.6" r="0.8" fill="#ffffff" opacity="0.7"/><circle cx="301.1" cy="56.9" r="1.2" fill="#ffffff" opacity="0.22"/><circle cx="413.7" cy="38.4" r="0.8" fill="#ffffff" opacity="0.79"/><circle cx="333.5" cy="167.6" r="0.8" fill="#ffffff" opacity="0.35"/><circle cx="578.9" cy="30.0" r="1.5" fill="#ffffff" opacity="0.89"/><circle cx="338.4" cy="33.1" r="1.0" fill="#ffffff" opacity="0.74"/><circle cx="280.5" cy="35.2" r="1.2" fill="#ffffff" opacity="0.21"/><circle cx="344.2" cy="162.3" r="1.0" fill="#ffffff" opacity="0.37"/><circle cx="203.9" cy="31.1" r="1.5" fill="#ffffff" opacity="0.32"/><circle cx="411.9" cy="90.0" r="1.0" fill="#ffffff" opacity="0.89"/><circle cx="507.4" cy="85.7" r="1.5" fill="#ffffff" opacity="0.28"/><circle cx="349.0" cy="54.4" r="1.2" fill="#ffffff" opacity="0.81"/><circle cx="600.6" cy="112.1" r="0.8" fill="#ffffff" opacity="0.35"/><circle cx="337.0" cy="151.9" r="1.9" fill="#ffffff" opacity="0.27"/><circle cx="607.1" cy="54.4" r="1.2" fill="#ffffff" opacity="0.21"/><circle cx="435.1" cy="148.2" r="1.5" fill="#ffffff" opacity="0.25"/><circle cx="198.9" cy="110.6" r="1.0" fill="#ffffff" opacity="0.21"/><circle cx="325.4" cy="116.6" r="1.0" fill="#ffffff" opacity="0.87"/><circle cx="377.6" cy="109.3" r="1.5" fill="#ffffff" opacity="0.33"/><circle cx="228.0" cy="160.1" r="1.9" fill="#ffffff" opacity="0.37"/><circle cx="244.2" cy="134.4" r="1.9" fill="#ffffff" opacity="0.34"/><circle cx="589.4" cy="156.1" r="1.9" fill="#ffffff" opacity="0.25"/><circle cx="179.5" cy="38.6" r="1.9" fill="#ffffff" opacity="0.87"/><circle cx="266.2" cy="129.1" r="1.2" fill="#ffffff" opacity="0.49"/><circle cx="568.8" cy="96.6" r="1.9" fill="#ffffff" opacity="0.32"/><circle cx="485.0" cy="32.5" r="1.0" fill="#ffffff" opacity="0.54"/><circle cx="454.7" cy="115.6" r="0.8" fill="#ffffff" opacity="0.4"/><circle cx="574.5" cy="53.0" r="0.8" fill="#ffffff" opacity="0.25"/><circle cx="344.8" cy="59.9" r="0.8" fill="#ffffff" opacity="0.32"/><circle cx="325.4" cy="109.0" r="1.0" fill="#ffffff" opacity="0.26"/><circle cx="220.8" cy="90.5" r="1.2" fill="#ffffff" opacity="0.66"/><circle cx="471.8" cy="110.8" r="1.0" fill="#ffffff" opacity="0.61"/><circle cx="577.3" cy="94.2" r="1.2" fill="#ffffff" opacity="0.69"/><circle cx="595.1" cy="25.2" r="0.8" fill="#ffffff" opacity="0.54"/><circle cx="489.6" cy="70.5" r="0.8" fill="#ffffff" opacity="0.25"/><circle cx="405.9" cy="134.0" r="1.0" fill="#ffffff" opacity="0.76"/><circle cx="573.4" cy="75.5" r="1.5" fill="#ffffff" opacity="0.83"/><circle cx="553.5" cy="85.4" r="0.8" fill="#ffffff" opacity="0.8"/><circle cx="418.1" cy="117.0" r="1.5" fill="#ffffff" opacity="0.47"/><circle cx="163.7" cy="33.0" r="0.8" fill="#ffffff" opacity="0.65"/><circle cx="609.0" cy="155.7" r="1.2" fill="#ffffff" opacity="0.47"/><circle cx="491.7" cy="110.3" r="1.5" fill="#ffffff" opacity="0.52"/><circle cx="403.7" cy="100.8" r="1.9" fill="#ffffff" opacity="0.22"/><circle cx="431.0" cy="95.1" r="1.0" fill="#ffffff" opacity="0.87"/><circle cx="209.2" cy="140.6" r="1.5" fill="#ffffff" opacity="0.38"/><circle cx="163.1" cy="67.8" r="1.9" fill="#ffffff" opacity="0.34"/><circle cx="235.0" cy="159.7" r="1.5" fill="#ffffff" opacity="0.55"/><circle cx="267.6" cy="83.5" r="1.2" fill="#ffffff" opacity="0.34"/><circle cx="353.6" cy="144.5" r="1.0" fill="#ffffff" opacity="0.82"/><circle cx="332.5" cy="110.6" r="1.2" fill="#ffffff" opacity="0.35"/><circle cx="219.1" cy="75.3" r="0.8" fill="#ffffff" opacity="0.7"/><circle cx="589.3" cy="64.1" r="1.0" fill="#ffffff" opacity="0.28"/><circle cx="372.0" cy="162.7" r="1.5" fill="#ffffff" opacity="0.47"/><circle cx="394.1" cy="124.2" r="1.9" fill="#ffffff" opacity="0.52"/><circle cx="191.9" cy="26.8" r="1.9" fill="#ffffff" opacity="0.23"/><circle cx="479.7" cy="108.7" r="1.2" fill="#ffffff" opacity="0.65"/><circle cx="414.1" cy="119.4" r="1.5" fill="#ffffff" opacity="0.52"/><circle cx="169.2" cy="148.1" r="1.0" fill="#ffffff" opacity="0.75"/><circle cx="519.8" cy="171.6" r="0.8" fill="#ffffff" opacity="0.51"/><circle cx="444.0" cy="121.6" r="1.2" fill="#ffffff" opacity="0.87"/><circle cx="468.8" cy="52.3" r="1.5" fill="#ffffff" opacity="0.38"/><circle cx="482.3" cy="136.8" r="1.9" fill="#ffffff" opacity="0.7"/><circle cx="239.3" cy="63.4" r="1.2" fill="#ffffff" opacity="0.58"/><circle cx="587.9" cy="98.1" r="1.0" fill="#ffffff" opacity="0.48"/><circle cx="517.5" cy="159.7" r="0.8" fill="#ffffff" opacity="0.49"/><circle cx="563.3" cy="81.0" r="1.5" fill="#ffffff" opacity="0.52"/><circle cx="442.0" cy="160.3" r="1.5" fill="#ffffff" opacity="0.59"/><circle cx="454.3" cy="98.4" r="1.2" fill="#ffffff" opacity="0.52"/><circle cx="453.7" cy="53.1" r="0.8" fill="#ffffff" opacity="0.35"/><circle cx="566.6" cy="171.0" r="1.2" fill="#ffffff" opacity="0.58"/><circle cx="517.0" cy="70.7" r="0.8" fill="#ffffff" opacity="0.44"/><circle cx="195.6" cy="89.0" r="1.9" fill="#ffffff" opacity="0.49"/><circle cx="283.0" cy="161.8" r="1.0" fill="#ffffff" opacity="0.77"/><circle cx="187.1" cy="143.6" r="1.0" fill="#ffffff" opacity="0.57"/><circle cx="469.7" cy="161.2" r="1.5" fill="#ffffff" opacity="0.3"/><circle cx="392.5" cy="132.0" r="1.5" fill="#ffffff" opacity="0.86"/><circle cx="381.6" cy="166.3" r="0.8" fill="#ffffff" opacity="0.73"/><circle cx="357.5" cy="106.9" r="1.9" fill="#ffffff" opacity="0.65"/><circle cx="395.3" cy="150.2" r="1.9" fill="#ffffff" opacity="0.38"/><circle cx="462.8" cy="167.1" r="1.9" fill="#ffffff" opacity="0.35"/><circle cx="544.3" cy="169.2" r="1.9" fill="#ffffff" opacity="0.39"/><circle cx="383.9" cy="84.5" r="0.8" fill="#ffffff" opacity="0.55"/><circle cx="432.8" cy="26.2" r="0.8" fill="#ffffff" opacity="0.56"/><circle cx="339.9" cy="143.8" r="1.9" fill="#ffffff" opacity="0.29"/><circle cx="200.3" cy="47.3" r="1.9" fill="#ffffff" opacity="0.52"/><circle cx="576.0" cy="143.7" r="1.5" fill="#ffffff" opacity="0.39"/><circle cx="372.8" cy="41.3" r="1.5" fill="#ffffff" opacity="0.83"/><circle cx="582.8" cy="161.8" r="1.9" fill="#ffffff" opacity="0.42"/><circle cx="244.9" cy="115.9" r="1.2" fill="#ffffff" opacity="0.29"/><circle cx="511.8" cy="25.5" r="1.0" fill="#ffffff" opacity="0.31"/><circle cx="163.4" cy="65.2" r="1.2" fill="#ffffff" opacity="0.37"/><circle cx="384.5" cy="98.0" r="1.9" fill="#ffffff" opacity="0.29"/><circle cx="389.8" cy="60.1" r="1.0" fill="#ffffff" opacity="0.69"/><circle cx="556.9" cy="25.5" r="1.5" fill="#ffffff" opacity="0.78"/><circle cx="437.6" cy="103.8" r="1.9" fill="#ffffff" opacity="0.65"/><circle cx="398.4" cy="151.4" r="1.9" fill="#ffffff" opacity="0.61"/><circle cx="220.0" cy="161.1" r="1.2" fill="#ffffff" opacity="0.83"/><circle cx="301.4" cy="69.9" r="1.0" fill="#ffffff" opacity="0.35"/><circle cx="611.3" cy="156.9" r="1.0" fill="#ffffff" opacity="0.82"/><circle cx="218.2" cy="35.4" r="1.5" fill="#ffffff" opacity="0.27"/><circle cx="535.8" cy="86.1" r="1.0" fill="#ffffff" opacity="0.34"/><circle cx="443.1" cy="143.4" r="0.8" fill="#ffffff" opacity="0.34"/><circle cx="467.8" cy="160.5" r="1.2" fill="#ffffff" opacity="0.28"/><circle cx="387.6" cy="137.2" r="1.9" fill="#ffffff" opacity="0.9"/><circle cx="536.2" cy="144.0" r="1.5" fill="#ffffff" opacity="0.27"/><circle cx="175.0" cy="105.9" r="1.9" fill="#ffffff" opacity="0.83"/><circle cx="376.5" cy="50.8" r="0.8" fill="#ffffff" opacity="0.34"/><circle cx="539.5" cy="172.5" r="0.8" fill="#ffffff" opacity="0.61"/><circle cx="219.0" cy="125.5" r="0.8" fill="#ffffff" opacity="0.74"/><circle cx="306.4" cy="93.0" r="1.9" fill="#ffffff" opacity="0.45"/><circle cx="253.4" cy="78.7" r="0.8" fill="#ffffff" opacity="0.79"/><circle cx="240.3" cy="91.0" r="1.2" fill="#ffffff" opacity="0.48"/><circle cx="246.6" cy="47.1" r="1.9" fill="#ffffff" opacity="0.75"/><circle cx="305.0" cy="34.9" r="1.5" fill="#ffffff" opacity="0.6"/><circle cx="244.7" cy="110.9" r="1.2" fill="#ffffff" opacity="0.76"/><circle cx="275.3" cy="160.5" r="1.0" fill="#ffffff" opacity="0.77"/><circle cx="342.2" cy="158.3" r="1.9" fill="#ffffff" opacity="0.69"/><circle cx="506.3" cy="138.3" r="1.5" fill="#ffffff" opacity="0.34"/><circle cx="241.9" cy="143.2" r="1.2" fill="#ffffff" opacity="0.53"/><circle cx="162.8" cy="76.1" r="1.9" fill="#ffffff" opacity="0.23"/><circle cx="281.9" cy="168.1" r="1.2" fill="#ffffff" opacity="0.44"/><circle cx="457.5" cy="108.6" r="1.9" fill="#ffffff" opacity="0.25"/><circle cx="391.7" cy="97.6" r="1.0" fill="#ffffff" opacity="0.69"/><circle cx="503.8" cy="171.0" r="0.8" fill="#ffffff" opacity="0.28"/><circle cx="207.1" cy="58.0" r="1.5" fill="#ffffff" opacity="0.48"/><circle cx="180.9" cy="51.7" r="1.5" fill="#ffffff" opacity="0.21"/><circle cx="275.4" cy="63.9" r="1.2" fill="#ffffff" opacity="0.59"/><circle cx="388.6" cy="169.0" r="1.9" fill="#ffffff" opacity="0.79"/><circle cx="203.2" cy="89.5" r="0.8" fill="#ffffff" opacity="0.58"/><circle cx="461.5" cy="167.2" r="1.5" fill="#ffffff" opacity="0.85"/><circle cx="230.6" cy="93.7" r="1.0" fill="#ffffff" opacity="0.8"/><circle cx="404.0" cy="112.7" r="1.5" fill="#ffffff" opacity="0.86"/><circle cx="349.0" cy="102.1" r="1.9" fill="#ffffff" opacity="0.42"/><circle cx="398.8" cy="95.5" r="1.2" fill="#ffffff" opacity="0.59"/><circle cx="286.7" cy="130.9" r="1.2" fill="#ffffff" opacity="0.22"/><circle cx="508.7" cy="111.0" r="1.0" fill="#ffffff" opacity="0.49"/><circle cx="468.7" cy="30.0" r="1.2" fill="#ffffff" opacity="0.72"/><circle cx="180.8" cy="172.3" r="1.2" fill="#ffffff" opacity="0.25"/><circle cx="569.1" cy="87.3" r="1.5" fill="#ffffff" opacity="0.38"/><circle cx="501.0" cy="28.9" r="0.8" fill="#ffffff" opacity="0.86"/><circle cx="486.1" cy="93.2" r="1.0" fill="#ffffff" opacity="0.62"/><circle cx="210.3" cy="116.9" r="1.5" fill="#ffffff" opacity="0.28"/><circle cx="549.0" cy="76.2" r="1.0" fill="#ffffff" opacity="0.29"/><circle cx="359.1" cy="123.5" r="1.5" fill="#ffffff" opacity="0.62"/><circle cx="448.4" cy="125.7" r="1.2" fill="#ffffff" opacity="0.74"/><circle cx="399.0" cy="173.6" r="1.2" fill="#ffffff" opacity="0.71"/><circle cx="266.2" cy="39.3" r="1.2" fill="#ffffff" opacity="0.75"/><circle cx="441.7" cy="76.6" r="1.2" fill="#ffffff" opacity="0.63"/><circle cx="487.2" cy="128.3" r="1.0" fill="#ffffff" opacity="0.64"/><circle cx="500.0" cy="50.9" r="1.0" fill="#ffffff" opacity="0.55"/><circle cx="454.4" cy="51.8" r="0.8" fill="#ffffff" opacity="0.64"/><circle cx="162.3" cy="61.4" r="0.8" fill="#ffffff" opacity="0.64"/><circle cx="204.5" cy="104.3" r="0.8" fill="#ffffff" opacity="0.73"/><circle cx="572.5" cy="46.5" r="1.0" fill="#ffffff" opacity="0.64"/><circle cx="327.4" cy="94.7" r="1.0" fill="#ffffff" opacity="0.44"/><circle cx="382.5" cy="42.3" r="0.8" fill="#ffffff" opacity="0.76"/><circle cx="361.1" cy="147.0" r="1.0" fill="#ffffff" opacity="0.51"/><circle cx="497.3" cy="81.3" r="1.0" fill="#ffffff" opacity="0.46"/><circle cx="454.8" cy="172.4" r="1.2" fill="#ffffff" opacity="0.4"/><circle cx="502.6" cy="147.6" r="1.0" fill="#ffffff" opacity="0.5"/><circle cx="325.6" cy="36.7" r="1.2" fill="#ffffff" opacity="0.25"/><text x="199" y="109" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="357" y="126" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="284" y="139" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="196" y="60" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="427" y="41" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="286" y="131" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="439" y="70" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="222" y="80" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="452" y="81" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="212" y="129" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="390" y="159" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text><text x="536" y="158" font-size="7" fill="#e08b7c" opacity="0.9">$0.0027</text>
+ <text x="166" y="34" font-size="9" fill="#8e8e8e">みんなの星</text>
+ <text x="556" y="34" font-size="9" fill="#e08b7c">1,284 個</text>
 </g>
-<rect x="0" y="188" width="760" height="112" fill="#e3e5e8"/>
-<rect x="230" y="206" width="320" height="74" rx="12" fill="#0d1014"/><rect x="252" y="218" width="218" height="50" fill="#15191f"/><circle cx="505" cy="230" r="6" fill="#ffffff" opacity="0.3"/><circle cx="505" cy="256" r="6" fill="#ffffff" opacity="0.3"/>
-<text x="230" y="300" font-size="11" fill="#1a1a1a" font-weight="700">手前の Ledger は、暗いまま</text>
-<text x="634" y="100" font-size="10" fill="#555555">AI が「許可」を</text>
-<text x="634" y="114" font-size="10" fill="#555555">連打している</text>
-<path d="M630 110 L610 110" stroke="#8e8e8e" stroke-width="1"/>
-<text x="634" y="238" font-size="10" fill="#1a1a1a">焦点はここ</text>
-<path d="M630 234 L566 234" stroke="#173f66" stroke-width="1.2"/>
+<text x="634" y="96" font-size="10" fill="#555">AI が「許可」を</text>
+<text x="634" y="110" font-size="10" fill="#555">連打している</text>
+<path d="M630 106 L610 106" stroke="#8e8e8e" stroke-width="1"/>
+<rect x="0" y="182" width="760" height="128" fill="#e3e5e8"/>
+<rect x="226" y="198" width="310" height="84" rx="12" fill="#0d1014"/><rect x="243" y="209" width="223" height="62" fill="#f1efea"/><path d="M292 230 L332 223 L366 240" stroke="#111" stroke-width="0.9" fill="none" opacity="0.55"/><circle cx="292" cy="230" r="3.8" fill="#111"/><circle cx="332" cy="223" r="3.8" fill="#111"/><circle cx="366" cy="240" r="3.8" fill="#111"/><text x="256" y="266" font-size="9" fill="#111" opacity="0.75">あなたの空 — 2 星</text><circle cx="499" cy="225" r="6" fill="#ffffff" opacity="0.28"/><circle cx="499" cy="255" r="6" fill="#ffffff" opacity="0.28"/>
+<text x="226" y="302" font-size="12" fill="#1a1a1a" font-weight="700">手元の Ledger は、何も聞いてこない</text>
+<text x="574" y="238" font-size="10" fill="#1a1a1a">焦点はここ</text>
+<path d="M570 234 L548 234" stroke="#173f66" stroke-width="1.2"/>
 </svg></div>
-    <p class="src">奥の PC では AI が「許可」を連打し、偽の星が増え続けている。手前の Ledger は暗いまま。<b>一言も喋らずに、問題と答えが同じフレームに入る。</b></p>
-  </figure>
-
-  <h3>原則3つ</h3>
-  <ul>
-    <li><b>カメラの定位置は Ledger。</b>PC の画面は、つねに Ledger の奥でボケている</li>
-    <li><b>Ledger の画面を PC のキャプチャで代用しない。</b>実機が写っていることが主張そのもの</li>
-    <li><b>押す／押さない／押せない の3状態を、全部ちゃんと見せる。</b>押せないことが一番言いたいこと</li>
-  </ul>
-
-  <div class="tbl"><table>
-    <caption>表1　ショットリスト（5カット）</caption>
-    <thead><tr><th>#</th><th>名前</th><th>画</th><th>何が伝わるか</th></tr></thead>
-    <tbody>
-      <tr><td>S1</td><td><b>沈黙</b></td><td>机。奥の画面は偽の星で埋まり点滅。<b>手前の Ledger は暗いまま。</b>焦点は Ledger</td><td>AI はもう PC の中にいる。<b>ここには届かない</b></td></tr>
-      <tr><td>S2</td><td><b>生まれる</b></td><td>両ボタンに指。押す → <b>奥の画面に星が1つ灯る。</b>カットを割らない</td><td>物理ボタンと星が直結している</td></tr>
-      <tr><td>S3</td><td><b>ふだん</b></td><td>時間経過。Ledger は暗いまま。画面の端に <code>0G: ふだん</code> が流れ続ける</td><td>ふだんは何もしなくていい。<b>0G が働いている</b></td></tr>
-      <tr><td>S4</td><td><b>拒否</b></td><td>マクロ。画面いっぱいに <b class="neg">DENIED</b>。奥で AI が連打。<b>押している指がない</b></td><td>このボタンだけは押せない</td></tr>
-      <tr><td>S5</td><td><b>手の中</b></td><td>審査員の手。スマホで系譜をたどる。Ledger は机に置かれている</td><td>発表者を信じなくていい</td></tr>
-    </tbody>
-  </table></div>
-
-  <div class="note"><b>ライティング:</b> 部屋を暗めにして、<b>Ledger の画面が唯一の光源</b>になる角度を作る。<br>
-  <b>レンズ:</b> 寄りはマクロ（4行の文字が読めること）。引きは Ledger と PC 画面が同一フレーム。</div>
-
-  <figure>
-    <figcaption>図表3　S2「生まれる」— 押した瞬間に星が灯る</figcaption>
-    <div class="fig-scroll"><svg viewBox="0 0 760 196" role="img" aria-label="S2 押すと星が生まれる">
-<rect x="0" y="0" width="760" height="196" fill="#f4f5f6"/>
-<rect x="300" y="14" width="320" height="118" fill="#12161c"/>
-
-<circle cx="460" cy="73" r="3.4" fill="#ffffff"/>
-<circle cx="460" cy="73" r="10" fill="none" stroke="#ffffff" stroke-opacity="0.4"/>
-<circle cx="460" cy="73" r="19" fill="none" stroke="#ffffff" stroke-opacity="0.16"/>
-<text x="300" y="148" font-size="10.5" fill="#555555">奥の画面に、星が1つ灯る</text>
-<rect x="18" y="54" width="250" height="78" rx="12" fill="#0d1014"/><rect x="36" y="66" width="170" height="53" fill="#151b22"/><text x="48" y="82" font-size="8" fill="#8e8e8e" letter-spacing="1">KEY</text><text x="107" y="82" font-size="8" fill="#ffffff">openai:api_key</text><text x="48" y="93" font-size="8" fill="#8e8e8e" letter-spacing="1">TO</text><text x="107" y="93" font-size="8" fill="#ffffff">api.openai.com</text><text x="48" y="103" font-size="8" fill="#8e8e8e" letter-spacing="1">SCOPE</text><text x="107" y="103" font-size="8" fill="#ffffff">read</text><text x="48" y="114" font-size="8" fill="#8e8e8e" letter-spacing="1">UNTIL</text><text x="107" y="114" font-size="8" fill="#ffffff">11-30 09:00</text><circle cx="233" cy="80" r="6" fill="#ffffff" opacity="0.85"/><circle cx="233" cy="106" r="6" fill="#ffffff" opacity="0.85"/>
-<path d="M276 93 L296 93 M290 88 L296 93 L290 98" stroke="#173f66" stroke-width="1.4" fill="none"/>
-<text x="18" y="148" font-size="10.5" fill="#1a1a1a" font-weight="700">両ボタンを押す（審査員の指）</text>
-<text x="18" y="178" font-size="12.5" fill="#1a1a1a" font-weight="700">カットを割らない。物理ボタンと星が、1フレームの中でつながっていること。</text>
-</svg></div>
-    <p class="src">同じ操作を AI にやらせても、Ledger は光らない。その対比を続けて1カット入れる。</p>
-  </figure>
+<p class="src">奥では AI が「許可」を連打し、偽の星が増え続けている。手前の Ledger は星座を出したまま、一度も聞いてこない。</p></figure>
+<div class="note"><b>v2 からの訂正。</b>「Ledger の画面が唯一の光源」は撤回する。電子ペーパーは自己発光ではない可能性があるため、
+<b>斜めからの外光で紙のように見せる</b>案に差し替えた。実機で確認する（issue #5）。</div>
 </section>
 
 <section>
-  <h2><span class="no">03</span>0G を記録係にしない</h2>
-  <p class="msg">0G を「Ledger を起こすかどうかを決める頭脳」に置く。賞ページは記録だけの作品を対象外にしている。</p>
+<h2><span class="no">02</span>3つの丸</h2>
+<p class="msg">星1個は、3つそろったときだけ光る。その3つが、そのままスポンサー3社。</p>
+<figure><figcaption>図表2　星が光る条件と、それぞれが防いでいる偽造</figcaption>
+<div class="fig-scroll"><svg viewBox="0 0 760 210" role="img" aria-label="3つの丸">
+<circle cx="130" cy="76" r="30" fill="#173f66"/><text x="130" y="82" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">World</text>
+<circle cx="380" cy="76" r="30" fill="#173f66"/><text x="380" y="82" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">Ledger</text>
+<circle cx="630" cy="76" r="30" fill="#173f66"/><text x="630" y="82" font-size="13" fill="#fff" text-anchor="middle" font-weight="700">0G</text>
+<text x="130" y="130" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="700">人である</text>
+<text x="380" y="130" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="700">本人が押した</text>
+<text x="630" y="130" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="700">実際に使っている</text>
+<text x="130" y="150" font-size="11" fill="#555" text-anchor="middle">偽アカウントの量産を防ぐ</text>
+<text x="380" y="150" font-size="11" fill="#555" text-anchor="middle">PC の中の AI を防ぐ</text>
+<text x="630" y="150" font-size="11" fill="#555" text-anchor="middle">口だけの推薦を防ぐ</text>
+<line x1="20" y1="176" x2="740" y2="176" stroke="#d9d9d9"/>
+<text x="380" y="198" font-size="13" fill="#1a1a1a" text-anchor="middle" font-weight="700">3つ揃ったときだけ、星が1個光る</text>
+</svg></div>
+<p class="src">#7 で合意済み。World だけでは PC の中の AI が代わりに星を出せる。Ledger だけでは1人が鍵を1000個作れる。</p></figure>
+</section>
 
-  <figure>
-    <figcaption>図表4　0G の判定が、Ledger の3状態を決める</figcaption>
-    <div class="fig-scroll"><svg viewBox="0 0 760 250" role="img" aria-label="0Gの判定とLedgerの状態">
-<text x="8" y="16" font-size="11" fill="#8e8e8e">0G の判定</text>
-<rect x="8" y="26" width="232" height="26" fill="#e7e9ec"/><text x="124" y="44" font-size="12" fill="#1a1a1a" text-anchor="middle" font-weight="700">ふだん</text>
-<rect x="264" y="26" width="232" height="26" fill="#e7e9ec"/><text x="380" y="44" font-size="12" fill="#1a1a1a" text-anchor="middle" font-weight="700">大事</text>
-<rect x="520" y="26" width="232" height="26" fill="#173f66"/><text x="636" y="44" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="700">決定的 / 届かない</text>
-<path d="M124 56 L124 72 M118 66 L124 72 L130 66" stroke="#8e8e8e" stroke-width="1" fill="none"/>
-<path d="M380 56 L380 72 M374 66 L380 72 L386 66" stroke="#8e8e8e" stroke-width="1" fill="none"/>
-<path d="M636 56 L636 72 M630 66 L636 72 L642 66" stroke="#8e8e8e" stroke-width="1" fill="none"/>
-<rect x="8" y="82" width="232" height="86" rx="14" fill="#0d1014"/><rect x="24" y="96" width="158" height="58" fill="#15191f"/><circle cx="208" cy="110" r="6" fill="#ffffff" opacity="0.3"/><circle cx="208" cy="140" r="6" fill="#ffffff" opacity="0.3"/>
-<rect x="264" y="82" width="232" height="86" rx="14" fill="#0d1014"/><rect x="280" y="96" width="158" height="58" fill="#151b22"/><text x="292" y="113" font-size="8" fill="#8e8e8e" letter-spacing="1">KEY</text><text x="346" y="113" font-size="9" fill="#ffffff">openai:api_key</text><text x="292" y="125" font-size="8" fill="#8e8e8e" letter-spacing="1">TO</text><text x="346" y="125" font-size="9" fill="#ffffff">api.openai.com</text><text x="292" y="136" font-size="8" fill="#8e8e8e" letter-spacing="1">SCOPE</text><text x="346" y="136" font-size="9" fill="#ffffff">read</text><text x="292" y="148" font-size="8" fill="#8e8e8e" letter-spacing="1">UNTIL</text><text x="346" y="148" font-size="9" fill="#ffffff">11-30 09:00</text><circle cx="464" cy="110" r="6" fill="#ffffff" opacity="0.85"/><circle cx="464" cy="140" r="6" fill="#ffffff" opacity="0.85"/>
-<rect x="520" y="82" width="232" height="86" rx="14" fill="#0d1014"/><rect x="536" y="96" width="158" height="58" fill="#2a0f0b"/><text x="615" y="132" font-size="26" fill="#e26a55" font-weight="700" letter-spacing="2" text-anchor="middle">DENIED</text><circle cx="720" cy="110" r="6" fill="#e26a55" opacity="0.85"/><circle cx="720" cy="140" r="6" fill="#e26a55" opacity="0.85"/>
-<text x="8" y="192" font-size="12" fill="#1a1a1a" font-weight="700">暗いまま・自動で通る</text>
-<text x="264" y="192" font-size="12" fill="#1a1a1a" font-weight="700">光る・範囲4行・押せば通る</text>
-<text x="520" y="192" font-size="12" fill="#a33c2e" font-weight="700">止まる・人を呼ぶ</text>
-<text x="8" y="210" font-size="11" fill="#555">何も起きない（S3）</text>
-<text x="264" y="210" font-size="11" fill="#555">承認（S2）</text>
-<text x="520" y="210" font-size="11" fill="#555">拒否（S4）／0G 不達も同じ絵</text>
+<section>
+<h2><span class="no">03</span>Ledger の画面（#8 の統合）</h2>
+<p class="msg">押す瞬間を、PC の側だけでなく実機の側でも絵にする。</p>
+
+<div class="tbl"><table>
+<caption>表1　場面ごとの表示</caption>
+<thead><tr><th>場面</th><th>表示</th><th>何が伝わるか</th></tr></thead>
+<tbody>
+<tr><td><b>待機</b></td><td><b>「あなたの空」</b>＝自分の星座を白黒で。星が増えると線がつながる。「2 星」</td><td><b>何も聞いてこない。</b>でも生きている</td></tr>
+<tr><td><b>許可</b></td><td>「このスキルに鍵を使わせますか？」＋範囲4行。<b>長押しで署名</b>（離すと取り消し）</td><td>AI の1秒100回の連打と、<b>人の1回の長押し</b></td></tr>
+<tr><td><b>承認直後</b></td><td><b>★のハンコ</b>「星になりました」。同じ瞬間に奥の空に星が1つ増える</td><td>物理ボタンと星が直結している</td></tr>
+<tr><td><b>拒否</b></td><td><b>画面全体を白黒反転。</b>✕ と DENIED。宛先と操作に取り消し線</td><td>このボタンだけは押せない</td></tr>
+<tr><td><b>確かめる</b></td><td><b>何も出さない。</b>QR は空（画面A）の詳細に出す</td><td>Ledger の役は「範囲」と「拒否」だけ</td></tr>
+</tbody></table></div>
+
+<figure><figcaption>図表3　S2「生まれる」— 長押し → ハンコ → 星</figcaption>
+<div class="fig-scroll"><svg viewBox="0 0 760 230" role="img" aria-label="S2 長押しで星が生まれる">
+<rect x="0" y="0" width="760" height="230" fill="#f4f5f6"/>
+<rect x="14" y="20" width="226" height="88" rx="12" fill="#0d1014"/><rect x="26" y="31" width="163" height="65" fill="#f1efea"/><text x="35" y="44" font-size="9" fill="#111" font-weight="700">このスキルに鍵を使わせますか？</text><text x="35" y="55" font-size="8" fill="#666" letter-spacing="1">KEY</text><text x="75" y="55" font-size="9" fill="#111">openai:api_key</text><text x="35" y="64" font-size="8" fill="#666" letter-spacing="1">TO</text><text x="75" y="64" font-size="9" fill="#111">api.openai.com</text><text x="35" y="74" font-size="8" fill="#666" letter-spacing="1">SCOPE</text><text x="75" y="74" font-size="9" fill="#111">read</text><text x="35" y="83" font-size="8" fill="#666" letter-spacing="1">UNTIL</text><text x="75" y="83" font-size="9" fill="#111">11-30 09:00</text><rect x="26" y="97" width="163" height="6" fill="#ffffff" opacity="0.18"/><rect x="26" y="97" width="57" height="6" fill="#ffffff" opacity="0.85"/><circle cx="213" cy="48" r="6" fill="#ffffff" opacity="0.85"/><circle cx="213" cy="80" r="6" fill="#ffffff" opacity="0.85"/>
+<text x="14" y="124" font-size="11" fill="#1a1a1a" font-weight="700">1. 長押し（塗り替わる）</text>
+<path d="M248 64 L268 64 M262 59 L268 64 L262 69" stroke="#173f66" stroke-width="1.4" fill="none"/>
+<rect x="276" y="20" width="226" height="88" rx="12" fill="#0d1014"/><rect x="288" y="31" width="163" height="65" fill="#f1efea"/><circle cx="370" cy="61" r="17" fill="none" stroke="#111" stroke-width="1.6"/><text x="370" y="69" font-size="21" fill="#111" text-anchor="middle">★</text><text x="370" y="91" font-size="9" fill="#111" text-anchor="middle" font-weight="700">星になりました</text><circle cx="475" cy="48" r="6" fill="#ffffff" opacity="0.85"/><circle cx="475" cy="80" r="6" fill="#ffffff" opacity="0.85"/>
+<text x="276" y="124" font-size="11" fill="#1a1a1a" font-weight="700">2. ★のハンコが落ちる</text>
+<path d="M510 64 L530 64 M524 59 L530 64 L524 69" stroke="#173f66" stroke-width="1.4" fill="none"/>
+<rect x="538" y="20" width="210" height="88" fill="#12161c"/>
+<circle cx="643" cy="64" r="3.2" fill="#fff"/><circle cx="643" cy="64" r="9.5" fill="none" stroke="#fff" stroke-opacity="0.4"/>
+<circle cx="643" cy="64" r="18" fill="none" stroke="#fff" stroke-opacity="0.15"/>
+<text x="538" y="124" font-size="11" fill="#1a1a1a" font-weight="700">3. 同じ瞬間、奥の空に星が灯る</text>
+<line x1="14" y1="146" x2="748" y2="146" stroke="#d9d9d9"/>
+<text x="14" y="170" font-size="13" fill="#1a1a1a" font-weight="700">カットを割らない。3つは1フレームの中で続けて起きる。</text>
+<text x="14" y="192" font-size="11.5" fill="#555">AI の1秒100回の連打に対して、人の1回の長押し。同じことを AI にやらせても、画面は書き換わらない。</text>
+<text x="14" y="214" font-size="11.5" fill="#555">電子ペーパーの白黒反転のちらつきは消さない。ソフトの演出ではないことの証拠になる。</text>
+</svg></div></figure>
+
+<h3>拒否を、なぜ Ledger に出すのか</h3>
+<p>範囲外の要求は <b>Broker が止める</b>ので、本来 Ledger には届かない。
+それでも<b>拒否の事実を Ledger に通知として出す</b>（署名は求めない。✕と理由だけ）。</p>
+<div class="copy"><p class="jp">手元に出ない拒否は、見えない拒否。</p><p class="en">A refusal you can't see isn't a refusal.</p></div>
+
+<h3>落とす順番（自作アプリが間に合わない場合）</h3>
+<p><b>落とせない3つ：</b>①範囲が読める ②押さないと通らない ③拒否が手元に出る</p>
+<div class="fig-scroll"><div class="matrix" style="--mx-cols:2;--mx-label:88px">
+<div></div><div class="mx-h">中身</div><div class="mx-h">落とすもの</div>
+<div class="mx-label"><small>段 1</small>全部</div>
+<div class="mx-cell">星座＋長押し＋★ハンコ＋反転 DENIED</div><div class="mx-cell">—</div>
+<div class="mx-label"><small>段 2</small>自作アプリ</div>
+<div class="mx-cell">長押し＋★ハンコ＋反転 DENIED</div><div class="mx-cell">星座（待機は暗転でよい）</div>
+<div class="mx-label alt"><small>段 3</small>標準アプリ</div>
+<div class="mx-cell">範囲4行＋標準の承認。拒否は<b>「Ledger が一度も聞いてこない」</b>ことで見せる</div>
+<div class="mx-cell">長押し・ハンコ・反転</div>
+</div></div>
+<div class="note"><b>段3でも台本は壊れない。</b>字幕を1行差し替えるだけ：「Ledger は、この要求を<b>人に見せることすらしません</b>」。</div>
+</section>
+
+<section>
+<h2><span class="no">04</span>0G を記録係にしない</h2>
+<p class="msg">0G を「Ledger に聞かせるかどうかを決める頭脳」に置く。</p>
+<figure><figcaption>図表4　0G の判定が、Ledger の表示を決める</figcaption>
+<div class="fig-scroll"><svg viewBox="0 0 760 258" role="img" aria-label="0Gの判定とLedgerの表示">
+<text x="8" y="14" font-size="11" fill="#8e8e8e">0G の判定</text>
+<rect x="8" y="22" width="232" height="26" fill="#e7e9ec"/><text x="124" y="40" font-size="12" text-anchor="middle" font-weight="700" fill="#1a1a1a">ふだん</text>
+<rect x="264" y="22" width="232" height="26" fill="#e7e9ec"/><text x="380" y="40" font-size="12" text-anchor="middle" font-weight="700" fill="#1a1a1a">大事 / 決定的</text>
+<rect x="520" y="22" width="232" height="26" fill="#173f66"/><text x="636" y="40" font-size="12" text-anchor="middle" font-weight="700" fill="#fff">範囲外（Broker が拒否）</text>
+<path d="M124 52 L124 68 M118 62 L124 68 L130 62" stroke="#8e8e8e" fill="none"/>
+<path d="M380 52 L380 68 M374 62 L380 68 L386 62" stroke="#8e8e8e" fill="none"/>
+<path d="M636 52 L636 68 M630 62 L636 68 L642 62" stroke="#8e8e8e" fill="none"/>
+<rect x="8" y="78" width="232" height="92" rx="13" fill="#0d1014"/><rect x="21" y="90" width="167" height="68" fill="#f1efea"/><path d="M58 113 L88 105 L113 124" stroke="#111" stroke-width="0.9" fill="none" opacity="0.55"/><circle cx="58" cy="113" r="4.1" fill="#111"/><circle cx="88" cy="105" r="4.1" fill="#111"/><circle cx="113" cy="124" r="4.1" fill="#111"/><text x="31" y="153" font-size="10" fill="#111" opacity="0.75">あなたの空 — 2 星</text><circle cx="212" cy="107" r="6" fill="#ffffff" opacity="0.28"/><circle cx="212" cy="141" r="6" fill="#ffffff" opacity="0.28"/>
+<rect x="264" y="78" width="232" height="92" rx="13" fill="#0d1014"/><rect x="277" y="90" width="167" height="68" fill="#f1efea"/><text x="285" y="103" font-size="10" fill="#111" font-weight="700">このスキルに鍵を使わせますか？</text><text x="285" y="114" font-size="8" fill="#666" letter-spacing="1">KEY</text><text x="327" y="114" font-size="9" fill="#111">openai:api_key</text><text x="285" y="124" font-size="8" fill="#666" letter-spacing="1">TO</text><text x="327" y="124" font-size="9" fill="#111">api.openai.com</text><text x="285" y="134" font-size="8" fill="#666" letter-spacing="1">SCOPE</text><text x="327" y="134" font-size="9" fill="#111">read</text><text x="285" y="144" font-size="8" fill="#666" letter-spacing="1">UNTIL</text><text x="327" y="144" font-size="9" fill="#111">11-30 09:00</text><rect x="277" y="159" width="167" height="6" fill="#ffffff" opacity="0.18"/><rect x="277" y="159" width="104" height="6" fill="#ffffff" opacity="0.85"/><circle cx="468" cy="107" r="6" fill="#ffffff" opacity="0.85"/><circle cx="468" cy="141" r="6" fill="#ffffff" opacity="0.85"/>
+<rect x="520" y="78" width="232" height="92" rx="13" fill="#0d1014"/><rect x="533" y="90" width="167" height="68" fill="#0d1014"/><path d="M559 110 L580 131 M580 110 L559 131" stroke="#fff" stroke-width="2.2"/><text x="600" y="127" font-size="24" fill="#ffffff" font-weight="700" letter-spacing="2">DENIED</text><text x="541" y="151" font-size="8" fill="#ffffff" opacity="0.72" text-decoration="line-through">transfer → unknown.host</text><circle cx="724" cy="107" r="6" fill="#ffffff" opacity="0.85"/><circle cx="724" cy="141" r="6" fill="#ffffff" opacity="0.85"/>
+<text x="8" y="192" font-size="12" font-weight="700" fill="#1a1a1a">星座のまま・何も聞かない</text>
+<text x="264" y="192" font-size="12" font-weight="700" fill="#1a1a1a">範囲4行・長押しで署名</text>
+<text x="520" y="192" font-size="12" font-weight="700" fill="#a33c2e">白黒反転・押せない</text>
+<text x="8" y="210" font-size="11" fill="#555">自動で通る（S3）／0G 不達はここに来ない</text>
+<text x="264" y="210" font-size="11" fill="#555">承認（S2）。0G 不達もこの画面で止める</text>
+<text x="520" y="210" font-size="11" fill="#555">拒否の通知（S4）。署名は求めない</text>
 <line x1="8" y1="228" x2="752" y2="228" stroke="#d9d9d9"/>
-<text x="8" y="246" font-size="13" fill="#1a1a1a" font-weight="700">0G が重さを決める。Ledger が最後に止める。</text>
+<text x="8" y="246" font-size="13" font-weight="700" fill="#1a1a1a">0G が重さを決める。Ledger が最後に止める。</text>
 </svg></div>
-    <p class="src">画面の端に <code>0G: 決定的（req_8f2a…）</code> が出た<b>ワンテンポ後</b>に Ledger が光る。順番が見えることが、0G が判断の流れの中にいる証拠になる。request ID はそのまま系譜に入る。</p>
-  </figure>
-
-  <div class="copy">
-    <p class="jp">判断はクラウド、拒否は手の中。</p>
-    <p class="en">Judgment in the cloud. Refusal in your hand.</p>
-  </div>
+<p class="src">画面の端に <code>0G: 決定的（req_8f2a…）</code> が出た<b>ワンテンポ後</b>に Ledger が書き換わる。順番が画で見えることが、0G が判断の流れの中にいる証拠になる。</p></figure>
+<div class="copy"><p class="jp">判断はクラウド、拒否は手の中。</p><p class="en">Judgment in the cloud. Refusal in your hand.</p></div>
 </section>
 
 <section>
-  <h2><span class="no">04</span>3分の動画（0:00–2:55）</h2>
-  <p class="msg">山は3つ。0:14 星が消える、0:58 押すと星が生まれる、1:42 実機の DENIED。</p>
-
-  <div class="fig-scroll"><div class="chevrons">
-    <div class="chev">0:00 沈黙<small>S1</small></div>
-    <div class="chev on">0:14 消える<small>★1</small></div>
-    <div class="chev on">0:58 生まれる<small>★2 / S2</small></div>
-    <div class="chev on">1:42 拒否<small>★3 / S4</small></div>
-    <div class="chev">2:32 手の中<small>★5 / S5</small></div>
-  </div></div>
-
-  <div class="tbl"><table>
-    <caption>表2　絵コンテ（0G は3分未満が要件。2:55 で作る）</caption>
-    <thead><tr><th>時間</th><th>ショット</th><th>起きること</th><th>字幕</th></tr></thead>
-    <tbody>
-      <tr><td class="num">0:00</td><td><b>S1 沈黙</b></td><td>奥の画面で星が増殖。値札 $0.0027。AI が「許可」を連打。<b>手前の Ledger は暗い</b></td><td>星は買える。1個 $0.0027</td></tr>
-      <tr><td class="num">0:14</td><td>A（寄り）</td><td><b>満天が0.6秒で消え、1つだけ残る</b></td><td><b>星の数ではなく、誰の星か</b></td></tr>
-      <tr><td class="num">0:38</td><td>A（詳細）</td><td>星を開く。<b>3つの丸が順に点灯</b></td><td>星1個は、3つそろったときだけ光る</td></tr>
-      <tr><td class="num">0:58</td><td><b>S2 生まれる</b></td><td>0G が「大事」と判定 → <b>Ledger が光る</b> → 範囲4行 → 審査員が押す → <b>奥の画面に星が灯る。</b>AI にやらせても光らない</td><td>勧めてはいない。使っているところを見せているだけ</td></tr>
-      <tr><td class="num">1:28</td><td><b>S3 ふだん</b></td><td>数日経つ。<code>0G: ふだん</code>が流れ続ける。<b>Ledger は暗いまま</b></td><td>ふだんは、何もしなくていい</td></tr>
-      <tr><td class="num">1:42</td><td><b>S4 拒否</b></td><td>範囲外の要求。<code>0G: 決定的</code> → ワンテンポ後、<b class="neg">Ledger が赤く DENIED</b>。AI は連打し続ける。<b>押している指がない</b></td><td><b>このボタンだけは押せない</b></td></tr>
-      <tr><td class="num">2:12</td><td>A（引き）</td><td>その版の星が<b>一斉に</b>消える。審査員の鍵も止まっている</td><td>同じ船に乗っている人の星</td></tr>
-      <tr><td class="num">2:32</td><td><b>S5 手の中</b></td><td>QR → 系譜。許可・使用・返却・<b>0G の request ID</b>・違反が1本で並ぶ</td><td>誰にも消せない</td></tr>
-      <tr class="total"><td class="num">2:50</td><td>S1 の構図</td><td>Ledger だけが光って終わる</td><td>判断はクラウド、拒否は手の中</td></tr>
-    </tbody>
-  </table></div>
-
-  <div class="note"><b>ワンカットの原則。</b>0:58 以降、<b>Ledger と PC 画面は同じ絵の中に同時に居る。</b>
-  AI が届く側と届かない側が1フレームで見えていることが、この作品の主張そのもの。</div>
-
-  <h3>決勝4分（＋質疑3分）との差分</h3>
-  <p>冒頭に15秒足して、<b>審査員に Ledger を手渡す。</b>2:55 のあと、質疑に入る前の1行：
-  「いま押していただいたのが、AI には押せないボタンです」。</p>
+<h2><span class="no">05</span>3分の動画（0:00–2:55）</h2>
+<p class="msg">山は3つ。0:14 星が消える、0:58 長押しで星が生まれる、1:42 白黒反転。</p>
+<div class="fig-scroll"><div class="chevrons">
+<div class="chev">0:00 沈黙<small>S1</small></div>
+<div class="chev on">0:14 消える<small>★1</small></div>
+<div class="chev on">0:58 生まれる<small>★2 / S2</small></div>
+<div class="chev on">1:42 拒否<small>★3 / S4</small></div>
+<div class="chev">2:32 手の中<small>★5 / S5</small></div>
+</div></div>
+<div class="tbl"><table>
+<caption>表2　絵コンテ（0G は3分未満が要件。2:55 で作る）</caption>
+<thead><tr><th>時間</th><th>ショット</th><th>起きること</th><th>字幕</th></tr></thead>
+<tbody>
+<tr><td class="num">0:00</td><td><b>S1 沈黙</b></td><td>奥の黒い空で星が増殖（$0.0027）。AI が連打。<b>手前は白い紙に2個</b></td><td>星は買える。1個 $0.0027</td></tr>
+<tr><td class="num">0:14</td><td>A（寄り）</td><td><b>満天が0.6秒で消え、1つ残る</b></td><td><b>星の数ではなく、誰の星か</b></td></tr>
+<tr><td class="num">0:38</td><td>A（詳細）</td><td><b>3つの丸が順に点灯</b></td><td>星1個は、3つそろったときだけ光る</td></tr>
+<tr><td class="num">0:58</td><td><b>S2 生まれる</b></td><td><code>0G: 大事</code> → 範囲4行 → <b>長押し</b> → <b>★ハンコ</b> → 奥の空に星が灯る。AI にやらせても書き換わらない</td><td>勧めてはいない。使っているところを見せているだけ</td></tr>
+<tr><td class="num">1:28</td><td><b>S3 ふだん</b></td><td>数日経つ。<code>0G: ふだん</code>。<b>星座のまま</b></td><td>ふだんは、何も聞いてこない</td></tr>
+<tr><td class="num">1:42</td><td><b>S4 拒否</b></td><td>範囲外の要求。<b>白黒反転</b>して ✕ DENIED。AI は連打し続ける。<b>指がない</b></td><td><b>このボタンだけは押せない</b></td></tr>
+<tr><td class="num">2:12</td><td>A（引き）</td><td>その版の星が<b>一斉に</b>消える。審査員の鍵も止まっている</td><td>同じ船に乗っている人の星</td></tr>
+<tr><td class="num">2:32</td><td><b>S5 手の中</b></td><td>A の QR → 系譜。許可・使用・返却・<b>0G の request ID</b>・違反が1本</td><td>誰にも消せない</td></tr>
+<tr class="total"><td class="num">2:50</td><td>S1 の構図</td><td>Ledger の星座が1つ増えて終わる</td><td>判断はクラウド、拒否は手の中</td></tr>
+</tbody></table></div>
+<div class="note"><b>ワンカットの原則。</b>0:58 以降、Ledger と PC 画面は同じ絵の中に同時に居る。<br>
+<b>決勝4分との差分：</b>冒頭に15秒足して審査員に Ledger を手渡す。締めの1行「いま長押ししていただいたのが、AI には押せないボタンです」。</div>
 </section>
 
 <section>
-  <h2><span class="no">05</span>キャッチコピー</h2>
-  <p class="msg">芯は1本、締めは1本。残りは場面ごとの字幕として使う。</p>
-  <div class="copy">
-    <p class="jp">星の数ではなく、誰の星か。</p>
-    <p class="en">Not how many stars. Whose.</p>
-  </div>
-  <div class="tbl"><table>
-    <thead><tr><th>場面</th><th>日本語</th><th>英語</th></tr></thead>
-    <tbody>
-      <tr><td>問題</td><td>星は買える。1個 $0.0027</td><td>Stars are for sale. $0.0027 each.</td></tr>
-      <tr><td>答え</td><td>AI は1秒に100回「許可」を押せる。このボタンだけは押せない</td><td>An AI can press "Allow" 100 times a second. It can't press this one.</td></tr>
-      <tr><td>3つの丸</td><td>星1個は、3つそろったときだけ光る</td><td>One star. Three things that must all be true.</td></tr>
-      <tr><td>0G</td><td>0G が重さを決める。Ledger が最後に止める</td><td>0G decides how much it matters. The Ledger decides whether it happens.</td></tr>
-      <tr><td>星の中身</td><td>勧めてはいない。使っているところを、見せているだけ</td><td>I'm not recommending it. I'm showing you what I actually use.</td></tr>
-      <tr><td>波及</td><td>同じ船に乗っている人の星</td><td>Stars from people in the same boat.</td></tr>
-      <tr><td>プライバシー</td><td>誰を知っているかは、ここから出ない</td><td>Who you know never leaves your device.</td></tr>
-      <tr class="total"><td>締め</td><td>買える星を、買えない星に</td><td>Stars you can't buy.</td></tr>
-    </tbody>
-  </table></div>
+<h2><span class="no">06</span>キャッチコピー</h2>
+<p class="msg">芯は1本、締めは1本。残りは場面ごとの字幕。</p>
+<div class="copy"><p class="jp">星の数ではなく、誰の星か。</p><p class="en">Not how many stars. Whose.</p></div>
+<div class="tbl"><table>
+<thead><tr><th>場面</th><th>日本語</th><th>英語</th></tr></thead>
+<tbody>
+<tr><td>問題</td><td>星は買える。1個 $0.0027</td><td>Stars are for sale. $0.0027 each.</td></tr>
+<tr><td>答え</td><td>AI は1秒に100回「許可」を押せる。このボタンだけは押せない</td><td>An AI can press "Allow" 100 times a second. It can't press this one.</td></tr>
+<tr><td>3つの丸</td><td>星1個は、3つそろったときだけ光る</td><td>One star. Three things that must all be true.</td></tr>
+<tr><td>0G</td><td>0G が重さを決める。Ledger が最後に止める</td><td>0G decides how much it matters. The Ledger decides whether it happens.</td></tr>
+<tr><td><b>反転（v3）</b></td><td>奥の黒い空に1,284個。手元の白い紙に2個</td><td>1,284 stars on the screen. Two in your hand.</td></tr>
+<tr><td><b>拒否（v3）</b></td><td>手元に出ない拒否は、見えない拒否</td><td>A refusal you can't see isn't a refusal.</td></tr>
+<tr><td>星の中身</td><td>勧めてはいない。使っているところを、見せているだけ</td><td>I'm not recommending it. I'm showing you what I actually use.</td></tr>
+<tr><td>波及</td><td>同じ船に乗っている人の星</td><td>Stars from people in the same boat.</td></tr>
+<tr><td>プライバシー</td><td>誰を知っているかは、ここから出ない</td><td>Who you know never leaves your device.</td></tr>
+<tr class="total"><td>締め</td><td>買える星を、買えない星に</td><td>Stars you can't buy.</td></tr>
+</tbody></table></div>
 </section>
 
 <section>
-  <h2><span class="no">06</span>外れても壊れて見えない設計</h2>
-  <p class="msg">0G 不達が、そのまま一番言いたい絵（Ledger が光る）になる。事故が実演に化ける形にしてある。</p>
-  <div class="tbl"><table>
-    <thead><tr><th>起きうること</th><th>当日の見え方</th><th>台本の1行</th></tr></thead>
-    <tbody>
-      <tr><td><b>0G に届かない・遅い</b></td><td><b>Ledger が光る。</b>自動では通さない（＝仕様どおりの安全停止）</td><td>「届かないときは、通さずに人を呼びます」</td></tr>
-      <tr><td>World が会場では模擬</td><td>設計上の主張として口で言う（賞ページも mock 前提）</td><td>「防いでいるのは、偽アカウントの量産です」</td></tr>
-      <tr><td>Ledger に範囲が出ない（#5）</td><td>範囲を1行の文字列に畳む</td><td>変えない。<b>範囲が読めること自体は落とさない</b></td></tr>
-      <tr><td>Anon-RPC が通らない（#6）</td><td>読み取りはトグルに降格。EF は CROPS 一本</td><td>動画からは落とす</td></tr>
-    </tbody>
-  </table></div>
+<h2><span class="no">07</span>外れても壊れて見えない設計</h2>
+<p class="msg">0G 不達も、自作アプリの不発も、字幕1行で実演に化ける形にしてある。</p>
+<div class="tbl"><table>
+<thead><tr><th>起きうること</th><th>当日の見え方</th><th>台本の1行</th></tr></thead>
+<tbody>
+<tr><td><b>0G に届かない・遅い</b></td><td><b>Ledger が書き換わる。</b>自動では通さない（安全停止）</td><td>「届かないときは、通さずに人を呼びます」</td></tr>
+<tr><td><b>自作アプリが間に合わない</b></td><td><b>段2 → 段3 に落とす。</b>台本は壊れない</td><td>「Ledger は、この要求を人に見せることすらしません」</td></tr>
+<tr><td>World が会場では模擬</td><td>設計上の主張として口で言う</td><td>「防いでいるのは、偽アカウントの量産です」</td></tr>
+<tr><td>Ledger に範囲が出ない（#5）</td><td>範囲を1行の文字列に畳む</td><td><b>範囲が読めること自体は落とさない</b></td></tr>
+<tr><td>Anon-RPC が通らない（#6）</td><td>読み取りはトグルに降格。EF は CROPS 一本</td><td>動画からは落とす</td></tr>
+</tbody></table></div>
 </section>
 
 <section>
-  <h2><span class="no">07</span>次のアクション</h2>
-  <p class="msg">映えの中心が Ledger に移ったので、issue #5 の優先度が上がった。</p>
-  <div class="tbl"><table>
-    <thead><tr><th>やること</th><th>担当</th><th>いつまで</th><th>通過の目安</th></tr></thead>
-    <tbody>
-      <tr><td>Ledger で許可に署名（#5）<b>← 映えの中心</b></td><td>minta</td><td>11/6 午前</td><td>実機の写真1枚に範囲4行が読める</td></tr>
-      <tr><td>Anon-RPC で 0G を読む（#6）</td><td>minta</td><td>11/6 午前</td><td>blockNumber と logs 件数</td></tr>
-      <tr><td>0G の重さ判定（ふだん／大事／決定的）</td><td>kou</td><td>11/6 日中</td><td>判定の後に Ledger が光る順番が見える</td></tr>
-      <tr><td>星空の画面（★1・★4）</td><td>kou</td><td>11/6 日中</td><td>トグルで満天→1個が動く</td></tr>
-      <tr class="total"><td>撮影（S1〜S5・2:55）</td><td>2人</td><td>11/7 04:00 IST</td><td>提出まで5時間の余裕を残す</td></tr>
-    </tbody>
-  </table></div>
+<h2><span class="no">08</span>次のアクション</h2>
+<p class="msg">#5 に確認項目が3つ増えた。自作アプリが可能かで、段1〜段3のどれで撮るかが決まる。</p>
+<div class="tbl"><table>
+<thead><tr><th>やること</th><th>担当</th><th>いつまで</th><th>通過の目安</th></tr></thead>
+<tbody>
+<tr><td>Ledger の署名（#5）＋<b>自作アプリ可否・電子ペーパーの自己発光・長押し</b></td><td>minta</td><td>11/6 午前</td><td>実機の写真1枚＋段1/2/3 のどれかが決まる</td></tr>
+<tr><td>Anon-RPC で 0G を読む（#6）</td><td>minta</td><td>11/6 午前</td><td>blockNumber と logs 件数</td></tr>
+<tr><td>0G の重さ判定（ふだん／大事／決定的）</td><td>kou</td><td>11/6 日中</td><td>判定の後に Ledger が書き換わる順番が見える</td></tr>
+<tr><td>星空の画面（★1・★4）＋ QR</td><td>kou</td><td>11/6 日中</td><td>トグルで満天→1個が動く</td></tr>
+<tr class="total"><td>撮影（S1〜S5・2:55）</td><td>2人</td><td>11/7 04:00 IST</td><td>提出まで5時間の余裕を残す</td></tr>
+</tbody></table></div>
 </section>
 
 <footer class="doc-footer">
-  <span>画面とシーン v2 ／ ideation/2026-11-06-storyboard.md</span>
-  <span>出所: minta-proposal.md（PR #4・採用）／ decisions.md ／ 0G・World・EF の賞ページ</span>
+<span>画面とシーン v3（#8 統合）／ ideation/2026-11-06-storyboard.md</span>
+<span>出所: issue #8（minta）／ minta-proposal.md（PR #4）／ decisions.md ／ 0G・World・EF の賞ページ</span>
 </footer>
-
 </div></body></html>

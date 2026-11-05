@@ -144,8 +144,8 @@ def gone():
 
 FRAMES = {
     "flame_asleep": asleep,
-    "flame_awake_a": lambda: awake(-0.10),
-    "flame_awake_b": lambda: awake(0.10),
+    "flame_awake_a": lambda: awake(-0.06),
+    "flame_awake_b": lambda: awake(0.06),
     "flame_happy": happy,
     "flame_guard": guard,
     "flame_gone": gone,

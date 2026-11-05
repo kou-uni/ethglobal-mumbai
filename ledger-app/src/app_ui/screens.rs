@@ -41,7 +41,11 @@ pub enum Choice {
 
 /// The APDU status sent to a host that talks while a screen is waiting for the person.
 const SW_BUSY: u16 = 0x6FAA;
-const TICK_MS: u32 = 300;
+/// One tick of the screen timer. E Ink needs time to settle between frames:
+/// redrawing faster than this leaves the previous frame showing through.
+const TICK_MS: u32 = 450;
+/// Frames in the wake-up animation after a tap: wake, lean, lean back, then sleep.
+const WIGGLE_FRAMES: u8 = 4;
 
 static mut LAYOUT: *mut nbgl_layout_t = null_mut();
 static mut ICON: MaybeUninit<nbgl_icon_details_t> = MaybeUninit::uninit();
@@ -127,6 +131,15 @@ unsafe fn finish(mode: nbgl_refresh_mode_t) {
     nbgl_refreshSpecial(mode);
 }
 
+/// Clears the panel to white before the next screen is drawn. Used after a
+/// screen that leaves a strong afterimage (the black BLOCKED screen, and the
+/// fast refreshes of the hold button), so the next screen starts from clean paper.
+unsafe fn wipe() {
+    begin(false, None);
+    nbgl_layoutDraw(LAYOUT);
+    nbgl_refreshSpecial(INIT_REFRESH);
+}
+
 /// Runs the device's event loop until the person makes a choice. A host that
 /// sends a command meanwhile is told the device is busy; it cannot answer for them.
 fn wait(comm: &mut Comm) -> Choice {
@@ -189,7 +202,7 @@ unsafe extern "C" fn on_idle_tick() {
         WIGGLE_LEFT -= 1;
         WIGGLE_STEP = WIGGLE_STEP.wrapping_add(1);
         let glyph = if WIGGLE_STEP % 2 == 0 { AWAKE_A } else { AWAKE_B };
-        draw_idle(&glyph, c"Hm? I'm here.".as_ptr(), true, BLACK_AND_WHITE_FAST_REFRESH);
+        draw_idle(&glyph, c"Hm? I'm here.".as_ptr(), true, BLACK_AND_WHITE_REFRESH);
     } else if WIGGLE_LEFT == 1 {
         WIGGLE_LEFT = 0;
         draw_idle(&ASLEEP, c"All quiet.".as_ptr(), false, FULL_COLOR_CLEAN_REFRESH);
@@ -202,9 +215,14 @@ unsafe extern "C" fn on_idle_action(token: c_int, _index: u8) {
     match token as u8 {
         T_LEFT => ledger_device_sdk::exit_app(0),
         T_TAP => {
-            WIGGLE_LEFT = 6;
+            // A tap while already awake does nothing: restarting the animation
+            // would stack half-drawn frames on top of each other.
+            if WIGGLE_LEFT > 0 {
+                return;
+            }
+            WIGGLE_LEFT = WIGGLE_FRAMES;
             WIGGLE_STEP = 0;
-            draw_idle(&AWAKE_A, c"Hm? I'm here.".as_ptr(), true, BLACK_AND_WHITE_FAST_REFRESH);
+            draw_idle(&AWAKE_A, c"Hm? I'm here.".as_ptr(), true, BLACK_AND_WHITE_REFRESH);
         }
         _ => {}
     }
@@ -271,11 +289,12 @@ pub fn lit(comm: &mut Comm, summary: &str) {
     let summary_c = CString::new(summary).unwrap_or_default();
     unsafe {
         LIT = LIT.saturating_add(1);
+        wipe();
         begin(true, Some(on_tick));
         center(&HAPPY, c"A light is lit.".as_ptr(), summary_c.as_ptr());
         finish(FULL_COLOR_CLEAN_REFRESH);
     }
-    show_for(comm, 10);
+    show_for(comm, 7);
 }
 
 /// The person said no: nothing was signed.
@@ -285,7 +304,7 @@ pub fn not_lit(comm: &mut Comm) {
         center(&ASLEEP, c"Nothing was signed.".as_ptr(), c"The skill did not get the key.".as_ptr());
         finish(FULL_COLOR_CLEAN_REFRESH);
     }
-    show_for(comm, 8);
+    show_for(comm, 6);
 }
 
 /// A request outside the range was stopped. Black screen, so it cannot be
@@ -307,6 +326,7 @@ pub fn blocked(comm: &mut Comm, what: &str) {
         finish(FULL_COLOR_CLEAN_REFRESH);
     }
     wait(comm);
+    unsafe { wipe() };
 }
 
 /// The skill changed after it was allowed, so its light went out.

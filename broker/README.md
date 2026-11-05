@@ -5,19 +5,29 @@
 スキルは鍵を受け取らない。`use` を投げるだけ。Broker は **人が署名した範囲**と見比べ、
 外れていれば実行せずに止め、**止めたこと自体を証拠ごと残す**。
 
+**範囲の中なら、次は重さを 0G に聞く。** 重いものは、その場で押された使い切りの許可でしか通さない。
+**0G に届かなければ、判断を作らずに止まる**（safe-stop）。
+
 ```
-スキル ──use──▶ Broker ──範囲チェック──▶ 外部 API
-                   │                        │
-                   └──── 系譜（追記のみ）◀──┘
+スキル ──use──▶ Broker ──範囲チェック──▶ 0G Private Computer（TeeML）
+                   │          │                    │ 重さ（ふだん／大事／決定的）
+                   │          └──▶ 外部 API ◀──────┘
+                   └──── 系譜（追記のみ）──▶ 0G Storage
 ```
 
 ## 1分で動かす
 
 ```bash
 npm install
-npm test                       # 19 件
-node src/server.js &           # http://127.0.0.1:8787
-node demo.mjs                  # 通る2件／刻む5件／刻まない2件／連打100本
+npm test                       # 32 件
+
+# 本番：0G に本当に聞く（pc.0g.ai の API キーが要る）
+ZG_API_KEY=sk-… node src/server.js &
+
+# 開発：0G を呼ばない【模擬】。記録と画面に「模擬」と出る。**撮影・提出では使わない**
+ZG_OFFLINE=1 node src/server.js &
+
+node demo.mjs                  # 通る／刻む／止まる／一押しが要る／root hash
 ```
 
 ## HTTP
@@ -28,9 +38,39 @@ node demo.mjs                  # 通る2件／刻む5件／刻まない2件／�
 | `GET /trace/:thread` | 1回の使用に紐づく記録。**QR はここを指す** |
 | `POST /lines` | permit → 端末に出る4行。画面とハッシュを別経路にしないための確認用 |
 | `POST /skill-message` | `{permit, request}` → スキルが署名すべき文字列 |
-| `GET /health` | |
+| `POST /seal` | `{thread}` → 系譜を 0G Storage へ。`rootHash` と `tx` を返す |
+| `GET /zg/balance` | 0G の残高（credits が減るのを画面に出すため） |
+| `GET /health` | 0G の宛先・モデル・鍵の有無・模擬かどうか |
 
-`request` は `{method, url, keyRef}`。`keyRef` は `permit.key` と一致していなければならない。
+`request` は `{method, url, keyRef, body?}`。`keyRef` は `permit.key` と一致していなければならない。
+返る `decision` は `ALLOWED` / `DENIED`(403) / `NEEDS_PRESS`(409) / `STOPPED`(503) の4つ。
+
+## 0G（ここが判断ループ）
+
+| | |
+|---|---|
+| **重さを決める** | `src/weigh.js`。`0gm-1.0-35b-a3b`（**TeeML・`tee_attested: true`・TDX / dstack**【実測 2026-11-06】） |
+| **渡すもの** | 端末に出る4行 ＋ 操作 ＋ **要求の本文**。**鍵の平文は渡さない** |
+| **なぜ 0G か** | **中身を読まないと重さは決まらない。その中身を、我々にも見せずに読ませられるのは封印された推論だけ** |
+| **request ID** | 応答の `x-request-id`（無ければ body の `id`）。`ALLOWED` / `NEEDS_PRESS` / `STOPPED` の記録に残る |
+| **効き目** | `src/tier.js`。`決定的` は立っている許可では通さない（`NEEDS_PRESS`）。**0G の答えで結果が変わる** |
+| **届かないとき** | **判断を作らない。** `STOPPED` ＋ `safeStop: true`。既定値で通すこともルールで代用することもしない |
+| **エピソードログ** | `src/episode.js`。`POST /seal` で 0G Storage（Log 層）へ。`rootHash` と `tx` を返す |
+
+```bash
+ZG_API_KEY=sk-…         # pc.0g.ai（無いと全部 STOPPED。黙って通さない）
+ZG_PRIVATE_KEY=0x…      # 0G Galileo の試験鍵。/seal の tx を出す
+ZG_MODEL=0gm-1.0-35b-a3b
+ZG_ESCALATE=決定的       # この段から「その場の一押し」を要る
+ZG_OFFLINE=1            # 【模擬】0G を呼ばない。記録に simulated: true が残る
+```
+
+**safe-stop を見る:**
+
+```bash
+ZG_API_KEY=sk-dummy ZG_ENDPOINT=https://127.0.0.1:1/v1 node src/server.js &
+node demo.mjs   # 範囲の中でも STOPPED。実行もしないし、回数も減らない
+```
 
 ## 2つの署名
 
@@ -73,7 +113,9 @@ node demo.mjs                  # 通る2件／刻む5件／刻まない2件／�
 
 ## まだ載っていないもの（黙って良く見せない）
 
-- **0G Storage** — 系譜はいまローカルの JSONL（`data/ledger.jsonl`）。`store.js` の `append` だけを差し替える
+- **0G Storage は手で封をする。** 記録は常にローカルの JSONL（`data/ledger.jsonl`）に追記し、
+  `POST /seal` を呼んだ分だけ 0G Storage に上がる。**毎回は上げていない**（Galileo の faucet が 0.1 0G/日）
+- **`ZG_PRIVATE_KEY` が無いと root hash だけ出て、`uploaded: false` になる。** 置いたことにはしない
 - **World** — 人間証明から星へ。未接続
 - **Ledger 実機** — `demo.mjs` は試験鍵で署名している。実機は `spec/permit-signature.md` の JSON 1本で入る
 - **版の照合** — `version` は見ていない。`VERSION_CHANGED` と星の消灯は未実装（issue #14 穴3）

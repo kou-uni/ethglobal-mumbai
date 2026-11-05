@@ -38,11 +38,16 @@ const sign = (permit, who = holder) =>
 
 const req = (over = {}) => ({ method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY, ...over })
 
+/** 試験では 0G を呼ばない。既定は「ふだん」を返す替え玉（本物は test/zg.test.js） */
+const fakeWeigh = (tier = 'ふだん') => async () => ({
+  ok: true, reachable: true, tier, reason: '試験', requestId: 'req_test', model: 'fake', ms: 1, usage: null,
+})
+
 /** 既定では、スキルの署名も正しく付けて投げる */
-async function run(permit, request = req(), { signer = holder, skillKey = skill, sign: withSkill = true } = {}) {
+async function run(permit, request = req(), { signer = holder, skillKey = skill, sign: withSkill = true, weigh = fakeWeigh() } = {}) {
   const body = { permit, signature: await sign(permit, signer), request }
   if (withSkill) body.skillSignature = await skillKey.signMessage({ message: skillMessage(requestHash(permit, request)) })
-  return use(body)
+  return use(body, { weigh })
 }
 
 describe('範囲の中なら通る', () => {

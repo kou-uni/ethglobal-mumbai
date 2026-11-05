@@ -19,19 +19,38 @@ const signature = await me.signTypedData({ domain: DOMAIN, types: TYPES, primary
 console.log('\n── 端末に出る4行（これと同じ値から32バイトが作られる） ──')
 console.log(lines(permit).map((l) => '  ' + l).join('\n'))
 
-const call = async (label, request, { signSkill = true } = {}) => {
-  const body = { permit, signature, request }
-  if (signSkill) body.skillSignature = await skill.signMessage({ message: skillMessage(requestHash(permit, request)) })
+const TAG = {
+  ALLOWED: '\x1b[32mALLOWED   \x1b[0m',
+  DENIED: '\x1b[31mDENIED    \x1b[0m',
+  STOPPED: '\x1b[35mSTOPPED   \x1b[0m',
+  NEEDS_PRESS: '\x1b[36mNEEDS_PRESS\x1b[0m',
+}
+
+/** 0G が何と言ったか。**模擬のときは模擬と出す。** */
+const zgOf = (b) => {
+  if (!b.zg) return ''
+  if (b.zg.error) return `\x1b[35m0G: ${b.zg.error}\x1b[0m`
+  const mark = b.zg.simulated ? '\x1b[33m【模擬】\x1b[0m' : ''
+  const id = b.zg.requestId ? ` / ${b.zg.requestId}` : ''
+  return `${mark}0G: ${b.zg.tier}${id}`
+}
+
+const call = async (label, request, { signSkill = true, p = permit, sig = signature } = {}) => {
+  const body = { permit: p, signature: sig, request }
+  if (signSkill) body.skillSignature = await skill.signMessage({ message: skillMessage(requestHash(p, request)) })
   const b = await (await fetch(`${BASE}/use`, {
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
   })).json()
-  const tag = b.decision === 'ALLOWED' ? '\x1b[32mALLOWED\x1b[0m' : '\x1b[31mDENIED \x1b[0m'
   const tail = b.decision === 'ALLOWED'
-    ? `残り ${b.remaining}`
-    : `${b.reason.padEnd(18)} ${b.violation ? '\x1b[33m違反として刻む\x1b[0m' : '刻まない'}`
-  console.log(`  ${tag} ${label}  ${tail}`)
+    ? `残り ${b.remaining}  ${zgOf(b)}`
+    : b.decision === 'DENIED'
+      ? `${b.reason.padEnd(18)} ${b.violation ? '\x1b[33m違反として刻む\x1b[0m' : '刻まない'}`
+      : `${(b.message ?? b.reason).padEnd(18)} ${zgOf(b)}`
+  console.log(`  ${TAG[b.decision] ?? b.decision} ${label}  ${tail}`)
   return b
 }
+
+const sign = (p) => me.signTypedData({ domain: DOMAIN, types: TYPES, primaryType: 'Permit', message: normalize(p) })
 
 console.log('\n── 範囲の中 ──')
 const ok = await call('POST api.stripe.com/v1/charges', { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY })
@@ -58,6 +77,21 @@ const outs = await Promise.all(Array.from({ length: 100 }, () => fetch(`${BASE}/
   body: JSON.stringify({ permit: p2, signature: sig2, request: burst, skillSignature: ss2 }),
 }).then((r) => r.json())))
 console.log(`  maxCalls=3 に 100 本同時 → 通ったのは ${outs.filter((o) => o.decision === 'ALLOWED').length} 本`)
+
+console.log('\n── 0G が重さを決める（判断ループの中）──')
+const heavy = { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY,
+  body: JSON.stringify({ amount: 480000, currency: 'usd', transfer_destination: 'acct_unknown' }) }
+const standing = { ...permit, nonce: Date.now() + 7, maxCalls: 5 }
+const press = { ...permit, nonce: Date.now() + 8, maxCalls: 1 }
+await call('重い要求を、立っている許可で', heavy, { p: standing, sig: await sign(standing) })
+await call('同じ要求を、その場の一押しで', heavy, { p: press, sig: await sign(press) })
+
+const seal = await (await fetch(`${BASE}/seal`, {
+  method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ thread: ok.thread }),
+})).json()
+console.log('\n── 0G Storage（エピソードログ）──')
+console.log(`  root  ${seal.rootHash ?? '—'}`)
+console.log(seal.uploaded ? `  tx    ${seal.tx}\n  ${seal.url}` : `  \x1b[33m置いていない: ${seal.reason}\x1b[0m`)
 
 const trace = await (await fetch(`${BASE}/trace/${ok.thread}`)).json()
 console.log(`\n── 系譜（QR はここを指す） ──\n  ${BASE}/trace/${ok.thread}`)

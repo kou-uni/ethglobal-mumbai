@@ -1,4 +1,4 @@
-// Hoshi Broker — use → 範囲チェック → 代理実行 → 系譜。
+// Tomoshibi Broker — use → 範囲チェック → 代理実行 → 系譜。
 // ここは信頼点。本番は TEE に載せる（今回は載せていない。README に明記）。
 import { createServer } from 'node:http'
 import { check, REASONS } from './scope.js'

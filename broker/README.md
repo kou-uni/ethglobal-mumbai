@@ -1,4 +1,4 @@
-# Hoshi Broker
+# Tomoshibi Broker
 
 **AI には押せないボタンを、鍵の前に1つ置く。**
 
@@ -37,7 +37,7 @@ node demo.mjs                  # 通る2件／刻む5件／刻まない2件／�
 | | 誰の鍵 | 何のため |
 |---|---|---|
 | `signature` | **人**（Ledger） | 範囲を許す。EIP-712。[`../spec/permit-signature.md`](../spec/permit-signature.md) |
-| `skillSignature` | **スキル**（ソフト鍵） | 要求が本当にそのスキルから出たことを示す。`personal_sign("hoshi-request:<thread>")` |
+| `skillSignature` | **スキル**（ソフト鍵） | 要求が本当にそのスキルから出たことを示す。`personal_sign("tomoshibi-request:<thread>")` |
 
 `skillSignature` が無い／`permit.skill`（= `keccak256(署名者アドレス)`）と一致しない要求も**止める**。
 ただし**違反としては刻まない**。permit を手に入れただけの第三者に、そのスキルの違反を作らせないため。

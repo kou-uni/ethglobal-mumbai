@@ -7,7 +7,7 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { DOMAIN, TYPES, lines, normalize, requestHash } from '../src/permit.js'
 import { skillMessage, skillIdFrom } from '../src/skill.js'
 
-const dir = mkdtempSync(join(tmpdir(), 'hoshi-'))
+const dir = mkdtempSync(join(tmpdir(), 'tomoshibi-'))
 process.env.LEDGER_PATH = join(dir, 'ledger.jsonl')
 process.on('exit', () => rmSync(dir, { recursive: true, force: true }))
 

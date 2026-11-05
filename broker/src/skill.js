@@ -4,7 +4,7 @@
 import { recoverMessageAddress, keccak256, toHex } from 'viem'
 
 /** スキルが署名する文字列。thread（要求の糸）そのもの。 */
-export const skillMessage = (thread) => `hoshi-request:${thread}`
+export const skillMessage = (thread) => `tomoshibi-request:${thread}`
 
 /** @returns {{signer:string|null, bound:boolean}} */
 export async function verifySkill(thread, skillSignature, expectedSigner) {

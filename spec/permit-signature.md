@@ -25,7 +25,7 @@ digest = keccak256( 0x19 ‖ 0x01 ‖ domainSeparator ‖ hashStruct(Permit) )
 
 ```solidity
 EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)
-  name              = "Hoshi"
+  name              = "Tomoshibi"
   version           = "1"
   chainId           = 16602          // 0G Galileo Testnet【確】
   verifyingContract = <VouchRegistry のアドレス>
@@ -69,7 +69,7 @@ Permit(address holder,bytes32 skill,string version,bytes32 key,
     "target": "api.example.com", "scope": "read", "maxCalls": 20,
     "expiry": 1762500000, "nonce": 7
   },
-  "domain": { "name": "Hoshi", "version": "1", "chainId": 0, "verifyingContract": "0x…" },
+  "domain": { "name": "Tomoshibi", "version": "1", "chainId": 16602, "verifyingContract": "0x…" },
   "signature": "0x…",
   "signer": "0x…",
   "source": "ledger-app"

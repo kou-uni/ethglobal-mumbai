@@ -1,7 +1,7 @@
 {
-  "name": "hoshi-broker",
+  "name": "tomoshibi-broker",
   "version": "1.0.0",
-  "description": "Hoshi Broker — 範囲チェックと代理実行。平文はPCを通らない。",
+  "description": "Tomoshibi Broker — 範囲チェックと代理実行。平文はPCを通らない。",
   "main": "index.js",
   "directories": {
     "test": "test"

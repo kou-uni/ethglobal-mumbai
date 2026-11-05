@@ -3,7 +3,7 @@
 import { keccak256, hashTypedData, recoverAddress, toHex } from 'viem'
 
 export const DOMAIN = {
-  name: 'Hoshi',
+  name: 'Tomoshibi',
   version: '1',
   chainId: 16602, // 0G Galileo Testnet【確・実測】
   verifyingContract: process.env.VOUCH_REGISTRY ?? '0x0000000000000000000000000000000000000000',

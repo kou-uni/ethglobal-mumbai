@@ -1,8 +1,12 @@
-# ethglobal-mumbai
+# TOMOSHIBI — ETHGlobal Mumbai 2026
 
 ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/7 09:00 IST。
 
+**TOMOSHIBI**（灯火 / a small flame that can go out）
+
 **AIが見られない場所を手元に持ち、AIには「誰が信頼したか」を持たせる。** — 星の数ではなく、誰の星か。
+
+レビューの点数は消えない。**灯は消える。だから意味がある。**
 
 | 場所 | 中身 |
 |---|---|

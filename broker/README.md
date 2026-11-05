@@ -59,6 +59,8 @@ node demo.mjs                  # 通る／刻む／止まる／一押しが要�
 | **効き目** | `src/tier.js`。`決定的` は立っている許可では通さない（`NEEDS_PRESS`）。**0G の答えで結果が変わる** |
 | **届かないとき** | **判断を作らない。** `STOPPED` ＋ `safeStop: true`。既定値で通すこともルールで代用することもしない |
 | **エピソードログ** | `src/episode.js`。`POST /seal` で 0G Storage（Log 層）へ。`rootHash` と `tx` を返す |
+| **宛先のコントラクト** | Galileo の Flow `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296`。**実測：root を載せた tx がここまで組み上がる**（`submit` の calldata に root が入る。残り gas だけ） |
+| **要る額** | 1回あたり **gas 約 30,733,644,962 wei ＋ 手数料 30.7 Gwei**【実測】。**faucet の 0.1 0G/日で足りる** |
 
 ```bash
 ZG_API_KEY=sk-…         # pc.0g.ai（無いと全部 STOPPED。黙って通さない）

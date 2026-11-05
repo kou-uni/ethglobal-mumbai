@@ -8,8 +8,10 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
   const counts = new Map()   // `${holder}:${nonce}` → 押さえた回数
   const owners = new Map()   // `${holder}:${nonce}` → { skill }。**holder の署名が通った要求だけ**
   const byThread = new Map()
+  const stars = new Map()    // `${skill}:${version}` → Set(nullifier)。**版ごとに別の集合**
 
   const key = (holder, nonce) => `${String(holder).toLowerCase()}:${nonce}`
+  const starKey = (skill, version) => `${skill}:${version}`
 
   // 再起動しても回数が戻らないように、起動時に読み直す
   if (existsSync(path)) {
@@ -30,6 +32,13 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
     // 署名なしの要求で結び付けると、正規の要求をあとから REPLAY にできてしまう（#14-2）
     const k = key(rec.holder, rec.nonce)
     if (rec.holderValid && rec.skill && !owners.has(k)) owners.set(k, { skill: rec.skill })
+    // 星は版ごとに持つ。**版が変われば、前の版の星は数えられない**（一斉に消える）
+    if (rec.decision === 'STAR' && rec.nullifier) {
+      const k = starKey(rec.skill, rec.version)
+      if (!stars.has(k)) stars.set(k, new Set())
+      stars.get(k).add(rec.nullifier)
+    }
+    if (!rec.thread) return
     const t = byThread.get(rec.thread) ?? []
     t.push(rec)
     byThread.set(rec.thread, t)
@@ -58,6 +67,31 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
       appendFileSync(path, JSON.stringify(row) + '\n')
       index(row)
       return row
+    },
+
+    /**
+     * 星をひとつ取る。**同じ人は、同じ版に二度星を出せない。**
+     * 確認と記録のあいだに await を挟まない（回数と同じ理由）。取れなければ false。
+     */
+    claimStar(nullifier, skill, version) {
+      const k = starKey(skill, version)
+      if (!stars.has(k)) stars.set(k, new Set())
+      const set = stars.get(k)
+      if (set.has(nullifier)) return false
+      set.add(nullifier)
+      return true
+    },
+
+    starCount: (skill, version) => stars.get(starKey(skill, version))?.size ?? 0,
+
+    /** 版ごとの星の数。**前の版に何個あったかも残す**（消えたことが見えるように） */
+    starsOf(skill) {
+      const out = {}
+      for (const [k, set] of stars) {
+        const [s, v] = [k.slice(0, k.lastIndexOf(':')), k.slice(k.lastIndexOf(':') + 1)]
+        if (s === skill) out[v] = set.size
+      }
+      return out
     },
 
     trace: (thread) => byThread.get(thread) ?? [],

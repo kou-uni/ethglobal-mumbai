@@ -19,7 +19,7 @@
 
 ```bash
 npm install
-npm test                       # 32 件
+npm test                       # 47 件
 
 # 本番：0G に本当に聞く（pc.0g.ai の API キーが要る）
 ZG_API_KEY=sk-… node src/server.js &
@@ -38,6 +38,9 @@ node demo.mjs                  # 通る／刻む／止まる／一押しが要�
 | `GET /trace/:thread` | 1回の使用に紐づく記録。**QR はここを指す** |
 | `POST /lines` | permit → 端末に出る4行。画面とハッシュを別経路にしないための確認用 |
 | `POST /skill-message` | `{permit, request}` → スキルが署名すべき文字列 |
+| `POST /vouch/start` | → `user_code` と URL。**本人の端末に出す合図**（QR は画面 A） |
+| `POST /vouch/finish` | `{deviceCode, skill, version}` → `200 STAR` / `403 VOUCH_DENIED`（`human_denied` / `proof_expired`） |
+| `GET /stars/:skill?version=` | 版ごとの星。**版が変わると前の版の星は数に入らない** |
 | `POST /seal` | `{thread}` → 系譜を 0G Storage へ。`rootHash` と `tx` を返す |
 | `GET /zg/balance` | 0G の残高（credits が減るのを画面に出すため） |
 | `GET /health` | 0G の宛先・モデル・鍵の有無・模擬かどうか |
@@ -63,6 +66,28 @@ ZG_PRIVATE_KEY=0x…      # 0G Galileo の試験鍵。/seal の tx を出す
 ZG_MODEL=0gm-1.0-35b-a3b
 ZG_ESCALATE=決定的       # この段から「その場の一押し」を要る
 ZG_OFFLINE=1            # 【模擬】0G を呼ばない。記録に simulated: true が残る
+```
+
+## World（誰であるか。星を出すときだけ）
+
+**鍵を使うたびには呼ばない。それは Ledger の仕事。** World が確かめるのは「人であること・同じ人であること」で、
+**守られる動作は星を出すこと**（自分の評判を賭けて「これを使っている」と言う行為）。
+
+| | |
+|---|---|
+| **正体** | 標準の OIDC。issuer `https://auth.world.org`【実測】。`device_code` グラントがあるので画面を持たない Broker から始められる |
+| **流れ** | `/vouch/start` → 本人が自分の端末で完了 → `/vouch/finish` が token を取り **JWKS で検証** → 星 |
+| **拒否の経路** | **作っていない。device flow に最初から入っている。** `access_denied`→`human_denied`、`expired_token`→`proof_expired` |
+| **検証** | `jose` の `jwtVerify`。`iss` / `aud` / `exp` を見る。**id_token を読んで済ませない** |
+| **client secret** | Broker の中だけ。ブラウザにもスキルにも出さない |
+| **一度きり** | 同じ仮名（`sub`）は同じ版に二度星を出せない。`store.claimStar` が atomic に弾く |
+| **版** | 星は `(skill, version)` ごと。**版が変われば星は一斉に消える**（前の版の数は残る） |
+
+```bash
+WORLD_CLIENT_ID=app_…      # auth.world.org/portal で登録（無いと /vouch/start が 503）
+WORLD_CLIENT_SECRET=…
+WORLD_OFFLINE=1            # 【模擬】World を呼ばない。記録に simulated: true が残る
+                           #   deviceCode に deny / expire を含めると拒否の経路をそのまま出せる
 ```
 
 **safe-stop を見る:**

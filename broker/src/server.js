@@ -10,12 +10,17 @@ import { weigh, balance, MODEL, ENDPOINT } from './weigh.js'
 import { needsPress, ESCALATE_FROM } from './tier.js'
 import { store as storeEpisode } from './episode.js'
 import { offlineWeigh } from './offline.js'
+import { deviceStart, waitForHuman, verifyIdToken, ISSUER } from './world.js'
+import { offlineWorld } from './world-offline.js'
 
 const ledger = createStore()
 const EXECUTE = process.env.EXECUTE === '1'
 // 【模擬】0G を呼ばない開発モード。記録に simulated: true が残る（撮影では使わない）
 const OFFLINE = process.env.ZG_OFFLINE === '1'
 const weigher = OFFLINE ? offlineWeigh : weigh
+// 【模擬】World を呼ばない開発モード（撮影では外す）
+const WORLD_OFF = process.env.WORLD_OFFLINE === '1'
+const world = WORLD_OFF ? offlineWorld : { deviceStart, waitForHuman, verifyIdToken }
 const secrets = JSON.parse(process.env.SECRETS ?? '{}')
 
 const json = (res, code, body) => {
@@ -115,6 +120,47 @@ export async function seal(thread, deps = {}) {
   return { thread, ...put }
 }
 
+/**
+ * 星を出す — **World で「誰であるか」を1回だけ確かめ、確かめられたときだけ刻む。**
+ * 断られた・期限切れも、同じ系譜に残す（拒否の経路は作り物ではなく device flow のもの）。
+ */
+export async function vouch({ deviceCode, skill, version }, deps = {}) {
+  const store = deps.store ?? ledger
+  const w = deps.world ?? world
+  const base = { skill, version, world: { issuer: ISSUER } }
+
+  const waited = await w.waitForHuman(deviceCode, deps.pollOpts ?? {})
+  if (!waited.ok) {
+    return store.append({
+      ...base,
+      decision: 'VOUCH_DENIED',
+      reason: waited.denied ?? 'WORLD_ERROR',
+      message: waited.denied === 'human_denied' ? '本人が断った（星を出さない）'
+        : waited.denied === 'proof_expired' ? '期限が切れた（星を出さない）'
+        : (waited.error ?? 'World に届かない'),
+      world: { ...base.world, simulated: waited.simulated || undefined },
+    })
+  }
+
+  const v = await w.verifyIdToken(waited.idToken, {})
+  if (!v.ok) {
+    return store.append({ ...base, decision: 'VOUCH_DENIED', reason: 'BAD_ID_TOKEN', message: v.error })
+  }
+
+  // 同じ人は、同じ版に二度星を出せない（使用済みの識別子を atomic に弾く）
+  if (!store.claimStar(v.nullifier, skill, version)) {
+    return store.append({ ...base, decision: 'VOUCH_DENIED', reason: 'ALREADY_VOUCHED', message: 'この版にはもう星を出している', nullifier: v.nullifier })
+  }
+
+  return store.append({
+    ...base,
+    decision: 'STAR',
+    nullifier: v.nullifier,
+    stars: store.starCount(skill, version),
+    world: { ...base.world, simulated: v.simulated || undefined },
+  })
+}
+
 const read = (req) => new Promise((ok, ng) => {
   let b = ''
   req.on('data', (c) => { b += c; if (b.length > 1e6) { ng(new Error('too large')); req.destroy() } })
@@ -140,6 +186,7 @@ export const app = createServer(async (req, res) => {
           escalateFrom: ESCALATE_FROM,
           simulated: OFFLINE || undefined,
         },
+        world: { issuer: ISSUER, clientId: Boolean(process.env.WORLD_CLIENT_ID), simulated: WORLD_OFF || undefined },
       })
     }
     if (url.pathname === '/use' && req.method === 'POST') {
@@ -155,6 +202,26 @@ export const app = createServer(async (req, res) => {
     if (url.pathname === '/seal' && req.method === 'POST') {
       const { thread } = await read(req)
       return json(res, 200, await seal(thread))
+    }
+    // 星を出す（World）。鍵を使うたびには呼ばない。**星を出すときだけ**
+    if (url.pathname === '/vouch/start' && req.method === 'POST') {
+      const started = await world.deviceStart({})
+      return json(res, started.ok ? 200 : 503, started)
+    }
+    if (url.pathname === '/vouch/finish' && req.method === 'POST') {
+      const out = await vouch(await read(req))
+      return json(res, out.decision === 'STAR' ? 200 : 403, out)
+    }
+    // 版ごとの星。**版が変わると、前の版の星は数に入らない**
+    if (url.pathname.startsWith('/stars/')) {
+      const skill = url.pathname.slice(7)
+      const version = url.searchParams.get('version')
+      return json(res, 200, {
+        skill,
+        version,
+        stars: version ? ledger.starCount(skill, version) : undefined,
+        byVersion: ledger.starsOf(skill),
+      })
     }
     // credits が減るのを画面に出すため（0G PC の iAI ボーナス）
     if (url.pathname === '/zg/balance') return json(res, 200, { balance: await balance() })

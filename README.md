@@ -16,3 +16,16 @@ ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/
 | `ideation/2026-11-06-architecture.md` | アーキテクチャ（叩き台 v2） |
 | `ideation/2026-11-06-architecture-v2.html` | 図（ダウンロードしてブラウザで開く） |
 | `research/10-ef-fit.md` | EF の賞との適合性（CROPS ＞ Anon-RPC） |
+
+## いま決まっていること・作るもの
+
+| 場所 | 中身 |
+|---|---|
+| `ideation/2026-11-06-plan.md` | **実施方針と時間割。** 分担・関門・捨てるもの |
+| `ideation/2026-11-06-tech-value-review.md` | **World / Ledger / 0G の位置づけと、実装に載っているかの再評価** |
+| `research/11-prize-gap.md` | **賞ごとの「狙えるか・足りないもの・埋め方」**（上限 $11,250） |
+| `spec/permit-signature.md` | **署名の契約。** 導出パス・EIP-712・Broker の検証。Ledger と Broker の境界 |
+| `spec/world-agent-pass.md` | **World Agent Pass の正体と入れ方**（OIDC / device flow） |
+
+**分担（#12）：人が見るものは minta、人が見ないものは kou。**
+境界は `spec/permit-signature.md` の JSON 1本と Broker の HTTP。

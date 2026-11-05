@@ -10,9 +10,14 @@
 > **Build with 0G Private Computer**。iAI はその中のボーナス条件）。
 > 「Wildcard」も無く、実際は **Agents That Pay for Themselves**（収益ループ必須）。
 
-要件の出典は `research/00-sponsors-groundtruth.md`（ethglobal.com の原文転記）と
-`repo/research/10-ef-fit.md`。**この表で「要件」と書いたものは原文由来。**
-「足りない」「埋め方」はこちらの判断。
+**要件の出典（この表で「要件」と書いたものは、すべてこの3ページの原文由来）:**
+
+- https://ethglobal.com/events/mumbai/prizes/world
+- https://ethglobal.com/events/mumbai/prizes/0g
+- https://ethglobal.com/events/mumbai/prizes/ethereum-foundation
+
+**「足りない」「埋め方」はこちらの判断。**
+（会期前の調査ノートは public には置かない。private の `Mumbai-ideation-2026` にある）
 
 **制約：パートナー賞は1プロジェクト最大3社。** World / 0G / EF で埋まっている。
 Finalist は別枠。

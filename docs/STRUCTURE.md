@@ -1,5 +1,9 @@
 # Structure — parts, functions, sequences
 
+> **Read [`NEW-DIRECTION.md`](NEW-DIRECTION.md) first.** The person, the words and the screens changed on the evening of
+> 6 Nov (a builder; TOMOSHIBI as a switchboard; label, row, light). The Broker's parts and its order of steps below are
+> unchanged. The words in sections 1 and 4 and the screen names are the earlier ones.
+
 Three figures of the same system, so that the pages, the Broker and the pitch describe one thing.
 
 Written from [`HOW-IT-RUNS.md`](HOW-IT-RUNS.md) and the code. It adds what that page leaves out:
@@ -164,7 +168,7 @@ flowchart LR
 | What is sent | The four lines of the permit, the method and URL, and the body (cut at 4,000 characters). **Never the key.** | The records of that thread as JSON lines. **No keys and no bodies.** |
 | What comes back, and where it goes | The weight and a short reason, the 0G request id, the time taken, the token count and the `x-0g-e2ee` header. All of it is written into the trail record as `zg{…}`. | The root hash and the transaction. Appended to the trail as `SEALED` with `storage{…}`. If it was not stored, the record says so and why. |
 | If 0G does not answer | `STOPPED`. No default, and no rule in its place. | `SEALED` with `uploaded: false` and the reason. |
-| Who triggers it today | Every request from the tool, so every button in the app except a refused one. | `broker/demo.mjs` and `broker/record-ui.mjs` only. **The app and the tool do not call it**, and the hosted copy has no wallet key. |
+| Who triggers it today | Every request from the tool, so every button in the app except a refused one. | The tool (`demo-agent.mjs`), after every answer, one thread at a time, and the trail screen shows whether it was stored. Also `broker/demo.mjs` and `broker/record-ui.mjs`. The hosted copy has no wallet key, so it is not asked there. Measured on the filming laptop: stored in about 20 s. |
 
 Also from 0G: the Broker can read the remaining credits (`GET /zg/balance`), and the permit's EIP-712 domain
 uses chain id 16602. Neither is a call on the request path.
@@ -383,4 +387,5 @@ To settle between us. Each row is a fact about the branch, not a proposal.
 | The Ledger without a bridge | Not described | Only on the hosted copy, which has no USB: the page opens the device itself and carries the same bytes. Where a bridge runs, only the bridge talks to the device. |
 | 0G model | `0gm-1.0-35b-a3b` | That model has been removed from 0G (404 since 17:32 IST on 6 Nov). The branch defaults to `0gm-1.0-35b-a3b-sia` with `ZG_JSON_MODE=0`. |
 | The end of the World flow | `/vouch/finish` answers its caller | The tool keeps the outcome and also sends it as an event, so a page that lost the long request still changes. |
-| `POST /seal` | Listed | The app does not call it. Only `broker/demo.mjs` does. |
+| `POST /seal` | Listed | The tool calls it after every answer and reports the outcome as an event (`sealed`). |
+| `GET /apis` | Not there | Lists the services a label can go to (`broker/src/apis.js`). Only Stripe is wired. |

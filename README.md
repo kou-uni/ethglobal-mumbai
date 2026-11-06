@@ -75,6 +75,22 @@ so the two languages cannot drift apart. The figures, this page and the deck are
 from one place: **[`docs/HOW-IT-RUNS.md`](docs/HOW-IT-RUNS.md)** — the processes, the state and
 the sequence, read off the code. If anything here disagrees with that page, that page is right.
 
+## What accumulates
+
+![What the switchboard leaves behind: use, press, seal, and one human star](assets/trust.png)
+
+The table is the near half. The far half is what the table leaves behind. Every call becomes a
+row; the rows become the lineage of one version of one tool, sealed into 0G Storage where
+nobody can go back and tidy it. That lineage is what makes a star mean something: here a star
+costs a real key, a range signed on a device, calls actually spent, and a human who can only do
+it once through World ID. Not a review count — a record of real use with a person at the end of
+it. And when the version changes, the stars go out.
+
+This is why the weighing is 0G's job and not a rule in a config file: the heavy ones are the
+ones worth asking a person about and worth recording as having been asked. Everything else
+passes without touching anybody. **So the word of mouth in this market is checkable rather
+than believable** — the thing a marketplace of agents and tools has never had.
+
 ## What it does, in four parts
 
 Everything in this repository is one of four things. The rest is support.

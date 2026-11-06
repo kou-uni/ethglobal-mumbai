@@ -27,7 +27,14 @@ that can approve a crossing the weighing called heavy.
 | the administrator | the Ledger in your hand |
 | connection log | `data/ledger.jsonl`, append-only |
 
-The figures `assets/nat.svg` and `assets/sequence.svg` are generated from
+And then it is a record. The same table that holds the keys produces, as a by-product of
+every call, the lineage of what each tool actually did with one: `data/ledger.jsonl`, sealed
+into 0G Storage. A star (`/vouch`) can only be lit by an address that holds a valid permit for
+that exact version **and** has spent calls on it, confirmed once by World ID — so the count is
+a count of real use by real people, not of accounts. `store.js` drops every star for a version
+when the version changes.
+
+The figures `assets/nat.svg`, `assets/sequence.svg` and `assets/trust.svg` are generated from
 `assets/build-figures.py`, which holds both languages in one dictionary.
 
 ## 1. Processes

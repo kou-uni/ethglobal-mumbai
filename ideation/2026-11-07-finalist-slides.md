@@ -19,7 +19,7 @@
 | **S2** | 0:25–0:50 | **Before / after**, as one picture | They can see the change before it is explained |
 | **— live —** | **0:50–2:10** | **No slide. The product** | Technicality · WOW · Usability |
 | **S3** | 2:10–2:30 | **What it gives, and what produces it** | Ties what they just watched to why they should care |
-| **S4** | 2:30–2:42 | **Who uses it, who pays** | Practicality |
+| **S4** | 2:30–2:42 | **Who it is for, and what changes for them** | Practicality |
 | **S5** | 2:42–2:50 | **One closing line** | What they repeat to each other afterwards |
 
 **Total 2:50.** The press lands at ~1:20. If they cut you off any time after it, the point is out.
@@ -103,16 +103,23 @@ person who actually used that version — and they all go out when the version c
 
 ---
 
-## S4 — Who uses it, who pays (2:30–2:42)
+## S4 — Who it is for, and what changes for them (2:30–2:42)
 
-**On the slide:** two faces and one pricing line. Nothing else.
+**Three people, one line each. This slide is about value, not revenue.**
 
-> **Today:** anyone who has handed an agent a real key — small shops, small teams.
-> **Who pays:** marketplaces that have to answer for a stray skill.
-> **How:** metered judgement and flame display. **We take no percentage of the money that moved.**
+| | What changes for them |
+|---|---|
+| **A shopkeeper who is not an engineer** | She can hand work to an agent **without holding something she has no way to manage** |
+| **Someone publishing a skill** | Her reputation is built from **actual use**, not from a star count anyone can buy |
+| **A marketplace** | When a stray skill does something, they can **say what was stopped and whose code tried it** — instead of closing the market |
 
-**Said:** *"We charge for judgement, not for volume — so we are never a company that loses money
-the more it stops."*
+**In small type at the foot of the slide, not spoken unless asked:**
+
+> Metered judgement and flame display. **No percentage of the money that moved** — so we are never
+> a company that loses money the more it stops.
+
+**Said:** *"None of this is a key-management tool. It is the layer that makes handing work to an
+agent something an ordinary person can afford to do."*
 
 ---
 
@@ -130,7 +137,7 @@ the more it stops."*
 |---|---|
 | **Technicality** | The press on real hardware, and `DENIED` carrying the skill's signature |
 | **Originality** | Four distinct refusals, never collapsed — and stars that go out |
-| **Practicality** | S4, twelve seconds, and the fact that it is running |
+| **Practicality** | S4: three named people, and the fact that it is running |
 | **Usability** | The spoken routine line, and the first row of S3: on an ordinary day it asks nothing |
 | **WOW** | The flame beat: every star going out at once |
 

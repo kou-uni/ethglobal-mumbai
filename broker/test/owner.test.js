@@ -92,3 +92,18 @@ describe('星を出せるのは、鍵の持ち主だけ', () => {
     assert.ok(r.at); assert.match(r.message, /no star is issued/)
   })
 })
+
+describe('what happened with one holder\'s key', () => {
+  test('since() returns that holder\'s records in order, and nobody else\'s', async () => {
+    const store = freshStore(), permit = permitFor()
+    const signature = await sign(permit)
+    await useOnce(store, permit, signature)
+    const out = { method: 'POST', url: 'https://evil.com/v1/charges', keyRef: KEY }
+    const skillSignature = await skill.signMessage({ message: skillMessage(requestHash(permit, out)) })
+    const denied = await use({ permit, signature, request: out, skillSignature }, { store, weigh })
+    assert.equal(denied.decision, 'DENIED')
+    const mine = store.since(holder.address)
+    assert.deepEqual(mine.map((r) => r.decision), ['ALLOWED', 'DENIED'])
+    assert.equal(store.since(other.address).length, 0)
+  })
+})

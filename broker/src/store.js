@@ -8,6 +8,7 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
   const counts = new Map()   // `${holder}:${nonce}` -> calls reserved so far
   const owners = new Map()   // `${holder}:${nonce}` -> { skill }. **Only requests whose holder signature checked out**
   const byThread = new Map()
+  const byHolder = new Map()  // holder (lowercase) -> every record about that holder's key, in order
   const stars = new Map()    // `${skill}:${version}` -> Set(nullifier). **A separate set per version**
   const checked = new Map()  // `${skill}:${version}` -> how many of those stars were issued after the owner check
 
@@ -41,6 +42,7 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
       if (rec.ownerChecked) checked.set(k, (checked.get(k) ?? 0) + 1)
     }
     if (!rec.thread) return
+    if (rec.holder) { const h = String(rec.holder).toLowerCase(); const l = byHolder.get(h) ?? []; l.push(rec); byHolder.set(h, l) }
     const t = byThread.get(rec.thread) ?? []
     t.push(rec)
     byThread.set(rec.thread, t)
@@ -106,6 +108,9 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
     },
 
     trace: (thread) => byThread.get(thread) ?? [],
+
+    /** Everything that happened with one holder's key, oldest first. What "while you were away" is read from. */
+    since: (holder, n = 100) => (byHolder.get(String(holder).toLowerCase()) ?? []).slice(-n),
     path,
   }
 }

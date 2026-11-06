@@ -8,8 +8,10 @@
 // Needs the demo running (tools/demo-up.sh) and ffmpeg. It uses whatever is really there:
 //   - a Ledger, if one is connected: the recording waits for the real hold (and cuts the waiting out);
 //     with none, the page's stand-in button is pressed, and the page says MOCK
-//   - HEADFUL=1 opens a visible window, so a Stripe test key can be pasted by hand when the screen asks
-//     (the recording pauses while it waits); otherwise the mock key is used, and the page says MOCK
+//   - HEADFUL=1 opens a visible window, so the person can follow it (and scan World's code from it)
+//   - PASTE=1 (with HEADFUL) waits for a Stripe test key to be pasted by hand when the screen asks; otherwise the
+//     mock key is used, and the page says MOCK
+//   - WORLD=1 lights the tool for real: it shows World's code and waits for the confirmation on the phone
 //   - REAL=1 refuses the stand-in: it waits until the Ledger is awake before the row is asked for, and stops if
 //     the page had to offer its stand-in button. Use it for the take that is shown to people.
 // Next to the video it writes <out>.cues.json: the moments of the two holds, so footage of the hand on the
@@ -112,6 +114,11 @@ const say = (chip, text, ms = 0) => js(`await wt.say(${JSON.stringify(chip)}, ${
 const click = (sel, ms = 0) => js(`const ok = await wt.click(${JSON.stringify(sel)}); await wt.W(${ms}); return ok`)
 const wait = (ms) => sleep(ms)
 const until = (cond, ms) => js(`return await wt.until(() => (${cond}), ${ms})`)
+/** Wait for an answer. A little of the waiting is shown; if 0G is slow, the rest is left out of the video. */
+async function answer(cond, keepMs = 1500, max = 150000) {
+  await wait(keepMs); if (await until(cond, 500)) return true
+  pause(); const ok = await until(cond, max); await sleep(300); resume(); return ok
+}
 /** REAL: the first row is only real if the tool can see the Ledger at the moment it asks. Wait for it, off camera. */
 async function ledgerAwake() {
   if (!REAL) return
@@ -183,7 +190,7 @@ await say('1 · ADD A ROW', 'Only supported APIs. The others are not supported y
 await js(`await wt.pick('#api', 'openai')`); await wait(1600)
 await js(`await wt.pick('#api', 'stripe')`)
 await say('1 · ADD A ROW', 'Stripe is on the list, so it already knows where the key goes. She parks the key once.', 400)
-const canType = Boolean(process.env.HEADFUL) && await js('return tomoshibi.mode === "live"')
+const canType = Boolean(process.env.PASTE) && Boolean(process.env.HEADFUL) && await js('return tomoshibi.mode === "live"')
 if (canType) { console.log('  paste the Stripe test key into the window now (or click "Use a mock key")'); await wait(1500); pause(); await until('document.getElementById("keyIn") && document.getElementById("keyIn").value.trim().length > 6', 240000); resume(); await wait(900) }
 else { await click('[data-act="key-test"]'); await wait(2300) }
 await ledgerAwake()
@@ -195,7 +202,7 @@ await say('THE LABEL', 'Her tool gets a label, never the key. The .env file can 
 await click('[data-act="back-ai"]', 1600)
 await say('3 · A ROUTINE CALL', 'The tool reads the unpaid invoices. 0G weighs the call: routine.')
 await js(`document.querySelector('[data-act="run:usual"]').click()`)
-await until(`wt.st().n === 1 && wt.st().last === 'ALLOWED'`, 45000); await wait(1700)
+await answer(`wt.st().n === 1 && wt.st().last === 'ALLOWED'`); await wait(1500)
 await click('.tabs [data-act="open-tomo"]')
 await say('3 · A ROUTINE CALL', 'The label goes in, the key is swapped in, the answer comes back. She is not asked.', 3600)
 // Proof, where it is real: the line the app shows carries 0G's own request id for this call.
@@ -203,12 +210,16 @@ const zgReal = PROOF || await js(`return Boolean(document.querySelector('.zg b')
 if (zgReal && await js(`return wt.ring('.zg')`)) { await say('PROOF · 0G PRIVATE COMPUTER', 'A sealed model on 0G weighed this call. Its answer and its request id are on the screen.', 3800); await js('wt.unring()') }
 await say('4 · A HEAVY CALL', 'A refund is heavy. A sealed model on 0G says so, and it waits for her Ledger.')
 await js(`document.querySelector('[data-act="run:heavy"]').click()`)
-await until(`wt.st().last === 'NEEDS_PRESS' || wt.st().last === 'STOPPED' || wt.st().last === 'ALLOWED'`, 45000); await wait(1700)
+const heavyDone = `wt.st().n >= 2 && ['NEEDS_PRESS', 'STOPPED', 'ALLOWED', 'DENIED'].includes(wt.st().last)`
+await answer(heavyDone)
+// 0G did not answer in time: that is a STOPPED, which is honest but not this scene. Ask again, off camera, twice at most.
+for (let i = 0; REAL && i < 2 && (await js('return wt.st().last')) === 'STOPPED'; i++) { console.log('  the refund was STOPPED (0G did not answer). Asking again…'); pause(); const n = await js('return wt.st().n'); await js(`document.querySelector('[data-act="seen"]')?.click(); await wt.W(500); document.querySelector('[data-act="run:heavy"]')?.click()`); await until(`wt.st().n > ${n} && ['NEEDS_PRESS', 'STOPPED', 'ALLOWED', 'DENIED'].includes(wt.st().last)`, 150000); await sleep(400); resume() }
+await wait(1500)
 if ((await js('return wt.st().last')) === 'NEEDS_PRESS') { await hold('press'); await until(`wt.view() === 'paid'`, 15000); await say('4 · A HEAVY CALL', 'One hold. It goes out once.', 3600); await click('[data-act="seen"]') }
 else { console.log('  the heavy call did not ask for a press:', await js('return wt.st().last')); await wait(2500); await click('[data-act="seen"]') }
 await say('5 · REFUSED', 'Another destination? This label only reaches Stripe. Refused, and recorded.')
 await js(`document.querySelector('[data-act="run:denied-host"]').click()`)
-await until(`wt.st().last === 'DENIED'`, 30000); await wait(3200)
+await answer(`wt.st().last === 'DENIED'`, 800); await wait(3000)
 await click('[data-act="seen"]')
 // The tool puts every finished thread into 0G Storage, about 20 seconds each. Wait for the refund's, off camera.
 const canStore = await js(`try { return (await (await fetch(window.appAgent + '/health', { cache: 'no-store' })).json()).storage === true } catch { return false }`)
@@ -247,8 +258,23 @@ if (stored || PROOF) {
   }
   await js('wt.unframe()')
 }
-await say('THE VALUE', 'She lights the tool she built. World says: one real person. The trail says: she really runs it.')
-await click('[data-act="tab:lights"]', 3900)
+if (process.env.WORLD) {
+  // For real: World's code is shown, she confirms in World App on her own phone, and the page changes by itself.
+  await say('THE VALUE', 'She lights the tool she built. World checks one thing: is this one real person?')
+  await click('[data-act="tab:lights"]', 2000)
+  if (await click('[data-act="show-light"]')) {
+    await until(`tomoshibi.ui.world && tomoshibi.ui.world.step !== 'starting'`, 40000)
+    await say('LIGHT IT', 'She scans the code, and confirms in World App on her own phone.', 3400)
+    cue('world-waiting'); pause(); console.log('  World: scan the code, confirm in World App, then go back to World’s page on the phone…')
+    const w = await js(`await wt.until(() => tomoshibi.ui.world && ['done', 'end', 'preview'].includes(tomoshibi.ui.world.step), 660000); return tomoshibi.ui.world ? tomoshibi.ui.world.step : null`)
+    await sleep(700); resume(); cue(`world-${w}`); console.log('  World:', w)
+    if (w === 'done') await say('THE VALUE', 'Her tool is lit. World says: one real person. The trail says: she really runs it.', 4600)
+    else await wait(2500)
+  }
+} else {
+  await say('THE VALUE', 'She lights the tool she built. World says: one real person. The trail says: she really runs it.')
+  await click('[data-act="tab:lights"]', 3900)
+}
 await say('THE VALUE', 'Others choose a tool by who built it, and who really runs it.')
 await js(`document.querySelector('[data-act="friend:1"]').click()`); await wait(3300)
 await say('THE VALUE', 'Every light is trust in her as a builder.')

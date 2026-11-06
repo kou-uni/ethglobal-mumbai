@@ -138,17 +138,19 @@ something goes wrong.
 
 # Tech stack (paste into the form, field by field)
 
-**Ethereum developer tools** — select: **viem**, **Ethers.js**.
+**Ethereum developer tools** — select: **viem**, **Ethers.js**, **Ledger**.
 Add under "other" if the list allows it: **EIP-712 typed-data signing**, **Ledger Device SDK (Rust)**.
 *What they do here:* viem signs and sends the seal transaction and recovers the signer of a permit;
-ethers is pulled in by the 0G Storage SDK.
+ethers is pulled in by the 0G Storage SDK; the Ledger is the only thing that can add a key to the
+switchboard or approve a heavy call.
 
 **Blockchain networks** — select **0G** (Galileo testnet, chainId **16602**, `0x40da`).
 Nothing else. We are not deployed on any mainnet and do not claim to be.
 
 **Programming languages** — **JavaScript**, **Rust**, **Python**.
-*Where:* JavaScript — the Broker (Node 22, no transpiler) and the three screens.
-Rust — the Ledger app (`ledger-app/`, `no_std`). Python — the USB bridge and the document generators.
+*Where:* JavaScript — the Broker (Node 24, no transpiler, no build step) and the three screens.
+Rust — the Ledger app (`ledger-app/`, `no_std`). Python — the USB bridge (`bridge/bridge.py`) and
+every figure in the repository.
 
 **Web frameworks** — **none**. Add under "other": **no framework (vanilla JS + the Node `http` module)**.
 *Why it is worth saying:* the judged screens are static files with no build step, so anyone can open
@@ -159,40 +161,42 @@ them straight from GitHub Pages and read the source in the same tab.
 wrong shape for the one artifact whose value is that it cannot be rewritten.
 
 **Design tools** — **none**. Add under "other": **hand-written SVG, generated from Python**.
-Every diagram in the repo is produced by `ideation/build-diagrams.py`,
-`build-business-model.py` and `build-hero-video.py`, so the figures cannot drift from the numbers.
+Every figure in the repository comes out of a script, from one bilingual source of copy, so the
+figures cannot drift from the system or from each other: `assets/build-figures.py` (the switchboard,
+the sequence, what accumulates, and the animated page that writes itself out — plain SMIL, no
+JavaScript), plus `ideation/build-diagrams.py`, `build-business-model.py` and `build-hero-video.py`.
 
 **Other technologies / libraries we lean on heavily**
 
 | | What it is | What it does for us |
 |---|---|---|
-| **0G Compute (TeeML)** | TEE-attested inference, Intel TDX / dstack, model `0gm-1.0-35b-a3b` | **Decides the weight of a request by reading its body — inside the seal, where its operator cannot read it.** This is in the decision loop, not a log sink |
-| **`@0gfoundation/0g-storage-ts-sdk`** | 0G Storage client | Seals the append-only trail. Flow contract `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296` |
+| **0G Compute (TeeML)** | TEE-attested inference, Intel TDX / dstack, model `0gm-1.0-35b-a3b` | **Decides the weight of a request by reading its body — inside the seal, where its operator cannot read it.** This is in the decision loop, not a log sink. No answer means the call stops; there is no fallback judgement |
+| **`@0gfoundation/0g-storage-ts-sdk`** | 0G Storage client | Seals the append-only trail, which is what makes a star checkable afterwards. Flow contract `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296` |
 | **World ID** | Proof of personhood, OIDC `device_code` grant | One sector-scoped pseudonym, one star, per version — so a flame cannot be bought |
 | **`ledger_device_sdk` (Rust)** | Ledger app framework | The four lines on the device screen, and the EIP-712 digest computed **inside** the device from those same bytes |
 | **`jose`** | JWT / JWKS | Verifies the World ID token against the issuer's keys |
 | **`hidapi`** (Python) | USB HID | The bridge between the host and the device |
-| **Node.js built-in test runner** | `node --test` | 50 tests, no test framework dependency |
+| **Node.js built-in test runner** | `node --test` | **60 tests, 60 passing**, no test framework dependency |
 
 ---
 
 ## Describe how AI tools were used in your project
 
-**Claude Code (Anthropic) was used, by one of the two of us, on the half that people do not look at.**
+**Claude Code (Anthropic) and OpenCode were used, by one of the two of us, on the half that people
+do not look at.**
 
-- **`broker/src/` and `broker/test/`** — the human wrote the boundaries first, as a spec
+- **`broker/src` and `broker/test`** — the human wrote the boundaries first, as a spec
   (`spec/permit-signature.md`), then had the AI write the implementation, then verified it with
-  tests the human read. The four refusal types, the scope match and the call-budget reservation
-  were specified before any code existed.
-- **`ideation/` and `research/`** — drafting and structure. **Every number, verdict and measurement
-  in those documents was produced by running something and reading the result**; anything not
-  measured is marked `[unverified]` in the text.
-- **`web/`, `ui/` and `ledger-app/`** — designed and implemented by the other teammate, on the
+  tests the human read and ran (`node --test`, 60 passing).
+- **`assets/build-figures.py` and the documentation** — the figures and `docs/HOW-IT-RUNS.md` are
+  generated and kept in step by the AI, from one bilingual source of copy, so a change to the system
+  cannot leave a figure behind.
+- **`ideation` and `research`** — drafting and structure. **Every number, verdict and measurement
+  in those documents was produced by running something and reading the result**.
+- **`web`, `ui` and `ledger-app`** — designed and implemented by the other teammate, on the
   device and in the browser. AI assistance on the Rust, human hands on the screens.
 - **What we did not do:** nothing generated by AI went into the submission without a human running
-  it. The prompt that decides a request's weight was changed from Japanese to English only **after
-  measuring 120 paired calls** and confirming the English version was not less safe
-  (`ideation/2026-11-06-decisions.md`, decision 25).
+  it.
 
 The spec-driven artifacts are all in the repository, so **what we asked for and what we rejected is
 visible, not just what was generated**.
@@ -268,102 +272,6 @@ through. We state that rather than claim otherwise.
 
 ---
 
-# Per-prize fields (paste these)
-
-Permalinks are pinned to commit `99e91a1`.
-
-## 0G — $15,000
-
-**Why we are applicable**
-
-> The 0G Private Computer is inside our decision loop, not beside it. Before an agent's request runs,
-> the Broker sends the request body to a TEE-attested model (`0gm-1.0-35b-a3b`, TeeML) and gets back
-> how heavy the action is — routine, significant or decisive — and that verdict decides whether a
-> human has to press a button on a Ledger. The Broker passes the body through and **keeps none of it**:
-> the judgement needs the content, and the operator must not have it. We measured 467 calls at
-> ~2.0 s and **$0.000036 per judgement**, and the append-only trail is sealed on 0G Galileo
-> (tx `0x74c7cdf9…aef1`, block 64103318). When 0G is unreachable we return `STOPPED` and change
-> nothing — we never fabricate a verdict.
-
-**Link to the line of code**
-`https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/weigh.js#L68`
-
-**Ease of use: 8**
-
-**Feedback for the sponsor**
-
-> The OpenAI-compatible surface meant the first working call took minutes, which is the best thing
-> about it. Three things cost us real time. (1) **Per-token prices are not in the docs** — we found
-> them in the `pricing_usd` field of `GET /v1/models`, after a day of planning around a 10x cost
-> uncertainty. Putting that table in the docs would have saved the whole exercise. (2) **Thinking is
-> on by default and is not mentioned in the quickstart.** Our first integration took 17.2 s per call
-> and we nearly dropped the feature; `chat_template_kwargs.enable_thinking=false` brought it to
-> 2.0 s. (3) **Verifying the TEE attestation end-to-end is hard to find a path for** — we can say the
-> endpoint is attested, but a short "how to check the dstack quote yourself" page would let us claim
-> it rather than cite it. Minor: in the storage SDK, `indexer.upload()` returning a `[tx, err]` tuple
-> is unusual for JavaScript and cost us one debugging round.
-
-## World — $12,500
-
-**Why we are applicable**
-
-> A trust signal is worthless if it can be bought, and stars sell for $0.0027 each today. In
-> TOMOSHIBI a "flame" can only be lit by a World-verified human: one sector-scoped pseudonym, one
-> star, per version of a skill — and **every star goes out when the maker ships a new version**, so
-> the signal always describes the code that is running now. We use Agent Pass through the OIDC
-> `device_code` grant, called straight from a Broker that has no screen, and verify the token against
-> the issuer's JWKS. We bind only the `sub` — no name, no e-mail, no wallet — so World never learns
-> which skill was endorsed, which key it was, or when it was used.
-
-**Link to the line of code**
-`https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/world.js#L39`
-
-**Ease of use: 8**
-
-**Feedback for the sponsor**
-
-> Agent Pass being plain OIDC underneath is the right decision and should be said louder in the docs
-> — we spent our first hour looking for a bespoke SDK before realising we could use any OIDC client.
-> The `device_code` grant is what made this work at all, because our Broker is a daemon with no
-> screen; a short "verifying a human from a headless process" guide would land well with the agent
-> crowd this hackathon was aimed at. One concrete sharp edge: **`/api/v1/device_authorization`
-> returns 400 unless the request carries `client_secret`** — a public client is rejected, and the
-> error body does not say that. Documenting that a confidential client is required for the device
-> flow would have saved us an hour. Finally, the relationship between the sector-scoped `sub` and the
-> nullifier vocabulary used elsewhere in the World docs took a while to pin down.
-
-## Ethereum Foundation — $15,000
-
-**Why we are applicable**
-
-> Our privacy property is structural rather than a promise. The only component that reads the
-> body of a request is the sealed model inside the TEE; the Broker proxies the call and keeps **only
-> a hash of what came back**, so the trail — which is written to be public — contains no request
-> body and no key. The signing key never leaves the Ledger: the device computes the EIP-712 digest
-> internally from the same four lines it displays, so the host cannot ask it to sign something other
-> than what the human read. Stars bind only to a sector-scoped pseudonym. There are no analytics
-> scripts, no pixels and no third-party cookies, and the whole thing is MIT.
-
-**Link to the line of code**
-`https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/execute.js#L21`
-
-**Ease of use: 7**
-
-**Feedback for the sponsor**
-
-> This is less an API than a set of properties to build toward, so the rating above is about the
-> track rather than a library. The most useful thing for a team like ours would be **a short
-> worked example of what counts as "minimum disclosure" when a third party must read a payload to
-> make a decision.** Our whole design turns on that case — something has to read the request to
-> judge it, and we solved it by putting the reader inside a TEE so the operator cannot see it. We
-> could not find prior art in the track materials saying whether that is considered acceptable or a
-> cop-out, and we would have built differently if it were the latter. A second useful addition would
-> be guidance on **privacy-preserving reads**: publishing a public trail is easy, but letting someone
-> query it without revealing which entry they care about is the part we designed and ran out of time
-> to implement.
-
----
-
 # PASTE-READY — the six boxes, exactly as typed
 
 Plain prose, no markdown. The first box asks for "a sentence or two"; these are two or three.
@@ -374,7 +282,7 @@ Permalinks are pinned to commit `99e91a1` and will not move.
 **Box 1 — How are you using this Protocol / API?**
 
 ```
-We put the 0G Private Computer inside our decision loop, not beside it. Before an agent's request runs, the Broker sends the request body to a TEE-attested model (0gm-1.0-35b-a3b, TeeML) and gets back how heavy the action is — routine, significant or decisive — and that verdict decides whether a human has to press a button on a Ledger. The Broker passes the body through and keeps none of it — not in the trail, not in a log — and the operator of the model cannot read it, because the inference runs inside the TEE. The Broker itself is not yet inside a TEE, and we say so rather than claim more. We measured 467 calls at ~2.0 s and $0.000036 per judgement, and the append-only trail is sealed on 0G Galileo (tx 0x74c7cdf9…aef1, block 64103318); when 0G is unreachable we return STOPPED and change nothing rather than invent a verdict.
+We put the 0G Private Computer inside our decision loop, not beside it. TOMOSHIBI is a switchboard between an engineer's agents and their API keys, and 0G is what decides, before a call runs, whether that call needs a person at all: the Broker sends the request body to a TEE-attested model (0gm-1.0-35b-a3b, TeeML) and gets back how heavy the action is — routine, significant or decisive. A decisive call stops until someone presses a Ledger; everything else goes straight through, so the person is interrupted only where it matters. The judgement needs the body and whoever runs the model must not have it, which is exactly why it runs inside the TEE. The Broker passes the body through and keeps none of it — not in the trail, not in a log — and the Broker itself is not yet inside a TEE, which we say rather than claim more. We measured 467 calls at ~2.0 s and $0.000036 per judgement, and the append-only trail is sealed on 0G Galileo (tx 0x74c7cdf9…aef1, block 64103318); when 0G is unreachable we return STOPPED and change nothing rather than invent a verdict.
 ```
 
 **Box 2 — Link to the line of code**
@@ -396,13 +304,13 @@ The OpenAI-compatible surface meant our first working call took minutes, which i
 **Box 1 — How are you using this Protocol / API?**
 
 ```
-A trust signal is worthless if it can be bought, and stars sell for $0.0027 each today. In TOMOSHIBI a "flame" can only be lit by a World-verified human: one sector-scoped pseudonym, one star per version of a skill, and every star goes out when the maker ships a new version, so the signal always describes the code that is running now. We use Agent Pass through the OIDC device_code grant, called straight from a Broker that has no screen, and verify the token against the issuer's JWKS. We bind only the sub — no name, no e-mail, no wallet — so World never learns which skill was endorsed, which key it was, or when it was used.
+What TOMOSHIBI accumulates is a record of trust, and a trust signal is worthless if it can be bought — stars sell for $0.0027 each today. So a flame here can only be lit by a World-verified human: one sector-scoped pseudonym, one star per version of a tool, and every star goes out when the maker ships a new version, so the signal always describes the code that is running now. The Broker already knows the call really happened and what the Ledger approved, so a star means a real person, inside a signed limit, actually used this version — not a number anyone can manufacture. We use Agent Pass through the OIDC device_code grant, called straight from a Broker that has no screen, and verify the token against the issuer's JWKS. We bind only the sub — no name, no e-mail, no wallet — so World never learns which tool was endorsed, which key it was, or when it was used.
 ```
 
 **Box 2 — Link to the line of code**
 
 ```
-https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/world.js#L39
+https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/world.js#L66
 ```
 
 **Box 3 — Ease of use:** 8 stars
@@ -418,7 +326,7 @@ Agent Pass being plain OIDC underneath is the right decision and should be said 
 **Box 1 — How are you using this Protocol / API?**
 
 ```
-Our privacy property is structural rather than a promise. The body is read for the judgement inside the TEE, where the model's operator cannot see it; the Broker passes it through and retains none of it, so the trail — which is written to be public — contains no request body and no key, only a hash of what came back. Two different keys, and neither reaches the agent: the signing key never leaves the Ledger, which computes the EIP-712 digest internally from the same four lines it displays, and the API key never leaves the Broker. The Broker is not yet inside a TEE and we say so. Stars bind only to a sector-scoped pseudonym, there are no analytics scripts, pixels or third-party cookies, and the whole thing is MIT.
+Our privacy property is structural rather than a promise. TOMOSHIBI keeps the real keys behind a table of labels: a tool is handed a label and never a key, and the label is swapped for the real key only at the moment of sending, for the one call that was allowed. The body of a request is read only by the sealed model inside the TEE, where the operator cannot see it; the Broker proxies the call and keeps only a hash of what came back, so the trail — which is written to be public — contains no request body and no key. Two keys, and neither reaches the agent: the signing key never leaves the Ledger, which computes the EIP-712 digest internally from the same four lines it displays, so the host cannot ask it to sign something other than what the person read, and the API key never leaves the Broker. The Broker is not yet inside a TEE and we say so. Stars bind only to a sector-scoped pseudonym, there are no analytics scripts, pixels or third-party cookies, and the whole thing is MIT.
 ```
 
 **Box 2 — Link to the line of code**

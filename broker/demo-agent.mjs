@@ -318,7 +318,7 @@ const routes = {
       tool: TOOL, range: { key: KEY_LABEL, ...RANGE, uses: STANDING_USES, days: STANDING_DAYS }, skill: skillIdFrom(skill.address), version: TOOL.version,
       apis: APIS, storage: Boolean(canSeal),
       // Is the call to Stripe real? 'test' = a test-mode key is parked in the Broker; null = the stand-in answers.
-      stripe: row?.mode ?? (broker?.execute ? 'real' : null), seed: row?.seed ? { payment: Boolean(row.seed.payment_intent), invoices: row.seed.invoices, notes: row.seed.notes } : null, canPark: !HOSTED }
+      stripe: row?.mode ?? (broker?.execute ? 'real' : null), seed: row?.seed ? { payment: Boolean(row.seed.payment_intent), invoices: row.seed.invoices, notes: row.seed.notes } : null, canPark: true, shared: HOSTED }
   },
   'GET /events': async (_, url) => { const since = Number(url.searchParams.get('since') ?? 0); return { epoch, events: events.slice(since), busy } },
   'POST /lend': async (body) => { lend(body); return { ok: true } },          // answers at once; the outcome arrives as events
@@ -364,8 +364,12 @@ createServer(async (req, res) => {
   // to reach both the tool and the record. Nothing is added or changed on the way.
   if (url.pathname.startsWith('/b/')) {
     if (req.method === 'POST' && url.pathname === '/b/vouch/start' && !rested('world', 20, 300)) return send(429, { ok: false, error: 'This shared demo is resting. Try again in a few minutes.' })
-    // A hosted copy passes on only what the pages need. It holds no wallet key, and nobody outside can ask it to write.
-    if (HOSTED && req.method === 'POST' && !['/b/vouch/start', '/b/vouch/finish'].includes(url.pathname)) return send(403, { ok: false, error: 'not available on the hosted copy' })
+    // A hosted copy passes on only what the pages need: the two World calls, and parking a key. Parking is the same
+    // call as on a person's own computer, and the Broker's rules are the same: a Stripe **test-mode** key only (a live
+    // key is refused before it is stored), memory only, never returned. It holds no wallet key, and nothing else
+    // can be written from outside.
+    if (req.method === 'POST' && url.pathname === '/b/keys' && !rested('keys', 8, 120)) return send(429, { ok: false, error: 'This shared demo is resting. Try again in a few minutes.' })
+    if (HOSTED && req.method === 'POST' && !['/b/vouch/start', '/b/vouch/finish', '/b/keys'].includes(url.pathname)) return send(403, { ok: false, error: 'not available on the hosted copy' })
     let raw = ''
     for await (const c of req) raw += c
     try {

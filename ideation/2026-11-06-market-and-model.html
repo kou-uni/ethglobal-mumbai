@@ -101,7 +101,7 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
     <li><b>TAM 430億ドル（年）。</b>守る 240億＋<b>信用を見せる 30億</b>＋<b>損失を移す 160億</b>。TOMOSHIBI は<b>同じ1つの仕組みで、売る側の財布と買う側の財布の両方に当たる</b>——灯は作り手には<b>看板（マーケ）</b>、持ち主には<b>事故が減ること（リスク低減）</b>。</li>
     <li><b>SAM は20〜70億ドル。</b>決め手は我々の実測だ。<b>0G は「金額」ではなく「お金が動くか」で判定する</b>——$4,800 でも <b>$1 でも「決定的」</b>。つまりエージェントの決済は<b>ほぼ全件が承認の対象</b>で、SAM はエージェント経済と同じ速さで伸びる。</li>
     <li><b>収益は3本。うち1本は、継続課金の動機が製品の仕組みに内蔵されている。</b>版を上げると灯が一斉に消える——だから<b>スキルの作り手は、版を出すたびに信用を買い直す</b>。チャーン対策を機能で足す必要がない。</li>
-    <li><b>原価は実測で1判定 300トークン</b>（入力277〜304／出力24〜28）。価格の見当は <b>1判定 0.02〜0.2円</b>。<b>いちばん先にやることは値付けではなく、0G の単価を確かめること</b>——原価の幅がまだ10倍ある。</li>
+    <li><b>原価は実測で1判定 $0.000036（0.0056円）。</b>トークン数も単価も本番の 0G から取った。$9/月プランの上限まで使われても粗利 <b>80%</b>、無料枠 2,000判定は月 $0.07。<b>原価は値付けの制約ではない</b>——だから値段の根拠は、原価ではなく<b>買い手にとっての価値</b>でしか立たない。次に確かめるのはそこ。</li>
   </ol>
 </section>
 
@@ -270,22 +270,23 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 
 <section>
   <h2><span class="no">06</span>単位経済（原価は実測から）</h2>
-  <p class="msg">1判定あたり <b>300トークン</b>。原価の見当は <b>0.02〜0.2円</b>——まだ10倍の幅があり、<b>これを潰すのが値付けの第一歩</b>。</p>
+  <p class="msg">1判定あたり <b>300トークン・$0.000036（0.0056円）</b>。<b>10倍の幅は潰れた</b>——推測していた下限より、さらに5倍安い。<b>原価は値付けの制約ではない。</b></p>
 
   <div class="tbl"><table>
-    <caption>表4　1判定の原価（トークン数は 2026-11-06 の本番 0G の記録から実測）</caption>
+    <caption>表4　1判定の原価（<b>トークン数・単価とも 2026-11-06 の本番 0G から実測</b>。推測値はもう入っていない）</caption>
     <thead><tr><th>項目</th><th class="num">実測</th><th>備考</th></tr></thead>
     <tbody>
-      <tr><td>入力トークン</td><td class="num">277〜304</td><td>うち <b>192 はキャッシュ済み</b>（型文が固定なので効く）</td></tr>
-      <tr><td>出力トークン</td><td class="num">24〜28</td><td>思考を切ってあるので短い（決定10）</td></tr>
+      <tr><td>入力トークン</td><td class="num">283.9（277〜304）</td><td>467件の平均。うち <b>192 はキャッシュ済み</b>（型文が固定なので効く。<b>キャッシュの割引があるかは未確認</b>——あれば下振れする）</td></tr>
+      <tr><td>出力トークン</td><td class="num">28.0（24〜32）</td><td>思考を切ってあるので短い（決定10）</td></tr>
       <tr><td>応答時間</td><td class="num">約 2.0 秒</td><td>思考ありは 17.2 秒でタイムアウトに当たる</td></tr>
-      <tr><td>推論の単価</td><td class="num"><b>未確認</b></td><td><b>0G の価格表を見ていない。</b>$5/M 入力なら $0.0019、$0.5/M なら $0.0002</td></tr>
-      <tr class="total"><td><b>1判定の原価</b></td><td class="num">$0.0002〜0.0019</td><td>価格 $0.001/判定 なら、粗利は <b>−90%〜+80%</b>。<b>ここが決まらないと値段は決められない</b></td></tr>
+      <tr><td>推論の単価</td><td class="num"><b>$0.08/M 入力<br>$0.48/M 出力</b></td><td><b>実測。</b><span class="mono">GET router-api.0g.ai/v1/models</span> の <span class="mono">pricing_usd</span>（<span class="mono">0gm-1.0-35b-a3b</span>）。価格表は我々が毎回叩いている API の中にあった</td></tr>
+      <tr class="total"><td><b>1判定の原価</b></td><td class="num">$0.000036</td><td>$9/月で 50,000判定なら粗利 <b>80%</b>、超過 $1/1,000判定なら <b>96%</b>。無料枠 2,000判定は月 <b>$0.07</b>——<b>配っても痛くない</b></td></tr>
     </tbody>
   </table></div>
 
   <p><b>効く手は2つある。</b>ひとつは<b>ふだんの要求を 0G に投げないこと</b>——範囲の中の読み取り（GET）は規則だけで通し、<b>お金が動きうる要求だけを 0G に渡す</b>。実測では課金系だけが「決定的」になるので、判定の数は<b>1桁減る</b>。もうひとつはキャッシュで、すでに入力の 63% が当たっている。</p>
-  <p class="note"><b>ただし、投げないと決めた瞬間に「読まずに通した」経路ができる。</b>どこまでを規則で通すかは<b>安全と原価の取引</b>で、こっそり決めてはいけない。<b>規則で通した要求も、系譜に「0G に聞かずに通した」と残す</b>のが条件。</p>
+  <p class="note"><b>ただし、原価が潰れたので、この2手の目的が変わった。</b>$0.000036 を半分にしても誰も得をしない。<b>投げる数を減らす理由は、もう原価ではなく速さ（2秒を待たせない）だけ</b>になった。原価のために安全を削る理由は無くなっている。</p>
+  <p class="note"><b>投げないと決めた瞬間に「読まずに通した」経路ができる。</b>どこまでを規則で通すかは<b>安全と原価の取引</b>で、こっそり決めてはいけない。<b>規則で通した要求も、系譜に「0G に聞かずに通した」と残す</b>のが条件。</p>
 </section>
 
 <section>
@@ -354,7 +355,7 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
   <div class="tbl"><table>
     <thead><tr><th>やること</th><th style="width:96px">誰</th><th style="width:128px">いつまで</th></tr></thead>
     <tbody>
-      <tr><td><b>0G の推論単価を確かめる</b>（原価の幅10倍を潰す。値付けはその後）</td><td>kou</td><td>ハッカソン後すぐ</td></tr>
+      <tr><td><s>0G の推論単価を確かめる</s> → <b>済（2026-11-06）。$0.08/M・$0.48/M、1判定 $0.000036。</b>原価は論点から外れた</td><td>kou</td><td><b>完了</b></td></tr>
       <tr><td>「お金が動きうる要求だけ 0G に渡す」規則の線を引く（通した経路は系譜に明記）</td><td>kou</td><td>2週間</td></tr>
       <tr><td>P1 に20人聞く：<b>月 $9 を払うのは、何件目の「止めた」を見たときか</b></td><td>kou</td><td>1か月</td></tr>
       <tr><td>P2 に10人聞く：<b>版を上げて灯が消えるのは、損か得か</b>（B の生死はここ）</td><td>minta・kou</td><td>1か月</td></tr>
@@ -376,7 +377,7 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
     <li>World ID で確かめられた人 18M・160か国（2026） — <a href="https://www.biometricupdate.com/202610/world-brings-biometric-proof-of-human-to-banking-and-ai-agents">Biometric Update</a></li>
     <li>コンプライアンス自動化（信用を見せる側）: $850M（2025）→ $2.7B（2028） — <a href="https://www.soc2certification.com/blog/soc2-automation-market-size-2025">SOC2 Certification</a>。Vanta $300M ARR・16,000社（2026/4） — <a href="https://www.businesswire.com/news/home/20260429269142/en/Vanta-Crosses-$300M-ARR-as-Growth-Accelerates-from-AI">BusinessWire</a>。Drata $100M ARR・8,000社超 — <a href="https://sacra.com/c/drata/">Sacra</a></li>
     <li>侵害1件の平均費用 $4.44M（世界）／$10.22M（米国）・2025 — IBM Cost of a Data Breach（<a href="https://axis-intelligence.com/cyber-insurance-statistics/">まとめ</a>）。サイバー保険の保険料 $15.6–16.3B（2025） — <a href="https://www.datamintelligence.com/research-report/cyber-risk-insurance-market">DataM Intelligence</a> ほか</li>
-    <li><b>1判定のトークン数・応答時間</b>: 2026-11-06 に本番 0G へ投げた記録（<span class="mono">ui/scenes.json</span>）から実測。<b>推論の単価は未確認</b></li>
+    <li><b>1判定のトークン数・応答時間</b>: 2026-11-06 に本番 0G へ投げた 467件（<span class="mono">ui/scenes.json</span> ＋ <span class="mono">broker/data/ledger.jsonl</span>）から実測。<b>単価</b>は同日 <span class="mono">GET /v1/models</span> の <span class="mono">pricing_usd</span> から実測（入力 $0.00000008/トークン・出力 $0.00000048/トークン）</li>
     <li><b>「$1 でも決定的」</b>: 2026-11-06 の実測（<span class="mono">ideation/2026-11-06-decisions.md</span> 13）</li>
   </ul>
   <p class="note"><b>調査会社の数字は会社ごとに2倍以上ばらつく。</b>この資料は<b>一次の価格表に当たっていない推計</b>で、出てくる金額は「桁」として読むもの。桁が動かない主張（百億ドル台の市場／決済はほぼ全件が承認対象）だけを、ピッチで使う。</p>

@@ -11,7 +11,7 @@ cd "$(dirname "$0")/../broker" || exit 1
 PUBLIC_PORT=${PORT:-8080}; BROKER_PORT=${BROKER_PORT:-8797}
 [ -n "${ZG_API_KEY:-}" ] || export ZG_OFFLINE=1
 [ -n "${WORLD_CLIENT_ID:-}" ] || export WORLD_OFFLINE=1
-unset SECRETS; export EXECUTE=0          # no key from the environment (decision 15). A visitor may park a Stripe test-mode key from the page (memory only; live keys refused)
+unset SECRETS; export EXECUTE=0          # never a real API key, never a real call (decision 15). A hosted copy takes no keys at all: a key belongs on its owner's machine
 # A public copy never holds the wallet key: anyone can reach it, and sealing spends from that wallet.
 # Without it the Broker still keeps its record; it just cannot write it to 0G Storage from here.
 unset ZG_PRIVATE_KEY

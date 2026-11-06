@@ -244,6 +244,8 @@ const routes = {
   },
   // The page says: I am connected to a Ledger with Tomoshibi open (sent every few seconds while true).
   'POST /device': async ({ ready, how }) => { pageDevice = ready ? { at: Date.now(), how: how || null } : { at: 0, how: null }; return { ok: true } },
+  // What the page saw while talking to the Ledger (for finding out why a connection does not work).
+  'POST /device/log': async ({ msg }) => { console.log(`  [page] ${String(msg).slice(0, 300)}`); return { ok: true } },
   // The page hands back what the Ledger answered to the APDUs of one `asking` event.
   'POST /device/answer': async ({ askId, hex, error }) => {
     if (!pageWait || pageWait.askId !== askId) return { ok: false, error: 'nothing is waiting for that' }

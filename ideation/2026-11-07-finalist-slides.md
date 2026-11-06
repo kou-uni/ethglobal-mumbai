@@ -2,8 +2,8 @@
 
 > **Five slides. The middle of the talk has no slide at all, because the product is running.**
 > The 4-minute running order with every spoken line is in `2026-11-07-finalist-4min.md`;
-> this file is the structure and what each part is for. Built to land at **2:50**, so there is
-> ten seconds of slack and no race at the end.
+> this file is the structure and what each part is for. Built to land at **2:55**, so there is
+> five seconds of slack and no race at the end.
 >
 > Judged on **Technicality / Originality / Practicality / Usability / WOW**.
 > What we are told matters most is **showing a working system**, so the live run is the spine and
@@ -18,11 +18,11 @@
 | **S1** | 0:00–0:25 | **The problem.** One picture, three short lines | Everyone in the room has done this |
 | **S2** | 0:25–0:50 | **Before / after**, as one picture | They can see the change before it is explained |
 | **— live —** | **0:50–2:10** | **No slide. The product** | Technicality · WOW · Usability |
-| **S3** | 2:10–2:30 | **What it gives, and what produces it** | Ties what they just watched to why they should care |
-| **S4** | 2:30–2:42 | **Who it is for, and what changes for them** | Practicality |
-| **S5** | 2:42–2:50 | **One closing line** | What they repeat to each other afterwards |
+| **S3** | 2:10–2:28 | **What it gives, and what produces it** | Ties what they just watched to why they should care |
+| **S4** | 2:28–2:40 | **Who it is for, and what changes for them** | Practicality |
+| **S5** | 2:40–2:55 | **What it is for, and who built it** | The last thing they look at while deciding |
 
-**Total 2:50.** The press lands at ~1:20. If they cut you off any time after it, the point is out.
+**Total 2:55.** The press lands at ~1:20. If they cut you off any time after it, the point is out.
 
 ---
 
@@ -84,7 +84,7 @@ is in `2026-11-06-storyboard.md` §"Order of degradation". **Never stop to fix h
 
 ---
 
-## S3 — What it gives, and what produces it (2:10–2:30)
+## S3 — What it gives, and what produces it (2:10–2:28)
 
 **Four rows. The left column is the only part they need to read; the right is there so the room can
 see that each one is a mechanism, not a promise.**
@@ -103,7 +103,7 @@ person who actually used that version — and they all go out when the version c
 
 ---
 
-## S4 — Who it is for, and what changes for them (2:30–2:42)
+## S4 — Who it is for, and what changes for them (2:28–2:40)
 
 **Three people, one line each. This slide is about value, not revenue.**
 
@@ -123,11 +123,33 @@ agent something an ordinary person can afford to do."*
 
 ---
 
-## S5 — The close (2:42–2:50)
+## S5 — What it is for, and who built it (2:40–2:55)
 
-**On the slide:** the line alone, on ink.
+**On the slide: one line, large, on ink. Under it, the team.**
 
-> **A review score never expires. A flame goes out.**
+> # Hand over the work. Not the key.
+>
+> **So that trusting an agent with something real is a thing an ordinary person can afford to do.**
+
+**Underneath, three short lines — the value, not the features:**
+
+> **Nothing to memorise, store or manage. It cannot go past what you signed. And whatever happens,
+> you can explain it afterwards.**
+
+**And the team, on the same slide:**
+
+> ### Team Yohaku (余白)
+> **minta** — the device and everything a person actually looks at
+> **kou** — the broker, and the three technologies underneath it
+>
+> *Two people, thirty-six hours, one working system.*
+
+**Said:** *"We built this because we both handed an agent a real key this month and neither of us
+felt good about it. Hand over the work — not the key."*
+
+**The line "a review score never expires, a flame goes out" is now the answer to "what inspired
+you" in Q&A** (`2026-11-07-finalist-4min.md` §3), not the closing slide. On its own it needs
+explaining, and a closing line that needs explaining is not a closing line.
 
 ---
 

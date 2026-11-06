@@ -12,7 +12,8 @@ off the footage of this take. Nothing is re-ordered: each piece of footage sits 
 import subprocess, sys, os
 
 W = sys.argv[1]; OUT = sys.argv[2]
-BASE = os.path.join(W, 'base.mp4')
+RAW = os.path.join(W, 'base.mp4')
+BASE = os.path.join(W, 'base_fixed.mp4')
 ENC = ['-an', '-r', '30', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18', '-pix_fmt', 'yuv420p', '-video_track_timescale', '15360']
 BG = '0xEBE8E3'
 PW, PH = 596, 885           # the panel for the footage, right of the app
@@ -21,6 +22,20 @@ parts = []
 def run(args):
     r = subprocess.run(['ffmpeg', '-y', '-loglevel', 'error'] + args, cwd=W)
     if r.returncode: sys.exit('ffmpeg failed: ' + ' '.join(args)[:300])
+
+def fix_captions():
+    """In this take the caption line is cut off from 80.77 s on (the window changed size when another page was
+    pictured). The captions of those scenes are drawn again, whole, over the same place."""
+    caps = [('cap1.png', 80.767, 85.0), ('cap2.png', 85.0, 90.2), ('cap3.png', 90.2, 93.8), ('cap4.png', 93.8, 98.6), ('cap5.png', 98.6, 102.0), ('cap6.png', 102.0, 106.0)]
+    ins, fc, last = ['-i', RAW], [], '0:v'
+    for i, (f, a, b) in enumerate(caps):
+        ins += ['-i', f]; fc.append(f"[{last}][{i + 1}:v]overlay=0:925:enable='between(t,{a},{b - 0.001})'[v{i}]"); last = f'v{i}'
+    run(ins + ['-filter_complex', ';'.join(fc), '-map', f'[{last}]', '-an', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '15', '-pix_fmt', 'yuv420p', BASE])
+
+def clip(f, speed=1.0):
+    """A scene recorded on its own (tools/walkthrough.mjs with SCENE=…), laid in whole."""
+    name = f'p{len(parts):03d}.mp4'
+    run(['-i', f, '-vf', f'setpts=PTS/{speed},fps=30,scale=1920:1080,setsar=1'] + ENC + [name]); parts.append(name)
 
 def full(a, b):
     """A stretch of the walkthrough, as recorded."""
@@ -65,11 +80,13 @@ def still(image, dur):
     name = f'p{len(parts):03d}.mp4'
     run(['-loop', '1', '-t', f'{dur:.3f}', '-i', image, '-vf', 'scale=1920:1080,fps=30,setsar=1'] + ENC + [name]); parts.append(name)
 
+fix_captions()
 # ── who, the problem, what she does, the switchboard, adding a row ──
 if os.path.exists(os.path.join(W, 'title.png')): still('title.png', 2.4)
 else: full(1.0, 3.3)
 scene(3.3, 6.7, 0.5); scene(6.7, 11.1, 0.6); scene(11.1, 18.5, 0.9); scene(18.5, 22.3, 1.1)
-scene(22.3, 26.0, 0.7); scene(26.0, 30.8, 1.0)
+clip('scene-row.mp4', 1.15)        # choosing the API from the list (recorded on its own: the list is the page's own now)
+scene(26.0, 30.8, 1.0)
 # ── approve: the page waits, the Ledger asks, she taps "See it", reads four lines, holds ──
 d = footage('r1.mp4', [(B, 26.6, 37.5, 1.6, LED)]); split(30.8, 34.10, 'r1.mp4', d, 'label-ledger.png')
 d = footage('r1s.mp4', [(B, 37.6, 40.4, 1.4, LED)]); split(34.4, 34.4 + d, 'r1s.mp4', d, 'label-ledger.png')
@@ -81,8 +98,8 @@ full(53.3, 55.6)
 d = footage('r2.mp4', [(B, 64.6, 76.0, 1.6, LED)]); split(55.6, 60.40, 'r2.mp4', d, 'label-ledger.png')
 d = footage('r2s.mp4', [(B, 76.2, 79.0, 1.4, LED)]); split(60.6, 60.6 + d, 'r2s.mp4', d, 'label-ledger.png')
 full(60.6 + d, 65.4)
-# ── refused: the Ledger shows it too ──
-full(65.4, 65.9)
+# ── refused: an email sends the tool somewhere else (the chat, recorded on its own), and the Ledger shows it too ──
+clip('scene-refuse.mp4')
 d = footage('r3.mp4', [(B, 83.2, 87.5, 1.0, LED)]); split(65.9, 70.2, 'r3.mp4', d, 'label-ledger.png')
 # ── the trail, and the proof ──
 scene(70.2, 74.6, 1.0); scene(74.6, 80.8, 1.4); scene(80.8, 85.0, 0.6)

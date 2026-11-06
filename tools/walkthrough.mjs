@@ -16,7 +16,9 @@
 //     the page had to offer its stand-in button. Use it for the take that is shown to people.
 // Next to the video it writes <out>.cues.json: the moments of the two holds, so footage of the hand on the
 // Ledger can be laid in at the right places (tools/walkthrough-edit.mjs).
-// Env: PAGES (http://127.0.0.1:8790), CHROME, FFMPEG, HEADFUL, REAL, KEEP=1 (keep the frames)
+//   - SCENE=row | refuse records one scene only (to lay into an existing take): choosing the API from the list, or
+//     the chat where an email sends the tool somewhere else. Everything before the scene runs off camera.
+// Env: PAGES (http://127.0.0.1:8790), CHROME, FFMPEG, HEADFUL, REAL, PASTE, WORLD, SCENE, KEEP=1 (keep the frames)
 import { spawn, spawnSync } from 'node:child_process'
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -29,6 +31,7 @@ const OUT = resolve(process.argv[2] || 'walkthrough.mp4'), PORT = 9334
 const W = 1440, H = 810, SCALE = 1920 / W            // a 16:9 page, recorded at 1920×1080
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const REAL = Boolean(process.env.REAL)
+const SCENE = process.env.SCENE || ''
 const PROOF = Boolean(process.env.PROOF)   // show the proof scenes even where the answers are simulated (to look at the layout)
 const dir = mkdtempSync(join(tmpdir(), 'walkthrough-'))
 
@@ -89,7 +92,7 @@ await js(`
     #wtframe .ev dl{margin:0;display:grid;grid-template-columns:230px 1fr;gap:7px 18px;align-items:baseline} #wtframe .ev dt{color:#6b6580;font-size:16px} #wtframe .ev dd{margin:0;font:600 16.5px/1.35 ui-monospace,Menlo,monospace;word-break:break-all}\`
   document.head.appendChild(st)
   for (const [tag, id] of [['div', 'wtcap'], ['div', 'wtcur'], ['div', 'wtcard'], ['div', 'wttick'], ['div', 'wtring'], ['div', 'wtframe']]) { const e = document.createElement(tag); e.id = id; document.body.appendChild(e) }
-  document.getElementById('wtcap').innerHTML = '<i></i><b></b>'; document.getElementById('wtcap').style.display = 'none'
+  document.getElementById('wtcap').innerHTML = '<i></i><b></b>'; document.getElementById('wtcap').style.display = 'none'; document.getElementById('wtcard').style.display = 'none'
   const W = (ms) => new Promise((r) => setTimeout(r, ms)), cur = document.getElementById('wtcur')
   let tick = 0; setInterval(() => { document.getElementById('wttick').style.background = (tick ^= 1) ? '#121212' : '#111' }, 90)
   const to = async (el) => { const r = el.getBoundingClientRect(); cur.style.left = (r.left + Math.min(r.width / 2, 260)) + 'px'; cur.style.top = (r.top + r.height / 2) + 'px'; await W(620) }
@@ -168,11 +171,29 @@ async function snap(url, ms = 11000) {
     const text = (await s2('Runtime.evaluate', { expression: 'document.body ? document.body.innerText.slice(0, 4000) : ""', returnByValue: true })).result?.result?.value || ''
     const r = await s2('Page.captureScreenshot', { format: 'jpeg', quality: 86 })
     w2.close(); await fetch(`http://127.0.0.1:${PORT}/json/close/${t.id}`).catch(() => {})
+    await send('Page.bringToFront'); await send('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: SCALE, mobile: false }); await sleep(600)
     return r.result?.data ? { data: r.result.data, text } : null
   } catch (e) { console.log('  the other page could not be pictured:', String(e.message ?? e)); return null }
 }
 
 await send('Page.startScreencast', { format: 'jpeg', quality: 92, maxWidth: 1920, maxHeight: 1080, everyNthFrame: 1 })
+const quiet = (sel) => js(`document.querySelector(${JSON.stringify(sel)})?.click(); await wt.W(350)`)
+if (SCENE === 'row') {
+  await quiet('[data-act="chat-send"]'); await wait(3400); await quiet('.aibtn[data-act="open-tomo"]'); await quiet('[data-act="onb:key"]'); await wait(700)
+  await say('1 · ADD A ROW', 'She picks the API from a list. Only supported APIs can be added.'); await wait(500); resume(); await wait(1000)
+  await click('.pickbtn', 1900)
+  await click('[data-act="api:openai"]'); await say('1 · ADD A ROW', 'The others are not supported yet…', 1700)
+  await click('.pickbtn', 1300)
+  await js(`await wt.click('[data-act="api:stripe"]')`); await wait(150)
+} else if (SCENE === 'refuse') {
+  await quiet('[data-act="chat-send"]'); await wait(3400); await quiet('.aibtn[data-act="open-tomo"]'); await quiet('[data-act="onb:key"]'); await quiet('[data-act="key-test"]'); await quiet('[data-act="park"]')
+  await until(`wt.st().asking === 'lend'`, 20000); await js('await wt.hold()'); await until('wt.st().lent', 20000); await quiet('[data-act="back-ai"]')
+  await quiet('[data-act="run:usual"]'); await until(`wt.st().n === 1 && wt.st().last === 'ALLOWED'`, 60000)
+  await quiet('[data-act="run:heavy"]'); await until(`wt.st().asking === 'press'`, 60000); await quiet('.tabs [data-act="open-tomo"]'); await js('await wt.hold()'); await until(`String(wt.st().last).includes('pressed')`, 30000)
+  await quiet('[data-act="seen"]'); await quiet('[data-act="open-ai"]'); await wait(900)
+  await say('5 · REFUSED', 'Then an email tells the tool to send her customer list somewhere else.'); await wait(500); resume(); await wait(1500)
+  await js(`document.querySelector('[data-act="run:denied-host"]').click()`); await until(`wt.st().last === 'DENIED'`, 30000); await wait(3600)
+} else {
 const LOGO = `${PAGES}/logo-mark-light.svg`
 await js(`wt.card('<img src="${LOGO}" alt=""><h1>tomoshibi</h1><p>The switchboard between your AI tools and your API keys.</p><small>A 90-SECOND WALKTHROUGH</small>')`)
 await wait(500); resume()
@@ -186,9 +207,11 @@ await click('[data-act="chat-send"]'); await wait(5400)
 await click('.aibtn[data-act="open-tomo"]')
 await say('TOMOSHIBI', 'It sits between her tools and her keys. A tool calls by label; the key stays here.', 2700)
 await click('[data-act="onb:key"]')
-await say('1 · ADD A ROW', 'Only supported APIs. The others are not supported yet…', 300)
-await js(`await wt.pick('#api', 'openai')`); await wait(1600)
-await js(`await wt.pick('#api', 'stripe')`)
+await say('1 · ADD A ROW', 'She picks the API from a list. Only supported APIs can be added.', 300)
+await click('.pickbtn', 1500)
+await click('[data-act="api:openai"]'); await say('1 · ADD A ROW', 'The others are not supported yet…', 1500)
+await click('.pickbtn', 1100)
+await click('[data-act="api:stripe"]')
 await say('1 · ADD A ROW', 'Stripe is on the list, so it already knows where the key goes. She parks the key once.', 400)
 const canType = Boolean(process.env.PASTE) && Boolean(process.env.HEADFUL) && await js('return tomoshibi.mode === "live"')
 if (canType) { console.log('  paste the Stripe test key into the window now (or click "Use a mock key")'); await wait(1500); pause(); await until('document.getElementById("keyIn") && document.getElementById("keyIn").value.trim().length > 6', 240000); resume(); await wait(900) }
@@ -289,6 +312,7 @@ await say('THE VALUE', 'Every light is trust in her as a builder.')
 await click('[data-act="friend:2"]', 2900)
 await js(`wt.card('<img src="${LOGO}" alt=""><h1>tomoshibi</h1><p>No key in a <b>.env</b> file.<br>Heavy calls wait for a <b>human</b>.<br>Trust that <b>cannot be bought</b>.</p><small>LEDGER · 0G · WORLD</small>')`)
 await wait(4200)
+}
 pause(); const end = Date.now() / 1000 - cut
 await send('Page.stopScreencast'); ws.close(); chrome.kill()
 

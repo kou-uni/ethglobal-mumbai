@@ -120,3 +120,28 @@
    root `0xc0e0c7a911547490680d545ad9d4638a9bf23bd72d8a3004edf9b4ffaa5be080`,
    tx `0x74c7cdf9bca055c502918e62a7ac9fc7634d1326471433ab10161045aa97aef1`.
    The hedge in the submission text — "the trail is local append-only" — **is no longer needed**. Paste the real tx.
+
+## 11/6 midday (language) [agreed — kou, 2026-11-06]
+
+24. **The whole repository is written in English from now on.** Conversation with the agent stays
+   Japanese; everything committed is English. Already-recorded evidence is **not** rewritten —
+   `ui/scenes.json` and `web/scenes.json` hold verbatim responses from the production model and
+   editing them would be falsifying measurement. New recordings are in English.
+
+25. **The weight prompt switches to English, and it was measured before switching.**
+   Same 10 requests, 6 repetitions, both languages against the production 0G (120 calls).
+   - First English draft (a literal translation): **56/60 agreement**, and the disagreement was not
+     noise — `refund` came back `significant` in 4 of 6 runs where Japanese said `decisive`.
+     **That is the unsafe direction**: a refund moves money out but would no longer have needed a press.
+   - Cause: the Japanese tier definitions turn on *"cannot be taken back"*, and a literal English
+     "cannot be undone" let the model read a refund as itself an undo.
+   - Fix: define the tiers by **who can undo it** —
+     `routine` = the owner can undo it alone · `significant` = undoing it takes work but is possible ·
+     `decisive` = **the owner cannot undo it alone** (assets leave, data is deleted, something becomes
+     public, authority is delegated, a message cannot be recalled).
+   - Re-measured: **58/60**, and the two remaining disagreements point the other way — *Japanese* was
+     unstable on `refund` (4/6 decisive), English was `decisive` **6/6**.
+     **The English prompt is stricter and more stable than the one it replaces.**
+   - Cost and latency are unchanged: 284.9 input / 29.3 output tokens, ~1.30 s (Japanese ~1.30 s).
+   - **This is a behaviour change, not a translation.** It is recorded here because the tier words are
+     compared against `broker/src/tier.js` and appear in the trail, the screens and the recordings.

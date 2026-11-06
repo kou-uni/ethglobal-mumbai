@@ -192,3 +192,71 @@ Every diagram in the repo is produced by `ideation/build-diagrams.py`,
 
 The spec-driven artifacts are all in the repository, so **what we asked for and what we rejected is
 visible, not just what was generated**.
+
+---
+
+# Prize selection (paste into the form)
+
+**Submission type: Top 10 Finalist & Partner Prizes.**
+*Condition: live judging is 09:30 IST on 7 November and someone has to be in the room.*
+The four-minute script is in `ideation/2026-11-07-finalist-4min.md`.
+
+**Partners (3 of 3 used): 0G · World · Ethereum Foundation.**
+Reasoning and what we gave up is in `research/11-prize-gap.md` — ENS ($7,000) was dropped on purpose,
+because it would have cost the EF slot, it is mainnet/Sepolia while our registry is on 0G Galileo,
+and a name is not core to this work.
+
+**Other partners' technologies used but not applying for:** none.
+*(The Ledger device is central to the project, but Ledger is not a partner at this event.)*
+
+## Why 0G
+
+**The sealed model is in the decision loop, not next to it.** Before anything runs, the Broker sends
+the request body to a **TEE-attested 0G Private Computer** (`0gm-1.0-35b-a3b`, TeeML / Intel TDX)
+and gets back the weight: `routine`, `significant` or `decisive`. The weight decides whether a human
+has to press. **We cannot read the body — not being able to is the feature**, because the thing that
+makes the judgement good is the thing we are not allowed to see.
+
+- **467 measured calls.** 283.9 input / 28.0 output tokens, ~2.0 s, **$0.000036 per judgement**
+  (unit prices read from `GET router-api.0g.ai/v1/models → pricing_usd`).
+- **The trail is sealed on 0G Galileo.** tx `0x74c7cdf9…aef1`, block **64103318**, `status 0x1`,
+  Flow contract `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296`.
+- **When 0G is unreachable we return `STOPPED`, change nothing, and do not bill.** No default verdict,
+  no rule-based stand-in. **A fabricated verdict is worse than no verdict** — and it would be against
+  the spirit of the track to pretend the model answered.
+- We also measured a prompt change rather than assuming it: switching the weight prompt from Japanese
+  to English was only adopted after **120 paired calls** showed it was not less safe (decision 25).
+
+## Why World
+
+**Proof of personhood is what makes a trust signal unbuyable.** Stars sell for **$0.0027** each today.
+A star in TOMOSHIBI can only be issued to a World-verified human, **one sector-scoped pseudonym, one
+star, per version** — and **every star goes out when the maker ships a new version**, so the signal
+describes the code running now rather than the code that earned the reputation.
+
+- **Agent Pass via OIDC `device_code`**, called directly from a **screenless Broker** — the device
+  flow is what makes personhood reachable from a daemon. Issuer verified; the token is checked
+  against the issuer's JWKS with `jose`.
+- We bind **only the `sub`**. No name, no e-mail, no wallet. Which skill got a star, which key it was
+  and when it was used are **not** visible to World.
+- **Honest status:** the code path is written and the issuer is verified, but **our client
+  registration has not come through, so no star has been issued against production yet.**
+  Runs without it are recorded with `simulated: true` and we do not present them as real.
+
+## Why Ethereum Foundation (CROPS)
+
+**The privacy property here is structural, not a policy.** The only component that ever sees a
+request body is the sealed model, inside the TEE. The operator cannot read it, and the trail — which
+is written to be public — carries **no request body and no key**.
+
+| | Knows | Does not know |
+|---|---|---|
+| The device | The four lines, and whether a human pressed | The request body. The key never leaves |
+| World | That this is a human, and the same human | Which skill, which key, when |
+| 0G Private Computer | The body, **inside the seal** | The key. **And we cannot read it either** |
+| The trail | Who permitted what, and whether it stopped | **No body, no key** |
+
+- No trackers: no analytics script, no pixel, no third-party cookie. MIT licensed.
+- **The known gap, stated rather than hidden:** the Broker is the one point of trust and **we did not
+  put it in a TEE this time**; and the anonymous read path for stars (query without revealing which
+  star you are reading) is **designed but not implemented**. Both are written down in the README.

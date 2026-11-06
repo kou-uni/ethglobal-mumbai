@@ -58,7 +58,11 @@ receipt. We would never hand a credit card over like that.*
 
 > **TOMOSHIBI — the approval layer that keeps the key and gives the agent one approved action at a time.**
 >
-> **The key is never handed over · It asks only when it matters · Every refusal is on the record, with who tried**
+> **The key is never handed over** → *there is no key anywhere for anything to leak from*
+> **It asks only when it matters** → *it stays out of the way, so it does not get switched off*
+> **Every refusal is kept, with who tried** → *"it was being used and I had no idea" stops being possible*
+>
+> ### So you can hand the work over and still have nothing happen that you cannot recover from.
 
 **Said:** *"We keep the key. The agent gets one approved action at a time, and the approval is
 signed on hardware it cannot press. Here it is running."*

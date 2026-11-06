@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOMOSHIBI &#8212; Business model, lean canvas and cash flow</title>
+<style>
+:root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
+--hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
+html{color-scheme:light}
+body{margin:0;background:var(--paper);color:var(--ink);
+font-family:"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic",Meiryo,sans-serif;
+font-size:15px;line-height:1.9;border-top:6px solid var(--accent);-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:56px clamp(24px,6vw,48px) 96px}
+.doc-header{padding-bottom:28px;border-bottom:1px solid var(--ink)}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin:0 0 20px}
+h1{font-size:27px;line-height:1.5;letter-spacing:.02em;margin:0 0 12px;font-feature-settings:"palt" 1}
+.lead{font-size:14px;color:var(--ink-2);margin:0 0 24px;max-width:38em}
+.doc-meta{font-size:12px;color:var(--ink-3);display:flex;gap:24px;flex-wrap:wrap}
+.page>section{border-top:1px solid var(--hairline);padding-top:44px;margin-top:64px}
+.page>section:first-of-type{border-top:0;padding-top:0;margin-top:56px}
+h2{font-size:19px;letter-spacing:.03em;margin:0;font-feature-settings:"palt" 1}
+h2 .no{color:var(--accent);margin-right:14px;font-variant-numeric:tabular-nums}
+.msg{font-size:16px;font-weight:600;line-height:1.8;margin:18px 0 24px;max-width:36em}
+h3{font-size:15px;margin:36px 0 8px}
+p{margin:0 0 16px;max-width:42em}
+ul,ol{margin:0 0 16px;padding-left:1.4em;max-width:41em}
+li{margin-bottom:6px}
+ul{list-style:none;padding-left:1.2em}
+ul li::before{content:"–";float:left;margin-left:-1.2em;color:var(--ink-3)}
+.summary{list-style:none;margin:24px 0 0;padding:0;counter-reset:s;max-width:44em}
+.summary li{counter-increment:s;position:relative;padding-left:2.4em;margin-bottom:14px}
+.summary li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:.4em;
+font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.kpis{display:flex;flex-wrap:wrap;row-gap:24px;margin:32px 0 8px}
+.kpi{padding:2px 32px}
+.kpi:first-child{padding-left:0}
+.kpi+.kpi{border-left:1px solid var(--hairline)}
+.kpi .v{font-size:30px;font-weight:700;color:var(--accent);line-height:1.3;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:14px;font-weight:600;margin-left:2px}
+.kpi .l{font-size:11.5px;color:var(--ink-3);letter-spacing:.06em;margin-top:6px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:28px 0 8px;font-size:13px;line-height:1.6}
+caption{text-align:left;font-size:12.5px;font-weight:600;margin-bottom:10px}
+th{font-size:12px;font-weight:600;text-align:left;padding:10px 12px;
+border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom}
+td{padding:10px 12px;border-bottom:1px solid var(--hairline);vertical-align:top}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-top:1px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:600;background:var(--accent-tint)}
+figure{margin:32px 0 8px}
+figcaption{font-size:12.5px;font-weight:600;margin-bottom:14px}
+figure svg{width:100%;height:auto;display:block}
+svg text{font-family:inherit}
+.fig-scroll{overflow-x:auto}
+.src{font-size:11.5px;color:var(--ink-3);margin:6px 0 0}
+.note{font-size:12.5px;color:var(--ink-2);border-left:2px solid var(--hairline);padding:2px 0 2px 14px;margin:24px 0 16px;max-width:40em}
+.chevrons{display:flex;margin:28px 0 8px;min-width:520px}
+.chev{flex:1;padding:9px 10px 9px 22px;font-size:12px;font-weight:600;line-height:1.5;text-align:center;
+background:var(--fill-gray);margin-left:4px;
+clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%)}
+.chev:first-child{margin-left:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%)}
+.chev.on{background:var(--accent);color:#fff}
+.chev small{display:block;font-size:10.5px;font-weight:500;opacity:.75}
+.matrix{display:grid;grid-template-columns:var(--mx-label,140px) repeat(var(--mx-cols,2),1fr);
+gap:18px 20px;margin:28px 0 8px;min-width:560px}
+.mx-h{font-size:11.5px;font-weight:600;color:var(--ink-2);text-align:center;align-self:end;
+padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.mx-label{background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;
+justify-content:center;text-align:center;gap:2px;font-size:12px;font-weight:700;line-height:1.5;padding:12px 10px}
+.mx-label small{font-size:10px;font-weight:600;opacity:.7;letter-spacing:.08em}
+.mx-label.alt{background:var(--fill-gray);color:var(--ink)}
+.mx-cell{font-size:12px;line-height:1.75}
+.mx-cell ul{margin:0}
+.mx-cell li{margin-bottom:5px}
+b,strong{font-weight:700}
+.em{color:var(--accent);font-weight:700}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--hairline);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--accent)}
+.doc-footer{margin-top:88px;padding-top:20px;border-top:1px solid var(--hairline);
+font-size:11.5px;color:var(--ink-3);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media print{@page{size:A4;margin:16mm}
+body{border-top-width:4px}.page{max-width:none;padding:0}
+.page>section{margin-top:48px;padding-top:32px}
+table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
+</style>
+<style>
+.lc{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:28px 0 8px;min-width:700px}
+.lc-box{border:1px solid var(--hairline);padding:10px 12px 12px;background:var(--paper)}
+.lc-h{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+font-weight:700;margin-bottom:8px;border-bottom:1px solid var(--hairline);padding-bottom:5px}
+.lc-box ul{margin:0;padding-left:1em;font-size:11px;line-height:1.65}
+.lc-box li{margin-bottom:5px}
+.lc-box li::before{content:"\2013";float:left;margin-left:-1em;color:var(--ink-3)}
+.tag{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;
+padding:1px 6px;border:1px solid currentColor;white-space:nowrap}
+.tag.verified{color:var(--accent)}
+.tag.assumption{color:#8a6d1f}
+.tag.unverified{color:var(--ink-3)}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="doc-header"><p class="eyebrow">Business model &#183; drawn, with the arithmetic</p><h1>Who pays, what it costs, and what is left over</h1><p class="lead">Three pictures of one model, and then every number on them traced back to where it came from. Generated by <span class="mono">ideation/build-business-model.py</span> &#8212; the page cannot drift from the arithmetic, because the arithmetic writes the page.</p><div class="doc-meta"><span>2026-11-06</span><span>Rule: <b>[verified]</b> we ran it &#183; <b>[assumption]</b> we chose it &#183; <b>[unverified]</b> someone else published it</span></div></header>
+<section><h2><span class="no">01</span>The business model</h2>
+<p class="msg">We are paid for deciding &#8212; the same for yes as for no. Four things are cut off by design, and each one, sold, would end the sentence the product is made of.</p>
+<figure><figcaption>Figure 1&emsp;Money in, cost out, and the four doors we closed</figcaption><div class="fig-scroll"><svg viewBox="0 0 760 330" role="img" aria-label="Who pays whom, and what we refuse to sell">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#173f66"/></marker><marker id="arx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8e8e8e"/></marker></defs>
+<style>.b{font-size:12px;font-weight:700}.s{font-size:10.5px;fill:#555}.l{font-size:10px;fill:#173f66;font-weight:700}.x{font-size:10px;fill:#8e8e8e}</style>
+<rect x="8" y="20" width="196" height="80" rx="6" fill="#eef3f8" stroke="#173f66"/>
+<text x="22" y="48" class="b">P1 the key holder</text>
+<text x="22" y="68" class="s">$108/yr, billed once</text>
+<rect x="8" y="118" width="196" height="80" rx="6" fill="#eef3f8" stroke="#173f66"/>
+<text x="22" y="146" class="b">P2 the maker</text>
+<text x="22" y="166" class="s">$348/yr per skill</text>
+<rect x="8" y="216" width="196" height="80" rx="6" fill="#eef3f8" stroke="#173f66"/>
+<text x="22" y="244" class="b">P3 the company</text>
+<text x="22" y="264" class="s">from $20,000/yr</text>
+<rect x="290" y="56" width="180" height="200" rx="6" fill="#fff" stroke="#1a1a1a" stroke-width="1.5"/>
+<text x="380" y="92" class="b" text-anchor="middle">TOMOSHIBI</text>
+<text x="380" y="114" class="s" text-anchor="middle">We are paid for</text>
+<text x="380" y="134" class="b" text-anchor="middle">deciding</text>
+<text x="380" y="162" class="s" text-anchor="middle">ALLOWED / NEEDS_PRESS</text>
+<text x="380" y="178" class="s" text-anchor="middle">/ DENIED: all billed alike</text>
+<text x="380" y="206" class="s" text-anchor="middle">STOPPED: not billed</text>
+<text x="380" y="222" class="s" text-anchor="middle">(no verdict exists)</text>
+<path d="M204 60 H286" stroke="#173f66" marker-end="url(#ar)" fill="none"/>
+<path d="M204 158 H286" stroke="#173f66" marker-end="url(#ar)" fill="none"/>
+<path d="M204 256 H286" stroke="#173f66" marker-end="url(#ar)" fill="none"/>
+<text x="214" y="52" class="l">money</text>
+<rect x="556" y="56" width="196" height="92" rx="6" fill="#e7e9ec" stroke="#8e8e8e"/>
+<text x="570" y="84" class="b">0G Private Computer</text>
+<text x="570" y="104" class="s">$0.000036 per judgement</text>
+<text x="570" y="122" class="s">[verified] 467 calls</text>
+<path d="M470 100 H552" stroke="#173f66" marker-end="url(#ar)" fill="none"/>
+<text x="482" y="92" class="l">cost</text>
+<rect x="556" y="170" width="196" height="120" rx="6" fill="#fff" stroke="#8e8e8e" stroke-dasharray="4 3"/>
+<text x="570" y="196" class="b" fill="#8e8e8e">Never sold</text>
+<text x="570" y="216" class="x">&#215; % of anything that moves</text>
+<text x="570" y="234" class="x">&#215; custody of keys or funds</text>
+<text x="570" y="252" class="x">&#215; the contents of requests</text>
+<text x="570" y="270" class="x">&#215; stars</text>
+<path d="M470 215 H552" stroke="#8e8e8e" stroke-dasharray="4 3" marker-end="url(#arx)" fill="none"/>
+<text x="474" y="208" class="x">cut off by design</text>
+</svg></div></figure>
+<p class="note"><b>Why <span class="mono">STOPPED</span> is not billed.</b> It means our own sealed model was unreachable, so no verdict exists. Billing it would mean <b>we earn when we are down</b> &#8212; and a company that earns while failing stops noticing that it failed.</p>
+</section>
+<section><h2><span class="no">02</span>Lean canvas</h2>
+<p class="msg">The full text, with the gaps it had to decide and the contradiction register, is in <span class="mono">LEAN-CANVAS.md</span>. This is the one-page view.</p>
+<figure><figcaption>Figure 2&emsp;Lean canvas</figcaption><div class="fig-scroll"><div class="lc">
+<div class="lc-box" style="grid-area:1/1/3/3"><div class="lc-h">Problem</div><ul><li>A key is a <b>standing</b> permission. There is no way to hand over less</li><li>Every refusal says the same word: &ldquo;failed&rdquo;</li><li>Trust numbers never expire &#8212; and cost <b>$0.0027</b> each</li></ul></div>
+<div class="lc-box" style="grid-area:1/3/2/5"><div class="lc-h">Solution</div><ul><li>A permit signed on a device: key / destination / operation / call budget / expiry</li><li>Proxy execution &#8212; the skill never gets the secret</li><li><b>Four refusals, never collapsed</b></li><li>An append-only trail, sealed on chain</li></ul></div>
+<div class="lc-box" style="grid-area:1/5/3/7"><div class="lc-h">Unique value proposition</div><ul><li><b>Hand an agent one use instead of the key</b> &#8212; and keep every refusal, named and signed</li><li><i>3-D Secure for everything a key can do</i></li></ul></div>
+<div class="lc-box" style="grid-area:1/7/2/9"><div class="lc-h">Unfair advantage</div><ul><li>A trust signal that <b>cannot be bought and does not keep</b></li><li>We structurally cannot read request bodies</li><li>The refusal corpus &#8212; a flow-priced rival cannot afford to collect it</li></ul></div>
+<div class="lc-box" style="grid-area:1/9/3/11"><div class="lc-h">Customer segments</div><ul><li><b>P2 the maker</b> &#8212; early adopter, already pays to be trusted</li><li>P1 the key holder &#8212; the sympathetic persona, zero evidence of paying</li><li>P3 the company &#8212; later, pays most</li></ul></div>
+<div class="lc-box" style="grid-area:2/3/3/5"><div class="lc-h">Key metrics</div><ul><li>Judgements per day</li><li><b>NEEDS_PRESS press-through rate</b> (100% means we built theatre)</li><li>Relight rate after a version bump</li><li>STOPPED rate &#8212; unbilled, so a clean SLO</li></ul></div>
+<div class="lc-box" style="grid-area:2/7/3/9"><div class="lc-h">Channels</div><ul><li>1. Device bundling &#8212; <b>the customer decides nothing</b></li><li>2. The repo and three live pages</li><li>3. The embeddable badge (the only loop that compounds)</li></ul></div>
+<div class="lc-box" style="grid-area:3/1/4/6"><div class="lc-h">Cost structure</div><ul><li><b>$0.000036</b> per judgement [verified]</li><li>A free user costs <b>$0.07</b>/month</li><li>0G Storage fee model <b>[unverified]</b> &#8212; the one cost that could turn C into a liability</li><li><b>The real cost is distribution</b></li></ul></div>
+<div class="lc-box" style="grid-area:3/6/4/11"><div class="lc-h">Revenue streams</div><ul><li>A. $108/yr billed once &#8212; <b>every verdict billed alike</b></li><li>B. $348/yr &#8212; badge and analytics. <b>The flame is free to see</b></li><li>C. from $20,000/yr &#8212; for the duration of the contract</li><li>D. device bundling &#8212; attempted first</li></ul></div>
+</div></div></figure>
+<p class="note"><b>The early adopter is P2, the maker &#8212; not P1.</b> P1 is the sympathetic persona and the evidence that P1 pays a subscription is <b>zero</b>. P2 already has a recurring budget line for being trusted. Sell to the side that already pays for trust.</p>
+</section>
+<section><h2><span class="no">03</span>Cash flow</h2>
+<p class="msg">This is not a capital-intensive business. Inference is <b>7% of year-3 revenue</b>, and the only thing that can kill it is that nobody pays.</p>
+<div class="kpis"><div class="kpi"><div class="v">$0.000036</div><div class="l">PER JUDGEMENT [VERIFIED]</div></div><div class="kpi"><div class="v">852</div><div class="l">PAYING KEY HOLDERS FUND ONE PERSON</div></div><div class="kpi"><div class="v">7.3<small>%</small></div><div class="l">YEAR-3 INFERENCE AS A SHARE OF REVENUE</div></div></div>
+<figure><figcaption>Figure 3&emsp;Revenue, every cost, and the cash left over</figcaption><div class="fig-scroll"><svg viewBox="0 0 760 316" role="img" aria-label="Revenue, cost and cash left over, years 1 to 3">
+<style>.b{font-size:11px;font-weight:700}.s{font-size:10px;fill:#555}.n{font-size:10.5px;font-variant-numeric:tabular-nums}</style>
+<path d="M40 232 H740" stroke="#1a1a1a"/>
+<rect x="80" y="222.0" width="54" height="10.0" fill="#173f66"/>
+<rect x="140" y="227.7" width="54" height="4.3" fill="#e7e9ec" stroke="#8e8e8e"/>
+<rect x="200" y="226.3" width="54" height="5.7" fill="#fff" stroke="#173f66" stroke-width="1.5"/>
+<text x="107" y="214.0" class="n" text-anchor="middle">$71,400</text>
+<text x="167" y="219.7" class="n" text-anchor="middle">$30,580</text>
+<text x="227" y="218.3" class="n" text-anchor="middle">$40,820</text>
+<text x="167" y="252" class="b" text-anchor="middle">Year 1</text>
+<text x="167" y="268" class="s" text-anchor="middle">500 key holders &#183; 50 makers &#183; 0 companies</text>
+<rect x="305" y="173.9" width="54" height="58.1" fill="#173f66"/>
+<rect x="365" y="203.3" width="54" height="28.7" fill="#e7e9ec" stroke="#8e8e8e"/>
+<rect x="425" y="202.6" width="54" height="29.4" fill="#fff" stroke="#173f66" stroke-width="1.5"/>
+<text x="332" y="165.9" class="n" text-anchor="middle">$414,400</text>
+<text x="392" y="195.3" class="n" text-anchor="middle">$204,900</text>
+<text x="452" y="194.6" class="n" text-anchor="middle">$209,500</text>
+<text x="392" y="252" class="b" text-anchor="middle">Year 2</text>
+<text x="392" y="268" class="s" text-anchor="middle">2,500 key holders &#183; 300 makers &#183; 2 companies</text>
+<rect x="530" y="34.0" width="54" height="198.0" fill="#173f66"/>
+<rect x="590" y="146.0" width="54" height="86.0" fill="#e7e9ec" stroke="#8e8e8e"/>
+<rect x="650" y="120.0" width="54" height="112.0" fill="#fff" stroke="#173f66" stroke-width="1.5"/>
+<text x="557" y="26.0" class="n" text-anchor="middle">$1,412,000</text>
+<text x="617" y="138.0" class="n" text-anchor="middle">$613,280</text>
+<text x="677" y="112.0" class="n" text-anchor="middle">$798,720</text>
+<text x="617" y="252" class="b" text-anchor="middle">Year 3</text>
+<text x="617" y="268" class="s" text-anchor="middle">8,000 key holders &#183; 1,000 makers &#183; 10 companies</text>
+<rect x="40" y="300" width="12" height="12" fill="#173f66"/><text x="58" y="310" class="s">revenue</text>
+<rect x="130" y="300" width="12" height="12" fill="#e7e9ec" stroke="#8e8e8e"/><text x="148" y="310" class="s">all costs</text>
+<rect x="226" y="300" width="12" height="12" fill="#fff" stroke="#173f66" stroke-width="1.5"/><text x="244" y="310" class="s">cash left over</text>
+</svg></div></figure>
+<div class="tbl"><table><caption>Table 1&emsp;The same three years, as numbers</caption><thead><tr><th>Year</th><th class="num">A. key holders</th><th class="num">B. makers</th><th class="num">C. companies</th><th class="num">Revenue</th><th class="num">Inference</th><th class="num">People + infra</th><th class="num">Channel</th><th class="num">Cash left</th></tr></thead><tbody>
+<tr><td><b>Year 1</b></td><td class="num">500</td><td class="num">50</td><td class="num">0</td><td class="num">$71,400</td><td class="num">$6,480</td><td class="num">$6,000</td><td class="num">$18,100</td><td class="num"><b>$40,820</b></td></tr>
+<tr><td><b>Year 2</b></td><td class="num">2,500</td><td class="num">300</td><td class="num">2</td><td class="num">$414,400</td><td class="num">$32,400</td><td class="num">$92,000</td><td class="num">$80,500</td><td class="num"><b>$209,500</b></td></tr>
+<tr><td><b>Year 3</b></td><td class="num">8,000</td><td class="num">1,000</td><td class="num">10</td><td class="num">$1,412,000</td><td class="num">$103,680</td><td class="num">$270,000</td><td class="num">$239,600</td><td class="num"><b>$798,720</b></td></tr>
+</tbody></table></div>
+<p class="note"><b>The cash point that made us change A's shape.</b> $108 billed once arrives <b>at the start</b> of the year it covers. The same amount at $9/month arrives twelve times, after the cost of serving it. <b>Annual billing is not a pricing trick here; it is the working capital.</b></p>
+<p class="note"><b>What this table does not contain.</b> No funding round, no salary for the two of us in year 1, no enterprise sales team. If any of the three were needed, the shape of row 3 changes before the margin does.</p>
+</section>
+<section><h2><span class="no">04</span>Where every number comes from</h2>
+<p class="msg">If a number here cannot be reproduced from the column next to it, it should not be in a pitch.</p>
+<div class="tbl"><table><caption>Table 2&emsp;Formula, inputs, result</caption><thead><tr><th>What</th><th>How it is computed</th><th class="num">Result</th><th>Standing</th><th>Note</th></tr></thead><tbody>
+<tr><td><b>Cost of one judgement</b></td><td class="mono">283.9 input tokens &#215; $0.08/M + 28.0 output tokens &#215; $0.48/M</td><td class="num"><b>$0.000036</b></td><td><span class="tag verified">verified</span></td><td>Token counts averaged over <b>467</b> production calls; unit prices read from <span class="mono">GET router-api.0g.ai/v1/models &rarr; pricing_usd</span></td></tr>
+<tr><td><b>Cost of one free user, per month</b></td><td class="mono">2,000 judgements &#215; $0.000036</td><td class="num"><b>$0.07</b></td><td><span class="tag verified">verified</span></td><td>Arithmetic on the row above. This is why the free tier can be generous</td></tr>
+<tr><td><b>Gross margin if a plan-A user maxes the plan</b></td><td class="mono">1 &minus; (50,000 &#215; 12 &#215; $0.000036) / $108</td><td class="num"><b>80%</b></td><td><span class="tag verified">verified</span></td><td>Worst case for us, not the expected case</td></tr>
+<tr><td><b>Year-3 revenue (= the published SOM)</b></td><td class="mono">8,000 &#215; $108 + 1,000 &#215; $348 + 10 &#215; $20,000</td><td class="num"><b>$1,412,000</b></td><td><span class="tag assumption">assumption</span></td><td>The user counts come from the SOM build in the market deck, not from this page. <b>Changing the price would change this number</b> &#8212; which is why A moved from $9/month to $108/year and <b>not</b> to $79/year</td></tr>
+<tr><td><b>Where 8,000 key holders comes from</b></td><td class="mono">8,000,000 hardware wallets shipped &#215; 5% use an agent &#215; 2% of those pay</td><td class="num"><b>8,000</b></td><td><span class="tag assumption">assumption</span></td><td>Two chained percentages, both chosen by us. <b>This is the softest number on the page</b></td></tr>
+<tr><td><b>Year-3 judgements served</b></td><td class="mono">8,000 paying &#215; 10,000/mo + 80,000 free &#215; 2,000/mo, &#215; 12</td><td class="num"><b>2.88B</b></td><td><span class="tag assumption">assumption</span></td><td>Free users assumed at 10&#215; paying users. <b>[unverified]</b> whether $0.08/M still holds at this volume</td></tr>
+<tr><td><b>Year-3 cost of inference</b></td><td class="mono">2.88B judgements &#215; $0.000036</td><td class="num"><b>$103,680</b></td><td><span class="tag assumption">assumption</span></td><td><b>7.3% of revenue.</b> Inference is not the business risk</td></tr>
+<tr><td><b>Year-3 channel cost</b></td><td class="mono">4,000 bundled users &#215; $108 &#215; 30% + 2,750 new direct users &#215; $40</td><td class="num"><b>$239,600</b></td><td><span class="tag assumption">assumption</span></td><td>The revenue share is the price of the only channel where the customer decides nothing</td></tr>
+<tr><td><b>People one paying cohort funds</b></td><td class="mono">($80,000 + $12,000) / $108</td><td class="num"><b>852 key holders</b></td><td><span class="tag assumption">assumption</span></td><td>Or <b>265 makers</b>, or <b>4.6 companies</b>. This is the number to aim at first, not the SOM</td></tr>
+</tbody></table></div>
+<p class="note"><b>Read the standings in order of danger.</b> Every [verified] number is a cost; every [assumption] is a revenue. <b>That is the correct way round, and it is still the whole risk.</b></p>
+</section>
+<section><h2><span class="no">05</span>Sources</h2>
+<div class="tbl"><table><caption>Table 3&emsp;Everything taken from outside this repository</caption><thead><tr><th>Source</th><th>What we took</th><th>Standing</th><th>How we use it</th></tr></thead><tbody>
+<tr><td><b><a href="https://router-api.0g.ai/v1/models">0G model pricing</a></b></td><td>GET https://router-api.0g.ai/v1/models &rarr; pricing_usd ($0.08/M input, $0.48/M output, model 0gm-1.0-35b-a3b)</td><td><span class="tag verified">verified</span></td><td>Read by the Broker on every request. Measured again over 467 calls</td></tr>
+<tr><td><b><a href="https://www.snsinsider.com/reports/machine-identity-security-market">Machine identity security market</a></b></td><td>$9.85B (2025), CAGR 10.62%</td><td><span class="tag unverified">unverified</span></td><td>Vendor report. Used only for TAM order of magnitude</td></tr>
+<tr><td><b><a href="https://www.juniperresearch.com/">Agent payments, 2026&rarr;2030</a></b></td><td>$8B &rarr; $1.5T (188&#215;)</td><td><span class="tag unverified">unverified</span></td><td>Juniper Research, as reported. <b>We cite the growth shape, not the absolute number</b></td></tr>
+<tr><td><b><a href="https://www.vanta.com/pricing">Compliance automation spend</a></b></td><td>Vanta $18.8k/company/yr, Drata $12.5k</td><td><span class="tag unverified">unverified</span></td><td>The existing budget line B competes for</td></tr>
+<tr><td><b><a href="https://www.ibm.com/reports/data-breach">Cyber insurance market</a></b></td><td>$16.3B/yr; average incident cost $4.44M</td><td><span class="tag unverified">unverified</span></td><td>Used to size the loss-shifting side of the market, not as our revenue</td></tr>
+<tr><td><b><a href="https://www.ledger.com/">Hardware wallets shipped</a></b></td><td>~8M units</td><td><span class="tag unverified">unverified</span></td><td>The base of the 8,000-user funnel. <b>The weakest link in the SOM chain</b></td></tr>
+<tr><td><b>Stars for sale</b></td><td>$0.0027 per star</td><td><span class="tag verified">verified</span></td><td>Listed price on an open marketplace, read 2026-11-05</td></tr>
+</tbody></table></div>
+<p class="src">Retrieved 2026-11-06. Market sizes marked [unverified] are vendor or analyst publications we have not independently checked; we use them for order of magnitude and say so. The SOM is ours, and it is deliberately the smallest number we publish.</p>
+</section>
+<footer class="doc-footer"><span>TOMOSHIBI &#8212; ETHGlobal Mumbai 2026</span><span>Generated by ideation/build-business-model.py</span></footer>
+</div>
+</body>
+</html>

@@ -8,6 +8,7 @@ assets/sequence.svg, assets/trust.svg). The Japanese copies are written one dire
 for reading, not for the submission.
 """
 import pathlib
+import re
 
 OUT = pathlib.Path(__file__).parent
 
@@ -23,7 +24,7 @@ T = {
             ('WORLD ID', ['one person, once. The only way a star', 'is lit, and the holder\'s address is', 'never written into it']),
             ('THE REAL SERVICES', ['api.anthropic.com · api.stripe.com', 'api.resend.com'])],
   'ledger_where': 'hardware, in your hand — not in the laptop, and not in the cloud',
-  'flow_hint': 'One call, moving through the same figure. It loops. Step 4, in orange, is the only one a person is in — and most calls never reach it.',
+  'flow_hint': 'The figure writes itself out a piece at a time, saying what each piece is for; then one call walks the eight steps. It loops. Step 4, in orange, is the only one a person is in — and most calls never reach it.',
   'box': 'TOMOSHIBI · the switchboard, on the laptop',
   'box_sub': 'two parts: the page you look at, and the broker that holds this table',
   'box_foot': 'What leaves this laptop: the request itself, its weight, and the trail. Never the right column.',
@@ -103,6 +104,17 @@ T = {
             'the result comes back to the tool, with a hash of it. Never the key',
             'the row is appended, and the thread sealed into 0G Storage',
             'afterwards: World ID, one person once — a star on this version'],
+  'write': [(['laptop'], ['One laptop. Everything drawn inside this line is yours — your agent, your tools, your keys.']),
+            (['tools'], ['The tools ask by label: model-main, stripe-live. A label is worth nothing anywhere else,', 'and nothing in here is ever handed a key.']),
+            (['box'], ['TOMOSHIBI sits between them. Two parts: a page you look at, and a broker that holds the table.']),
+            (['table'], ['The table is the whole trick — label, what it may do, the real key.', 'The right column never leaves this laptop.']),
+            (['ledger'], ['The Ledger is hardware, in your hand. It is the only thing that can add a row to that table,', 'and the only thing that can approve a heavy call.']),
+            (['zg'], ['0G Private Computer weighs each request before it runs. If it does not answer the call stops —', 'there is no fallback judgement.']),
+            (['services'], ['Only at this crossing is the label swapped for the key, and only for the one call that was allowed.']),
+            (['storage'], ['The row is appended, and the thread sealed into 0G Storage. Nobody can go back and tidy it.']),
+            (['world'], ['World ID: one person, once. That is what makes a count of stars worth reading at all.']),
+            (['order', 'who'], ['Eight steps, in order. Only step 4 has a person in it — and most calls never reach it.'])],
+  'write_run': ['Now one call, moving through it.'],
  },
  'ja': {
   'font': 'Hiragino Sans, Hiragino Kaku Gothic ProN, Helvetica, sans-serif',
@@ -115,7 +127,7 @@ T = {
             ('World ID', ['一人の人間が、一度だけ。星に灯が', 'ともる唯一の道。保有者の', 'アドレスは書かない']),
             ('本物のサービス', ['api.anthropic.com · api.stripe.com', 'api.resend.com'])],
   'ledger_where': '手元のハードウェア — パソコンの中でも、クラウドでもない',
-  'flow_hint': '同じ図の上を、1回の呼び出しが通っていく。橙の段だけが、人のいる段。クリックで停まる。',
+  'flow_hint': '図が1つずつ、役割を言いながら書き上がり、そのあとで1回の呼び出しが8つの段を歩く。繰り返し再生。人がいるのは橙の4だけで、ほとんどの呼び出しはそこまで来ない。',
   'box': '灯火 · 交換台（ノートパソコンの中）',
   'box_sub': '2つからなる：人が見る画面と、この表を持つ Broker',
   'box_foot': 'このパソコンを出るのは、要求そのものと、その重さと、台帳。右の列は出ない。',
@@ -193,6 +205,17 @@ T = {
             '結果とそのハッシュが道具に返る。キーは返らない',
             '台帳に1行追記し、0G Storage に封じる',
             'あとで：World ID で一人一度 — このバージョンに灯'],
+  'write': [(['laptop'], ['ノートパソコン1台。この線の内側は全部あなたのもの — エージェントも、道具も、キーも。']),
+            (['tools'], ['道具はラベルで頼む：model-main、stripe-live。ラベルは外では何の価値もなく、', 'この中の誰もキーを渡されない。']),
+            (['box'], ['あいだに灯火が入る。2つからなる：人が見る画面と、表を持つ Broker。']),
+            (['table'], ['この表が全部。ラベル、許す範囲、本物のキー。', '右の列は、このパソコンを出ない。']),
+            (['ledger'], ['Ledger は手元のハードウェア。表に1行を足せる唯一のもので、', '重い呼び出しを許可できる唯一のもの。']),
+            (['zg'], ['0G Private Computer が、走る前に重さを測る。答えが返らなければ呼び出しは止まる —', '代わりの判断は作らない。']),
+            (['services'], ['ラベルがキーに入れ替わるのは、この渡りだけ。しかも許可された1回ぶんだけ。']),
+            (['storage'], ['台帳に1行足し、0G Storage に封じる。あとから整え直せる人はいない。']),
+            (['world'], ['World ID：一人の人間が、一度だけ。星の数が読むに値するのは、これがあるから。']),
+            (['order', 'who'], ['8つの段を、順番に。人がいるのは4だけで、ほとんどの呼び出しはそこまで来ない。'])],
+  'write_run': ['ここから、1回の呼び出しが通っていく。'],
  },
 }
 
@@ -233,24 +256,25 @@ def badge(n, cx, cy, fill='#1b1630', bid=''):
 
 
 def nat(L):
-    """Everyone who touches a call, and which side of the laptop they are on."""
+    """Everyone who touches a call, and which side of the laptop they are on.
+
+    Each piece is wrapped in <g id="u-KEY"> ... <!--/u-KEY-->, which is what
+    flow() animates: the units are written onto the page one at a time.
+    """
     w, h = 1680, 1180
     o = [HEAD.format(w=w, h=h, font=L['font'], css=CSS.format())]
     a = o.append
+    u = lambda k: a(f'<g id="u-{k}">')
+    end = lambda k: a(f'</g><!--/u-{k}-->')
     a(f'<text class="ttl" x="60" y="54">{esc(L["nat_title"])}</text>')
     a(f'<text class="sub" x="60" y="88">{esc(L["nat_sub"])}</text>')
 
-    # the Ledger: neither of the two zones. A thing in a hand.
-    a('<rect x="390" y="108" width="750" height="84" rx="16" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5"/>')
-    a(f'<text class="k" x="414" y="138" fill="#c2410c">{esc(L["ledger"])}</text>')
-    a(f'<text class="m" x="414" y="172">{esc(L["ledger_where"])}</text>')
-
-    # zone 1 — the laptop
+    u('laptop')
     a('<rect x="40" y="200" width="1120" height="545" rx="22" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="10 8"/>')
     a(f'<text class="k" x="64" y="234">{esc(L["inside"])}</text>')
-    # drawn after the zone, or the zone's fill paints over it
-    a('<path d="M765 192 L765 246" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>')
-    a(badge(4, 765, 219, '#f2600c', 'b4'))
+    end('laptop')
+
+    u('tools')
     for i, (t1, t2) in enumerate(L['tools']):
         y = 290 + i * 104
         a(f'<rect class="card" x="64" y="{y}" width="280" height="84" rx="14"/>')
@@ -259,10 +283,15 @@ def nat(L):
         a(f'<path d="M344 {y+42} L386 {y+42}" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>')
         if i == 1:
             a(badge(1, 365, y + 42, bid='b1'))
+    end('tools')
 
+    u('box')
     a('<rect class="card" x="390" y="250" width="750" height="470" rx="18"/>')
     a(f'<text class="h" x="414" y="288">{esc(L["box"])}</text>')
     a(f'<text class="m" x="414" y="316">{esc(L["box_sub"])}</text>')
+    end('box')
+
+    u('table')
     th = L['thead']
     a(f'<text class="k" x="450" y="360">{esc(th[0])}</text>')
     a(f'<text class="k" x="590" y="360">{esc(th[1])}</text>')
@@ -277,11 +306,22 @@ def nat(L):
     a('<path d="M980 386 L980 588" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="7 6"/>')
     a(f'<text class="note" x="414" y="620">{esc(L["keynote"])}</text>')
     a(f'<text class="m" x="414" y="672">{esc(L["box_foot"])}</text>')
+    end('table')
 
-    # zone 2 — everything that is somewhere else
-    a(f'<text class="k" x="1200" y="234">{esc(L["outside"])}</text>')
+    u('ledger')
+    a('<rect x="390" y="108" width="750" height="84" rx="16" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5"/>')
+    a(f'<text class="k" x="414" y="138" fill="#c2410c">{esc(L["ledger"])}</text>')
+    a(f'<text class="m" x="414" y="172">{esc(L["ledger_where"])}</text>')
+    a('<path d="M765 192 L765 246" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>')
+    a(badge(4, 765, 219, '#f2600c', 'b4'))
+    end('ledger')
+
     for i, (title, lines) in enumerate(L['cloud']):
+        key = ('zg', 'storage', 'world', 'services')[i]
         y = 250 + i * 122
+        u(key)
+        if i == 0:
+            a(f'<text class="k" x="1200" y="234">{esc(L["outside"])}</text>')
         a(f'<rect class="card" x="1200" y="{y}" width="440" height="116" rx="14" style="fill:#fffdf8"/>')
         a(f'<text class="k" x="1222" y="{y+30}">{esc(title)}</text>')
         for j, line in enumerate(lines):
@@ -290,10 +330,11 @@ def nat(L):
         start = ' marker-start="url(#a)"' if both else ''
         a(f'<path d="M1146 {y+56} L1196 {y+56}" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"{start}/>')
         a(badge(n, 1171, y + 32, bid=f'b{n}'))
-        if i == 3:  # the answer comes back the same way
+        if i == 3:
             a(badge(6, 1171, y + 80, bid='b6'))
+        end(key)
 
-    # the order, as numbered on the figure
+    u('order')
     a(f'<text class="k" x="60" y="790">{esc(L["order_title"])}</text>')
     a('<rect class="card" x="60" y="810" width="860" height="314" rx="16"/>')
     for i, line in enumerate(L['order']):
@@ -302,14 +343,17 @@ def nat(L):
         a(badge(i + 1, 96, y - 6, '#f2600c' if i == 3 else '#1b1630'))
         a(f'<text class="m" x="124" y="{y}">{esc(line)}</text>')
         a('</g>')
+    end('order')
 
-    # who it is for
+    u('who')
     a(f'<text class="k" x="960" y="790">{esc(L["who_title"])}</text>')
     a('<rect x="960" y="810" width="680" height="314" rx="16" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="8 7"/>')
     for i, line in enumerate(L['who']):
         a(f'<text class="t" x="984" y="{852 + i * 34}">{esc(line)}</text>')
+    end('who')
     a('</svg>')
     return '\n'.join(o)
+
 
 def sequence(L):
     w, h = 1680, 1180
@@ -398,9 +442,59 @@ LEGS = [
 
 
 def flow(L, svg):
-    """The same figure, with one call walking through it."""
-    total = sum(d for _, _, d in LEGS) / 1000
-    t, o = 0.0, []
+    """The same figure, written onto the page one unit at a time, then walked by one call.
+
+    Phase 1: each box draws its own outline and says what it is for.
+    Phase 2: a single call travels the eight numbered crossings.
+    """
+    write_ms, hold_ms = 2600, 1200
+    build = len(L['write']) * write_ms / 1000
+    run = sum(d for _, _, d in LEGS) / 1000
+    total = build + run + hold_ms / 1000
+    o, caps = [], []
+
+    def window(a, b, lo=0.0, hi=1.0):
+        """keyTimes/values that hold, act between a and b, then hold again."""
+        return f'{a:.4f};{b:.4f}', f'{lo};{hi}'
+
+    # phase 1 — writing it out
+    for i, (keys, lines) in enumerate(L['write']):
+        a = i * write_ms / 1000 / total
+        b = (i + 1) * write_ms / 1000 / total
+        ink = a + (b - a) * 0.22          # the box is there by now
+        draw = a + (b - a) * 0.62         # its outline finishes here
+        for key in keys:
+            m = re.search(f'<g id="u-{key}">(.*?)<!--/u-{key}-->', svg, re.S)
+            inner = m.group(1)
+            shapes = []
+            for tag in re.findall(r'<(?:rect|path)\b[^>]*/>', inner):
+                if 'stroke-dasharray' in tag:
+                    continue              # dashed by design: those dashes carry meaning
+                if 'stroke=' not in tag and 'class="card"' not in tag:
+                    continue              # nothing to draw (the stroke comes from .card in the CSS)
+                if tag.startswith('<rect'):
+                    wd = float(re.search(r' width="([\d.]+)"', tag).group(1))
+                    ht = float(re.search(r' height="([\d.]+)"', tag).group(1))
+                    length = 2 * (wd + ht)
+                else:
+                    length = 1
+                    tag_new = tag[:-2] + ' pathLength="1"/>'
+                drawn = (tag if tag.startswith('<rect') else tag_new)[:-2]
+                shapes.append((tag, f'{drawn} stroke-dasharray="{length}" stroke-dashoffset="{length}">'
+                                    f'<animate attributeName="stroke-dashoffset" dur="{total}s"'
+                                    f' repeatCount="indefinite" values="{length};{length};0;0"'
+                                    f' keyTimes="0;{a:.4f};{draw:.4f};1"/></{"rect" if tag.startswith("<rect") else "path"}>'))
+            for old_tag, new_tag in shapes:
+                inner = inner.replace(old_tag, new_tag, 1)
+            svg = svg.replace(m.group(0),
+                              f'<g id="u-{key}" opacity="0"><animate attributeName="opacity" dur="{total}s"'
+                              f' repeatCount="indefinite" values="0;0;1;1" keyTimes="0;{a:.4f};{ink:.4f};1"/>'
+                              f'{inner}<!--/u-{key}-->')
+        caps.append((a, b, lines))
+    caps.append((build / total, (build + run) / total, L['write_run']))
+
+    # phase 2 — one call walking the crossings
+    t = build
     for n, pts, ms in LEGS:
         a, b = t / total, (t + ms / 1000) / total
         t += ms / 1000
@@ -411,17 +505,29 @@ def flow(L, svg):
             f' values="0;0;1;1;0;0" keyTimes="0;{a:.4f};{a:.4f};{b:.4f};{b:.4f};1"/>'
             f'<animateMotion dur="{total}s" repeatCount="indefinite" path="{path}"'
             f' calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;{a:.4f};{b:.4f};1"/></g>')
-        if n:  # a ring on the number this leg belongs to, and its line lit in the list
+        if n:
             cx, cy = BADGE_XY[n]
             o.append(
                 f'<circle cx="{cx}" cy="{cy}" r="20" fill="none" stroke="#f2600c" stroke-width="3" opacity="0">'
                 f'<animate attributeName="opacity" dur="{total}s" repeatCount="indefinite"'
                 f' values="0;0;1;1;0;0" keyTimes="0;{a:.4f};{a:.4f};{b:.4f};{b:.4f};1"/></circle>')
+            p0 = build / total
             svg = svg.replace(
                 f'<g id="o{n}">',
-                f'<g id="o{n}" opacity="0.32"><animate attributeName="opacity" dur="{total}s"'
-                f' repeatCount="indefinite" values=".32;.32;1;1;.32;.32"'
-                f' keyTimes="0;{a:.4f};{a:.4f};{b:.4f};{b:.4f};1"/>')
+                f'<g id="o{n}"><animate attributeName="opacity" dur="{total}s" repeatCount="indefinite"'
+                f' values="1;1;.32;.32;1;1;.32;.32" keyTimes="0;{p0:.4f};{p0:.4f};{a:.4f};{a:.4f};{b:.4f};{b:.4f};1"/>')
+
+    # the running commentary, under the figure
+    for a, b, lines in caps:
+        for j, line in enumerate(lines):
+            o.append(f'<text class="t" x="60" y="{1208 + j * 34}" opacity="0">{esc(line)}'
+                     f'<animate attributeName="opacity" dur="{total}s" repeatCount="indefinite"'
+                     f' values="0;0;1;1;0;0" keyTimes="0;{a:.4f};{a + 0.004:.4f};{b:.4f};{b:.4f};1"/></text>')
+
+    svg = svg.replace('viewBox="0 0 1680 1180" width="1680" height="1180"',
+                      'viewBox="0 0 1680 1280" width="1680" height="1280"')
+    svg = svg.replace('<rect width="1680" height="1180" fill="#F3EEE6"/>',
+                      '<rect width="1680" height="1280" fill="#F3EEE6"/>\n  <path d="M60 1170 L1620 1170" stroke="#d8d2c6" stroke-width="2"/>')
     return svg.replace('</svg>', ''.join(o) + '</svg>')
 
 

@@ -1,216 +1,216 @@
-# Minta からの提案：星は「約束」ではなく「事実」にする（2026-11-06）
+# Proposal from Minta: make the star a "fact", not a "promise" (2026-11-06)
 
-> `final-image.md`・`philosophy.md`・`review.md` を読んだうえでの提案です。
-> 印：**[提案]** まだ2人で決めていない ／ **[未確認]** 調べていない・確かめていない
-> 思想の8本柱はそのまま活かします。変えたいのは「保証」の中身と、作る範囲です。
+> This is a proposal written after reading `final-image.md`, `philosophy.md` and `review.md`.
+> Markers: **[proposed]** not yet decided by the two of us / **[unverified]** not researched or confirmed
+> The eight pillars of the philosophy are kept as they are. What I want to change is the content of the "guarantee", and the scope of what we build.
 
-## 一言
-**Arjun さんに保証させない。Arjun さんが自分の鍵を預けている、という事実を星にする。**
+## In one line
+**Don't make Arjun guarantee anything. Make the star the fact that Arjun has entrusted his own key.**
 
-> おすすめは口で言える。鍵を預けたかは、嘘をつけない。
+> A recommendation can be said out loud. Whether you entrusted your key cannot be faked.
 
-変える提案は3つです。
-1. **星の中身**：「このスキルは良い」という約束 → 「私は自分の鍵でこれを使っている」という事実
-2. **裏切りの扱い**：保証人の重みを下げる → スキルに刻み、使っている全員を同時に守る
-3. **作る範囲**：預け金・投げ銭・二次のマッチングは今回作らない（発表で1行だけ触れる）
+There are three changes I propose.
+1. **What the star contains**: from a promise that "this skill is good" → the fact that "I am using this with my own key"
+2. **How betrayal is handled**: instead of lowering the guarantor's weight → inscribe it on the skill, and protect everyone using it at the same time
+3. **Scope of what we build**: no deposit, no tipping, no secondary matching this time (mention them in one line during the presentation)
 
 ---
 
-## 1. 課題：Arjun さんがリスクを負いすぎている
+## 1. Problem: Arjun is carrying too much risk
 
-`final-image.md` の Arjun さんの一言は「良いものは勧めたい。でも、勧めて裏切られたら嫌だ」です。今の設計は、この「嫌だ」をそのまま本人に負わせています。
+In `final-image.md`, Arjun's one line is "I want to recommend good things. But I don't want to be betrayed after recommending them." The current design puts that "don't want to" squarely on him.
 
-| Arjun さんが負うもの | Arjun さんが得るもの |
+| What Arjun carries | What Arjun gets |
 |---|---|
-| 預け金を置く | ありがとう（投げ銭）とマッチング |
-| 裏切られると重みが下がる | 目利きの履歴 |
-| 自分が保証した他のスキルまで細くなる | 異変を最初に知れる |
-| 友人の信頼を失う | |
+| Puts up a deposit | Thanks (tips) and matching |
+| Weight drops if betrayed | A track record as a judge of quality |
+| Even other skills he guaranteed get thinner | He learns about anomalies first |
+| Loses a friend's trust | |
 
-スキルの更新は Arjun さんには止められません。**自分で制御できない未来に、自分の名前を賭ける形**になっています。詳しくて慎重な人ほど、星を出さなくなります。星が出なければ、信頼の網は育ちません。
-
----
-
-## 2. アイディア：星＝「自分の鍵を預けている」という事実 [提案]
-
-Arjun さんは、自分のためにスキルを使うとき、どのみち Ledger で許可を出します。**その許可を、知り合いに見える星にするだけ**にします。保証のための作業は増えません。
-
-| | 今の案（保証） | 提案（事実） |
-|---|---|---|
-| 星が言っていること | 「このスキルは良い。これからも良い」 | 「私は今、この版を、この範囲で、自分の鍵で使っている」 |
-| 外れることがあるか | ある（未来は分からない） | ない（今の事実なので） |
-| 手間 | 保証のために Ledger＋World ID | 自分で使う許可のついで。公開するときだけ World ID |
-| 偽りにくさ | 口だけで出せる | 自分の鍵を実際に預けないと出せない |
-
-### 星の3つの性質
-1. **事実である**：約束をしないので、裏切られても Arjun さんは嘘をついたことになりません
-2. **生きている**：星は「スキルの版」と「Arjun さんの許可」に紐づきます。スキルが更新されるか、許可が切れると、星は自動で消えます。**古い星が残って、知らない版の看板に使われることがありません**
-3. **見せるほど守られる**：星を見せ合っている人どうしで、警告が流れます（下の 2.2）
-
-### 2.1 「信頼は賭けるもの」（柱3）は残る
-賭けるものを変えます。**賭け金は、預け金でも評判でもなく、自分の鍵そのもの**です。Arjun さんは保証人ではなく、同じ船に乗っている人になります。自分も被害を受ける立場にいることが、星の重みになります。
-
-裏切りは事実として刻まれますが、刻む先を変えます。
-- **スキルに刻む**：範囲外の要求の証拠。その版の星は全員ぶん消え、権限も止まる
-- **Arjun さんには刻まない**：記録に残るのは「Arjun さんも使っていた。何分後に止まった」という事実だけ。重みは下げない
-
-### 2.2 見せるほど守られる（柱4の線引きがそのまま使える）
-| 種類 | 届く範囲 | 根拠 |
-|---|---|---|
-| **証明できる違反**（範囲外の要求） | 全員。その版を使う全員の権限が止まる | チェーン上の証拠 |
-| **疑わしいという判断**（TeeML の警告） | 星を見せ合っている人だけ | 「Priya さんの端末で、このスキルに警告が出ました」 |
-
-判断は罰に使わず、人のつながりに沿って知らせるだけにします。Arjun さんにとっては、星を見せるほど、自分の代わりにスキルを見張ってくれる目が増えます。**リスクを負う行為が、守られる行為に変わります。**
-
-### 2.3 Arjun さんの旨み（お金なしで成り立つ）
-- **聞かれなくなる**：「どのスキルがいい？」に、自分の空を見せれば済む
-- **自分も守られる**：知り合いの端末の警告が、自分にも届く
-- **自分も選びやすくなる**：全員が Priya さんであり、Arjun さんでもある
-- **履歴が残る**：「早くから使っていて、問題が起きなかった」が検証できる形で残る
-
-### 2.4 正直な弱点
-- **使っていないのに許可だけ出す星**：安く作れます。対策は、使用の記録（0G の request ID）がある星だけを数えること（`integrated.md` の「使った証拠のある口コミだけ」と同じ）
-- **範囲の違い**：Arjun さんは読み取りだけ、Priya さんは送金も、という差があります。星に範囲を入れて「Arjun さんは読み取りで使用中」と出します
-- **何を使っているかが見える**：見せる相手を選べるようにします。チェーンに載るのは仮名だけ（今の設計のまま）
-- **新しいスキルには星が無い**：最初の1人は誰かがなる必要があります。星が無いスキルは、細い権限から始まるだけで、使えないわけではありません
+Arjun cannot stop a skill from being updated. It is **a shape where you bet your own name on a future you cannot control**. The more knowledgeable and careful a person is, the less they will give out stars. If no stars appear, the web of trust never grows.
 
 ---
 
-## 3. 全体コンセプト [提案]
+## 2. Idea: the star = the fact that "I have entrusted my own key" [proposed]
 
-**AI は人間証明を持てない。だから、人間が自分の証明を貸す。**
+When Arjun uses a skill for himself, he issues a permit on the Ledger anyway. **We just make that permit a star visible to the people he knows.** No extra work for the sake of guaranteeing.
 
-ピッチの3行（思想の柱 2・5 から）
-1. **問題**：星は買える。1個 $0.0027
-2. **答え**：AI は1秒に100回「許可」を押せる。このボタンだけは押せない
-3. **世界観**：星の数ではなく、誰の星か
-
-星1個は、3つがそろったときだけ光ります。それぞれ別の偽造を防ぎます。
-
-| そろうもの | 担うもの | 防ぐ偽造 |
+| | Current plan (guarantee) | Proposal (fact) |
 |---|---|---|
-| **人である** | World ID | 偽アカウントの量産。1人が1つのスキルに出せる星は1個 |
-| **本人が押した** | Ledger | 本人の PC の中の AI によるなりすまし |
-| **実際に使っている** | 0G の使用記録 | 口だけの推薦 |
+| What the star says | "This skill is good. It will stay good." | "I am, right now, using this version, with this scope, with my own key." |
+| Can it be wrong | Yes (the future is unknown) | No (it is a present fact) |
+| Effort | Ledger + World ID for the sake of guaranteeing | A by-product of the permit you issue for your own use. World ID only when you make it public |
+| Hardness to fake | Can be issued with words alone | Cannot be issued without actually entrusting your own key |
 
-World と Ledger は役が重なりません。World だけでは PC の中の AI が代わりに星を出せます。Ledger だけでは1人が鍵を1000個作れます。
+### Three properties of the star
+1. **It is a fact**: since no promise is made, Arjun has not lied even if the skill betrays him
+2. **It is alive**: a star is tied to "the version of the skill" and "Arjun's permit". If the skill is updated, or the permit expires, the star disappears automatically. **An old star never lingers and gets used as a signboard for a version nobody has seen**
+3. **The more you show it, the more you are protected**: warnings flow between people who show each other their stars (see 2.2 below)
+
+### 2.1 "Trust is something you bet" (pillar 3) survives
+We change what is bet. **The stake is neither a deposit nor a reputation — it is your own key itself.** Arjun is not a guarantor; he is someone on the same boat. The fact that he would also be harmed is what gives the star its weight.
+
+Betrayal is still inscribed as a fact, but we change where it is inscribed.
+- **Inscribe it on the skill**: evidence of an out-of-scope request. Every star on that version disappears, and permissions stop
+- **Do not inscribe it on Arjun**: all that stays in the record is the fact that "Arjun was using it too. It stopped N minutes later." His weight is not lowered
+
+### 2.2 The more you show it, the more you are protected (pillar 4's line works as is)
+| Kind | How far it reaches | Basis |
+|---|---|---|
+| **Provable violation** (out-of-scope request) | Everyone. Permissions stop for everyone using that version | On-chain evidence |
+| **A judgement that something is suspicious** (TeeML warning) | Only people who show each other their stars | "A warning appeared for this skill on Priya's device" |
+
+Judgements are not used for punishment; they are only relayed along human connections. For Arjun, the more he shows his stars, the more eyes watch the skill on his behalf. **The act of taking on risk turns into the act of being protected.**
+
+### 2.3 What's in it for Arjun (works with no money involved)
+- **People stop asking**: to "which skill is good?", he can just show his sky
+- **He is protected too**: warnings from acquaintances' devices reach him
+- **He can choose more easily too**: everyone is both Priya and Arjun
+- **A history remains**: "used it early, and nothing went wrong" remains in a verifiable form
+
+### 2.4 Honest weaknesses
+- **A star where the permit is issued but the skill is never used**: cheap to manufacture. The countermeasure is to count only stars that have a usage record (a 0G request ID) — the same as "only word of mouth with evidence of actual use" in `integrated.md`
+- **Differences in scope**: Arjun may be read-only while Priya also sends money. We put the scope into the star and show "Arjun is using it read-only"
+- **What you are using becomes visible**: we let you choose who sees it. Only the pseudonym goes on chain (unchanged from the current design)
+- **A new skill has no stars**: someone has to be the first person. A skill with no stars simply starts with thin permissions; it is not unusable
 
 ---
 
-## 4. ジャーニー [提案]
+## 3. Overall concept [proposed]
 
-`final-image.md` の絵コンテを土台に、変えた所に ★ を付けました。
+**An AI cannot hold a proof of humanity. So a human lends their own proof.**
 
-### Priya さん（主役）
-| # | 場面 | 起きること | 字幕 |
+The pitch in three lines (from pillars 2 and 5)
+1. **Problem**: stars can be bought. $0.0027 each
+2. **Answer**: an AI can press "allow" 100 times a second. This is the one button it cannot press
+3. **Worldview**: not the number of stars, but whose star it is
+
+A single star lights up only when three things line up. Each prevents a different kind of forgery.
+
+| What lines up | What it carries | The forgery it prevents |
+|---|---|---|
+| **Being a human** | World ID | Mass production of fake accounts. One person can give one skill one star |
+| **The key holder pressed it** | Ledger | Impersonation by the AI inside the person's own PC |
+| **Actually using it** | 0G usage record | Recommendations made with words alone |
+
+World and Ledger do not overlap in role. With World alone, the AI inside the PC could issue the star on the person's behalf. With Ledger alone, one person could create 1,000 keys.
+
+---
+
+## 4. Journey [proposed]
+
+Built on the storyboard in `final-image.md`, with ★ marking what changed.
+
+### Priya (the protagonist)
+| # | Scene | What happens | Subtitle |
 |---|---|---|---|
-| 0 | 掴み | AI が `.env` を開き、「許可」を連打し、偽の星を1000個作る | 「AI はもう、あなたの PC の中にいる」 |
-| 1 ★ | 選ぶ | 「知り合いだけ」に切り替えると、満天の星が消えて1つ残る。「Arjun さんが読み取りで使用中・42日」 | 「星の数ではなく、誰の星か」 |
-| 2 | 入れる | Ledger の画面に範囲が出る。1回押す | 「鍵は Ledger から出ない」 |
-| 3 | 日常 | 細い権限で自動で動く。Ledger は静か | 「ふだんは、何もしなくていい」 |
-| 4 | 事故の日（山場） | スキルが更新され、範囲外を要求する。0G が判定して止め、Ledger に `DENIED` | 「このボタンだけは押せない」 |
-| 5 ★ | 波及 | その版の星が一斉に消える。**Arjun さんの鍵も同時に止まり、守られる** | 「同じ船に乗っている人の星」 |
-| 6 | 確かめる | 視聴者が記録をたどる | 「誰にも消せない」 |
+| 0 | Hook | The AI opens `.env`, hammers "allow", and manufactures 1,000 fake stars | "The AI is already inside your PC" |
+| 1 ★ | Choosing | Switching to "people I know only" makes the sky full of stars vanish, leaving one. "Arjun using it read-only, 42 days" | "Not the number of stars, but whose star it is" |
+| 2 | Installing | The scope appears on the Ledger screen. One press | "The key never leaves the Ledger" |
+| 3 | Routine | It runs automatically with thin permissions. The Ledger stays quiet | "In routine use, you don't have to do anything" |
+| 4 | The day of the accident (climax) | The skill is updated and requests something out of scope. 0G judges it and stops it, and `DENIED` goes to the Ledger | "This is the one button it cannot press" |
+| 5 ★ | Ripple | Every star on that version disappears at once. **Arjun's key stops at the same time, and he is protected** | "Stars of the people on the same boat" |
+| 6 | Verifying | A viewer traces the record | "No one can erase it" |
 
-### Arjun さん（星を出す人）★
-1. **使う**：自分のためにスキルを入れ、Ledger で許可する（ここまでは誰でもやること）
-2. **見せる**：「知り合いに見せる」を選ぶ。World ID で1回証明すると、星になる
-3. **何もしない**：星は使っているあいだだけ光る。スキルが更新されると自動で消え、新しい版を許可し直すとまた光る
-4. **事故の日**：自分の鍵も止まって守られる。知り合いの端末の警告も届く。重みは下がらない
+### Arjun (the person who gives stars) ★
+1. **Uses it**: installs the skill for himself and issues a permit on the Ledger (up to here, this is what anybody does)
+2. **Shows it**: chooses "show to people I know". One proof with World ID turns it into a star
+3. **Does nothing**: the star shines only while he is using it. When the skill is updated the star disappears automatically, and it shines again when he re-permits the new version
+4. **The day of the accident**: his own key stops too, so he is protected. Warnings from acquaintances' devices reach him. His weight does not drop
 
-### Arjun さんの一言の変化
-- 前：「良いものは勧めたい。でも、勧めて裏切られたら嫌だ」
-- 後：「勧めてはいない。自分が使っているものを、見せているだけ」
+### How Arjun's one line changes
+- Before: "I want to recommend good things. But I don't want to be betrayed after recommending them"
+- After: "I'm not recommending anything. I'm just showing what I use"
 
 ---
 
-## 5. デモ（決勝 4分。動画は 3分未満に縮める）[提案]
+## 5. Demo (4 minutes in the finals. The video is cut to under 3 minutes) [proposed]
 
-審査員1人で成り立つ形にします。**審査員が Arjun さん役**です。
+Make it work with a single judge. **The judge plays Arjun.**
 
-| 時間 | 内容 |
+| Time | Content |
 |---|---|
-| 0:00〜0:40 | **星を買う**：AI に偽の星を1000個作らせ、ソフトの「許可」も自分で押させる |
-| 0:40〜1:20 | **星が消える**：「人だけ」に切り替える。満天の星が消える |
-| 1:20〜2:20 | **使うと星になる**：審査員が自分用にスキルを許可し（Ledger）、World ID で見せる。発表者の空に星が1つ増える。同じことを AI にやらせても増えない |
-| 2:20〜3:30 | **事故の日**：スキルが更新され、範囲外を要求する。0G が止め、`DENIED`。審査員の星は自動で消え、審査員の鍵も止まっている。「あなたは何も失っていません」 |
-| 3:30〜4:00 | **確かめる**：審査員が自分のスマホで記録をたどる |
+| 0:00–0:40 | **Buying stars**: have the AI manufacture 1,000 fake stars, and have it press the software "allow" itself as well |
+| 0:40–1:20 | **The stars disappear**: switch to "humans only". The sky full of stars vanishes |
+| 1:20–2:20 | **Using it makes a star**: the judge permits the skill for their own use (Ledger) and shows it with World ID. One star is added to the presenter's sky. Doing the same thing with an AI adds nothing |
+| 2:20–3:30 | **The day of the accident**: the skill is updated and requests something out of scope. 0G stops it, `DENIED`. The judge's star disappears automatically, and the judge's key has stopped too. "You have lost nothing" |
+| 3:30–4:00 | **Verifying**: the judge traces the record on their own phone |
 
-- 動画の長さ：ETHGlobal は 2〜4分。0G は 3分未満を求めているので、**2:00〜2:59 で作る**
-- 決勝の発表：デモ 4分＋質疑 3分
+- Video length: ETHGlobal says 2–4 minutes. 0G asks for under 3 minutes, so **we build it at 2:00–2:59**
+- Finals presentation: 4 minutes of demo + 3 minutes of Q&A
 
 ---
 
-## 6. プライズとの関係 [提案]
+## 6. Relationship to the prizes [proposed]
 
-パートナー賞は3つまでです。World の2つを別々に数えるかは [未確認] です。
+Partner prizes are capped at three. Whether World's two prizes are counted separately is [unverified].
 
-| 賞 | 金額 | 求められること（賞ページより） | このプロダクトで見せる場面 |
+| Prize | Amount | What is required (from the prize page) | Where this product shows it |
 |---|---|---|---|
-| **World ID Agent Pass** | $5,000 | その瞬間に新しい証明を求める／全行程の実演／**拒否・期限切れなどで保護された操作が起きない場面**／バックエンドで検証／導入の振り返り | 星を見せる瞬間と、決定的な操作の承認。証明を取り消すと星が出ない・操作が起きない |
-| **World Best Use of IDKit** | $2,500（最大2チームに $1,250） | 実際の「信頼の瞬間」を解く／**必要最小限の証明を選んだ理由**／成功と別の道の両方／導入の振り返り | 信頼の瞬間＝星を見せるとき。知りたいのは「一意の人間か」だけなので Proof of Human で足りる、と説明する |
-| **0G Physical AI** | $5,000（実機の作品に1枠） | **判断の流れの中で 0G を呼ぶ**／判断ごとの request ID 付きの記録を 0G Storage に／0G に届かないときの安全停止（判断を偽ると失格）／コントラクトアドレス | 要求ごとに 0G の AI が重さ（ふだん／大事／決定的）を決める。届かなければ人を呼ぶか止める。Ledger が実機 |
-| **Finalist** | — | 技術・独創性・実用性・使いやすさ・驚き | 一言で言える問題（星は買える）／触れる実演（押すと星になる）／数字（$0.0027） |
+| **World ID Agent Pass** | $5,000 | Requiring a fresh proof at that moment / demonstrating the full flow / **a scene where a protected operation does not happen because of a denial, an expiry, etc.** / verification on the backend / a retrospective on the integration | The moment a star is shown, and approval of a decisive operation. Revoke the proof and the star does not appear, and the operation does not happen |
+| **World Best Use of IDKit** | $2,500 (up to 2 teams at $1,250) | Solving a real "moment of trust" / **the reason for choosing the minimum necessary proof** / both the successes and the alternatives / a retrospective on the integration | The moment of trust = when a star is shown. All we want to know is "is this a unique human", so Proof of Human is enough — we explain that |
+| **0G Physical AI** | $5,000 (one slot for a work with real hardware) | **Calling 0G inside the decision flow** / a record with a request ID per decision in 0G Storage / a fail-safe stop when 0G is unreachable (faking the judgement disqualifies you) / the contract address | For each request, 0G's AI decides the weight (routine / significant / decisive). If it doesn't get through, call a human or stop. The Ledger is the real hardware |
+| **Finalist** | — | Technology, originality, practicality, usability, surprise | A problem statable in one line (stars can be bought) / a demo you can touch (press it and it becomes a star) / a number ($0.0027) |
 
-### 0G を「記録係」にしない
-0G の賞ページは「0G を記録だけに使う」作品を対象外にしています。今の設計の TeeML は警告するだけで、判断を変えません。**重さの判定そのものを 0G に置く**ことを提案します。
-- 柱4と矛盾しません。AI の判断は「人を呼ぶ」だけで、罰には使わないからです
-- 柱7（大事なときだけ人が出てくる）の「大事かどうか」を決めるのが 0G になります
-- 0G に届かないときは、自動では通さず、Ledger を求めます
+### Don't make 0G a "record keeper"
+0G's prize page excludes works that "use 0G only for recording". The TeeML in the current design only warns; it does not change the decision. **I propose putting the weight judgement itself on 0G.**
+- This does not contradict pillar 4. The AI's judgement is only "call a human"; it is never used for punishment
+- 0G becomes what decides the "is this significant?" of pillar 7 (a human appears only when it is significant)
+- When 0G is unreachable, we do not let it through automatically; we require the Ledger
 
-### 忘れると落ちるもの
-- World の2つとも、**導入の振り返り**（最初の成功までの時間・詰まった所・足りない機能や資料・一番効く改善1つ）が必須です。作業しながらメモを取ります
-- World の証明は会場では模擬です（賞ページに "mocking proofs" "fake identities" とあります）。「偽アカウントを防げる」は設計上の主張として話します
-- ENS は今回の3つに入れない案です。入れるなら、スキルの名前と宣言の置き場として最小限にします
-
----
-
-## 7. 作るもの・作らないもの [提案]
-
-### 作る順番
-| 順 | 作るもの | 通過の目安 |
-|---|---|---|
-| 1 | Ledger で許可に署名する | 画面に範囲が読める形で出る |
-| 2 | Broker の `use` と範囲チェック | 範囲外で `DENIED` が出る |
-| 3 | 許可を星として見せる（World ID） | 成功と、取り消しの両方が動く |
-| 4 | 0G の判定と記録 | 判定で重さが変わり、届かないと止まる |
-| 5 | 星空の画面 | チェーンの実データで星が消える・増える |
-| 6 | 音や振動の機器 | 時間が余ったときだけ |
-
-許可の署名と星の署名を1つにまとめられるので、今の設計より作るものが減ります。
-
-### 今回は作らない（発表で1行だけ触れる）
-預け金／ありがとう（投げ銭）と二次のマッチング／保証のゼロ知識化／ERC-8004 への自動書き込み／ENS／スタックチャン
-
-### Broker の扱い
-「Broker は信頼点。本番では TEE に載せる」と明記します。2-of-2 は、ふだん Ledger を押さずに自動で動く設計と両立しないので、今回は外す案です。
+### Things that will sink us if forgotten
+- Both World prizes require **a retrospective on the integration** (time to first success / where you got stuck / missing features or docs / the single most effective improvement). Take notes while working
+- World proofs are mocked at the venue (the prize page says "mocking proofs" and "fake identities"). We talk about "preventing fake accounts" as a design-level claim
+- The plan is to leave ENS out of our three. If we include it, we keep it minimal as the place for the skill's name and its declaration
 
 ---
 
-## 8. 今の資料との差分
+## 7. What we build and what we don't [proposed]
 
-| 項目 | 今の資料 | この提案 |
+### Build order
+| # | What to build | Pass criteria |
 |---|---|---|
-| 星の中身 | 保証（約束） | 自分の鍵で使っている、という事実 |
-| 保証の手間 | Ledger＋World ID を別に行う | 自分で使う許可のついで |
-| 預け金 | 賭け金として残す | 作らない。賭け金は自分の鍵 |
-| 裏切りの先 | 保証人の重みを下げる。他のスキルも細くなる | スキルに刻む。使っている全員が同時に止まる |
-| 動機 | 投げ銭と二次のマッチング | 聞かれなくなる・自分も守られる（お金なし） |
-| 0G | 記録と、返答を読んで警告 | 重さの判定を担う（判断の流れに入る） |
-| つながりの濃さ | 3段（会った／一緒に働いた／知ってるだけ） | 2段（会った／知っている）。足りなければ後で増やす |
-| ハード | Ledger が主役（合意済み） | 同じ。スタックチャンは忘れてよい |
+| 1 | Signing a permit on the Ledger | The scope appears on screen in readable form |
+| 2 | The Broker's `use` and scope check | `DENIED` appears for out-of-scope |
+| 3 | Showing a permit as a star (World ID) | Both success and revocation work |
+| 4 | 0G's judgement and record | The weight changes with the judgement, and it stops when unreachable |
+| 5 | The starry-sky screen | Stars disappear and appear from real on-chain data |
+| 6 | Sound and haptic devices | Only if there is time left |
 
-## 9. Issue #2 の6つの問いへの答え
-1. **ストーリー**：Priya さんと Arjun さんでいく。山場は「選ぶ（星が消える）」と「事故の日」の2つ
-2. **最初の適用先**：API キー管理。スキル市場は売り先として話す
-3. **濃さと預け金**：2段。預け金は今回外す
-4. **Broker**：信頼点と明記する。2-of-2 は外す
-5. **削る所**：上の「今回は作らない」
-6. **Ledger を持たない人**：今回は示さない。聞かれたら「スマホのパスキーでも代われるが、守りは弱くなる」と答える
+The permit signature and the star signature can be merged into one, so there is less to build than in the current design.
 
-## 10. 未確認
-- Ledger の画面に、範囲がどこまで読める形で出るか（最初に確かめる）
-- World の2つの賞を、3つの枠の中で別々に数えるか
-- IDKit で、action を固定した nullifier を仮名として使えるか
-- 0G の判定にかかる時間が、デモで待てる長さか
-- 「使っている」という事実を、どの粒度まで知り合いに見せるか
+### Not building this time (mention in one line in the presentation)
+Deposit / thanks (tips) and secondary matching / zero-knowledge guarantees / automatic writes to ERC-8004 / ENS / Stack-chan
+
+### How the Broker is handled
+We state explicitly: "the Broker is a trust point. In production it goes in a TEE." 2-of-2 is incompatible with a design that runs automatically without pressing the Ledger in routine use, so the plan is to drop it this time.
+
+---
+
+## 8. Diff against the current documents
+
+| Item | Current documents | This proposal |
+|---|---|---|
+| What the star contains | A guarantee (a promise) | The fact that I am using it with my own key |
+| Effort of guaranteeing | Ledger + World ID done separately | A by-product of the permit for your own use |
+| Deposit | Kept as the stake | Not built. The stake is your own key |
+| Where betrayal lands | Lowers the guarantor's weight. Their other skills get thinner too | Inscribed on the skill. Everyone using it stops at the same time |
+| Motivation | Tips and secondary matching | People stop asking / you are protected too (no money) |
+| 0G | Recording, plus reading responses and warning | Carries the weight judgement (it is in the decision flow) |
+| Thickness of connections | 3 levels (met / worked together / just know of) | 2 levels (met / know). Add more later if that is not enough |
+| Hardware | The Ledger is the lead (agreed) | Same. Stack-chan can be forgotten |
+
+## 9. Answers to the six questions in Issue #2
+1. **Story**: go with Priya and Arjun. Two climaxes: "choosing (the stars disappear)" and "the day of the accident"
+2. **First application**: API key management. The skill marketplace is talked about as who we sell to
+3. **Thickness and deposit**: 2 levels. Drop the deposit this time
+4. **Broker**: state it is a trust point. Drop 2-of-2
+5. **What to cut**: the "not building this time" list above
+6. **People without a Ledger**: don't show it this time. If asked, answer "a phone passkey could stand in, but the protection is weaker"
+
+## 10. Unverified
+- How readably the scope appears on the Ledger screen (verify this first)
+- Whether World's two prizes are counted separately within the limit of three
+- Whether a nullifier with a fixed action can be used as a pseudonym in IDKit
+- Whether the time 0G's judgement takes is short enough to wait for in a demo
+- At what granularity the fact of "using it" is shown to acquaintances

@@ -1,175 +1,175 @@
-# 3つの技術の、位置づけ・体験としての価値・実装に本当に載っているか
+# The three technologies: their position, their value as experience, and whether they are really in the implementation
 
-**一言：3つとも体験には載っている。ただし Broker が全部を知っているので、
-3つの丸は「Broker を信じる」という1本の柱の上に並んでいるだけになっている。**
+**In one line: all three are in the experience. But because the Broker knows everything,
+the three circles end up merely standing on a single pillar called "trust the Broker".**
 
-**そして World を置く場所を、いま間違えている。** → §4。
+**And we are currently putting World in the wrong place.** → §4.
 
 ---
 
-## 0. 結論の表
+## 0. The conclusion table
 
-| | 技術的な位置づけ | 体験としての価値（その人に何が起きるか） | 実装に載っているか |
+| | Technical position | Value as experience (what happens to the person) | Is it in the implementation |
 |---|---|---|---|
-| **World** | Agent Pass（OIDC device flow）で「いま人が居る」／IDKit の nullifier を仮名にする | **星を買えなくする。** 1,284個の偽の星に対して「本物」を定義しているのはここ | **仮名は載っている。ただし置く場所を間違えている（§4）** |
-| **Ledger** | EIP-712 の署名。鍵はデバイスの中。範囲4行を端末内で hash する | **AI が物理的に届かない場所がある**、という一点。これが無いと全部ソフトの約束になる | **載っている。ただし守っているのは「許可」であって「鍵」ではない（§3）** |
-| **0G** | Private Computer で重さを判定／Storage に系譜／Galileo にレジストリ | **静けさ。** ふだんは何も聞いてこない。これが「AI に鍵を預けても生活が壊れない」唯一の理由 | **判断ループの中にある。ただし「0G でなければならない理由」が弱い（§2）** |
+| **World** | "A human is here right now" via Agent Pass (OIDC device flow) / using IDKit's nullifier as a pseudonym | **It makes stars unbuyable.** This is what defines "real" against the 1,284 fake stars | **The pseudonym is in. But it is placed in the wrong spot (§4)** |
+| **Ledger** | EIP-712 signature. The key stays inside the device. The 4 scope lines are hashed inside the device | The single point that **there is a place the AI physically cannot reach**. Without it, everything becomes a software promise | **It's in. But what it protects is the "permit", not the "key" (§3)** |
+| **0G** | Judges the weight in Private Computer / the trail in Storage / the registry on Galileo | **Quiet.** In routine use it asks nothing. This is the only reason "handing your keys to an AI doesn't wreck your life" | **It is in the decision loop. But the "reason it has to be 0G" is weak (§2)** |
 
 ---
 
-## 1. World — 星を買えなくしている
+## 1. World — it makes stars unbuyable
 
-### 技術的な位置づけ
-- **IDKit の nullifier** を、そのまま**仮名**として星に刻む。名前は要らない
-- **Agent Pass**（`device_code`）で「保護された動作の直前に、人が居ること」を確かめる
+### Technical position
+- **IDKit's nullifier** is inscribed on the star directly as a **pseudonym**. No name needed
+- **Agent Pass** (`device_code`) confirms "a human is here, immediately before a protected action"
 
-### 体験としての価値
+### Value as experience
 
-**この作品の一行目は「星は買える。1個 $0.0027」。** それに対する答えが World。
-**「人ひとりにつき1つ」が効いている限り、星は金で増やせない。**
+**The first line of this work is "stars can be bought. $0.0027 each."** World is the answer to that.
+**As long as "one per human" holds, stars cannot be multiplied with money.**
 
-**名前を出さないことも価値。** 「誰の星か」は、**本名ではなく「同じ人の星が積み上がっている」で足りる。**
-nullifier はちょうどその粒度で、**それ以上を知らない。** 最小十分（IDKit 賞の要件そのもの）。
+**Not showing a name is also value.** For "whose star it is", **it is enough that "stars from the same person have piled up", not the real name.**
+The nullifier is exactly that granularity, and **it knows nothing beyond it.** Minimal and sufficient (exactly the IDKit prize's requirement).
 
-### 載っているか → **仮名は載っている。置く場所が間違っている（§4 へ）**
-
----
-
-## 2. 0G — 静けさを作っている。ただし理由が弱い
-
-### 技術的な位置づけ
-- **Private Computer で重さを判定**（ふだん／大事／決定的／届かない）
-- **Storage に系譜**（追記のみ。許可→使用→返却→判定→違反）
-- Galileo に VouchRegistry / ViolationRegistry
-
-### 体験としての価値
-
-**0G は「聞いてこないこと」を作っている。**
-
-毎回 Ledger が光るなら、誰も使わない。**ふだんは黙っていて、大事なときだけ起きる。**
-その線引きをしているのが 0G で、**これがこの作品で唯一「実用的」な部分。**
-
-そして **0G 不達のときに Ledger が「判定できません」を出す**のは、
-「壊れたら止まる」が手元に見えるということ。**安全が、画面の中ではなく手の中にある。**
-
-### 載っているか → **載っている。ただし「0G でなければならない理由」が弱い**
-
-**いまの重さ判定は、ルールでも書ける。**
-範囲外か／金額が大きいか／初めての相手か。**それなら推論は要らない。**
-審査員に「なぜ 0G？」と聞かれて、「ログを置いています」では落ちる。
-
-**強くする道は1つ。重さ判定の入力を、誰にも見せたくないものにする。**
-
-> このリクエストの**中身**を読まないと、重さは決まらない。
-> でもその中身は、Broker にも我々にも見せたくない。
-> **だから Private Computer で判定する。**
-
-**これが成立すると、依存の理由が1文で立つ**（0G 賞の必須項目）。
-**そして成立させる方法は1つしかない → §5。**
+### Is it in → **the pseudonym is in. Its placement is wrong (see §4)**
 
 ---
 
-## 3. Ledger — 守っているのは「許可」で、「鍵」ではない
+## 2. 0G — it creates the quiet. But the reason is weak
 
-### 技術的な位置づけ
-EIP-712 の署名。**範囲4行の元の値から、端末の中で hash する**（`spec/permit-signature.md`）。
-だから**画面に出ている4行と、署名されるものが同じ**。
+### Technical position
+- **Judges the weight in Private Computer** (routine / significant / decisive / unreachable)
+- **The trail in Storage** (append-only; permit → use → return → judgement → violation)
+- VouchRegistry / ViolationRegistry on Galileo
 
-### 体験としての価値
+### Value as experience
 
-**AI が物理的に届かない場所がある。** 指が無いから押せない。
-ソフトの「権限」はソフトで回避されうるが、**押していないものは押されていない。**
+**0G is what creates "not being asked".**
 
-**これが無いと、この作品は「約束」に戻る。** 3つの中で、**唯一ソフトで代替できない。**
+If the Ledger lit up every time, nobody would use it. **It stays silent in routine use and wakes only when it is significant.**
+0G is what draws that line, and **this is the only "practical" part of this work.**
 
-### 載っているか → **載っている。ただし正直に言うべき弱点がある**
+And **the Ledger showing "cannot judge" when 0G is unreachable** means
+"it stops when it breaks" is visible in your hand. **Safety is in your hand, not on a screen.**
 
-**Ledger が守っているのは permit への署名であって、API キーそのものではない。**
-キーは Broker の中にある。**Ledger は「許可」を守り、「鍵」は守っていない。**
+### Is it in → **it is in. But the "reason it has to be 0G" is weak**
 
-隠すと CROPS で刺さる。**README に自分から書く。** §5 が解けば、これも一緒に解ける。
+**The current weight judgement could also be written as rules.**
+Out of scope? Large amount? First time with this counterparty? **Then no inference is needed.**
+If a judge asks "why 0G?", answering "we put the logs there" sinks us.
+
+**There is one way to make it strong. Make the input to the weight judgement something you don't want anyone to see.**
+
+> The weight cannot be decided without reading the **contents** of this request.
+> But we don't want to show those contents to the Broker or to ourselves.
+> **So we judge it in Private Computer.**
+
+**If that holds, the reason for the dependency stands in one sentence** (0G's required item).
+**And there is only one way to make it hold → §5.**
 
 ---
 
-## 4. いま間違えていること：World を置く場所
+## 3. Ledger — what it protects is the "permit", not the "key"
 
-`spec/world-agent-pass.md` §2 では、**鍵を使う直前**に Agent Pass を呼ぶ形で書いた。
-**これは間違い。Ledger の長押しと機能が重複している。**
+### Technical position
+An EIP-712 signature. **The hash is computed inside the device from the original values of the 4 scope lines** (`spec/permit-signature.md`).
+So **the 4 lines shown on screen and the thing being signed are the same.**
 
-**人から見ると、同じ1回の行為に対して2回聞かれる。** 何のために2回なのか説明できない。
+### Value as experience
 
-### 整理
+**There is a place the AI physically cannot reach.** It has no fingers, so it cannot press.
+Software "permissions" can be bypassed by software, but **what has not been pressed has not been pressed.**
 
-| | 何を確かめるか | いつ |
+**Without this, the work goes back to being a "promise".** Of the three, **it is the only one software cannot substitute for.**
+
+### Is it in → **it's in. But there is a weakness we should state honestly**
+
+**What the Ledger protects is the signature on the permit, not the API key itself.**
+The key is inside the Broker. **The Ledger protects the "permit"; it does not protect the "key".**
+
+Hide this and CROPS will hit it. **Write it in the README ourselves.** If §5 is solved, this is solved along with it.
+
+---
+
+## 4. What we are getting wrong right now: where to put World
+
+In `spec/world-agent-pass.md` §2, it is written so that Agent Pass is called **immediately before the key is used**.
+**That is wrong. It duplicates the function of the Ledger's long press.**
+
+**From the person's point of view, they are asked twice for the same single act.** We cannot explain what the second one is for.
+
+### Sorted out
+
+| | What it confirms | When |
 |---|---|---|
-| **World** | **誰であるか**（人であること・同じ人であること） | **星を出すとき（1回）** |
-| **Ledger** | **いま、これを許すか**（範囲と期限） | **鍵を使うとき（毎回）** |
+| **World** | **Who they are** (that they are a human, that they are the same human) | **When giving a star (once)** |
+| **Ledger** | **Do I permit this, right now** (scope and expiry) | **When a key is used (every time)** |
 
-**星を出すのは重い行為。** 自分の評判を賭けて「私はこれを使っている」と言う。
-**ここに人の証明を置くのは自然で、賞の要件（保護された動作の直前に検証）も満たす。**
-**保護された動作 ＝ 星を出すこと**（VouchRegistry に書くこと）。
+**Giving a star is a heavy act.** You stake your own reputation to say "I am using this".
+**Putting proof of humanity here is natural, and it also satisfies the prize requirement (verification immediately before a protected action).**
+**The protected action = giving a star** (writing to VouchRegistry).
 
-**鍵を使うたびに World を呼ばない。** それは Ledger の仕事。
+**Don't call World every time a key is used.** That is the Ledger's job.
 
-→ `spec/world-agent-pass.md` §2 を直す。台本 v4 の S2（星が生まれる）は、
-**Agent Pass → Ledger の長押し → ★ハンコ** の順になる。**3つの丸が同時に光るのは、ここだけ。**
-
----
-
-## 5. 3つの丸が、1本の柱の上に乗っている
-
-**World も Ledger も 0G も、Broker を信じる前提の上にある。**
-
-Broker は平文の API キーを持ち、呼び出しを実行し、系譜を書く。
-**Broker が嘘をつけば、3つとも意味がない。**
-
-| | Broker が嘘をついたら |
-|---|---|
-| World | 証明を検証したと言い張れる |
-| Ledger | 署名を確かめずに実行できる |
-| 0G | 重さを偽って Ledger を起こさずに済ませられる |
-
-**3つの丸は、信頼を分散していない。並んでいるだけ。**
-
-### 一手で、ここも §2 も §3 も解ける
-
-**Broker を 0G Private Computer（TEE）の中に入れる。**
-
-| 解けるもの | どう解けるか |
-|---|---|
-| **§2「なぜ 0G か」** | **中身を誰にも見せずに、重さを決めて、呼び出しを実行する。** これは TEE でしかできない。依存の理由が1文で立つ |
-| **§3 鍵を守れていない** | 鍵が Broker にあることは変わらないが、**その Broker を誰も覗けない。** 「人の手元ではないが、誰の手元でもない」 |
-| **CROPS の P** | 「鍵と個人データは端末の中」への反則が、**例外の説明ではなく実装で消える** |
-| **§5 柱が1本** | Broker が信頼点でなくなる。**3つの丸が、ほんとうに3つになる** |
-
-**これが設計の芯。** 時間内に載るかは別の話で、**載らなければ README に正直に書く**
-（「本番では TEE に載せる。今回は載せていない」）。
-**ただし、どちらを選んだかは必ず書く。黙って選ばない。**
+→ Fix `spec/world-agent-pass.md` §2. S2 in script v4 (the star is born) becomes the order
+**Agent Pass → the Ledger's long press → ★ stamp.** **This is the only place where the three circles light up at once.**
 
 ---
 
-## 6. ジャーニーのどこで、どれが効くか
+## 5. The three circles are standing on a single pillar
 
-| その人がいる地点 | World | Ledger | 0G |
+**World, Ledger and 0G all sit on the premise of trusting the Broker.**
+
+The Broker holds the plaintext API key, executes the calls, and writes the trail.
+**If the Broker lies, all three are meaningless.**
+
+| | If the Broker lied |
+|---|---|
+| World | It could insist it verified the proof |
+| Ledger | It could execute without checking the signature |
+| 0G | It could fake the weight and get away with never waking the Ledger |
+
+**The three circles do not distribute trust. They merely stand next to each other.**
+
+### One move solves this, and §2 and §3 too
+
+**Put the Broker inside 0G Private Computer (a TEE).**
+
+| What it solves | How it solves it |
+|---|---|
+| **§2 "why 0G"** | **Decide the weight and execute the call without showing the contents to anyone.** Only a TEE can do this. The reason for the dependency stands in one sentence |
+| **§3 the key isn't protected** | The key is still at the Broker, but **nobody can peek into that Broker.** "Not in the person's hands, but not in anyone's hands either" |
+| **The P in CROPS** | The foul against "keys and personal data stay inside the device" **disappears in the implementation, rather than in an explanation of an exception** |
+| **§5 one pillar** | The Broker stops being a trust point. **The three circles really become three** |
+
+**This is the core of the design.** Whether it fits in the time is a separate matter, and **if it doesn't, write it honestly in the README**
+("in production it goes in a TEE. This time it is not").
+**But always write which one we chose. Don't choose silently.**
+
+---
+
+## 6. Where in the journey each one matters
+
+| Where the person is | World | Ledger | 0G |
 |---|:--:|:--:|:--:|
-| **空を見て、スキルを選ぶ**（Priya） | ○ 仮名 | — | ○ 系譜 |
-| **星を出す**（保証する側） | **◎** | **◎** | ○ |
-| **鍵を使い続ける**（ふだん） | — | ○ 聞いてこない | **◎ 静けさ** |
-| **大事な要求が来た** | — | **◎ 長押し** | **◎ 重さ判定** |
-| **違反が出た**（星が一斉に消える） | — | — | **◎ 系譜** |
+| **Looking at the sky and choosing a skill** (Priya) | ○ pseudonym | — | ○ trail |
+| **Giving a star** (the guaranteeing side) | **◎** | **◎** | ○ |
+| **Continuing to use the key** (routine) | — | ○ it asks nothing | **◎ quiet** |
+| **A significant request arrives** | — | **◎ long press** | **◎ weight judgement** |
+| **A violation appears** (the stars go out at once) | — | — | **◎ trail** |
 
-**3つが同時に効くのは「星を出す瞬間」だけ。** これは欠陥ではない。
-**常に3つ要求する道具は、使われない。**
+**The only place all three matter at once is "the moment a star is given".** This is not a defect.
+**A tool that demands all three all the time doesn't get used.**
 
-**だからデモの山は「星を出す瞬間」でいい**（台本 v4 の S2）。**合っている。**
+**So the climax of the demo can be "the moment a star is given"** (S2 in script v4). **That's right.**
 
 ---
 
-## 7. やること
+## 7. What to do
 
-| | やること | 効くところ |
+| | What to do | Where it helps |
 |---|---|---|
-| **1** | **`spec/world-agent-pass.md` §2 を直す。** Agent Pass は「星を出すとき」に置く | 体験の重複が消える。賞の要件も満たす |
-| **2** | **重さ判定の入力を「見せたくないもの」にする**（要求の本文を含める） | 「なぜ 0G か」が1文で立つ |
-| **3** | **Broker を Private Computer に載せられるか、1時間だけ試す** | §2・§3・CROPS・§5 が同時に解ける |
-| **4** | 3が落ちたら、README に「Broker は信頼点である」と自分から書く | 黙って弱点を持つより強い |
+| **1** | **Fix `spec/world-agent-pass.md` §2.** Put Agent Pass at "when a star is given" | The duplication in the experience disappears. It also satisfies the prize requirement |
+| **2** | **Make the input to the weight judgement "something you don't want seen"** (include the body of the request) | "Why 0G" stands in one sentence |
+| **3** | **Spend exactly one hour trying whether the Broker can go on Private Computer** | §2, §3, CROPS and §5 all get solved at once |
+| **4** | If 3 falls through, write in the README ourselves that "the Broker is a trust point" | Stronger than holding a weakness silently |

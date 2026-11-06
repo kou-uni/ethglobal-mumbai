@@ -1,167 +1,167 @@
-# ジャーニーと、ストーリーテリング
+# The journey, and the storytelling
 
-**一言：この作品の価値は「選べること」ではなく、
-**評価できないものを、評価しなくてよくすること**。**
+**In one line: the value of this work is not "being able to choose",
+but **making it unnecessary to evaluate what you cannot evaluate**.**
 
-そして**最大の価値が出る瞬間は、署名するときではない。
-数日後、自分が何もしていないのに星が消えて、それを知るとき。**
-
----
-
-## 1. この作品が、ほんとうは何をしているか
-
-人には、**原理的に評価できないもの**がある。
-
-医者。工務店。留学先。知らない街のレストラン。
-**中身を判断する能力が自分に無く、調べても分からない。**
-
-人類はずっと同じ方法で切り抜けてきた。**「行ったことある人、いる？」**
-
-レビューは、この問いを**別の問いにすり替えた。**
-「何人がいいと言ったか」。**言った人が誰かは、もう分からない。**
-
-> **評価を、言葉から事実に戻す。**
-> 「何人がいいと言ったか」ではなく、**「いま誰が本当に使っているか」。**
-
-**これがこの作品の一行。** AI は出てこない。
-**AI は「なぜ今それが壊れたか」の理由であって、作品の主語ではない。**
-
-### なぜ今なのか（AI が入ってくる場所）
-
-**おすすめを書くものと、あなたの代わりに選ぶものが、同じものになった。**
-AI がレビューを書き、AI がそれを読んで選び、AI があなたの鍵でそれを使う。
-**人間は、どこにも居ない。**
-
-だから「人であること」が、突然、情報として価値を持つ。
+And **the moment of greatest value is not when you sign.
+It is a few days later, when a star goes out without you doing anything, and you learn of it.**
 
 ---
 
-## 2. ジャーニー — 価値が出る瞬間は3つあり、大きさが違う
+## 1. What this work is really doing
 
-**追うのは1人。Priya（スキルを選ぶ側）。**
-保証する側は「Priya から見える他人」として出す。**主役を2人にしない。**
+There are things a person **cannot evaluate in principle**.
 
-| | 地点 | 何が起きるか | 価値の種類 | 頻度 | 強さ |
+Doctors. Builders. Where to study abroad. A restaurant in an unfamiliar city.
+**You lack the ability to judge the substance, and researching it doesn't help.**
+
+Humanity has always got through this the same way. **"Has anyone here actually been?"**
+
+Reviews **swapped that question for a different one.**
+"How many people said it was good." **Who said it is no longer knowable.**
+
+> **Return evaluation from words to facts.**
+> Not "how many people said it was good", but **"who is actually using it right now".**
+
+**That is the one line of this work.** The AI does not appear in it.
+**The AI is the reason why this broke now; it is not the subject of the work.**
+
+### Why now (where the AI comes in)
+
+**The thing that writes the recommendation and the thing that chooses on your behalf became the same thing.**
+An AI writes the review, an AI reads it and chooses, and an AI uses it with your key.
+**There is no human anywhere.**
+
+So "being a human" suddenly has value as information.
+
+---
+
+## 2. The journey — there are three moments of value, and they differ in size
+
+**We follow one person. Priya (the one choosing skills).**
+The guaranteeing side appears as "another person as seen by Priya". **Don't make two protagonists.**
+
+| | Point | What happens | Kind of value | Frequency | Strength |
 |---|---|---|---|---|---|
-| **A** | **選ぶ** | 1,284個 → `知り合い` → 1個 | **判断しなくてよくなる** | 毎回 | 中 |
-| **B** | **ふだん** | 何も起きない。聞いてこない | **生活が壊れない** | 常時 | 弱（見えない） |
-| **C** | **数日後** | **自分は何もしていないのに、星が消えている** | **知らないうちに守られていた** | 稀 | **最大** |
+| **A** | **Choosing** | 1,284 → `people I know` → 1 | **You no longer have to judge** | Every time | Medium |
+| **B** | **Routine** | Nothing happens. It doesn't ask | **Your life isn't wrecked** | Constant | Weak (invisible) |
+| **C** | **A few days later** | **The star is gone, though you did nothing** | **You were protected without knowing** | Rare | **Greatest** |
 
-### 最大の価値は C
+### The greatest value is C
 
-**A は便利。C は、助かっている。**
+**A is convenient. C is being saved.**
 
-A でやっているのは絞り込みで、**うまくやれば自分でもできる。**
-C は**自分では絶対に気づけない。** 版がこっそり変わったことを、人は知らない。
+What A does is filtering, and **done well, you could do it yourself.**
+C is **something you could never notice yourself.** People don't know when a version changed quietly.
 
-**そして C は、Priya が何もしていないときに起きる。**
-**受け取る側が何もしていないのに価値が届く** — これがこの作品の形。
+**And C happens while Priya is doing nothing.**
+**Value arrives at the receiving side while they do nothing** — that is the shape of this work.
 
-### なぜ、これまで C を山にできていなかったか
+### Why we had not been able to make C the climax
 
-**C は絵にならない。** 「何も起きていなかったことが分かる」は、動きが無い。
-だから台本 v4 では C を18秒しか取っておらず、**中盤の30秒は署名（機械の説明）に使っている。**
+**C doesn't make a picture.** "You find out that nothing had been happening" has no motion.
+So in script v4 only 18 seconds are given to C, and **30 seconds in the middle go to the signature (explaining the machinery).**
 
-**署名は、一番きれいな絵だが、一番の価値ではない。**
-**あれは「C を成立させるために、誰かが払った代償」。**
+**The signature is the prettiest image, but it is not the greatest value.**
+**It is "the price someone paid in order to make C possible".**
 
 ---
 
-## 3. 物語の形 — 3案
+## 3. The shape of the story — 3 options
 
-### 案1：機械の順に見せる（＝いまの台本 v4）
+### Option 1: show it in the order of the machinery (= the current script v4)
 
-沈黙 → 星が生まれる（署名）→ ふだん → 拒否 → 手の中
+Silence → the star is born (signature) → routine → denial → in the hand
 
-- **強み**：一番きれいな絵（長押し→★ハンコ）が中盤に来て、たるまない
-- **弱み**：**なぜ気にすべきかの前に、機械の説明が始まる。**
-  見ている人は「よくできているね」と思うが、**自分の話だと思わない**
+- **Strength**: the prettiest image (long press → ★ stamp) comes in the middle, so it never sags
+- **Weakness**: **the explanation of the machinery starts before why you should care.**
+  Viewers think "nicely done", but **they don't think it's about them**
 
-### 案2：**安心 → 根拠 → 代償**（推奨）
+### Option 2: **relief → grounds → price** (recommended)
 
-| | 中身 | 秒 |
+| | Contents | Seconds |
 |---|---|---|
-| **問い** | 「今週入れた AI の道具は、誰に聞いて選びましたか？」 | 20 |
-| **安心（A）** | 1,284個 →『知り合い』→ 1個。**「これなら分かる」** | 25 |
-| **疑い** | 「でも、その1個も買えるのでは？」 | 10 |
-| **根拠** | 3つの丸。**legend ではなく、疑いへの答えとして出す** | 20 |
-| **代償（署名）** | **この1個を出すために、誰かがこれをやった。** 長押し→★ハンコ | 35 |
-| **ふだん（B）** | 数日経つ。何も起きない | 10 |
-| **最大の価値（C）** | **版が変わり、星が一斉に消える。Priya は何もしていない** | **35** |
-| **手の中** | QR → 系譜。審査員の手に Ledger | 20 |
+| **Question** | "The AI tool you installed this week — whose advice did you pick it on?" | 20 |
+| **Relief (A)** | 1,284 → `people I know` → 1. **"That I can understand"** | 25 |
+| **Doubt** | "But couldn't that one be bought too?" | 10 |
+| **Grounds** | The three circles. **Shown as the answer to the doubt, not as a legend** | 20 |
+| **Price (the signature)** | **Somebody did this in order to give that one star.** Long press → ★ stamp | 35 |
+| **Routine (B)** | A few days pass. Nothing happens | 10 |
+| **Greatest value (C)** | **The version changes and the stars go out at once. Priya did nothing** | **35** |
+| **In the hand** | QR → the trail. The Ledger in the judge's hand | 20 |
 
-- **強み**：**30秒で「自分の話だ」になる。** 署名が「機能」ではなく
-  **「誰かが払った代償」**として立つ。**C が最後に来て、一番長い**
-- **弱み**：一番きれいな絵が後ろに下がる。中盤（疑い→根拠）に動きが少ない
-- **対策**：中盤は Ledger を**出さない。** 画面 A だけで押し切り、
-  **署名で初めて実物が出る**。「物が出てくる」こと自体を山にする
+- **Strength**: **in 30 seconds it becomes "this is about me".** The signature stands not as a "feature" but as
+  **"a price someone paid"**. **C comes last, and it is the longest**
+- **Weakness**: the prettiest image moves back. There is little motion in the middle (doubt → grounds)
+- **Countermeasure**: **don't show** the Ledger in the middle. Carry it with screen A alone, and
+  **the physical object appears for the first time at the signature**. Make "the object appearing" itself a climax
 
-### 案3：Cから始める（逆回し）
+### Option 3: start from C (play it backwards)
 
-星が消えるところから始め、なぜ消えたかを遡る。
+Start where the stars go out, and work back to why they went out.
 
-- **強み**：最初の5秒が一番強い
-- **弱み**：**何が消えたのか分かっていない人には、何も起きていない。**
-  3分でこれをやると、理解に2回見る必要が出る。**採らない**
+- **Strength**: the first 5 seconds are the strongest
+- **Weakness**: **for someone who doesn't know what went out, nothing is happening.**
+  Doing this in 3 minutes means they need two viewings to understand. **Not taking it**
 
-**→ 案2 を推す。** 変更は**順番と秒の配分だけ**で、撮るものは台本 v4 と同じ。
-**作り直しではない。**
+**→ I recommend option 2.** The change is **only the order and the allocation of seconds**; what we film is the same as script v4.
+**This is not a rebuild.**
 
 ---
 
-## 4. ストーリーテリング — 共感の取り方
+## 4. Storytelling — how to get empathy
 
-### 使う言葉を、技術の外に出す
+### Take the words outside the technology
 
-| 言わない | 言う |
+| Don't say | Say |
 |---|---|
-| 信頼のグラフ／評判システム | **「行ったことある人、いる？」** |
-| 鍵の委譲とスコープ制御 | **「鍵は渡す。でも、どこまでかは自分で決める」** |
-| サプライチェーン攻撃 | **「昨日入れたものが、今日こっそり変わっていたら」** |
-| ゼロ知識／nullifier | **「名前は要らない。同じ人だと分かれば足りる」** |
-| ハードウェアウォレット | **「AI には指がない」** |
+| Trust graph / reputation system | **"Has anyone here actually been?"** |
+| Key delegation and scope control | **"I'll hand over the key. But how far it goes, I decide"** |
+| Supply chain attack | **"If what you installed yesterday quietly changed today"** |
+| Zero knowledge / nullifier | **"No name needed. Knowing it's the same person is enough"** |
+| Hardware wallet | **"An AI has no fingers"** |
 
-### 共感の芯は「鍵を貼り付けた、あの一瞬」
+### The core of the empathy is "that split second when you pasted the key"
 
-会場の全員がやったことがある。
-**設定ファイルに API キーを貼り付けて、Enter を押す前に 0.5 秒止まる。**
-止まるが、**止めても何も始まらないので、押す。**
+Everyone in the room has done it.
+**You paste the API key into a config file and pause for half a second before pressing Enter.**
+You pause, but **pausing starts nothing, so you press.**
 
-> **誰も、安全だと思って渡していない。
-> 渡さないと何も始まらないから、渡している。**
+> **Nobody hands it over thinking it is safe.
+> They hand it over because nothing starts unless they do.**
 
-**これは怖がらせる話ではない。全員がすでに諦めていることを、言葉にする。**
-**「分かってるよ」と思わせたら勝ち。**
+**This is not a scare story. It puts into words something everyone has already given up on.**
+**If they think "yeah, I know", we've won.**
 
-### 言ってはいけないこと
+### Things we must not say
 
-- **「AI は危険です」** — 会場の全員が AI を作りに来ている。敵に回る
-- **「これで安全になります」** — Broker は信頼点のまま。嘘になる
-- **「レビューは嘘です」** — レビューを憎んでいるのではない。
-  **問いが変わったのに、答えが変わっていないだけ**
+- **"AI is dangerous"** — everyone in the room came to build AI. You make enemies
+- **"This makes you safe"** — the Broker is still a trust point. It would be a lie
+- **"Reviews are lies"** — we don't hate reviews.
+  **The question changed and the answer simply didn't**
 
-### 最後の一行（3案）
+### The last line (3 options)
 
-| 案 | 日本語 / English | 効き |
+| Option | Japanese / English | Effect |
 |---|---|---|
-| **a** | **星の数ではなく、誰の星か。** / *Not how many stars. Whose.* | 既存。短く、作品の名前になる |
-| **b** | **言葉ではなく、事実を数える。** / *Count facts, not words.* | §1 の一行に忠実。**汎用的すぎて刺さりにくい** |
-| **c** | **あなたが何もしていない間に、星は消えた。** / *You did nothing. The star went out.* | **C を山にする案2 と噛み合う。** 締めに強い |
+| **a** | **Not the number of stars, but whose star it is.** / *Not how many stars. Whose.* | Existing. Short, and works as the name of the work |
+| **b** | **Count facts, not words.** / *Count facts, not words.* | Faithful to the one line in §1. **Too generic to land** |
+| **c** | **While you did nothing, the star went out.** / *You did nothing. The star went out.* | **Meshes with option 2, which makes C the climax.** Strong as a closer |
 
-**→ a を名前として残し、c を締めに置く。** b は README の説明文に使う。
+**→ Keep a as the name, and put c at the close.** Use b in the README's description.
 
 ---
 
-## 5. 台本 v4 からの差分（やること）
+## 5. Diff from script v4 (what to do)
 
-| | やること | 大きさ |
+| | What to do | Size |
 |---|---|---|
-| 1 | **順番を案2 に変える**（安心 → 疑い → 根拠 → 代償 → ふだん → **C** → 手の中） | 編集のみ |
-| 2 | **C に 35 秒。** 台本 v4 の 18 秒から倍にする | 編集のみ |
-| 3 | **3つの丸を legend にしない。**「その1個も買えるのでは？」への答えとして出す | 字幕のみ |
-| 4 | **中盤は Ledger を映さない。** 署名で初めて実物が出す | 撮り方 |
-| 5 | **Priya を1人の人として最後まで追う。** 保証する側は「Priya から見える他人」 | 字幕のみ |
-| 6 | **締めに c を足す**（「あなたが何もしていない間に、星は消えた」） | 字幕のみ |
+| 1 | **Change the order to option 2** (relief → doubt → grounds → price → routine → **C** → in the hand) | Editing only |
+| 2 | **35 seconds for C.** Double it from script v4's 18 seconds | Editing only |
+| 3 | **Don't make the three circles a legend.** Show them as the answer to "couldn't that one be bought too?" | Subtitles only |
+| 4 | **Don't show the Ledger in the middle.** The physical object appears for the first time at the signature | How we shoot |
+| 5 | **Follow Priya as one person all the way through.** The guaranteeing side is "another person as seen by Priya" | Subtitles only |
+| 6 | **Add c at the close** ("while you did nothing, the star went out") | Subtitles only |
 
-**撮るものは変わらない。順番と秒の配分と字幕だけ。**
-**→ minta さんの画面の作業には影響しない。**
+**What we film doesn't change. Only the order, the allocation of seconds, and the subtitles.**
+**→ No impact on minta's work on the screens.**

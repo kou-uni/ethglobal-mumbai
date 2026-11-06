@@ -1,32 +1,32 @@
-# minta さんへの返事（issue #18 / #19 に貼る本文・2026-11-06）
+# Reply to minta (body to paste into issues #18 / #19, 2026-11-06)
 
-> **これはイシューに貼るための下書き。** この環境から GitHub へのコメント投稿が権限で止められたので、ここに置いて URL を渡す。
+> **This is a draft to paste into the issues.** Posting comments to GitHub from this environment was blocked by permissions, so it is kept here and the URL is handed over.
 
-# issue #18 への返事
+# Reply to issue #18
 
-kou です。**gate.html まで仕上げてもらって助かりました。読んだうえで、測ってから返します。**
+This is kou. **Thanks for finishing gate.html. I read it, and I'm replying after measuring.**
 
-## 0. 先に測った — 「$12 の課金」は本番の 0G で **決定的** でした（3/3）
+## 0. Measured first — "the $12 charge" came out as **decisive** on the real 0G (3/3)
 
-minta さんの「未確認」はここで潰れます。**本番キー・本番の 0G（`0gm-1.0-35b-a3b`）で実測:**
+minta's "unverified" is settled here. **Measured with the real key, on the real 0G (`0gm-1.0-35b-a3b`):**
 
-| 要求 | 0G の読み | 理由（0G の言葉） |
+| Request | 0G's reading | Reason (0G's words) |
 |---|---|---|
-| `POST /v1/charges` $12 | **決定的**（3/3） | Stripe決済APIへの資金移動指示 |
-| `POST /v1/charges` $4,800 | 決定的 | 高額な決済実行で取り消し不可能 |
-| `POST /v1/charges` **$1** | 決定的 | 資金移動が可能 |
-| `POST /v1/customers` | 大事 | 顧客データを作成 |
-| `GET /v1/charges?limit=10` | **ふだん** | 読み取り専用で取り消し可能 |
-| `GET /v1/balance` | **ふだん** | 残高照会のみで資産移動や公開を伴わない |
+| `POST /v1/charges` $12 | **decisive** (3/3) | An instruction to move funds to the Stripe payments API |
+| `POST /v1/charges` $4,800 | decisive | A large payment execution, irreversible |
+| `POST /v1/charges` **$1** | decisive | Funds can be moved |
+| `POST /v1/customers` | significant | Creates customer data |
+| `GET /v1/charges?limit=10` | **routine** | Read-only and reversible |
+| `GET /v1/balance` | **routine** | Balance query only, with no asset movement or disclosure |
 
-**金額ではなく「お金が動くか」で読んでいます。** なので $12 でも長押しが要ります。
+**It reads "does money move", not the amount.** So even $12 requires a long press.
 
-## 1. 解決：長押しは1回のままでいけます（`scope` を `* /v1` にする）
+## 1. Solution: one long press is still enough (make `scope` `* /v1`)
 
-`scope` は **`METHOD /path` の前方一致で、メソッドに `*` が使えます**（`broker/src/scope.js:34`）。
-1回貸すだけで「ふだんは黙って通る」も「重いので起きる」も両方出ます。**実機の長押しは増えません。**
+`scope` is **a prefix match on `METHOD /path`, and `*` can be used for the method** (`broker/src/scope.js:34`).
+Lending once gives you both "it goes through silently in routine use" and "it wakes up because this is heavy". **The number of long presses on the real device does not go up.**
 
-端末に出る4行（この形で貸す）:
+The 4 lines that appear on the device (lend it in this shape):
 
 ```
 KEY   0xabababab…
@@ -35,110 +35,110 @@ SCOPE * /v1 x5
 UNTIL 2026-11-06 03:57Z
 ```
 
-**本番の 0G に通した結果（さっき実測）:**
+**Result of running it through the real 0G (measured just now):**
 
 ```
-① GET  /v1/balance          ALLOWED      ふだん   req a78db4d373d500e4
-② POST /v1/charges $4,800   NEEDS_PRESS  決定的   req 1e24d54d82eef9a7
-③ POST evil.com/v1/charges  DENIED       OUT_OF_TARGET（0G には見せていない）
+① GET  /v1/balance          ALLOWED      routine    req a78db4d373d500e4
+② POST /v1/charges $4,800   NEEDS_PRESS  decisive   req 1e24d54d82eef9a7
+③ POST evil.com/v1/charges  DENIED       OUT_OF_TARGET (never shown to 0G)
 ```
 
-場面①を「$12 の課金」から **「残高を読む」** に差し替えるのが一番安いです（道具の見た目は変わらない）。
+Replacing scene ① from "the $12 charge" with **"read the balance"** is the cheapest fix (the tool looks the same).
 
-## 2. 決めたいこと3つへの返事
+## 2. Replies to the three things to decide
 
-**1（星と灯をそろえる）→ ◯。** 差分は minta さんでお願いします。1つだけ注文で、
-**人が読む言葉は `BLOCKED`、Broker が返す判定コードは `DENIED` のまま**にしてください。
-機械の語と人の語を分けておくと、系譜の JSON と字幕が食い違っても説明が1行で済みます。
+**1 (align the star and the flame) → yes.** Please handle the diff, minta. One request only:
+**keep the word humans read as `BLOCKED`, and the judgement code the Broker returns as `DENIED`.**
+Separating machine words from human words means that if the trail's JSON and the subtitles disagree, the explanation takes one line.
 
-**2（公開ホスト）→ ◯。ただし Broker は Funnel に載せません。**
-母艦の Tailscale Funnel（443 → 8402）は**別件で凍結中**（触れません）。代わりに:
+**2 (a public host) → yes. But we are not putting the Broker on the Funnel.**
+The main machine's Tailscale Funnel (443 → 8402) is **frozen for an unrelated matter** (don't touch it). Instead:
 
-- 撮影と審査のあいだだけ **`cloudflared` の一時 URL**（アカウント不要・1コマンド）で Broker に HTTPS を付ける
-- **`SECRETS` は入れない・`EXECUTE` は切ったまま**（minta さんの注意に同意）
-- **その URL を公開リポジトリに書かない。** Broker は 0G のクレジット（残 $6）を使えるので、貼ると誰でも回せます。提出に書くのは**画面の URL と動画**だけ
+- Put HTTPS on the Broker with **a temporary `cloudflared` URL** (no account needed, one command) only during filming and judging
+- **Don't put `SECRETS` in, and leave `EXECUTE` off** (I agree with minta's warning)
+- **Don't write that URL in the public repository.** The Broker can spend 0G credits ($6 left), so posting it lets anyone run it. What goes in the submission is **only the screen URL and the video**
 
-**3（1台にまとめる）→ 2 が◯なので消えます。** Air で bridge と画面だけ動かす形で。
+**3 (consolidate onto one machine) → it disappears now that 2 is a yes.** We run just the bridge and the screens on the Air.
 
-## 3. 主役の画面 → **`web/gate.html` に◯**
+## 3. The lead screen → **yes to `web/gate.html`**
 
-実機とつながっているほうが強いです。`ui/index.html` は**設計の試作と、撮影の保険**として残します
-（`?s=heavy` のような深いリンクで、どの場面からでも単独再生できます）。灯は `web/index.html` で◯。
+The one connected to the real device is stronger. `ui/index.html` stays **as a design prototype and as filming insurance**
+(with deep links like `?s=heavy` it can be played standalone from any scene). For the flames, yes to `web/index.html`.
 
-## 4. 本番の 0G で通す件 — **こちらの Broker はもう本番につながって動いています**
+## 4. On running it through the real 0G — **our Broker is already connected to production and running**
 
-母艦で2本立っています。**8797＝本番の 0G**／**8798＝わざと 0G に届かない役**（`STOPPED` 用）。
-`ZG_API_KEY` と `ZG_PRIVATE_KEY` は母艦の `broker/.env.local`（コミットしない・600）。
+Two instances are up on the main machine. **8797 = the real 0G** / **8798 = the role that deliberately cannot reach 0G** (for `STOPPED`).
+`ZG_API_KEY` and `ZG_PRIVATE_KEY` are in the main machine's `broker/.env.local` (not committed, 600).
 
 ```bash
 cd broker && (set -a; . ./.env.local; set +a; PORT=8797 node src/server.js &)
 cd broker && (set -a; . ./.env.local; set +a; ZG_ENDPOINT=https://router-api.invalid/v1 PORT=8798 node src/server.js &)
-curl -s 127.0.0.1:8797/health   # apiKey:true / storageKey:true / simulated が無いこと
+curl -s 127.0.0.1:8797/health   # apiKey:true / storageKey:true / no "simulated"
 ```
 
-`minta/screens` を取り込めば `bridge.py` と `demo-agent.mjs` もこちらで動かせます。
-**Ledger を持ってきてもらえれば、そのまま本番の 0G で通し1本録れます。**
+If we pull in `minta/screens` we can run `bridge.py` and `demo-agent.mjs` here too.
+**If you bring the Ledger over, we can record a single take straight through on the real 0G.**
 
-## 5. PR #17 の Broker 2か所 — 読みました。**どちらも◯**
+## 5. The two Broker spots in PR #17 — read them. **Yes to both**
 
-- **CORS の `access-control-allow-headers`**: preflight に必要。◯
-- **`/stars` の `who`（`starWho`）**: 「数ではなく誰の灯か」に要る口。◯
+- **CORS `access-control-allow-headers`**: needed for preflight. Yes
+- **`who` on `/stars` (`starWho`)**: the opening we need for "not the count, but whose flame". Yes
 
-1つだけ記録として。**`who` を返すと、同じ仮名が版やスキルをまたいで並ぶので「この人は A にも B にも灯を出している」が外から見えます。**
-これは**機能の前提**（見る側が知り合いを照合するため）なので塞ぎませんが、
-README のプライバシー節に「仮名は、このアプリの中では結びつく」と**正直に書いておきます**。黙って「結びつきません」と書かないために。
+One thing for the record. **Returning `who` means the same pseudonym lines up across versions and skills, so "this person gives flames to both A and B" becomes visible from outside.**
+This is **a premise of the feature** (so the viewer can match acquaintances), so we are not blocking it, but
+**we will write honestly in the README's privacy section that "pseudonyms do link up inside this app".** So that we don't quietly write "they don't link up".
 
-## 6. こちらの状態
+## 6. Our status
 
-- 0G Storage は root hash まで。**gas は 0 のまま**（`0xdfcb…42A4`）。faucet は両方で押しましょう
-- World はクライアント登録が未了。**模擬のまま撮らない**方針は変えていません
-- 画面の設計（誰が・いつ・どの画面に出会うか／遷移表／決めたいこと9個）を #19 に置きました
-
----
-
-# issue #19 に足す分（設計の同期）
-
-**画面遷移とプロセス、タッチポイントの設計を置きました。**
-
-- 画面遷移とプロセス https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-screen-flow.html
-- 誰が・いつ・どの画面に出会い、何を変えるか https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-touchpoints.html
-
-要点だけ:
-
-- **人に聞く場面は2つだけ。** 押す（毎回・手元の機器・いま許すか）と、名乗る（1回・World・誰であるか）。同じ1回の行為で2回聞かない
-- **画面は5枚。増やさない。** 止まったときの画面を新設せず、4つの止まり方は門の**状態**として出す
-- **割り込んでよい場面は3つだけ**（重い要求／灯が消えた／止められたことに後から気づく）。ふだんは何も出ないのが成功の形
-- **決めてほしいことを9個に割りました**（選択肢・変わるもの・手間・返事が無いときの既定つき）。返事が要るのは実質4つ: Q1-a（灯を出すボタンの置き場）／Q1-b（灯を出せるのは持ち主だけにするか）／Q2-a（World の待ちはコードか QR か）／Q3-a（実機の代役をいつ出すか）
-- **スタックチャンを入れるなら「重い要求が来た」の合図1点だけ**（判断も承認も持たせない）。**今回は作りません。** ブースで聞かれたときの口頭回答としてだけ持ちます
+- 0G Storage goes as far as the root hash. **Gas is still 0** (`0xdfcb…42A4`). Let's both hit the faucet
+- World client registration is not done. The policy of **not filming with a mock** has not changed
+- I put the screen design (who / when / which screen they meet / the transition table / 9 things to decide) in #19
 
 ---
 
-# 統合案（`ideation/2026-11-06-screens-merge.md`）への返事
+# Addition for issue #19 (design sync)
 
-**結論：きれいに統合できます。確かめました。**
+**I've put up the screen transitions and processes, and the touchpoint design.**
 
-- `minta/screens` と `minta/ledger-app` を**ローカルで main に両方マージ → 衝突ゼロ**（GitHub 側も `mergeable=CLEAN`）
-- マージ後の **Broker のテスト 50/50 pass**（`broker/` で `npm test`）
-- ぶつかるのは `broker/src/server.js`(+4/-1) と `store.js`(+6) だけで、**どちらもレビュー済み・◯**
+- Screen transitions and processes https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-screen-flow.html
+- Who / when / which screen they meet, and what they change https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-touchpoints.html
 
-## §5 の3つに返事
+Just the key points:
 
-1. **門の「押す」を実機につなぐために `ui/` を触ってよいか → ×（触らないでください）。**
-   理由は反対ではなく**分担**です。実機とつながる門は **`web/gate.html` 一本**でいきましょう（もう出来ている）。
-   `ui/index.html` は**凍結して撮影の保険**にします（`?s=heavy` で場面単独再生・実機が無くても最後まで通る）。
-   提出12時間前に、同じファイルを2人で触らないのが一番効きます。
-2. **灯は「数」ではなく「誰の」で撮る → ◯。** `web/index.html` を使います。
-   `ui/stars.html` は試作として残しますが、**World の4段（合図 → 本人の端末 → 署名の検証 → 灯）と
-   3つの結末（確かめられた／`human_denied`／`proof_expired`）の見せ方だけ `web/` に持っていってください。**
-   World の賞は「断られた経路」が本物かを見ます。
-3. **PR #16・#17 を main に入れる → ◯。入れましょう。**
+- **There are only two scenes where we ask a human.** Pressing (every time, the device in hand, do I permit this now) and identifying yourself (once, World, who you are). Don't ask twice for the same single act
+- **Five screens. No more.** Don't add a new screen for when it stops; show the four ways of stopping as **states** of the gate
+- **There are only three scenes where interrupting is allowed** (a heavy request / a flame went out / noticing after the fact that you were stopped). Nothing appearing in routine use is the shape of success
+- **I split what I want decided into 9 items** (with options, what changes, the effort, and the default if there is no reply). Only about 4 actually need a reply: Q1-a (where to put the button that gives a flame) / Q1-b (whether only the owner can give a flame) / Q2-a (whether the World wait is a code or a QR) / Q3-a (when to bring out the stand-in for the real device)
+- **If we include Stack-chan, make it just one signal, "a heavy request arrived"** (give it neither judgement nor approval). **We are not building it this time.** We keep it only as a verbal answer if asked at the booth
 
-## 入れた直後にやること（3つ・小さい）
+---
 
-| やること | なぜ | 誰 |
+# Reply to the merge proposal (`ideation/2026-11-06-screens-merge.md`)
+
+**Conclusion: it merges cleanly. I verified it.**
+
+- Merged both `minta/screens` and `minta/ledger-app` into main **locally → zero conflicts** (GitHub also says `mergeable=CLEAN`)
+- After the merge, **the Broker tests are 50/50 pass** (`npm test` in `broker/`)
+- The only collisions are `broker/src/server.js` (+4/-1) and `store.js` (+6), and **both are reviewed and fine**
+
+## Replies to the three items in §5
+
+1. **May I touch `ui/` to connect the gate's "press" to the real device → no (please don't touch it).**
+   The reason is not disagreement but **division of labor.** Let's go with **`web/gate.html` alone** for the gate connected to the real device (it already exists).
+   `ui/index.html` gets **frozen as filming insurance** (play scenes standalone with `?s=heavy`; it runs to the end even with no real device).
+   Twelve hours before submission, the most effective thing is for the two of us not to touch the same file.
+2. **Film the flames as "whose", not as a "count" → yes.** We'll use `web/index.html`.
+   `ui/stars.html` stays as a prototype, but **please carry just the presentation of World's 4 steps (signal → the key holder's device → verifying the signature → flame) and
+   the 3 endings (verified / `human_denied` / `proof_expired`) over into `web/`.**
+   The World prize looks at whether "the denied path" is real.
+3. **Merge PR #16 and #17 into main → yes. Let's do it.**
+
+## Things to do right after merging (3, small)
+
+| What to do | Why | Who |
 |---|---|---|
-| 提出フォームのデモ URL を `…/web/gate.html` に差し替え | いまは `ui/index.html` を書いている | kou |
-| 録画の正本を `ui/scenes.json` に一本化 | `web/scenes.json` は同じ内容の写し。**録り直すと食い違う**。`record-ui.mjs` が両方に書くようにした（済） | kou（済） |
-| 公開は `kou-uni.github.io/ethglobal-mumbai/` 一本、`mintannn.github.io/tomoshibi/` は予備 | 審査員に2つ渡すと、古い方を見られる | 2人 |
+| Change the demo URL on the submission form to `…/web/gate.html` | It currently says `ui/index.html` | kou |
+| Consolidate the canonical recording into `ui/scenes.json` | `web/scenes.json` is a copy of the same content. **Re-recording makes them disagree.** I made `record-ui.mjs` write to both (done) | kou (done) |
+| Publish at `kou-uni.github.io/ethglobal-mumbai/` only; `mintannn.github.io/tomoshibi/` is the backup | Hand judges two and they'll look at the stale one | Both |
 
-**残る本当の関門は、統合ではありません。** World のクライアント登録と、実機を入れた本番 0G の通し1本です。
+**The real remaining hurdle is not the merge.** It is the World client registration, and one straight take on the real 0G with the real device in it.

@@ -1,190 +1,190 @@
-# 画面とシーン（デモ台本 v3）— 2026-11-06
+# Screens and scenes (demo script v3) — 2026-11-06
 
-> v3: **#8（minta）を統合。** Ledger を「範囲4行を出す板」から「**星が押される場所**」に変えた。
-> **赤い `DENIED` は撤回**（実機は白黒の電子ペーパー。白黒反転で見せる）。
-> 図版: [スマホで見る](https://htmlpreview.github.io/?https://github.com/kou-uni/ethglobal-mumbai/blob/main/ideation/2026-11-06-storyboard.html)
-> 印：**[決]** 合意済み ／ **[提案]** まだ2人で決めていない
+> v3: **integrated #8 (minta).** Changed the Ledger from "a panel that shows the 4 scope lines" to "**the place where the star is pressed**".
+> **The red `DENIED` is withdrawn** (the real device is a black-and-white e-paper display; show it by inverting black and white).
+> Figures: [view on a phone](https://htmlpreview.github.io/?https://github.com/kou-uni/ethglobal-mumbai/blob/main/ideation/2026-11-06-storyboard.html)
+> Markers: **[decided]** agreed / **[proposed]** not yet decided by the two of us
 
 ---
 
-## 0. 一言でいうと
+## 0. In one line
 
-> **0G が重さを決める。Ledger が最後に止める。**
+> **0G decides the weight. The Ledger stops it last.**
 > *0G decides how much it matters. The Ledger decides whether it happens.*
 
-**3つの丸**＝スポンサー3社。**3つ揃ったときだけ星が1個光る。** [決・#7]
+**The three circles** = the three sponsor companies. **A star lights up only when all three line up.** [decided, #7]
 
-| 丸 | 言っていること | 社 | 防ぐ偽造 |
+| Circle | What it says | Company | The forgery it prevents |
 |---|---|---|---|
-| ⬤ 人である | 1人が1つのスキルに出せる星は1個 | **World** | 偽アカウントの量産 |
-| ⬤ 本人が押した | PC の中の AI は、この物理ボタンに届かない | **Ledger** | PC の中の AI のなりすまし |
-| ⬤ 実際に使っている | 使用の記録があるものだけ星になる。重さは毎回 0G が決める | **0G** | 口だけの推薦 |
+| ⬤ Is a human | One person can give one skill one star | **World** | Mass production of fake accounts |
+| ⬤ The key holder pressed it | The AI inside the PC cannot reach this physical button | **Ledger** | Impersonation by the AI inside the PC |
+| ⬤ Actually using it | Only things with a usage record become stars. 0G decides the weight every time | **0G** | Recommendations made with words alone |
 
 ---
 
-## 1. Ledger の画面（v3 の本体・#8 を統合）[提案]
+## 1. The Ledger screen (the body of v3; #8 integrated) [proposed]
 
-### 一番強い絵（v3 で見つかった）
+### The strongest image (found in v3)
 
-> **奥の黒い空には、買われた星が 1,284 個。手元の白い紙には、本物の星が 2 個。**
+> **In the black sky behind, 1,284 bought stars. On the white paper in your hand, 2 real ones.**
 
-実機は**白黒の電子ペーパー**。PC の星空は黒地に白、Ledger の星座は**白地に黒**。
-**色を使わずに、偽物と本物が反転した2枚で並ぶ。** これが冒頭 S1 の構図。
+The real device is **black-and-white e-paper**. The starry sky on the PC is white on black; the constellation on the Ledger is **black on white**.
+**Without using color, the fake and the real stand side by side as two inverted images.** That is the composition of the opening shot S1.
 
-### 場面ごとの表示
+### Display per scene
 
-| 場面 | 表示 | 何が伝わるか |
+| Scene | Display | What it conveys |
 |---|---|---|
-| **待機**（0:00–0:58 / 1:28–1:42） | **「あなたの空」**＝自分の星座を白黒で。星が増えると線がつながる。「2 星」 | **何も聞いてこない。**でも生きている |
-| **許可**（0:58–1:28） | 「このスキルに鍵を使わせますか？」＋範囲4行（KEY/TO/SCOPE/UNTIL）。**長押しで署名**（押し続けるとボタンが端から塗り替わる。離すと取り消し） | **AI の1秒100回の連打と、人の1回の長押し** |
-| **承認の直後** | **★のハンコ**が落ちてきて「星になりました」。**同じ瞬間に、奥の空に星が1つ増える** | 物理ボタンと星が直結している |
-| **拒否**（1:42–2:12） | **画面全体を白黒反転。**大きな ✕ と `DENIED`。宛先と操作に取り消し線 | このボタンだけは押せない |
-| **確かめる**（2:32–2:50） | **何も出さない。**QR は空（画面A）の詳細に出す | Ledger の役は「範囲」と「拒否」だけ |
+| **Idle** (0:00–0:58 / 1:28–1:42) | **"Your sky"** = your own constellation in black and white. As stars increase, lines connect them. "2 stars" | **It asks you nothing.** But it is alive |
+| **Permit** (0:58–1:28) | "Let this skill use your key?" plus the 4 scope lines (KEY/TO/SCOPE/UNTIL). **Sign with a long press** (hold and the button fills in from one edge; release to cancel) | **The AI's 100 taps a second, versus a human's one long press** |
+| **Right after approval** | **A ★ stamp** drops down: "it became a star". **At the same instant, one star is added to the sky behind** | The physical button and the star are directly connected |
+| **Denial** (1:42–2:12) | **The whole screen inverts black and white.** A large ✕ and `DENIED`. The destination and the operation struck through | This is the one button it cannot press |
+| **Verify** (2:32–2:50) | **Show nothing.** The QR appears in the detail of the sky (screen A) | The Ledger's role is only "scope" and "denial" |
 
-**電子ペーパーの白黒反転のちらつき**が、画面の切り替わりごとに入る。**これは消さない。**
-機械が物理的に書き換わっている音と絵が、「ソフトの演出ではない」ことの証拠になる。
+**The flicker of the e-paper inverting black and white** appears at every screen transition. **Do not remove it.**
+The sound and sight of the machine physically rewriting itself is the evidence that "this is not a software effect".
 
-### 拒否を、なぜ Ledger に出すのか（設計の整理）[提案]
+### Why show the denial on the Ledger (design rationale) [proposed]
 
-範囲外の要求は **Broker が止める**ので、本来 Ledger には届かない。
-それでも**拒否の事実を Ledger に通知として出す**（署名は求めない。✕と理由だけ）。
+An out-of-scope request is **stopped by the Broker**, so it should never reach the Ledger.
+Even so, **we show the fact of the denial on the Ledger as a notification** (no signature required; just the ✕ and the reason).
 
-> **手元に出ない拒否は、見えない拒否。**
+> **A denial that doesn't appear in your hand is a denial you can't see.**
 
-PC に出した合図は、PC の中の AI が書いた文字と区別がつかない。**拒否こそ手元に出す。** [決・#7]
+A signal shown on the PC is indistinguishable from characters written by the AI inside the PC. **The denial above all should appear in your hand.** [decided, #7]
 
-### 落とす順番（自作アプリが間に合わない場合）[提案]
+### Order of degradation (if the custom app isn't ready in time) [proposed]
 
-**落とせない3つ:** ①範囲が読める ②押さないと通らない ③拒否が手元に出る
+**Three things that cannot be dropped:** (1) the scope is readable (2) it doesn't go through unless you press (3) the denial appears in your hand
 
-| 段 | 中身 | 落とすもの |
+| Level | Contents | What is dropped |
 |---|---|---|
-| **段1** | 星座＋長押し＋★ハンコ＋反転 `DENIED` | — |
-| **段2** | 長押し＋★ハンコ＋反転 `DENIED` | 星座（待機は暗転でよい） |
-| **段3** | 標準アプリの範囲4行＋標準の承認。拒否は**「Ledger が一度も聞いてこない」**ことで見せる | 長押し・ハンコ・反転 |
+| **Level 1** | Constellation + long press + ★ stamp + inverted `DENIED` | — |
+| **Level 2** | Long press + ★ stamp + inverted `DENIED` | The constellation (idle can just be a dark screen) |
+| **Level 3** | The standard app's 4 scope lines + the standard approval. The denial is shown by **"the Ledger never asks at all"** | Long press, stamp, inversion |
 
-**段3でも台本は壊れない。** 字幕を1行差し替えるだけ：
-「Ledger は、この要求を**人に見せることすらしません**」。
+**The script does not break even at level 3.** Just swap one subtitle line:
+"The Ledger **does not even show this request to a human**."
 
 ---
 
-## 2. 0G を記録係にしない [提案]
+## 2. Don't make 0G a record keeper [proposed]
 
-0G を「**Ledger を起こすかどうかを決める頭脳**」に置く。
+Put 0G in place as **"the brain that decides whether to wake the Ledger"**.
 
-| 0G の判定 | Ledger |
+| 0G's judgement | Ledger |
 |---|---|
-| **ふだん** | 星座のまま。何も聞かない。自動で通る |
-| **大事** | 画面が切り替わる。範囲4行 → 長押し |
-| **決定的** | 範囲＋**World ID** を要求 |
-| **届かない** | **画面が切り替わる。**自動では通さない（安全停止） |
+| **Routine** | Stays on the constellation. Asks nothing. Goes through automatically |
+| **Significant** | The screen changes. 4 scope lines → long press |
+| **Decisive** | Requires the scope plus **World ID** |
+| **Unreachable** | **The screen changes.** Does not go through automatically (fail-safe stop) |
 
-画面の端に `0G: 決定的（req_8f2a…）` が出た**ワンテンポ後**に Ledger が書き換わる。
-**順番が画で見えることが、0G が判断の流れの中にいる証拠。** request ID はそのまま系譜に入る。
+`0G: decisive (req_8f2a…)` appears at the edge of the screen, and **one beat later** the Ledger rewrites itself.
+**The order being visible on screen is the evidence that 0G is inside the decision flow.** The request ID goes straight into the trail.
 
-> **判断はクラウド、拒否は手の中。** / *Judgment in the cloud. Refusal in your hand.*
+> **Judgement in the cloud, denial in your hand.** / *Judgment in the cloud. Refusal in your hand.*
 
 ---
 
-## 3. 画面は3つしかない [決・#7]
+## 3. There are only three screens [decided, #7]
 
-| | 何が出るか | 誰が触るか |
+| | What appears | Who touches it |
 |---|---|---|
-| **A 空** | トグル1つ（みんな／知り合い）。星をタップ → 誰が／何を／**根拠3つ**。**QR もここ** | 審査員（トグル） |
-| **B Ledger（物）** | 星座 → 範囲4行 → ★ハンコ ／ 反転 `DENIED` | 審査員（長押し1回） |
-| **C 記録** | A の QR から。系譜が縦1本：許可→使用→返却→**0G の判定**→違反 | 審査員（自分のスマホ） |
+| **A Sky** | One toggle (everyone / people I know). Tap a star → who / what / **the three grounds**. **The QR is here too** | The judge (the toggle) |
+| **B Ledger (physical)** | Constellation → 4 scope lines → ★ stamp / inverted `DENIED` | The judge (one long press) |
+| **C Record** | From the QR in A. The trail as a single vertical line: permit → use → return → **0G's judgement** → violation | The judge (their own phone) |
 
-**空に「星の数」は出さない。** 数を出した瞬間、買える土俵に戻る。[決・#7]
-**作らない画面:** 設定／ダッシュボード／残高／ログビューア／管理画面／スタックチャン。
+**We do not show a "star count" in the sky.** The moment you show a count, you are back on buyable ground. [decided, #7]
+**Screens we do not build:** settings / dashboard / balance / log viewer / admin panel / Stack-chan.
 
 ---
 
-## 4. ショットリスト（5カット）[提案]
+## 4. Shot list (5 cuts) [proposed]
 
-| # | 名前 | 画 |
+| # | Name | Image |
 |---|---|---|
-| **S1 沈黙** | 机。奥の PC は**黒い空に1,284個**、AI が「許可」を連打。**手前の Ledger は白い紙に2個の星座、静止したまま** |
-| **S2 生まれる** | 長押し → ボタンが端から塗り替わる → ★のハンコ → **同じカットで奥の空に星が灯る。カットを割らない** |
-| **S3 ふだん** | 時間経過。`0G: ふだん` が流れ続ける。**Ledger は星座のまま、一度も聞いてこない** |
-| **S4 拒否** | マクロ。**白黒が反転**して ✕ と `DENIED`。奥で AI が連打。**押している指がない** |
-| **S5 手の中** | 審査員の手。スマホで系譜。Ledger は机に置かれている |
+| **S1 Silence** | A desk. The PC behind shows **1,284 in a black sky**, the AI hammering "allow". **The Ledger in front shows a 2-star constellation on white paper, motionless** |
+| **S2 Birth** | Long press → the button fills in from one edge → the ★ stamp → **in the same shot, a star lights up in the sky behind. Don't cut** |
+| **S3 Routine** | Time passes. `0G: routine` keeps streaming by. **The Ledger stays on the constellation and never asks once** |
+| **S4 Denial** | Macro. **Black and white invert** into ✕ and `DENIED`. The AI hammers away behind. **There is no finger pressing** |
+| **S5 In the hand** | The judge's hands. The trail on a phone. The Ledger sits on the desk |
 
-**原則:** カメラの定位置は Ledger／PC は奥でボケている／**実機の画面を PC のキャプチャで代用しない**／押す・押さない・**押せない**の3状態を全部見せる。
+**Principles:** the camera's home position is the Ledger / the PC is behind and out of focus / **never substitute a PC capture for the real device's screen** / show all three states: pressing, not pressing, and **not being able to press**.
 
-**⚠️ ライティングは実機を見てから決める。** 電子ペーパーは自己発光ではない可能性がある。
-v2 の「Ledger の画面が唯一の光源」は**撤回**。**斜めからの外光で紙のように見せる**案に差し替え（#5 で確認）。
+**⚠️ Decide the lighting after seeing the real device.** The e-paper may not be self-illuminating.
+v2's "the Ledger screen is the only light source" is **withdrawn**. Replaced with the plan of **making it look like paper with angled ambient light** (confirm in #5).
 
 ---
 
-## 5. 3分の動画（0:00–2:55）[提案]
+## 5. The 3-minute video (0:00–2:55) [proposed]
 
-| 時間 | ショット | 起きること | 字幕 |
+| Time | Shot | What happens | Subtitle |
 |---|---|---|---|
-| 0:00–0:10 | **S0 問い** | 黒画面。字だけ。**声だけ** | **今週入れた AI の道具は、誰に聞いて選びましたか？** |
-| 0:10–0:20 | S0（続き） | 間を2秒おいて、自分で答える | たぶん、信頼している誰かが使っていたから。**それが星です** |
-| 0:20–0:30 | **S1 沈黙** | 奥の黒い空で星が増殖（$0.0027）。AI が連打。**手前は白い紙に2個** | 星は買える。1個 $0.0027 |
-| **0:30–0:52** | A（寄り） | 審査員が `知り合い` を押す。**満天が0.6秒で消え、1つ残る** | **星の数ではなく、誰の星か** |
-| 0:52–1:08 | A（詳細） | **3つの丸が順に点灯** | 星1個は、3つそろったときだけ光る |
-| **1:08–1:38** | **S2 生まれる** | `0G: 大事` → Ledger が書き換わる → 範囲4行 → **長押し**（塗り替わる）→ **★ハンコ** → 奥の空に星が灯る。AI にやらせても書き換わらない | 勧めてはいない。使っているところを見せているだけ |
-| 1:38–1:48 | **S3 ふだん** | 数日経つ。`0G: ふだん`。**星座のまま** | ふだんは、何も聞いてこない |
-| **1:48–2:18** | **S4 拒否** | 範囲外の要求。`0G: 決定的` → **白黒反転**して ✕ `DENIED`。AI は連打し続ける。**指がない** | **このボタンだけは押せない** |
-| **2:18–2:36** | A（引き） | その版の星が**一斉に**消える。審査員の鍵も止まっている | **昨日入れた道具が、今日こっそり更新されていたら、気づけますか？** |
-| **2:36–2:50** | **S5 手の中** | A の QR → 系譜。許可・使用・返却・**0G の request ID**・違反が1本 | 誰にも消せない |
-| 2:50–2:55 | S1 の構図 | Ledger の星座が1つ増えて終わる | **判断はクラウド、拒否は手の中** |
+| 0:00–0:10 | **S0 Question** | Black screen. Text only. **Voice only** | **The AI tool you installed this week — whose advice did you pick it on?** |
+| 0:10–0:20 | S0 (cont.) | Leave a 2-second beat, then answer it yourself | Probably because someone you trust was using it. **That is a star** |
+| 0:20–0:30 | **S1 Silence** | Stars multiply in the black sky behind ($0.0027). The AI hammers away. **In front, 2 on white paper** | Stars can be bought. $0.0027 each |
+| **0:30–0:52** | A (close) | The judge presses `people I know`. **The full sky vanishes in 0.6 seconds, leaving one** | **Not the number of stars, but whose star it is** |
+| 0:52–1:08 | A (detail) | **The three circles light up in turn** | A single star lights up only when all three line up |
+| **1:08–1:38** | **S2 Birth** | `0G: significant` → the Ledger rewrites itself → 4 scope lines → **long press** (fills in) → **★ stamp** → a star lights up in the sky behind. Having the AI do it doesn't rewrite anything | I'm not recommending it. I'm just showing you what I use |
+| 1:38–1:48 | **S3 Routine** | A few days pass. `0G: routine`. **Stays on the constellation** | In routine use, it asks nothing |
+| **1:48–2:18** | **S4 Denial** | An out-of-scope request. `0G: decisive` → **black and white invert** into ✕ `DENIED`. The AI keeps hammering. **There is no finger** | **This is the one button it cannot press** |
+| **2:18–2:36** | A (wide) | Every star on that version goes out **at once**. The judge's key has stopped too | **If the tool you installed yesterday was quietly updated today, would you notice?** |
+| **2:36–2:50** | **S5 In the hand** | The QR in A → the trail. Permit, use, return, **0G's request ID**, violation, in one line | No one can erase it |
+| 2:50–2:55 | S1's composition | The Ledger's constellation gains one star, and it ends | **Judgement in the cloud, denial in your hand** |
 
-**ワンカットの原則:** 1:08 以降、**Ledger と PC 画面は同じ絵の中に同時に居る。**
+**The one-shot principle:** from 1:08 on, **the Ledger and the PC screen are in the same frame at the same time.**
 
-**決勝4分との差分:** 冒頭に15秒足して**審査員に Ledger を手渡す。**
-2:55 のあと1行：「いま長押ししていただいたのが、AI には押せないボタンです」。
-**口頭だけで足す（動画には入れない）:**「Ledger を持っている人、手を挙げてください。それは今日から、AI の鍵にもなります」。
-手が挙がるかは当日の運なので、**外れても動画が壊れない場所にだけ置く。**
+**Diff for the 4-minute final:** add 15 seconds at the top to **hand the Ledger to a judge.**
+One line after 2:55: "That long press you just made is the button an AI cannot press."
+**Add only verbally (not in the video):** "If you have a Ledger, raise your hand. From today it is also a key for your AI."
+Whether hands go up is luck on the day, so **put it only where the video doesn't break if it misses.**
 
-### 星空に何を映すか（#10 D・E）[提案]
+### What to show in the starry sky (#10 D, E) [proposed]
 
-デモの星を、**この36時間で私たち2人が実際に鍵を預けた道具**にする。
-「手元の白い紙に、本物の星が2個」が、たとえ話ではなく事実になる。系譜も本物の使用履歴になる。
+Make the demo's stars **the tools the two of us actually entrusted our keys to during these 36 hours.**
+"Two real stars on the white paper in your hand" becomes a fact rather than a figure of speech. The trail becomes a real usage history too.
 
-**入れる条件は1つ:** Broker が範囲チェックに通った呼び出しを**1回でも成功させるまで、本物の鍵は入れない。**
-超えたら、残り時間は自分たちの道具で開発し続ける。撮影時点で星が2個とも本物になる。
+**There is one condition for putting them in:** **do not put a real key in until the Broker has succeeded at least once on a call that passed the scope check.**
+Once we clear that, we keep developing with our own tools for the remaining time. At filming time both stars will be real.
 
-冒頭の `$0.0027`（論文の数字）は、**「この36時間で私たちの AI が `.env` を何回開いたか」の実測が取れたら差し替える。**
-数えられなければ論文の数字のまま。**測れないものは出さない。**
+The `$0.0027` at the top (the number from the paper) **gets replaced if we can measure "how many times our AI opened `.env` during these 36 hours".**
+If we can't count it, it stays the number from the paper. **Don't show what you can't measure.**
 
 ---
 
-## 6. キャッチコピー [提案]
+## 6. Taglines [proposed]
 
-> **星の数ではなく、誰の星か。** / *Not how many stars. Whose.*
+> **Not the number of stars, but whose star it is.** / *Not how many stars. Whose.*
 
-| 場面 | 日本語 | 英語 |
+| Scene | Japanese | English |
 |---|---|---|
-| 問題 | 星は買える。1個 $0.0027 | Stars are for sale. $0.0027 each. |
-| 答え | AI は1秒に100回「許可」を押せる。このボタンだけは押せない | An AI can press "Allow" 100 times a second. It can't press this one. |
-| 3つの丸 | 星1個は、3つそろったときだけ光る | One star. Three things that must all be true. |
-| 0G | 0G が重さを決める。Ledger が最後に止める | 0G decides how much it matters. The Ledger decides whether it happens. |
-| 反転（v3） | 奥の黒い空に1,284個。手元の白い紙に2個 | 1,284 stars on the screen. Two in your hand. |
-| 拒否（v3） | 手元に出ない拒否は、見えない拒否 | A refusal you can't see isn't a refusal. |
-| 星の中身 | 勧めてはいない。使っているところを、見せているだけ | I'm not recommending it. I'm showing you what I actually use. |
-| 波及 | 同じ船に乗っている人の星 | Stars from people in the same boat. |
-| プライバシー | 誰を知っているかは、ここから出ない | Who you know never leaves your device. |
-| 締め | 買える星を、買えない星に | Stars you can't buy. |
+| Problem | Stars can be bought. $0.0027 each | Stars are for sale. $0.0027 each. |
+| Answer | An AI can press "allow" 100 times a second. This is the one button it cannot press | An AI can press "Allow" 100 times a second. It can't press this one. |
+| The three circles | A single star lights up only when all three line up | One star. Three things that must all be true. |
+| 0G | 0G decides the weight. The Ledger stops it last | 0G decides how much it matters. The Ledger decides whether it happens. |
+| Inversion (v3) | 1,284 in the black sky behind. 2 on the white paper in your hand | 1,284 stars on the screen. Two in your hand. |
+| Denial (v3) | A denial that doesn't appear in your hand is a denial you can't see | A refusal you can't see isn't a refusal. |
+| What the star contains | I'm not recommending it. I'm just showing you what I use | I'm not recommending it. I'm showing you what I actually use. |
+| Ripple | Stars from the people on the same boat | Stars from people in the same boat. |
+| Privacy | Who you know never leaves here | Who you know never leaves your device. |
+| Closer | From stars you can buy, to stars you can't | Stars you can't buy. |
 
 ---
 
-## 7. 外れても壊れて見えない設計 [提案]
+## 7. Designed so that it doesn't look broken when it misses [proposed]
 
-| 起きうること | 当日の見え方 | 台本の1行 |
+| What could happen | How it looks on the day | The script line |
 |---|---|---|
-| **0G に届かない・遅い** | **Ledger が書き換わる。**自動では通さない（＝安全停止） | 「届かないときは、通さずに人を呼びます」 |
-| **自作アプリが間に合わない** | **段2 → 段3 に落とす**（§1）。台本は壊れない | 「Ledger は、この要求を人に見せることすらしません」 |
-| World が会場では模擬 | 設計上の主張として口で言う | 「防いでいるのは、偽アカウントの量産です」 |
-| Ledger に範囲が出ない（#5） | 範囲を1行の文字列に畳む | **範囲が読めること自体は落とさない** |
-| Anon-RPC が通らない（#6） | 読み取りはトグルに降格。EF は CROPS 一本 | 動画からは落とす |
+| **0G unreachable or slow** | **The Ledger rewrites itself.** Does not go through automatically (= fail-safe stop) | "When it can't get through, we don't let it through; we call a human" |
+| **The custom app isn't ready in time** | **Degrade from level 2 to level 3** (§1). The script doesn't break | "The Ledger does not even show this request to a human" |
+| World is mocked at the venue | State it verbally as a design-level claim | "What this prevents is the mass production of fake accounts" |
+| The scope doesn't render on the Ledger (#5) | Fold the scope into a single line of text | **Do not drop the readability of the scope itself** |
+| Anon-RPC doesn't work (#6) | Demote reads to a toggle. For EF, go with CROPS alone | Drop it from the video |
 
 ---
 
-## 8. まだ確かめていないこと（#5 に乗せる）
+## 8. Things not yet verified (put on #5)
 
-- 電子ペーパーが**自己発光か**（ライティングの決め方が変わる）
-- **自作アプリ**で任意の図（星座・★ハンコ）を描けるか／**長押し**を作れるか／待機中も画面を出し続けられるか
-- 標準の Ethereum アプリで範囲4行が読めるか（段3の下限）
+- Whether the e-paper is **self-illuminating** (it changes how we decide the lighting)
+- Whether a **custom app** can draw arbitrary figures (constellation, ★ stamp) / whether we can build a **long press** / whether it can keep the screen on while idle
+- Whether the 4 scope lines are readable in the standard Ethereum app (the floor for level 3)

@@ -1,252 +1,252 @@
-# 賞ごとの「狙えるか／足りないもの／埋め方」（構想段階 2026-11-06）
+# Per-prize "can we win it / what is missing / how to fill it" (conceptual stage, 2026-11-06)
 
-**一言：いま狙える上限は $11,250。現実線は $3,500〜6,000。**
+**In one line: the current ceiling we can aim at is $11,250. The realistic line is $3,500–6,000.**
 
-> **2026-11-06 訂正（賞ページを直読）。** 初版は World を $7,500、0G のトラック名を
-> 「Build with iAI」「Wildcard」と書いていた。**どちらも間違い。**
-> World は**総額を1チームが取れると書いていた**（EF で一度やった間違いを繰り返した）。
-> 実際は枠に分割され、**うち2枠は Continuity 限定でこちらは出せない。**
-> 0G の「Build with iAI」というトラックは**存在しない**（正しくは
-> **Build with 0G Private Computer**。iAI はその中のボーナス条件）。
-> 「Wildcard」も無く、実際は **Agents That Pay for Themselves**（収益ループ必須）。
+> **Correction 2026-11-06 (read the prize pages directly).** The first version put World at $7,500 and named 0G's tracks
+> "Build with iAI" and "Wildcard". **Both were wrong.**
+> For World, I **wrote that one team could take the total amount** (repeating a mistake I already made once with EF).
+> In fact it is split into slots, and **two of those slots are Continuity-only, which we cannot enter.**
+> 0G has **no track called "Build with iAI"** (it is actually
+> **Build with 0G Private Computer**; iAI is a bonus condition inside it).
+> There is no "Wildcard" either; it is actually **Agents That Pay for Themselves** (a revenue loop is required).
 
-**要件の出典（この表で「要件」と書いたものは、すべてこの3ページの原文由来）:**
+**Sources for the requirements (everything labeled "requirement" in these tables comes from the original text of these three pages):**
 
 - https://ethglobal.com/events/mumbai/prizes/world
 - https://ethglobal.com/events/mumbai/prizes/0g
 - https://ethglobal.com/events/mumbai/prizes/ethereum-foundation
 
-**「足りない」「埋め方」はこちらの判断。**
-（会期前の調査ノートは public には置かない。private の `Mumbai-ideation-2026` にある）
+**"What is missing" and "how to fill it" are my own judgement.**
+(The pre-event research notes are not placed in public; they are in the private `Mumbai-ideation-2026`.)
 
-**制約：パートナー賞は1プロジェクト最大3社。** World / 0G / EF で埋まっている。
-Finalist は別枠。
+**Constraint: partner prizes are capped at 3 partners per project.** World / 0G / EF fill them.
+Finalist is a separate slot.
 
 ---
 
-## 0. 結論の表
+## 0. The conclusion table
 
-| 賞 | 枠の内訳 | 1位で取れる額 | 狙えるか | 最大の抜け |
+| Prize | Slot breakdown | Amount for 1st place | Can we aim at it | Biggest gap |
 |---|---|---:|---|---|
-| World **Agent Pass** | $5,000 / 3枠（2,500 / 1,500 / 1,000） | **$2,500** | **○** | **IDKit と別物。§1 で調べ直した** |
-| World IDKit | $2,500 / 最大2チーム（各 **$1,250**） | **$1,250** | ○ | 最小十分な credential の説明がない |
-| World Agent Pass [Cont] | $2,500 | — | **×** | **Continuity 限定。出せない** |
-| World IDKit [Cont] | $2,500 | — | **×** | **Continuity 限定。出せない** |
-| **0G Build with 0G Private Computer** | $5,000 / 3枠（2,500 / 1,500 / 1,000） | **$2,500** | **◎（本命）** | credits の可視化が画面に無い |
-| 0G Physical AI | $5,000 / 3枠（2,500 / 1,500 / **Hardware 1,000**） | $2,500 | **△〜○** | 体がない。**ただし Hardware 枠が独立** |
-| 0G Keep Building | $3,000 | — | **×** | **Continuity 限定。出せない** |
-| 0G Agents That Pay for Themselves | $2,000 / 最大2チーム（各 $1,000） | $1,000 | **低** | **収益ループが無い** |
-| EF CROPS | $3,500 / 3枠 | **$2,000** | ○ | **Broker が平文の鍵を持つ＝P に反する** |
-| EF Anon-RPC | $5,000 / 3枠 | $2,500 | △ | #6 の30分判定待ち。**EF は1賞のみ** |
-| ENS ENSv2 | $7,000 | — | **×（採らない）** | 枠3社を EF と取り合う。下の §6 |
-| Finalist | 記載なし | — | ○ | Practicality（誰が金を払うか）が4分に無い |
+| World **Agent Pass** | $5,000 / 3 slots (2,500 / 1,500 / 1,000) | **$2,500** | **Yes** | **A different thing from IDKit. Re-researched in §1** |
+| World IDKit | $2,500 / up to 2 teams (**$1,250** each) | **$1,250** | Yes | No explanation of a minimal sufficient credential |
+| World Agent Pass [Cont] | $2,500 | — | **No** | **Continuity-only. We cannot enter** |
+| World IDKit [Cont] | $2,500 | — | **No** | **Continuity-only. We cannot enter** |
+| **0G Build with 0G Private Computer** | $5,000 / 3 slots (2,500 / 1,500 / 1,000) | **$2,500** | **Best bet** | Credit usage isn't visible on any screen |
+| 0G Physical AI | $5,000 / 3 slots (2,500 / 1,500 / **Hardware 1,000**) | $2,500 | **Maybe to yes** | No body. **But the Hardware slot is separate** |
+| 0G Keep Building | $3,000 | — | **No** | **Continuity-only. We cannot enter** |
+| 0G Agents That Pay for Themselves | $2,000 / up to 2 teams ($1,000 each) | $1,000 | **Low** | **There is no revenue loop** |
+| EF CROPS | $3,500 / 3 slots | **$2,000** | Yes | **The Broker holds plaintext keys = violates the P** |
+| EF Anon-RPC | $5,000 / 3 slots | $2,500 | Maybe | Waiting on #6's 30-minute decision. **EF is one prize only** |
+| ENS ENSv2 | $7,000 | — | **No (not taking it)** | It competes with EF for the 3 partner slots. See §6 |
+| Finalist | Not stated | — | Yes | Practicality (who pays) is absent from the 4 minutes |
 
-**上限 = World $3,750 ＋ 0G $5,000 ＋ EF $2,500 = $11,250。**
-**Continuity 限定の4トラック（$11,000 ぶん）には、こちらは出せない。**
+**Ceiling = World $3,750 + 0G $5,000 + EF $2,500 = $11,250.**
+**We cannot enter the four Continuity-only tracks ($11,000 worth).**
 
-**同じスポンサーの複数トラックは取れる【確定・2026-11-06】。** 公式の提出案内に
-「If a partner has multiple tracks, you can be eligible for all of them while only
-counting as 1 Partner Prize」とある。**World の2トラックも 0G の複数トラックも、
-パートナー枠を1つしか使わない。** よって上限 $11,250 はそのまま成立する。
-（0G 側の「枠数の明記なし・0G の裁量」は、賞金の配分の話で別件）
-
----
-
-## 1. World（$3,750 を狙う）
-
-**→ Agent Pass の正体は `spec/world-agent-pass.md` に調べ直した。中身は標準の OIDC。**
-**`device_code` グラントがあるので Broker からそのまま呼べる。**
-**拒否／期限切れの経路は device flow に標準で入っているので、作る必要がない**
-（下の「足りないもの 2」は、Agent Pass を使えば消える）。
-
-
-**要件（原文由来）**
-- 公式の **World ID Agent Pass** に統合する
-- **一連の流れを全部見せる**：証明の要求 → 本人が完了 → 結果の検証 → 保護された動作
-- **拒否／期限切れ／取り消し／失敗の経路も見せる**
-- **安全なバックエンドで検証する。** client secret を晒さない。検証していない client の返事を信じない
-- **導入の振り返り**（最初に成功するまでの時間・つまずき・足りなかったドキュメント・改善案1つ）
-- IDKit 側は上記に加えて「**使う credential が最小十分であることの説明**」と「成功経路＋代替経路の両方のデモ」
-
-**足りないもの**
-
-1. **Agent Pass を、IDKit と同じものだと思って設計していた。** 別の製品で、まだ触っていない。
-   **これが World $7,500 の生死を分ける。最優先で潰す**
-2. **拒否の経路が、World のものになっていない。** 台本 v4 の `DENIED` は Ledger の拒否で、
-   World の「証明が期限切れ／取り消された」ではない。**審査員は World の拒否を見たい**
-3. **導入の振り返りが1文字も書かれていない**（D6・kou 持ち）。両賞で必須
-4. 会場の証明は mock。mock でバックエンド検証が通るか未確認
-
-**埋め方**
-
-- **いま30分で Agent Pass のドキュメントを読む。** 統合の形が IDKit と違うなら、設計より先にここを直す
-- **拒否の経路を1つ足す：星の持ち主の証明が切れている場合。**
-  → 星が**灰色**になり、Broker が `DENIED: proof_expired` を返す。
-  **#10 の F（灰色の星）を、体験としてではなく「World の拒否経路」として復活させる。** 画面1つで済む
-- **振り返りは、いま書き始めて、詰まるたびに1行足す。** 後からは書けない
-- credential の説明は README に3行：「使うのは nullifier だけ。
-  Orb か Device かは問わない。**人であることが分かれば十分で、誰かは要らないため**」
+**Multiple tracks from the same sponsor can be won [confirmed, 2026-11-06].** The official submission guidance says
+"If a partner has multiple tracks, you can be eligible for all of them while only
+counting as 1 Partner Prize". **So World's two tracks and 0G's multiple tracks
+each use only one partner slot.** The ceiling of $11,250 therefore stands.
+(0G's "the number of slots is not stated, at 0G's discretion" is about how the prize money is split, a separate matter.)
 
 ---
 
-## 2. 0G（$5,000 を狙う。出す先は2つ）
+## 1. World (aiming for $3,750)
 
-### 訂正：「Build with iAI」というトラックは無い
+**→ What Agent Pass actually is has been re-researched in `spec/world-agent-pass.md`. Inside, it is standard OIDC.**
+**It has the `device_code` grant, so it can be called straight from the Broker.**
+**The denial / expiry paths are built into the device flow as standard, so we don't need to build them**
+(the "what is missing, item 2" below disappears if we use Agent Pass).
 
-正しくは **Build with 0G Private Computer**（$5,000 / 3枠）。
-**iAI はその中のボーナス条件**（「0G アカウントで認証し、credits が減るのが見えること」）。
 
-**要件（原文由来）**
-- **主たる利用の流れの中で 0G Private Computer で推論する。request ID 付きで**
-- 審査員が触れる、動くアプリケーション。**再訪する価値が明確なこと**
-- 0G に依存している理由を**1文で**
-- **iAI ボーナス：0G アカウントで認証し、credits が減るのが見えること**
+**Requirements (from the original text)**
+- Integrate with the official **World ID Agent Pass**
+- **Show the whole flow**: requesting the proof → the key holder completing it → verifying the result → the protected action
+- **Also show the denial / expiry / revocation / failure paths**
+- **Verify on a secure backend.** Don't expose the client secret. Don't trust a response from an unverified client
+- **A retrospective on the integration** (time to first success, where you stumbled, missing documentation, one improvement idea)
+- The IDKit side additionally requires "**an explanation that the credential used is minimal and sufficient**" and a demo of both the success path and the alternative path
 
-**これは全部、もともとやろうとしていること。言い張りが要らない。本命にする。**
+**What is missing**
 
-### Physical AI は「体」を言い張らなくていい
+1. **We designed on the assumption that Agent Pass was the same thing as IDKit.** It is a different product, and we haven't touched it.
+   **This decides whether World's $7,500 lives or dies. Kill it first**
+2. **The denial path isn't World's.** The `DENIED` in script v4 is the Ledger's denial,
+   not World's "the proof expired / was revoked". **The judges want to see World's denial**
+3. **Not one character of the integration retrospective has been written** (D6, kou owns it). Required for both prizes
+4. The proofs at the venue are mocked. Whether backend verification passes with a mock is unverified
 
-**3枠目が `Hardware: $1,000` で独立している。**
+**How to fill it**
 
-| 枠 | 額 |
+- **Spend 30 minutes right now reading the Agent Pass docs.** If the shape of the integration differs from IDKit, fix this before the design
+- **Add one denial path: the star owner's proof has expired.**
+  → The star turns **gray**, and the Broker returns `DENIED: proof_expired`.
+  **Revive F from #10 (the gray star), not as experience but as "World's denial path".** One screen is enough
+- **Start writing the retrospective now, and add a line every time we get stuck.** It can't be written after the fact
+- The credential explanation goes in the README in three lines: "All we use is the nullifier.
+  Orb or Device doesn't matter. **Knowing it's a human is enough; who they are isn't needed**"
+
+---
+
+## 2. 0G (aiming for $5,000, entering two tracks)
+
+### Correction: there is no track called "Build with iAI"
+
+It is actually **Build with 0G Private Computer** ($5,000 / 3 slots).
+**iAI is a bonus condition inside it** ("authenticate with a 0G account, and make the credits visibly decrease").
+
+**Requirements (from the original text)**
+- **Run inference on 0G Private Computer inside the main usage flow, with a request ID**
+- A working application the judges can touch. **The reason to come back must be clear**
+- The reason for depending on 0G, **in one sentence**
+- **iAI bonus: authenticate with a 0G account, and make the credits visibly decrease**
+
+**All of this is what we were already going to do. No stretching required. Make it the best bet.**
+
+### Physical AI doesn't require claiming a "body"
+
+**The third slot, `Hardware: $1,000`, is separate.**
+
+| Slot | Amount |
 |---|---|
-| 1位 | $2,500 |
-| 2位 | $1,500 |
+| 1st | $2,500 |
+| 2nd | $1,500 |
 | **Hardware** | **$1,000** |
 
-**Ledger を "Agents with a Body" の body だと言い張る必要はない。
-実機のデモがあるというだけで Hardware 枠に乗る。**
+**We don't need to claim the Ledger is the body in "Agents with a Body".
+Simply having a real-hardware demo puts us in the Hardware slot.**
 
-**要件（原文由来）**
-- **判断ループの中での 0G 呼び出し**（vision / voice / decision model）
-- 0G Storage への episode log（**判断ごとに request ID**）
-- **再現できるシミュレーション、または実機のデモ**
-- **0G 不達のときの safe-stop**（**判断を偽ると失格**）
+**Requirements (from the original text)**
+- **0G calls inside the decision loop** (vision / voice / decision model)
+- An episode log into 0G Storage (**a request ID per decision**)
+- **A reproducible simulation, or a real-hardware demo**
+- **A safe-stop when 0G is unreachable** (**faking the judgement is disqualifying**)
 
-**埋め方（追加作業は画面1つと README 3行）**
+**How to fill it (extra work is one screen and three README lines)**
 
-1. **credits の消費を画面 C に出す。** 系譜の各行に `0G: 決定的（req_8f2a… / 0.0031 0G）`。
-   **iAI ボーナスは、これだけで満たせる**
-2. **0G アカウントでの認証**を Broker に足す（iAI ボーナスの前半）。**未確認：やり方**
-3. **再訪する価値を README に2行。**「星は1回では意味がない。
-   同じ鍵で使い続けている事実が積み上がるほど重くなる。**だから翌日も来る**」
-4. **依存の理由を1文で。**「重さの判定を、鍵も本文も渡さずに外で回せるのは Private Computer だけ」
-5. **両方に出す。実装は同じ。** Private Computer を1位で、Physical AI を Hardware 枠で
+1. **Show credit consumption on screen C.** Each line of the trail gets `0G: decisive (req_8f2a… / 0.0031 0G)`.
+   **The iAI bonus can be satisfied with just this**
+2. **Add 0G-account authentication** to the Broker (the first half of the iAI bonus). **Unverified: how**
+3. **Two README lines on the reason to come back.** "A star is meaningless once.
+   The more the fact of continued use with the same key piles up, the heavier it gets. **So you come back the next day**"
+4. **The reason for the dependency, in one sentence.** "Private Computer is the only place that can run the weight judgement externally without handing over the key or the body"
+5. **Enter both. The implementation is the same.** Private Computer for 1st, Physical AI for the Hardware slot
 
-⚠️ **「判断を偽ると失格」が原文にある。** 重さ判定は、本当に 0G に聞いた結果を出す。
-**ハードコードした `大事` / `決定的` を撮らない。**
+⚠️ **"Faking the judgement is disqualifying" is in the original text.** The weight judgement must show the result of actually asking 0G.
+**Don't film a hardcoded `significant` / `decisive`.**
 
-### Agents That Pay for Themselves（$1,000・適合低）
+### Agents That Pay for Themselves ($1,000, low fit)
 
-収益ループ（tx hash と request ID）／**デモ中に人が入金せず自走する**／
-**使い切ったときの上限と、緩やかな劣化**が要る。
+It requires a revenue loop (tx hash and request ID) / **running on its own during the demo without a human topping it up** /
+**a cap and graceful degradation when it runs out**.
 
-**収益ループが無いので採らない。** ただし `maxCalls` は「上限と緩やかな劣化」そのものなので、
-**余裕があれば出すだけ出す。**
+**There is no revenue loop, so we're not taking it.** But `maxCalls` is exactly "a cap and graceful degradation",
+so **if there is room, just enter it anyway.**
 
 ---
 
-## 3. EF CROPS（$2,000 を狙う）
+## 3. EF CROPS (aiming for $2,000)
 
-**要件（原文由来）**
-- OSS ライセンス付きの公開リポジトリ＋ README
-- README に **CROPS の節**（C/O/P/S 各1〜2行。**P の行は、各第三者が何を知るかを明記**）
-- 会期前後の状態の差分
-- 3分以内のデモ動画
-- **トラッカー・解析を使わない**
-- **鍵と個人データは端末の中。例外は README で説明する**
+**Requirements (from the original text)**
+- A public repository with an OSS license, plus a README
+- A **CROPS section** in the README (1–2 lines each for C/O/P/S. **The P line must state what each third party learns**)
+- The diff between the state before and after the event
+- A demo video of 3 minutes or less
+- **No trackers or analytics**
+- **Keys and personal data stay inside the device. Exceptions are explained in the README**
 
-**足りないもの — ここが正面から反する**
+**What is missing — this is a head-on contradiction**
 
-**Broker が平文の API キーを持っている。** これは「鍵は端末の中」に真っ向から反する。
-**この作品の設計の中心が、CROPS の P に反している。** 隠すと審査で刺さる。
+**The Broker holds plaintext API keys.** That directly contradicts "keys stay inside the device".
+**The center of this work's design violates CROPS's P.** Hide it and it gets hit in judging.
 
-**埋め方（3択。上から順に強い）**
+**How to fill it (3 options, strongest first)**
 
-1. **Broker を 0G Private Computer（TEE）に載せる。** 反していたものが消える。
-   **かつ 0G iAI の「Private Computer で推論」とも一本になる。** 時間があればこれ
-2. **README に例外として書き切る。**
-   「鍵は端末ではなく Broker の中にある。**PC の中よりは安全だが、Broker は信頼点である。**
-   本番では TEE に載せる。今回は載せていない」
-   → **弱点を自分から名指しするほうが、黙っているより審査で強い**
-3. ~~鍵を端末に戻す~~ → それだと AI が鍵を読めるので、作品の前提が壊れる。**採らない**
+1. **Put the Broker on 0G Private Computer (a TEE).** The contradiction disappears.
+   **And it also lines up with 0G iAI's "inference on Private Computer".** Do this if there is time
+2. **Write it out fully in the README as an exception.**
+   "The key is not in the device, it is inside the Broker. **Safer than being inside the PC, but the Broker is a trust point.**
+   In production it goes in a TEE. This time it is not"
+   → **Naming your own weakness is stronger in judging than staying quiet**
+3. ~~Put the key back in the device~~ → then the AI can read the key, which breaks the work's premise. **Not taking it**
 
-**P の行（各第三者が何を知るか）は、そのまま書ける。**
+**The P line (what each third party learns) can be written as is.**
 
-| 誰 | 何を知るか |
+| Who | What they learn |
 |---|---|
-| Ledger | 範囲4行だけ。鍵の中身も、相手も知らない |
-| World | 人であること。**誰かは知らない**（nullifier だけ） |
-| 0G | 要求の重さと request id。**鍵も本文も渡さない** |
-| Broker | **全部知る。ここが信頼点** |
+| Ledger | Only the 4 scope lines. It knows neither the key's contents nor the counterparty |
+| World | That it is a human. **Not who** (just the nullifier) |
+| 0G | The request's weight and the request id. **Neither the key nor the body is handed over** |
+| Broker | **Learns everything. This is the trust point** |
 
-**「会期前後の差分」は、リポジトリの運用ですでに満たしている**（11/5 21:00 以降のものだけ）。
-
----
-
-## 4. EF Anon-RPC（$2,500・条件つき）
-
-**#6 が30分で通れば出す。通らなければ CROPS 一本。** D4 のまま。
-**EF は1プロジェクト1賞なので、両方出しても入るのは片方。**
-1位どうしの差は $500（$2,500 と $2,000）。**時間を賭ける価値は小さい。**
+**"The diff between before and after the event" is already satisfied by how the repository is run** (only things from 11/5 21:00 onward).
 
 ---
 
-## 5. Finalist（金額は未確認）
+## 4. EF Anon-RPC ($2,500, conditional)
 
-**審査軸5つ：** Technicality／Originality／Practicality／Usability(UI/UX/DX)／WOW Factor。
-発表は**7分（デモ4分＋質疑3分）**。
+**Enter it if #6 passes within 30 minutes. If not, CROPS alone.** Unchanged from D4.
+**EF is one prize per project, so even if we enter both only one can land.**
+The difference between the two first places is $500 ($2,500 vs $2,000). **Not worth betting time on.**
 
-| 軸 | いまの手札 | 抜け |
+---
+
+## 5. Finalist (amount unverified)
+
+**Five judging axes:** Technicality / Originality / Practicality / Usability (UI/UX/DX) / WOW Factor.
+The presentation is **7 minutes (4 minutes of demo + 3 minutes of Q&A)**.
+
+| Axis | Current hand | Gap |
 |---|---|---|
-| Technicality | Ledger 自作アプリ・EIP-712 を端末内で・0G Compute | — |
-| Originality | 「星は約束ではなく事実」 | — |
-| **Practicality** | — | **誰が金を払うのかが4分に1行も無い** |
-| Usability | 画面3つだけ。minta が持つ（#12） | — |
-| WOW | 長押し→★ハンコ・一斉消灯 | — |
+| Technicality | Ledger custom app, EIP-712 inside the device, 0G Compute | — |
+| Originality | "The star is a fact, not a promise" | — |
+| **Practicality** | — | **Not one line in the 4 minutes says who pays** |
+| Usability | Only three screens. minta owns it (#12) | — |
+| WOW | Long press → ★ stamp, all going out at once | — |
 
-**埋め方：Practicality を1行だけ足す。**
-「スキルの作者が、星を集めるために払う。**買えない星だから、払う価値がある**」
-**質疑3分で必ず聞かれるので、4分の中に置いておく。**
-
----
-
-## 6. ENS は採らない（$7,000 を見送る理由）
-
-**Best Use of ENSv2 $7,000 は、金額だけ見れば EF より大きい。** それでも採らない。
-
-1. **パートナー賞は最大3社。** ENS を入れると EF を外すことになる
-2. **ENSv2 は mainnet か Sepolia。** レジストリを 0G Galileo に置く設計と分裂する。
-   **2つのチェーンに跨ると、0G の「判断ループの中で 0G を呼ぶ」が薄まる**
-3. 「機能の中核であること」が要件。**名前は、この作品の中核ではない**
-   （中核は「誰の星か」であって、その誰かは nullifier で足りる）
-
-**ただし覚えておく：** 「誰の星か」は本来、名前の問題でもある。
-**次に出すときは ENS が本命になりうる。** 今回は枠の取り合いで負けるだけ。
+**How to fill it: add one line for Practicality.**
+"Skill authors pay in order to collect stars. **Because the stars can't be bought, they're worth paying for**"
+**It will definitely be asked in the 3 minutes of Q&A, so put it inside the 4 minutes.**
 
 ---
 
-## 7. 今日中に潰す順（抜けの大きい順）
+## 6. We are not taking ENS (why we pass on $7,000)
 
-| 順 | やること | 誰 | 目安 | 落ちると |
+**Best Use of ENSv2 $7,000 is bigger than EF on amount alone.** We still don't take it.
+
+1. **Partner prizes are capped at 3 partners.** Adding ENS means dropping EF
+2. **ENSv2 is mainnet or Sepolia.** It splits from the design that puts the registry on 0G Galileo.
+   **Straddling two chains dilutes 0G's "call 0G inside the decision loop"**
+3. "It must be core to the functionality" is a requirement. **The name is not core to this work**
+   (the core is "whose star it is", and that "whose" is adequately served by a nullifier)
+
+**But remember:** "whose star it is" is, fundamentally, also a question of names.
+**Next time we ship this, ENS could be the main bet.** This time it just loses the fight for a slot.
+
+---
+
+## 7. Order to kill things today (biggest gap first)
+
+| # | What to do | Who | Estimate | If it falls |
 |---|---|---|---|---|
-| **1** | **Agent Pass のクライアント登録と `device_code` の疎通**（`spec/world-agent-pass.md`） | kou | 1時間 | World $2,500 |
-| **2** | **credits の消費を画面 C に出す**（`req_… / 0.0031 0G`）＋ 0G アカウント認証 | minta・kou | 1時間 | 0G の iAI ボーナス |
-| **3** | **導入の振り返りを書き始める** | kou | 以後ずっと | World 両方 |
-| **4** | README の CROPS 節と、Broker の例外の説明 | kou | 1時間 | EF $2,000 |
-| **5** | 0G への依存の理由1文／再訪する価値2行／safe-stop を撮る | kou | 30分 | 0G $2,500 |
-| **6** | Practicality の1行を台本に足す | kou | 10分 | Finalist |
+| **1** | **Register the Agent Pass client and get `device_code` talking** (`spec/world-agent-pass.md`) | kou | 1 hour | World $2,500 |
+| **2** | **Show credit consumption on screen C** (`req_… / 0.0031 0G`) + 0G account authentication | minta, kou | 1 hour | 0G's iAI bonus |
+| **3** | **Start writing the integration retrospective** | kou | From now on | Both World prizes |
+| **4** | The README's CROPS section, and the explanation of the Broker exception | kou | 1 hour | EF $2,000 |
+| **5** | The one-sentence reason for depending on 0G / two lines on the reason to come back / film the safe-stop | kou | 30 min | 0G $2,500 |
+| **6** | Add the Practicality line to the script | kou | 10 min | Finalist |
 
-**「World の拒否経路を足す」は消えた。** Agent Pass の device flow に
-`access_denied` / `expired_token` が標準で入っているため（`spec/world-agent-pass.md` §3）。
+**"Add World's denial path" has disappeared.** The Agent Pass device flow includes
+`access_denied` / `expired_token` as standard (`spec/world-agent-pass.md` §3).
 
 ---
 
-## 未確認
+## Unverified
 
-- **同じスポンサーの複数トラックを、1プロジェクトで取れるか**（World も 0G も、取れない旨の記載は無い）
-- Finalist の賞金額（一次資料に記載なし）
-- **会場の mock 証明で、Agent Pass の `device_code` フローが回るか**
-- `id_token` のどの claim に sector 単位の識別子が入るか
-- 0G の faucet 0.1 0G/日 で、重さ判定を回すクレジットが足りるか
-- 0G アカウントでの認証（iAI ボーナス）のやり方
+- **Whether one project can win multiple tracks from the same sponsor** (neither World nor 0G states that you cannot)
+- The Finalist prize amount (not stated in primary sources)
+- **Whether the Agent Pass `device_code` flow runs with the venue's mock proofs**
+- Which claim in the `id_token` carries the sector-scoped identifier
+- Whether 0G's faucet at 0.1 0G/day gives enough credits to run the weight judgement
+- How to do 0G-account authentication (the iAI bonus)

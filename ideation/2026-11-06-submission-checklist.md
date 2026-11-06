@@ -1,136 +1,136 @@
-# 提出までにやること全部（2026-11-06 05:16 IST 時点）
+# Everything to do before submission (as of 2026-11-06 05:16 IST)
 
-**締切 = 2026-11-07 09:00 IST**（`research/00-event-facts.md`・ethglobal の配信データ実測）。
-いま **残り約27時間**。撮影を 11-06 22:00 IST に置くと、技術の締めは **11-06 20:00 IST**。
+**Deadline = 2026-11-07 09:00 IST** (`research/00-event-facts.md`, measured from ETHGlobal's own feed data).
+About **27 hours left**. With filming at 11-06 22:00 IST, the technical freeze is **11-06 20:00 IST**.
 
-**印の意味**: 【確】＝一次ソースで確認済み ／ 【通】＝ETHGlobal の通例、今回は未確認 ／
-【要】＝確認しないと詰む。会場スタッフか Discord で潰す。
+**Marker meanings**: [verified] = confirmed against a primary source / [customary] = ETHGlobal's usual practice, unverified for this event /
+[must-check] = we are stuck if we do not confirm it. Resolve with venue staff or on Discord.
 
 ---
 
-## 0. 逆算タイムライン
+## 0. Timeline, worked backwards
 
-| 時刻（IST） | やること | 誰 |
+| Time (IST) | What | Who |
 |---|---|---|
-| 11-06 午前 | faucet 着金 → 本番 seal 1回。tx と root hash を控える | kou |
-| 11-06 午前 | 0G API キー・World クライアント登録 → 模擬モード外す | kou |
-| 11-06 午後 | 星画面・記録画面の実装完了 | minta |
-| 11-06 17:00 | **通し2回**（ALLOWED / DENIED / STOPPED / NEEDS_PRESS / 星 の5本） | 両方 |
-| 11-06 20:00 | **技術の締め。** ここから先は撮影と文章だけ | 両方 |
-| 11-06 22:00 | 撮影（2:55以内） | 両方 |
-| 11-07 00:00 | 動画アップロード・提出フォーム入力 | kou |
-| 11-07 **03:00** | **仮提出を完了させる**（締切6時間前。あとは編集で直す） | kou |
-| 11-07 09:00 | 締切 | — |
+| 11-06 morning | Faucet funds arrive → one production seal. Record the tx and root hash | kou |
+| 11-06 morning | 0G API key, World client registration → turn off simulation mode | kou |
+| 11-06 afternoon | Star screen and record screen implemented | minta |
+| 11-06 17:00 | **Two full run-throughs** (the 5 paths: ALLOWED / DENIED / STOPPED / NEEDS_PRESS / stars) | both |
+| 11-06 20:00 | **Technical freeze.** From here it is filming and writing only | both |
+| 11-06 22:00 | Filming (within 2:55) | both |
+| 11-07 00:00 | Upload the video, fill in the submission form | kou |
+| 11-07 **03:00** | **Complete a provisional submission** (6 hours before the deadline; fix the rest by editing) | kou |
+| 11-07 09:00 | Deadline | — |
 
-**仮提出を早く出すのが一番効く事務。** 【通】ETHGlobal は締切まで編集できるので、
-空欄のまま一度 submit しておけば「出し忘れ」だけは消える。【要】編集可否は会場で確認する。
+**Getting the provisional submission in early is the single most effective piece of admin.** [customary] ETHGlobal lets you edit until the deadline,
+so submitting once with blanks at least removes "forgot to submit". [must-check] Confirm at the venue whether editing is allowed.
 
 ---
 
-## 1. いま止まっているもの（これが外れないと他が進まない）
+## 1. What is currently blocked (nothing else moves until these clear)
 
-| 止まっているもの | 必要なもの | 状態 |
+| Blocked thing | What it needs | Status |
 |---|---|---|
-| 0G Storage への実書き込み | faucet の gas（0.1 0G/日で足りる） | 両アドレス要求済み・未着金 |
-| 0G の重さ判定（本番） | `ZG_API_KEY` | issue #15・未取得 |
-| World の人証明（本番） | `WORLD_CLIENT_ID` / `SECRET` | 登録待ち |
-| 模擬モードの撤去 | 上の3つ全部 | `simulated: true` が残っていると**提出で嘘になる** |
+| Real write to 0G Storage | Gas from the faucet (0.1 0G/day is enough) | Requested for both addresses, not yet arrived |
+| 0G weight judgement (production) | `ZG_API_KEY` | issue #15, not obtained |
+| World proof of personhood (production) | `WORLD_CLIENT_ID` / `SECRET` | Awaiting registration |
+| Removing simulation mode | All three of the above | If `simulated: true` remains, **the submission becomes a lie** |
 
-**着金・キーが11-06 午後までに揃わない場合の線引き**（先に決めておく）:
-- 0G Storage が書けない → **系譜はローカル追記のみ**と提出文に書く。tx があるフリはしない
-- 0G API が無い → **模擬モードのまま撮らない。** `STOPPED` を実演する方に振る
-  （0G に届かないと何も起きない、が賞の要件そのものなので、**これはこれで見せ場になる**）
-- World が無い → 星の実演は OIDC の拒否パスのモックではなく、**設計の説明に落とす**
+**Where we draw the line if funds and keys are not all in place by the afternoon of 11-06** (decide this in advance):
+- 0G Storage cannot be written → write in the submission text that **the trail is local append-only**. Do not pretend there is a tx
+- No 0G API → **do not film in simulation mode.** Shift the emphasis to demonstrating `STOPPED`
+  (nothing happening when 0G cannot be reached is the prize requirement itself, so **this makes a fine highlight in its own right**)
+- No World → the star demo becomes **an explanation of the design**, not a mock of the OIDC denial path
 
 ---
 
-## 2. ETHGlobal の事務（プラットフォーム）
+## 2. ETHGlobal admin (platform)
 
-- [ ] **プロジェクトを作成**（ethglobal.com の event ページ内 Project）
-- [ ] **チーム全員を追加**。【通】各自 ETHGlobal アカウントが要り、**締切後は追加できない**。
-      minta を先に追加しておく
-- [ ] **パートナー賞を3つ選択** → **0G / World / Ethereum Foundation (CROPS)**
-      【確】1プロジェクト3つまで（`research/00-event-facts.md`）
-- [ ] 入力項目（`ideation/2026-11-06-submission-draft.md` に英文の下書きあり）
+- [ ] **Create the project** (Project inside the event page on ethglobal.com)
+- [ ] **Add every team member.** [customary] Each one needs an ETHGlobal account, and **they cannot be added after the deadline**.
+      Add minta early
+- [ ] **Select 3 partner prizes** → **0G / World / Ethereum Foundation (CROPS)**
+      [verified] Up to 3 per project (`research/00-event-facts.md`)
+- [ ] Form fields (an English draft is in `ideation/2026-11-06-submission-draft.md`)
   - [ ] Project name: **TOMOSHIBI**
-  - [ ] Tagline（1行）
+  - [ ] Tagline (one line)
   - [ ] Short description
-  - [ ] **How it's made**（賞の審査はここを読む。0G/World/CROPS の各段落を入れてある）
-  - [ ] **Source code**: `github.com/kou-uni/ethglobal-mumbai` を **public** に
-  - [ ] **Live demo URL** → **未決。下の §4 参照**
-  - [ ] **Video URL**（YouTube。限定公開でも**ログイン無しで見られること**）
-  - [ ] Cover image / ロゴ（灯火の1枚）【要】必須かどうか
-- [ ] **チェックイン / リストバンド**（会場。済んでいなければ最優先）
-- [ ] **賞金の受取先アドレス**をプロフィールに登録。【通】未登録だと受賞しても払われない。
-      **ETHGlobal の送金はチーム代表1アドレスのことが多い** → minta との分配を先に口頭で決めておく
-- [ ] 【要】判定（judging）の形式と時刻。会場テーブルでの2〜3分ピッチ＋質疑か、動画審査のみか。
-      **スポンサー個別の審査枠（0G / World）が別にあるかを必ず聞く**
+  - [ ] **How it's made** (prize judging reads this. The 0G / World / CROPS paragraphs are in there)
+  - [ ] **Source code**: make `github.com/kou-uni/ethglobal-mumbai` **public**
+  - [ ] **Live demo URL** → **undecided. See §4 below**
+  - [ ] **Video URL** (YouTube. Unlisted is fine, but it **must be viewable without logging in**)
+  - [ ] Cover image / logo (one flame image) [must-check] whether it is required
+- [ ] **Check-in / wristband** (at the venue. Top priority if not done)
+- [ ] **Register the prize payout address** in the profile. [customary] Without it you do not get paid even if you win.
+      **ETHGlobal often pays to a single team-representative address** → agree the split with minta verbally in advance
+- [ ] [must-check] The format and time of judging. A 2–3 minute pitch plus Q&A at a venue table, or video judging only.
+      **Be sure to ask whether there are separate sponsor-specific judging slots (0G / World)**
 
 ---
 
-## 3. 賞ごとの必須要件（落とすと即失格・減点）
+## 3. Per-prize hard requirements (miss one and you are disqualified or marked down)
 
 **0G**
-- [ ] 0G が**判断に効いている**こと（ログの置き場ではない）。重さが結果を変える経路を映す
-- [ ] **決定を偽装するフォールバックは失格**【確】。`STOPPED` が実装されている理由。
-      **撮影前に `ZG_OFFLINE` を外す**
-- [ ] 0G の **request id** を画面に出す。提出文にも1個実物を貼る
-- [ ] 使ったもの: Private Computer（TeeML `0gm-1.0-35b-a3b`）/ Storage Log層 / Galileo 16602
+- [ ] 0G must **affect the decision** (not be a log sink). Show the path where weight changes the outcome
+- [ ] **A fallback that fakes a decision is disqualifying** [verified]. This is why `STOPPED` is implemented.
+      **Turn off `ZG_OFFLINE` before filming**
+- [ ] Show the 0G **request id** on screen. Paste one real one into the submission text too
+- [ ] What we used: Private Computer (TeeML `0gm-1.0-35b-a3b`) / Storage Log layer / Galileo 16602
 
 **World**
-- [ ] **拒否パスの実演が要件**【確】。`human_denied`（人が断る）と `proof_expired`（人が居ない）を
-      **別々の出来事として**映す。ここが World 枠の本体
-- [ ] 鍵の使用ごとではなく**星を出すときだけ**人証明を置いている理由を1文で言う
-- [ ] sector-scoped pseudonym で「版ごと1人1つ」
+- [ ] **Demonstrating the refusal paths is a requirement** [verified]. Film `human_denied` (a person refuses) and `proof_expired` (nobody there)
+      **as two separate events**. This is the core of the World slot
+- [ ] Say in one sentence why proof of personhood sits at star issuance rather than at every key use
+- [ ] "One per person per version" via sector-scoped pseudonym
 
-**Ethereum Foundation（CROPS）**
-- [ ] **OSS ライセンス**（MIT）をリポジトリに入れる
-- [ ] **トラッカー・アナリティクス 0**。README に明記済み
-- [ ] 「誰が何を知るか」の分離表（アーキ1枚と README にある）
-- [ ] 【要】提出時に CROPS 側の追加フォーム／条件文があるか賞ページを読み直す
-
----
-
-## 4. デモ URL をどうするか（未決・今日決める）
-
-**母艦の Tailscale Funnel は凍結中**（ETHGlobal Tokyo のリワード配布まで触らない・本人指示）。
-したがって TOMOSHIBI の公開 URL は**別の口**が要る。選択肢:
-
-1. **GitHub Pages**（星画面・記録画面の静的部分だけ）— 安全。Broker は動かない
-2. **cloudflared / ngrok の一時トンネル** — Broker ごと見せられる。会場の回線とトークン次第
-3. **URL を出さない** — 動画＋リポジトリで提出。【通】Live demo は必須ではないことが多いが、
-   **空欄は審査で弱い**
-
-→ **既定は 1 + 動画。** 2 が通れば差し替える。
+**Ethereum Foundation (CROPS)**
+- [ ] Put an **OSS license** (MIT) in the repository
+- [ ] **Zero trackers and analytics.** Already stated in the README
+- [ ] The "who knows what" separation table (in the architecture slide and the README)
+- [ ] [must-check] Re-read the prize page for any extra CROPS form or condition at submission time
 
 ---
 
-## 5. 撮影（11-06 22:00 IST）
+## 4. What to do about the demo URL (undecided, decide today)
 
-- [ ] **2:55 以内**。【通】3分上限
-- [ ] 映す順: ①鍵を渡していないこと ②Ledger の4行と押下 ③範囲外 → `DENIED`
-      ④0G の重さ → `NEEDS_PRESS` ⑤0G 不達 → `STOPPED` ⑥星と、版が変わって消える
-- [ ] **画面に request id と root hash が1度は映る**
-- [ ] `simulated: true` がどこにも出ていないこと（**撮影直前に health を目視**）
-- [ ] 物理: Ledger 充電 / ケーブル（**自宅に置いてきた・未解消**）/ 静かな場所 / 画面収録の解像度
-- [ ] 音声は後から当てるか現場録りか決める。英語ナレーション
+**The main machine's Tailscale Funnel is frozen** (do not touch it until the ETHGlobal Tokyo rewards are distributed, the owner's instruction).
+So TOMOSHIBI's public URL needs **a different outlet**. Options:
 
----
+1. **GitHub Pages** (only the static parts: the star screen and the record screen) — safe. The Broker does not run
+2. **A temporary cloudflared / ngrok tunnel** — shows the Broker itself. Depends on the venue network and on tokens
+3. **Give no URL** — submit with the video plus the repository. [customary] A live demo is often not mandatory, but
+   **a blank field is weak in judging**
 
-## 6. 文章・素材（残っているもの）
-
-- [ ] 提出文の `【要確認】` を全部つぶす（`ideation/2026-11-06-submission-draft.md`）
-- [ ] **3分ピッチ台本**（日本語で話す版＋英語で読む版）— **未作成。次に作る**
-- [ ] アーキ1枚（英語・HTML）**済** → `ideation/2026-11-06-architecture-v3.html`
-- [ ] spec §6 のテストベクタを minta に渡す（issue コメントが権限で止まっている・**手渡しでよい**）
-- [ ] README の最終読み直し（判定者が最初に見る）
+→ **Default is 1 + the video.** Swap to 2 if it works.
 
 ---
 
-## 7. 提出後
+## 5. Filming (11-06 22:00 IST)
 
-- [ ] showcase ページの URL を控える
-- [ ] 0G / World / EF の各 Discord・Telegram に**提出リンクを投げる**。【通】スポンサーの
-      メンターが拾って審査前に触る。ここをやらないチームが多い
-- [ ] フィードバックフォーム【通】
-- [ ] 日本の角度は**チーム紹介のときだけ**出す（`JAPAN-ANGLE.md`。プロダクト説明には混ぜない）
+- [ ] **Within 2:55.** [customary] 3-minute cap
+- [ ] Shooting order: (1) the key was never handed over (2) the four lines on the Ledger and the press (3) out of scope → `DENIED`
+      (4) 0G weight → `NEEDS_PRESS` (5) 0G unreachable → `STOPPED` (6) stars, and the version changing so they go out
+- [ ] **A request id and a root hash must appear on screen at least once**
+- [ ] `simulated: true` must appear nowhere (**eyeball health right before filming**)
+- [ ] Physical: Ledger charged / cable (**left at home, unresolved**) / a quiet place / screen recording resolution
+- [ ] Decide whether audio is dubbed afterwards or recorded live. English narration
+
+---
+
+## 6. Writing and assets (what is left)
+
+- [ ] Clear every `[to confirm]` in the submission text (`ideation/2026-11-06-submission-draft.md`)
+- [ ] **The 3-minute pitch script** (a version spoken in Japanese plus a version read in English) — **not written. Next thing to write**
+- [ ] One-slide architecture (English, HTML) **done** → `ideation/2026-11-06-architecture-v3.html`
+- [ ] Hand the spec §6 test vectors to minta (the issue comment is blocked by permissions; **handing them over directly is fine**)
+- [ ] Final re-read of the README (it is the first thing judges look at)
+
+---
+
+## 7. After submission
+
+- [ ] Record the showcase page URL
+- [ ] **Post the submission link** in each of the 0G / World / EF Discords and Telegrams. [customary] Sponsor
+      mentors pick it up and try it before judging. Many teams skip this
+- [ ] Feedback form [customary]
+- [ ] Bring out the Japan angle **only during the team introduction** (`JAPAN-ANGLE.md`. Do not mix it into the product explanation)

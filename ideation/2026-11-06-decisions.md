@@ -1,122 +1,122 @@
-# 決定の記録（2026-11-06）
+# Decision log (2026-11-06)
 
-## 11/6 未明 [合意]
-1. **minta さんの案（PR #4）を採用する。** 星は約束ではなく、「自分の鍵でこの版を使っている」という事実にする。違反はスキルに刻み、保証人の重みは下げない。預け金・投げ銭・二次のマッチング・2-of-2・スタックチャンは今回作らない
-2. **ENS を外す。** 3つ目のパートナー枠は **EF**（Ethereum Foundation）にする。CROPS と Anon-RPC の両方に出す（EF は1プロジェクト1賞なので、どちらに入れるかは審査員が決める）→ `research/10-ef-fit.md`
+## 11/6 early morning [agreed]
+1. **Adopt minta's proposal (PR #4).** A star is not a promise; it is the fact that "I am using this version with my own key". Violations are recorded against the skill, and the voucher's weight is not reduced. Deposits, tips, quadratic matching, 2-of-2 and Stack-chan are out of scope this time
+2. **Drop ENS.** The third partner slot goes to **EF** (Ethereum Foundation). Submit to both CROPS and Anon-RPC (EF gives one prize per project, so the judges decide which one we land in) → `research/10-ef-fit.md`
 
-## これで増える作業
-- README に CROPS 節を書く（Private の行に、Ledger・World・0G がそれぞれ何を知るか）。OSS ライセンスを付け、トラッカーは使わない
-- 星の読み取りを既定で Anon-RPC 経由にする。全件を取って端末で絞る（照会の中身から、知り合いの網を漏らさない）
+## Extra work this creates
+- Write a CROPS section in the README (on the Private line, what Ledger, World and 0G each learn). Attach an OSS license and use no trackers
+- Make star reads go through Anon-RPC by default. Fetch everything and filter on the device (so the content of the query does not leak the web of who you know)
 
-## 11/6 朝 [合意]
+## 11/6 morning [agreed]
 
-3. **D1〜D7（`2026-11-06-plan.md`）を合意。** 実機は Flex と Nano X の両方が手元にある。
-   Ledger の投下時間は合計4時間まで。#6 Anon-RPC は30分で判定し、通らなければ EF は CROPS 一本。
-   撮影 11/6 22:00 IST ／ 提出 11/7 06:00 IST。World の「導入の振り返り」は kou が持つ。
-   系譜の表示は QR 1枚だけ
-4. **D2 を変更：Ledger は自作アプリで作る**（#11・minta）。
-   **11/6 朝までは「自作アプリは狙わない」だった。** 理由は「SDK・ビルド環境・デバイス管理モードで
-   36時間では間に合わない」。**Flex で自作アプリが実機で動いたので、その前提が消えた。**
-   関門0（標準アプリ）を先に通して下限を確保し、落ちたら段を下げる。4時間の上限は守る
-5. **署名の受け渡しを `spec/permit-signature.md` で固定。** 導出パスは標準アプリと同じ
-   `m/44'/60'/0'/0/0`、EIP-712 の digest は**端末の中で**4行の元の値から計算する
-   （ブラインド署名にしない）。Broker は送られてきた digest を使わず作り直して `ecrecover` する
-6. **#10 の A・C・D・E を台本 v4 に採用。** B はピッチの口頭のみ（動画には入れない）。
-   **F（灰色の星の体験）は採らない** — 会場の World は模擬証明で、体験が成立しないため
+3. **D1–D7 (`2026-11-06-plan.md`) agreed.** Both a Flex and a Nano X are on hand as real devices.
+   Total time invested in Ledger is capped at 4 hours. #6 Anon-RPC gets a 30-minute go/no-go; if it does not pass, EF goes to CROPS only.
+   Filming 11/6 22:00 IST / submission 11/7 06:00 IST. kou owns World's "onboarding retrospective".
+   The trail is displayed as a single QR, nothing more
+4. **D2 changed: build the Ledger side as a custom app** (#11, minta).
+   **Up to the morning of 11/6 the position was "do not go for a custom app".** The reason was "the SDK, the build environment and device management mode cannot be done in 36 hours". **A custom app ran on a real Flex, so that premise is gone.**
+   Clear gate 0 (the standard app) first to lock in the floor; if it fails, step back down a tier. Keep the 4-hour cap
+5. **Signature hand-off frozen in `spec/permit-signature.md`.** The derivation path is the same as the standard app,
+   `m/44'/60'/0'/0/0`, and the EIP-712 digest is computed **inside the device** from the original four-line values
+   (no blind signing). The Broker does not use the digest it is sent; it rebuilds it and runs `ecrecover`
+6. **A, C, D and E from #10 go into script v4.** B is spoken in the pitch only (not in the video).
+   **F (the grey-star experience) is not taken** — the World at the venue is a mock proof, so the experience does not hold up
 
-## 11/6 未明〜朝（実装中）[kou が決めた・×なら直す]
+## 11/6 early morning to morning (in implementation) [kou decided; if × we change it]
 
-7. **「その場の一押し」＝ `maxCalls=1` の許可にした。**
-   0G が `決定的` と判定した要求は、立っている許可（`maxCalls>1`）では通さず `NEEDS_PRESS` を返す。
-   **署名の契約（`spec/permit-signature.md`）を増やさないため**にこうした。
-   新しい署名の型を足すと、minta さんの自作アプリ側も直すことになる。
-   **×なら Broker 側だけで変えられる**（`src/tier.js` の `needsPress` 1か所）
-8. **0G と World に「模擬モード」を付けた**（`ZG_OFFLINE=1` / `WORLD_OFFLINE=1`）。
-   API キーとクライアント登録が揃うまで開発を止めないため。
-   **記録に `simulated: true` が残り、/health と demo に「模擬」と出る。**
-   0G の賞に「決定を偽装するフォールバックは失格」とあるので、**撮影と提出では外す**
-9. **星は `(skill, version)` ごとに持つ。** 版が変われば前の版の星は数に入らない（＝一斉に消える）。
-   前の版に何個あったかは残す（消えたことが見えるように）
+7. **"A press right here, right now" = a permit with `maxCalls=1`.**
+   A request that 0G judges `decisive` is not let through by a standing permit (`maxCalls>1`); it returns `NEEDS_PRESS`.
+   This was done **so as not to grow the signature contract (`spec/permit-signature.md`)**.
+   Adding a new signature type would mean minta's custom app has to change too.
+   **If × this can be changed on the Broker side alone** (one place, `needsPress` in `src/tier.js`)
+8. **0G and World got a "simulation mode"** (`ZG_OFFLINE=1` / `WORLD_OFFLINE=1`).
+   So development does not stall until the API key and client registration are in place.
+   **`simulated: true` stays in the record, and /health and the demo show "simulated".**
+   The 0G prize says "a fallback that fakes a decision is disqualifying", so **turn it off for filming and submission**
+9. **Stars are held per `(skill, version)`.** If the version changes, stars on the previous version do not count (i.e. they all go out at once).
+   How many there were on the previous version is kept (so that the going-out is visible)
 
-10. **0G の思考（reasoning）を切る。** `chat_template_kwargs.enable_thinking=false`。
-   理由は速度ではなく**正しさ**: 思考ありだと17.2秒かかり、20秒のタイムアウトに当たって
-   「決められなかった」= `STOPPED` に化ける。本物でない `STOPPED` は、偽の判断と同じくらい悪い。
-   実測（2026-11-06・本番キー）: 思考あり17.2s ／ `reasoning_effort:low` は24.1s かつ答えが空 ／
-   切ると2.0s。判定は重い3件・軽い3件で6/6一致。`ZG_THINKING=1` で戻せる。
-   タイムアウトは保険として30秒に上げた
-11. **デモの公開 URL は GitHub Pages ＋ 動画**。別件で凍結中の公開経路は使わない
-12. **インドの語・象徴は借りない。** 絵文字は 🕯️、🪔（ディヤ）は採らない
+10. **Turn off 0G's reasoning (thinking).** `chat_template_kwargs.enable_thinking=false`.
+   The reason is not speed but **correctness**: with thinking on it takes 17.2 seconds, which hits the 20-second timeout and
+   turns into "could not decide" = `STOPPED`. A `STOPPED` that is not real is as bad as a fabricated verdict.
+   Measured (2026-11-06, production key): thinking on 17.2s / `reasoning_effort:low` is 24.1s and returns an empty answer /
+   off is 2.0s. The verdicts matched 6/6 across 3 heavy and 3 light cases. `ZG_THINKING=1` restores it.
+   The timeout was raised to 30 seconds as insurance
+11. **The public demo URL is GitHub Pages plus the video.** Do not use the public route that is frozen for a separate matter
+12. **Do not borrow Indian words or symbols.** The emoji is 🕯️; 🪔 (diya) is not used
 
-13. **ふだんの場面は「残高を読む」にする。`scope` は `* /v1`。**
-   本番の 0G は**金額ではなく「お金が動くか」**で読む。実測（2026-11-06・本番キー）:
-   課金は $4,800 も $12 も **$1 でも「決定的」**（$12 は 3/3）、`POST /v1/customers` は「大事」、
-   `GET /v1/balance` と `GET /v1/charges` は「ふだん」。
-   → minta の gate.html の「ふだん」の場面（$12 の課金）は長押しが増えてしまう。
-   `scope` はメソッドに `*` が使える前方一致なので（`broker/src/scope.js:34`）、
-   **`* /v1` で1回貸せば「ふだんは黙って通る」も「重いので起きる」も両方出る。実機の長押しは増えない。**
-   本番で通しを確認済み（ALLOWED ふだん → NEEDS_PRESS 決定的 → DENIED 範囲外）
-14. **動画の主役は `web/gate.html`**（実機とつながっている方）。`ui/index.html` は設計の試作と撮影の保険として残す
-15. **Broker の公開は cloudflared の一時 URL で、撮影と審査の時間だけ。**
-   Funnel（443 → 8402）は別件で凍結中なので触らない。`SECRETS` は入れず `EXECUTE` は切ったまま。
-   **URL を公開リポジトリに書かない**（0G のクレジットを誰でも回せてしまう）
+13. **The routine scenario is "read a balance". `scope` is `* /v1`.**
+   Production 0G reads **not the amount but whether money moves**. Measured (2026-11-06, production key):
+   a charge is **"decisive" at $4,800, at $12, and even at $1** ($12 scored 3/3), `POST /v1/customers` is "significant",
+   and `GET /v1/balance` and `GET /v1/charges` are "routine".
+   → The "routine" scenario in minta's gate.html (a $12 charge) would add a long-press.
+   `scope` is a prefix match that accepts `*` for the method (`broker/src/scope.js:34`), so
+   **lending once with `* /v1` produces both "routine passes silently" and "heavy wakes you up". No extra long-press on the real device.**
+   Verified end to end in production (ALLOWED routine → NEEDS_PRESS decisive → DENIED out of scope)
+14. **The star of the video is `web/gate.html`** (the one wired to the real device). `ui/index.html` stays as a design prototype and as filming insurance
+15. **The Broker is exposed through a temporary cloudflared URL, only for the duration of filming and judging.**
+   The Funnel (443 → 8402) is frozen for a separate matter, so do not touch it. `SECRETS` is not set and `EXECUTE` stays off.
+   **Do not write the URL in the public repo** (anyone could burn through the 0G credits)
 
-## 11/6 夕（市場とモデル）[kou が決めた・×なら直す]
+## 11/6 evening (market and model) [kou decided; if × we change it]
 
-16. **収益に、流量の%を取らない。** 決済額の手数料を取ると、**止めるほど損をする会社**になる。
-   値札は「判断」（判定の従量）と「掲示」（灯）に付ける。
+16. **Take no percentage of flow as revenue.** Taking a fee on payment volume makes us **a company that loses money the more it stops things**.
+   The price tags go on "judgement" (metered verdicts) and "display" (the flame).
    `ideation/2026-11-06-market-and-model.html` §05
-17. **預け金と保険は捨てたままにする**（決定1の再確認）。
-   預け金は「**金を多く持つ人ほど信用される**」に反転し、灯の意味が壊れる。
-   保険料を取る形は**保険業の規制に触れうる**【未確認】。賭けるのは**自分の鍵そのもの**。
-   将来やるとしても、預け金は**灯の重みに混ぜず別の軸**、保険は**第三者に系譜を渡す形**。
+17. **Deposits and insurance stay dropped** (reconfirming Decision 1).
+   A deposit inverts into "**the more money you have, the more you are trusted**", which breaks the meaning of the flame.
+   Charging a premium **could fall under insurance regulation** [unverified]. What you stake is **your own key itself**.
+   If we ever do it, a deposit goes on **a separate axis, not mixed into the flame's weight**, and insurance takes the form of **handing the trail to a third party**.
    `ideation/2026-11-06-actors-io.html` §03
-18. **市場は3つの財布で数える。** 守る（機械の身元＋秘密情報）$24B ／ 信用を見せる（作り手のマーケ）$3B ／
-   損失を移す（サイバー保険）$16B。**TAM $43B・SAM $2–7B・SOM $1.4M（3年目）。**
-   SOM は小さいまま正直に出す。出典は資料末尾（調査会社の数字は2倍以上ばらつくので、**桁だけ**使う）
+18. **The market is counted as three wallets.** Protect (machine identity + secrets) $24B / show credibility (maker marketing) $3B /
+   transfer loss (cyber insurance) $16B. **TAM $43B, SAM $2–7B, SOM $1.4M (year 3).**
+   The SOM is presented small and honest. Sources are at the end of the deck (research-firm numbers vary by more than 2x, so **only the order of magnitude** is used)
 
-## 11/6 夜（提出と審査）[合意]
+## 11/6 night (submission and judging) [agreed]
 
-19. **Finalist 審査に出る**（本人・2026-11-06）。提出フォームは
-   **「Finalist and Partner Prizes」**を選ぶ。7分＝**デモ4分＋質疑3分**。
-   台本は `ideation/2026-11-07-finalist-4min.md`。2:55 の提出動画は別に残す。
-   **審査の時間は提出後に Dashboard に出る**ので、提出（目標 11/7 06:00 IST）を遅らせない
-20. **パートナー賞の枠は World / 0G / EF の3社で確定。**
-   公式に「**同じパートナーの複数トラックは全部に応募でき、枠は1つしか使わない**」と
-   あるので、World の2トラックも 0G の複数トラックも同時に出せる（上限 $11,250 が成立）。
-   `research/11-prize-gap.md` の「未確認」が消えた
-21. **AI の使い方と再利用を README に明示する**（規則で義務）。
-   明示が無いと**パートナー賞と Finalist の対象外**になりうる。
-   spec と決定の記録（`spec/` `ideation/`）は**提出まで消さない**。
-   規則に「生成物ではなく、どう指示したかを見せること」と明記されている
+19. **Enter Finalist judging** (the owner, 2026-11-06). On the submission form pick
+   **"Finalist and Partner Prizes"**. Seven minutes = **4-minute demo + 3-minute Q&A**.
+   The script is `ideation/2026-11-07-finalist-4min.md`. The 2:55 submission video is kept separately.
+   **The judging time appears on the Dashboard after submission**, so do not delay submitting (target 11/7 06:00 IST)
+20. **The partner prize slots are fixed at three: World / 0G / EF.**
+   The official rules say "**you can apply to all tracks of the same partner and it only uses one slot**",
+   so both of World's tracks and several of 0G's tracks can be entered at once (the $11,250 cap holds).
+   The "unverified" note in `research/11-prize-gap.md` is resolved
+21. **State AI usage and reuse explicitly in the README** (required by the rules).
+   Without it we could be **excluded from partner prizes and Finalist**.
+   The spec and the decision log (`spec/`, `ideation/`) **are not to be deleted before submission**.
+   The rules state explicitly: "show not the output but how you instructed it"
 
-## まだ確かめていないこと
-- EF がパートナー枠3つのうち1つを使うか
-- Anon-RPC で 0G Galileo の RPC を実際に読めるか（仕組み上は読めるはず）
-- 自作アプリで `44'/60'` を導出できるか／端末内で keccak256 を回せるか
-- **World：`verification_uri_complete` が返るか**（QR の作りが変わる）／**sector 識別子の claim 名**
-  （いまは `sub` を仮名として扱っている）／会場の mock で device flow が最後まで回るか
+## Still unverified
+- Whether EF uses one of the three partner slots
+- Whether 0G Galileo's RPC can actually be read through Anon-RPC (mechanically it should be)
+- Whether a custom app can derive `44'/60'` / whether keccak256 can be run inside the device
+- **World: whether `verification_uri_complete` is returned** (it changes how the QR is built) / **the claim name for the sector identifier**
+  (we currently treat `sub` as the pseudonym) / whether the device flow runs to completion against the venue mock
   → `ideation/2026-11-06-world-integration-notes.md`
-- ~~0G Galileo の chainId~~ → **16602【確】**（`evmrpc-testnet.0g.ai` に `eth_chainId` で実測。16601 は古い項目なので使わない）
+- ~~0G Galileo's chainId~~ → **16602 [verified]** (measured with `eth_chainId` against `evmrpc-testnet.0g.ai`. 16601 is a stale entry, do not use it)
 
-## 11/6 朝（原価・11/7 IST）[kou が決める・×なら直す]
+## 11/6 morning (unit cost, 11/7 IST) [kou decides; if × we change it]
 
-22. **1判定の原価は $0.000036（0.0056円）。実測で確定。**
-   トークン数は本番の 0G へ投げた **467件**（`ui/scenes.json` ＋ `broker/data/ledger.jsonl`）の
-   平均（入力 283.9 ／ 出力 28.0）。単価は **我々が毎回叩いている `GET router-api.0g.ai/v1/models` の
-   `pricing_usd`** から（`0gm-1.0-35b-a3b`: 入力 $0.00000008/tok・出力 $0.00000048/tok）。
-   **価格表は外に探しに行く必要がなく、API の中にあった。**
-   推測していた幅 $0.0002〜0.0019 の**下限より、さらに5倍安い**。
-   - $9/月で 50,000判定 → 粗利 **80%**。超過 $1/1,000判定 → **96%**。無料枠 2,000判定 → 月 **$0.07**
-   - **帰結:** 「原価の幅10倍を潰す」は資料の第一アクションだったが、**潰した結果わかったのは
-     「原価は論点ではなかった」**こと。値段の根拠は原価ではなく**買い手にとっての価値**にしか置けない。
-     第一アクションは P1 への20人ヒアリング（何件目の「止めた」で払うか）に繰り上がる
-   - **未確認:** キャッシュ済み入力 192トークンに割引があるか（あれば下振れ）。
-     SIA 版（`-sia`）は 6.7倍高い（$0.536/M・$3.216/M）ので使わない
-   - **副作用:** 「ふだんの要求を 0G に投げない」最適化の**理由が変わった**。原価のためではなく
-     速さ（2秒待たせない）のためだけになる。**原価を理由に安全を削る必要は無くなった**
+22. **The cost of one verdict is $0.000036 (0.0056 yen). Confirmed by measurement.**
+   Token counts are the average over the **467 requests** sent to production 0G
+   (`ui/scenes.json` + `broker/data/ledger.jsonl`) (input 283.9 / output 28.0). The unit price comes from
+   **`pricing_usd` in `GET router-api.0g.ai/v1/models`, which we call every time**
+   (`0gm-1.0-35b-a3b`: input $0.00000008/tok, output $0.00000048/tok).
+   **The price list did not need to be hunted down externally; it was inside the API.**
+   That is **5x cheaper than the bottom** of the $0.0002–0.0019 range we had guessed.
+   - $9/month for 50,000 verdicts → **80%** gross margin. Overage $1/1,000 verdicts → **96%**. A free tier of 2,000 verdicts → **$0.07** per month
+   - **Consequence:** "close the 10x range on unit cost" was the deck's first action, but **closing it showed that
+     unit cost was never the issue**. The basis for pricing can only sit on **value to the buyer**, not on cost.
+     The first action moves up to 20 P1 interviews (at which "stopped" event do they pay?)
+   - **Unverified:** whether the 192 cached input tokens get a discount (if so the cost is lower still).
+     The SIA build (`-sia`) is 6.7x more expensive ($0.536/M, $3.216/M), so we do not use it
+   - **Side effect:** the **reason** for the "do not send routine requests to 0G" optimization **changed**. It is no longer about cost,
+     only about speed (not making the user wait 2 seconds). **There is no longer any need to cut safety for cost reasons**
 
-23. **0G Storage への封印が、本番チェーンに乗った**（2026-11-06 09:30 IST）。
-   gas 着弾（9.99 0G）→ `/seal` を1回。`status 0x1` / block **64103318** / gasUsed **306,371**。
-   root `0xc0e0c7a911547490680d545ad9d4638a9bf23bd72d8a3004edf9b4ffaa5be080`、
-   tx `0x74c7cdf9bca055c502918e62a7ac9fc7634d1326471433ab10161045aa97aef1`。
-   提出文の「系譜はローカル追記のみ」という逃げは**不要になった**。実物の tx を貼る
+23. **The seal to 0G Storage landed on the production chain** (2026-11-06 09:30 IST).
+   Gas arrived (9.99 0G) → one `/seal` call. `status 0x1` / block **64103318** / gasUsed **306,371**.
+   root `0xc0e0c7a911547490680d545ad9d4638a9bf23bd72d8a3004edf9b4ffaa5be080`,
+   tx `0x74c7cdf9bca055c502918e62a7ac9fc7634d1326471433ab10161045aa97aef1`.
+   The hedge in the submission text — "the trail is local append-only" — **is no longer needed**. Paste the real tx.

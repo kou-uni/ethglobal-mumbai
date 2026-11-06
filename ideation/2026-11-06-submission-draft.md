@@ -1,13 +1,13 @@
-# 提出文のたたき台（英語・2026-11-06）
+# Draft submission text (English, 2026-11-06)
 
-**提出前に `【要確認】` を全部つぶすこと。** 実装していないことは書いていない。
-書いた時点で動いていないものには印を付けてある。
+**Clear every `[to confirm]` before submitting.** Nothing written here is something we have not implemented.
+Anything that was not yet working at the time of writing is marked.
 
 ---
 
 ## Project name
 
-**TOMOSHIBI** (灯火 — a small flame that can go out)
+**TOMOSHIBI** (*tomoshibi*, a flame — a small flame that can go out)
 
 ## Tagline (one line)
 
@@ -44,7 +44,7 @@ carries the 0G `request id`. Episode logs go to **0G Storage** (append-only Log 
 `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296` on Galileo, chain id 16602), and the root hash is in the trail.
 
 **If 0G cannot be reached, nothing happens.** No default, no local rule standing in for the model, no
-fabricated verdict — the request stops and the stop is recorded. 【要確認：撮影前に ZG_OFFLINE を外す】
+fabricated verdict — the request stops and the stop is recorded. [to confirm: turn off ZG_OFFLINE before filming]
 
 **World (who, once).** Issuing a star is the protected action — that is where a person stakes their
 reputation — so that is where **World ID Agent Pass** sits, not on every key use (the Ledger already covers
@@ -66,13 +66,13 @@ bodies. MIT licensed, no trackers, no analytics.
   the EIP-712 `verifyingContract` is deliberately frozen at the zero address for this build.
 - Reading stars through Anon-RPC is designed, not implemented.
 
-## 賞ごとに言うこと（提出欄に貼る短文）
+## What to say for each prize (short text to paste into the submission fields)
 
 **0G — Build with 0G Private Computer:** *What breaks without 0G:* grading a request requires reading it, and
 we refuse to be the ones who read it — only sealed inference makes that possible. *Why you come back:* a star
 is meaningless once; it gets heavy only as the same key keeps using the same version — and when the version
 changes every star goes out, so the people still using it are the ones who notice and light it again.
-【要確認：iAI ボーナス（0G アカウントでの認証と credits の減りの可視化）は画面 C 次第】
+[to confirm: the iAI bonus (authenticating with a 0G account and making the credit burn-down visible) depends on screen C]
 
 **0G — Physical AI (Hardware):** the decision loop calls 0G per request, episode logs with request ids go to
 0G Storage, and the hardware is a Ledger device that must be physically pressed. Safe-stop on 0G failure is
@@ -84,10 +84,10 @@ Integration notes: `ideation/2026-11-06-world-integration-notes.md`.
 
 **EF — CROPS:** who-knows-what table in the README, MIT, no trackers, no third-party analytics.
 
-## 【要確認】提出までに埋めるもの
+## [to confirm] Things to fill in before submission
 
-- 動画 2:55 以内（EF は3分未満が必須）
-- コントラクトアドレスの欄：Flow `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296`（Galileo）
-- 0G の request id を1つ、画面に出した状態のスクリーンショット
-- デモ URL（審査員が触れること。0G PC トラックの必須）
-- `simulated: true` が残っていないこと（模擬モードを外して撮り直す）
+- Video within 2:55 (EF requires under 3 minutes)
+- The contract address field: Flow `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296` (Galileo)
+- A screenshot with one 0G request id visible on screen
+- Demo URL (judges must be able to touch it. Required for the 0G PC track)
+- No `simulated: true` left anywhere (turn off simulation mode and re-film)

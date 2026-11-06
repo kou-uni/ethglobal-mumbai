@@ -1,6 +1,6 @@
-# 提出フォーム — そのまま貼る用（2026-11-06）
+# Submission form — ready to paste (2026-11-06)
 
-後で直す前提の初稿。**実装していないことは書いていない。**
+A first draft, expected to be revised. **Nothing written here is something we have not implemented.**
 
 ---
 
@@ -8,29 +8,29 @@
 tomoshibi
 
 ## Category
-**Security**（このまま）
+**Security** (keep as is)
 
 ## Emoji
-**🕯️**（フォームの絵文字欄はこれ。雫型の炎を持つ蝋燭で、灯火そのもの）
-🪔（ディヤ）はディワリの灯で意味は近いが、**インドの語・象徴は借りないと決めている**ので外す。
+**🕯️** (this is what goes in the form's emoji field. A candle with a teardrop flame — the flame itself)
+🪔 (diya) is the Diwali light and the meaning is close, but **we have decided not to borrow Indian words or symbols**, so it is out.
 
-## Cover image / ロゴ
-`assets/tomoshibi-mark.svg`（雫の炎＋丸い蝋燭）／ `assets/tomoshibi-cover.svg`（1200×630）
-絵文字では形を選べないので、**見た目は自前のマークで持つ。**
+## Cover image / logo
+`assets/tomoshibi-mark.svg` (teardrop flame + round candle) / `assets/tomoshibi-cover.svg` (1200×630)
+Emoji do not let you choose the shape, so **the look is carried by our own mark.**
 
 ## Demo link
-**`https://kou-uni.github.io/ethglobal-mumbai/ui/index.html`**【確】触れる画面（門）。
-GitHub Pages は 2026-11-06 に有効化して 200 を確認済み。灯の画面は `/ui/stars.html`。
-画面の値は本番の 0G に実際に投げた応答（録画。時刻と出どころを画面に出している）。
-会場では「生で投げる」に切り替えて、その場の request id を出す
-（GitHub Pages。Broker を公開トンネルに出せたら差し替える）
+**`https://kou-uni.github.io/ethglobal-mumbai/ui/index.html`** [verified] A screen you can touch (the gate).
+GitHub Pages was enabled on 2026-11-06 and a 200 was confirmed. The flame screen is `/ui/stars.html`.
+The values on screen are real responses sent to production 0G (recorded; the timestamp and the source are shown on screen).
+At the venue, switch to "send it live" and show the request id from that moment
+(GitHub Pages. Swap it out if we can get the Broker onto a public tunnel)
 
-## Short description（100字以内）
+## Short description (100 characters max)
 AI agents use your API keys without ever holding them. The light goes out when the skill changes.
 
-（97字。別案98字: AI agents use your keys without ever holding them — and the light goes out when the skill changes.）
+(97 characters. Alternative at 98 characters: AI agents use your keys without ever holding them — and the light goes out when the skill changes.)
 
-## Description（280字以上）
+## Description (280 characters minimum)
 Agent skills are starting to ask for our API keys the way apps once asked for passwords: a secret with
 no scope, no expiry and no receipt, handed to code we did not read.
 
@@ -49,7 +49,7 @@ proof_expired — a person refused to vouch, or nobody was there.
 Stars are not reviews. A star means: I, a verified human, am using this version with my own key. When
 the version changes, every star goes out at once. Reviews never expire; a flame does.
 
-## How it's made（280字以上）
+## How it's made (280 characters minimum)
 **Ledger (hardware).** A custom Ledger app, written in Rust, computes the EIP-712 digest inside the
 device from the same four values it displays, so the screen and the signature cannot disagree. No blind
 signing, and the host never sends a digest. The device/broker boundary is frozen as one JSON contract
@@ -87,4 +87,4 @@ honest next step is to run the broker itself inside 0G Private Computer. Stars l
 log — the on-chain registry is specified, not deployed.
 
 ## GitHub Repositories
-`kou-uni/ethglobal-mumbai`（public）
+`kou-uni/ethglobal-mumbai` (public)

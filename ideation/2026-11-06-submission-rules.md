@@ -1,79 +1,79 @@
-# 提出と審査の規則（ETHGlobal 公式・2026-11-06 受領）
+# Submission and judging rules (ETHGlobal official, received 2026-11-06)
 
-**出典：** https://ethglobal.com/events/mumbai/info/details
-（Key information / Important rules / Submitting / Judging / Demo video）
-**この文書は原文の要約と、こちらの適合状況。原文と食い違ったら原文が正しい。**
+**Source:** https://ethglobal.com/events/mumbai/info/details
+(Key information / Important rules / Submitting / Judging / Demo video)
+**This document is a summary of the original plus our compliance status. If it conflicts with the original, the original is right.**
 
-## 1. 締切と出し方
+## 1. Deadline and how to submit
 
 | | |
 |---|---|
-| **提出締切** | **11/7 09:00 IST。遅れは受け付けない**（延長なし） |
-| 出し先 | Hacker Dashboard（ethglobal.com/events/mumbai/home）のフォーム |
-| 要るもの | タイトル・説明・**リポジトリの URL** |
-| 動画 | **任意。ただし強く推奨**（Showcase に載る） |
-| パートナー賞 | **最大3社**。**同じパートナーの複数トラックは全部に応募でき、枠は1つしか使わない** |
-| 出し方 | ①Finalist＋パートナー賞（Finalist 審査に出る）／②パートナー賞のみ |
+| **Submission deadline** | **11/7 09:00 IST. Late submissions are not accepted** (no extensions) |
+| Where | The form in the Hacker Dashboard (ethglobal.com/events/mumbai/home) |
+| Required | Title, description, **repository URL** |
+| Video | **Optional, but strongly recommended** (it appears in the Showcase) |
+| Partner prizes | **Up to 3 partners.** **You can apply to all tracks of the same partner and it only uses one slot** |
+| How | (1) Finalist + partner prizes (enter Finalist judging) / (2) partner prizes only |
 
-**パートナーの審査は提出物だけで行われる。ブース訪問は任意**（フィードバックと交流のため）。
-→ **ブースで喋れなかったことは評価に入らない。提出物に全部入れる。**
+**Partner judging is done on the submission alone. Visiting the booth is optional** (for feedback and networking).
+→ **Anything you did not get to say at the booth does not count toward the evaluation. Put all of it in the submission.**
 
-## 2. 禁止と必須（失格・対象外になる条件）
+## 2. Prohibited and required (conditions that disqualify or exclude you)
 
-- **Classic「From Scratch」：作業はハック開始後に始めること。** 事前のコード・デザイン・素材は
-  **公開ライブラリかスターターキットを除き不可**。事前制作のものは参加はできるが
-  **パートナー賞と Finalist の対象外**
-- **版管理を使うこと。巨大な単一コミットや履歴の欠落は失格になりうる**
-- **再利用したものは明示すること。** 何が新規で何が流用かを分ける
-- **AI ツール（Claude Code 等）の使用は可。ただし:**
-  - **どこでどう使ったかを提出物に明記する**（どのコード・どのファイル・どの素材か）
-  - **AI だけで作ったものは、パートナー賞と Finalist の対象外になりうる**
-  - **spec 駆動で作ったなら、spec・プロンプト・計画の成果物を全部リポジトリに入れる。**
-    審査員は「生成物」ではなく「どう指示したか」を見る
+- **Classic "From Scratch": work must begin after the hack starts.** Pre-existing code, design or assets are
+  **not allowed except public libraries and starter kits**. Pre-built work can still participate but is
+  **excluded from partner prizes and Finalist**
+- **Use version control. One giant commit or a missing history can disqualify you**
+- **State explicitly what you reused.** Separate what is new from what is borrowed
+- **AI tools (Claude Code etc.) are allowed, but:**
+  - **State in the submission where and how you used them** (which code, which files, which assets)
+  - **Something built by AI alone can be excluded from partner prizes and Finalist**
+  - **If you built it spec-driven, put the spec, the prompts and the planning artifacts in the repository.**
+    Judges look not at "the output" but at "how you instructed it"
 
-## 3. 審査
+## 3. Judging
 
-**Finalist：1チーム7分 ＝ デモ4分 ＋ 質疑3分。**
+**Finalist: 7 minutes per team = 4-minute demo + 3-minute Q&A.**
 
-| 観点 | 中身 |
+| Criterion | What it means |
 |---|---|
-| Technicality | 問題の難しさと、解の洗練 |
-| Originality | 新しいか、既存問題を創造的に解いたか |
-| **Practicality** | **完成しているか。対象の人が今日使えるか** |
-| Usability (UI/UX/DX) | 直感的か。使いやすくしてあるか |
-| WOW Factor | 記憶に残るか |
+| Technicality | How hard the problem is, and how refined the solution is |
+| Originality | Is it new, or does it solve an existing problem creatively |
+| **Practicality** | **Is it finished. Can the target person use it today** |
+| Usability (UI/UX/DX) | Is it intuitive. Has it been made easy to use |
+| WOW Factor | Is it memorable |
 
-**聞かれる定番3つ：何に着想を得たか／どの道具をなぜ使ったか／どの困難をどう解いたか。**
+**The three standard questions: what inspired you / which tools you used and why / what difficulty you solved and how.**
 
-## 4. 動画の規則（破ると再提出を求められる）
+## 4. Video rules (breaking them means being asked to resubmit)
 
-- **2〜4分。** 2分未満・4分超は**アップロード自体が弾かれる**
-- **720p 未満は弾かれる**
-- **早送りで尺に収めない**
-- **文字＋音楽だけ（喋らない）は不可**
-- **スマホで撮らない**
-- **読み上げ・AI ボイスオーバーは不可**（肉声で話す）
-- ゆっくり話す／雑音と反響を避ける／自己紹介は20秒まで／待ち時間は編集で飛ばす／
-  スライドは**1枚4行まで**
+- **2–4 minutes.** Under 2 or over 4 minutes **gets rejected at upload**
+- **Below 720p is rejected**
+- **Do not fast-forward to fit the length**
+- **Text plus music only (no speaking) is not allowed**
+- **Do not film on a phone**
+- **Text-to-speech / AI voiceover is not allowed** (speak in your own voice)
+- Speak slowly / avoid noise and echo / self-introduction up to 20 seconds / edit out waiting time /
+  slides are **4 lines max per slide**
 
-## 5. こちらの適合状況（2026-11-06 時点）
+## 5. Our compliance status (as of 2026-11-06)
 
-| 規則 | 状況 | 直したこと・残り |
+| Rule | Status | What was fixed / what remains |
 |---|---|---|
-| 11/7 09:00 IST 締切 | ◯ | 自分の締切は 06:00（3時間の余裕）のまま |
-| From Scratch | ◯ | 11/5 21:00 以降に開始。事前の調査ノートは public に置いていない |
-| 版管理の履歴 | ◯ | 小さいコミットが積み上がっている。巨大な単一コミットなし |
-| 再利用の明示 | **直した** | `ledger-app/` は LedgerHQ の `app-boilerplate-rust`（Apache-2.0）由来。README に節を追加 |
-| **AI 利用の明示** | **直した** | README に「AI の使い方」節を追加。spec と計画（`spec/` `ideation/`）はすべてリポジトリにある |
-| パートナー賞3社 | ◯ | World / 0G / EF。**同一パートナーの複数トラックが1枠だと確定したので、World 2枠・0G 複数枠を同時に狙える**（`research/11-prize-gap.md` の「未確認」が消えた） |
-| 動画 2〜4分 | **要注意** | いまの台本は **2:55**。2分は超えているので可。**1分台に縮めない** |
-| 720p・肉声・スマホ不可 | **要注意** | 画面収録で 1080p、**肉声で喋る**。読み上げソフトを使わない |
-| Finalist 4分＋質疑3分 | **直した** | **出ると決めた（決定19）。** 4分の台本と質疑の答え → `2026-11-07-finalist-4min.md` |
+| 11/7 09:00 IST deadline | OK | Our own deadline stays at 06:00 (3 hours of slack) |
+| From Scratch | OK | Started after 11/5 21:00. The prior research notes are not in a public place |
+| Version control history | OK | Small commits accumulated. No giant single commit |
+| Stating reuse | **fixed** | `ledger-app/` derives from LedgerHQ's `app-boilerplate-rust` (Apache-2.0). Section added to the README |
+| **Stating AI usage** | **fixed** | Added an "AI usage" section to the README. The spec and the planning (`spec/`, `ideation/`) are all in the repository |
+| 3 partner prizes | OK | World / 0G / EF. **Now that multiple tracks of the same partner are confirmed to use one slot, we can go for World's 2 tracks and several 0G tracks at once** (the "unverified" note in `research/11-prize-gap.md` is resolved) |
+| Video 2–4 min | **watch out** | The current script is **2:55**. It is over 2 minutes so it is fine. **Do not shorten it into the 1-minute range** |
+| 720p, own voice, no phone | **watch out** | Screen recording at 1080p, **speaking in my own voice**. No text-to-speech software |
+| Finalist 4 min + 3 min Q&A | **fixed** | **Decided to enter (Decision 19).** The 4-minute script and the Q&A answers → `2026-11-07-finalist-4min.md` |
 
-## 6. ここから出てくる、やることの変化
+## 6. What changes in the plan because of this
 
-1. **提出フォームに書く文章が、ブースで喋ることより重い。** パートナーは提出物だけで判断する
-2. **動画は肉声で、2〜4分。** 読み上げに逃げない
-3. **4分のデモ＋質疑3つ**を用意した（`2026-11-07-finalist-4min.md`）。3分版は Showcase 用に残す。
-   **提出フォームでは「Finalist and Partner Prizes」を選ぶ**
-4. **AI の使い方を README に書く**（これが無いと、パートナー賞と Finalist の対象外になりうる）
+1. **The text written in the submission form counts for more than what is said at the booth.** Partners judge on the submission alone
+2. **The video is in my own voice, 2–4 minutes.** No escaping into text-to-speech
+3. **A 4-minute demo plus three Q&A answers** is prepared (`2026-11-07-finalist-4min.md`). The 3-minute version stays for the Showcase.
+   **On the submission form pick "Finalist and Partner Prizes"**
+4. **Write the AI usage in the README** (without it we could be excluded from partner prizes and Finalist)

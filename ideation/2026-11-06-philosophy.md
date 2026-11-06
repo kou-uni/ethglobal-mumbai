@@ -1,81 +1,81 @@
-# 思想 — なぜこれを作るのか（2026-11-06）
+# Philosophy — why we are building this (2026-11-06)
 
-> 機能の一覧は `2026-11-06-review.md`。ここには、その機能を選んだ**考え方**を書く。
-> 機能は36時間で削れる。ここに書いたことは削らない。
+> The feature list is in `2026-11-06-review.md`. This file holds the **thinking** behind choosing those features.
+> Features can be cut in 36 hours. What is written here does not get cut.
 
-## 1. 前提が変わった
-**PCの中は、もう人間だけの場所ではない。**
-Claude Code のような AI は `.env` を読める。「読んでいない」と言われても、それを保証できる人はいない。保証する仕組みが、読む側と同じ PC の中にあるからだ。
+## 1. The premise changed
+**The inside of a PC is no longer a place for humans only.**
+An AI like Claude Code can read `.env`. Even if it says "I did not read it", nobody can guarantee that. The mechanism that would guarantee it sits inside the same PC as the thing doing the reading.
 
-**ブロックチェーンは第三者を消した。AIは第三者を連れ戻した。**
-人とサービスのあいだに、また誰かが立っている。問題は、その第三者を誰が保証するかだ。
+**Blockchains removed the third party. AI brought the third party back.**
+Someone is standing between the person and the service again. The question is who guarantees that third party.
 
-## 2. 信頼は「何ができるか」から「誰が認めたか」へ
-> 人間はサービスの差がなくなってきてるから、誰がそれを認めたのか、誰がそれがいいって言ったのかっていうことに対しての信頼になるんじゃないか。
+## 2. Trust moves from "what can it do" to "who vouched for it"
+> Services are converging for people, so trust is going to be about who approved it, who said it was good.
 
-> 自分自身が選択するのは、信頼する人が選択したものを信頼するっていう感じだと思う。
+> The way I choose things myself is, I trust what the people I trust chose.
 
-**星の数ではなく、誰の星か。**
-評判を1つにしない。同じ AI でも、見る人ごとに点が違う。自分が信頼する人の保証だけでできた評判を、見る人の端末で計算する。誰と知り合いかは、外に出さない。
+**Not how many stars, but whose stars.**
+Do not collapse reputation into one number. The same AI scores differently for each viewer. A reputation built only from the vouches of people you trust, computed on the viewer's own device. Who you know never leaves the device.
 
-## 3. 信頼は賭けるもの
-> その信頼していたひとが、裏切ったらその事実も、刻まれる。検証可能性っていうところを、十分活かしたい。
+## 3. Trust is something you stake
+> If that person you trusted betrays you, that fact gets recorded too. I want to make full use of verifiability.
 
-保証は、自分の信用を賭けて出す。保証した AI が裏切れば、それは保証人の記録にも刻まれ、その人が保証していた他の AI も細くなる。**許可した記録が、そのまま違反の証拠になり、保証人まで届く。** 部品は新しくない。この1周がつながっていることが新しい。
+A vouch is issued by staking your own credibility. If the AI you vouched for betrays, that is recorded against the voucher as well, and the other AIs that person vouched for get thinner too. **The record of the permit is itself the evidence of the violation, and it reaches all the way back to the voucher.** The parts are not new. What is new is that this loop closes.
 
-## 4. 証明できる裏切りだけを罰し、疑わしいものは知らせるだけ
-罰するのは、署名付きで証明できるもの（宣言した範囲の外の要求）だけ。中身が怪しい、扇動している、という**判断**では罰しない。知らせるだけにする。判断で罰する仕組みは、いつか無実の人を罰する。
+## 4. Punish only provable betrayal; for anything merely suspicious, just report it
+Punishment applies only to what is provable with a signature (a request outside the declared scope). We do not punish on a **judgement** that the content is shady or inflammatory. We only report it. A system that punishes on judgement will, eventually, punish an innocent party.
 
-## 5. AI が押せないボタンを、1つ手元に置く
-**AI は1秒に100回「許可」を押せる。このボタンだけは押せない。**
-AI は鍵を読めるし、画面の承認も自分で押せるし、評判も大量に作れる（偽の評判は1件 $0.0027）。プログラムでできることは、すべて AI が大量にできる。できないのは、物理のボタンを押すことだけだ。
+## 5. Keep one button on hand that the AI cannot press
+**An AI can press "allow" a hundred times a second. This is the one button it cannot press.**
+An AI can read keys, can click on-screen approvals itself, and can manufacture reputation in bulk (a fake reputation costs $0.0027 each). Anything a program can do, an AI can do at scale. The one thing it cannot do is press a physical button.
 
-だから HW は、守りの飾りではない。**評判を偽れなくする部品**だ。人にしか押せないから、「誰が許したか」が本物になる。HW を外すと、信頼の記録はまるごと $0.0027 に戻る。
+So the hardware is not a defensive ornament. It is **the part that makes reputation unforgeable**. Because only a person can press it, "who allowed this" becomes real. Take the hardware out and the whole trust record goes back to being worth $0.0027.
 
-**金庫は黙り、顔がしゃべる。** 罰するのは Ledger（証明）で、知らせるのはスタックチャン（判断）。4 の線引きが、そのまま2台に分かれる。
+**The safe stays silent; the face does the talking.** Punishment comes from the Ledger (proof), reporting comes from Stack-chan (judgement). The line drawn in section 4 is exactly the line between the two devices.
 
-## 6. 持たないことで守る
-> できればクラウドにもデータを入れたくない。事業者も、過剰なユーザ情報を持ちたくないと思っていると思う。これこそ、web3で防衛できたりする世界観な気がする。
+## 6. Protect by not holding
+> Ideally I do not want to put data in the cloud either. I think businesses do not want to hold excessive user information either. This feels like exactly the kind of world view web3 can defend.
 
-人間証明は「その瞬間だけ」使う。ログインではなく、1回きりの同意の領収書だ。事業者に渡るのはゼロ知識の証明と仮名だけで、**持たないから、漏らさない**。Ledger は「その場で押した」ことを、World ID は「一意の人間だ」ということを証明する。両方そろって、1人の人間が、その場で、この要求を許したことになる。
+Proof of personhood is used "only for that moment". It is not a login; it is a one-time receipt of consent. All the business receives is a zero-knowledge proof and a pseudonym — **because it does not hold anything, it cannot leak anything**. The Ledger proves "this was pressed here and now"; World ID proves "this is a unique human". Together they mean one human, on the spot, allowed this request.
 
-## 7. ふだんは何もしない。大事なときだけ、人が出てくる
-安全のために毎回聞く仕組みは、3日で捨てられる。ふだんは細いトークンで自動に動かし、事故が起きても小さく済むようにしておく。人と機器が出てくるのは、大事なときだけにする。**利便性を落とさないことも、安全の一部だ。**
+## 7. Normally nothing happens. A person steps in only when it matters
+A system that asks every time for safety's sake gets thrown out in three days. Normally it runs automatically on a thin token, so that an incident stays small. The person and the device step in only when it matters. **Not degrading convenience is part of safety too.**
 
-## 8. 保証は、売るものではなく贈るもの
+## 8. Vouching is given, not sold
 
-> **【この節は 11/6 未明より前の版】** 投げ銭・二次のマッチング・預け金は決定1で捨てた。
-> いま賭けているのは「自分の鍵そのもの」で、製品の中で金は動かない（`2026-11-06-actors-io.html` §03）。
-保証は**知見の寄付**だ。お金は、守られた人から「ありがとう」として保証人へ返る。開発者から保証人へ流れる道は作らない。作った瞬間に、保証は「お金で買える掲載」に戻る。
+> **[This section predates 11/6 early morning]** Tips, quadratic matching and deposits were dropped in Decision 1.
+> What is staked now is "your own key itself", and no money moves inside the product (`2026-11-06-actors-io.html` §03).
+A vouch is **a donation of knowledge**. Money comes back to the voucher as a "thank you" from the person who was protected. We do not build a path from developers to vouchers. The moment that path exists, vouching turns back into "placement you can buy".
 
-「100人が1ドルずつ」を「1人が100ドル」より重く数える（二次の寄付）。その弱点の偽アカウントは、一意の人間しか数えないことで塞ぐ。これも「誰の星か」と同じ考え方だ。
+"A hundred people at one dollar each" counts for more than "one person at a hundred dollars" (quadratic funding). Its weakness, fake accounts, is closed by counting only unique humans. This is the same idea as "whose stars".
 
-**GitHub の贈与の文化に、偽れない星と、裏切りが返る仕組みを足したもの。**
+**GitHub's culture of giving, plus unforgeable stars and a mechanism by which betrayal comes back.**
 
-## 9. 渡しているのは「安心の余白」（2026-11-06・本人の言葉）
+## 9. What we hand over is "room to feel safe" (2026-11-06, the owner's words)
 
-> 「このプロダクトは、安心の余白を双方のユーザに提供することになるね」
+> "This product ends up giving both sides of the user room to feel safe."
 
-**余白のつくられ方は、両側で逆になっている。**
+**That room is created in opposite ways on the two sides.**
 
-- **鍵の持ち主（信用を買う側）の余白は「見なくていい時間」。**
-  ふだん何も出ないことが商品で、画面を見ている時間が増えたらその分だけ価値が減る。
-  → **通知・常時の見守り表示・ダッシュボードは、余白を埋める機能。足すことは値下げに等しい。**
-- **スキルの作り手（信用を売る側）の余白は「見られている安心」。**
-  宣言した範囲の外には踏み込めず、踏み込めば自分の署名ごと残る。
-  だから**疑われたときに証拠で返せる**し、無実も記録で示せる。
-  → 版が上がって灯が消えるのは罰ではなく、**毎回まっさらな床から始められる**ということ。
+- **For the key holder (the side buying credibility), the room is "time they do not have to watch".**
+  Nothing appearing, normally, is the product; the more time they spend looking at a screen, the less value there is.
+  → **Notifications, always-on monitoring displays and dashboards are features that fill the room in. Adding them is equivalent to cutting the price.**
+- **For the skill maker (the side selling credibility), the room is "being watched, safely".**
+  They cannot step outside the declared scope, and if they do it is recorded along with their own signature.
+  So **when they are suspected they can answer with evidence**, and innocence can be shown from the record too.
+  → The flame going out when the version goes up is not a punishment; it means **you get to start from a clean floor every time**.
 
-**余白は足して作れない。引いて作る。**
-割り込みは3場面だけ（重い要求／灯が消えた／止められたと後から気づく）。
-値付けも余白に合わせる——**黙っている時間には課金しない**（判定の従量だけ）。
+**Room cannot be created by adding. It is created by subtracting.**
+There are only three moments of interruption (a heavy request / the flame went out / you find out afterwards that you were stopped).
+Pricing follows the room too — **we do not charge for the time we stay silent** (metered verdicts only).
 
-**そして、安心そのものは売らない。** 補填もしないし、「これで安全です」とも言わない。
-渡すのは**見なくていい時間**と**証拠**の2つだけ。安心を商品にした瞬間、それは嘘になる。
+**And we do not sell the feeling of safety itself.** We do not reimburse, and we do not say "you are safe now".
+We hand over exactly two things: **time you do not have to watch** and **evidence**. The moment safety becomes the product, it is a lie.
 
-## 選ばなかったこと
-- **使われるたびに保証人へ報酬を払う**：開発者が保証人を買えてしまう
-- **判断で罰する**：判断は外れる。外れた罰は、無実の人に刻まれる
-- **評判を1つの点数にする**：偽アカウントで買える（ERC-8004 自身が "Sybil attacks are possible" と書いている）
-- **毎回承認させる**：安全でも、使われなくなる
-- **人の情報を集めて守る**：集めた時点で、漏れる場所になる
+## What we did not choose
+- **Paying the voucher every time the skill is used**: developers could buy vouchers
+- **Punishing on judgement**: judgement is wrong sometimes. A wrong punishment is recorded against an innocent party
+- **Collapsing reputation into one score**: it can be bought with fake accounts (ERC-8004 itself writes "Sybil attacks are possible")
+- **Asking for approval every time**: safe, but nobody uses it
+- **Collecting people's information in order to protect them**: the moment you collect it, you are a place it leaks from

@@ -1,71 +1,71 @@
-# Finalist 審査（7分）の台本 — デモ4分 ＋ 質疑3分
+# Finalist judging (7 minutes) script — 4-minute demo + 3-minute Q&A
 
-> **決定：Finalist 審査に出る**（2026-11-06・本人）。提出フォームでは
-> **「Finalist and Partner Prizes」**を選ぶ。パートナー賞3枠（World / 0G / EF）はそのまま。
-> 審査の時間と場所は**提出後に Hacker Dashboard に出る**ので、提出を遅らせない（目標 11/7 06:00 IST）。
+> **Decision: enter Finalist judging** (2026-11-06, the owner). On the submission form pick
+> **"Finalist and Partner Prizes"**. The three partner prize slots (World / 0G / EF) are unchanged.
+> The judging time and place **appear on the Hacker Dashboard after submission**, so do not delay submitting (target 11/7 06:00 IST).
 >
-> 2:55 の提出動画は別物（`2026-11-06-demo-scenario.md` §2）。**こちらは人が立って話す版。**
+> The 2:55 submission video is a different thing (`2026-11-06-demo-scenario.md` §2). **This one is the version where a person stands and talks.**
 
-## 0. この4分で勝ちに行く軸
+## 0. The axis we are going to win on in these 4 minutes
 
-審査は5つ（Technicality / Originality / Practicality / Usability / WOW）。
-**3分版は Practicality が薄い。** 4分版は**最後の45秒を「誰が今日使えて、誰が払うか」に使う。**
+Judging has five criteria (Technicality / Originality / Practicality / Usability / WOW).
+**The 3-minute version is thin on Practicality.** The 4-minute version **spends the last 45 seconds on "who can use this today, and who pays".**
 
-**覚えて帰ってもらう1つ：**
-*AI に鍵を渡さずに鍵を使わせる。止まり方が4通りに分かれていて、**止まったことを隠さない**。*
+**The one thing they should take away:**
+*Let the AI use the key without handing it the key. There are four distinct ways it can stop, and **a stop is never hidden**.*
 
-## 1. 進行表（4:00。各ブロックの末尾が「切ってもいい場所」）
+## 1. Running order (4:00. The end of each block is a safe place to be cut off)
 
-| 時間 | 画面 | 操作 | 言うこと | 画面に出る証拠 |
+| Time | Screen | Action | What to say | Evidence on screen |
 |---|---|---:|---|---|
-| 0:00–0:15 | 門（待機） | — | 「AI に API キーを渡したくない。でも AI に仕事はさせたい。**TOMOSHIBI は、鍵を渡さずに使わせる門です**」（名乗りは1行） | タイトルと4行 |
-| 0:15–0:40 | 門 ①ふだん | 投げる | 「ふだんの読み取りは黙って通る。**鍵はエージェントに渡っていない。**門が代わりに使う」 | `ALLOWED` / 0G「ふだん」/ **request id** |
-| 0:40–1:15 | 門 ②重い | 投げる | 「同じ範囲の中。でも中身は4,800ドルの送金で、宛先が知らない口座。**中身を読まないと重さは決まらない。でもその中身を我々に見せたくない。**だから封印された推論の中で読ませる」 | `NEEDS_PRESS` / 0G「決定的」＋理由 / **request id** |
-| 1:15–1:40 | **実機** | **押す** | 「手元の機器に4行だけ出る。鍵のラベル・宛先・操作・期限。**押して初めて、この1回だけ通る。**鍵は機器から出ません」 | 枠が灯色 → `ALLOWED`（使い切り） |
-| 1:40–2:05 | 門 ④範囲外 | 投げる | 「乗っ取られたスキルが別の宛先へ。**実行する前に止まる。**しかも**誰が要求したかがスキルの署名ごと残る**。ここは 0G にも見せていません」 | `DENIED` / 違反として刻む |
-| 2:05–2:25 | 門 ⑥届かない | 投げる | 「0G に届かないとき、**既定値を作らない。**通すでも拒むでもなく『決められなかった』と出して、回数も減らさない。**偽の判断は、通してしまうのと同じくらい悪い**」 | `STOPPED` / 残り回数が減らない |
-| 2:25–2:50 | 灯 | 版を上げる | 「星は約束ではなく**事実**。**版が変われば一斉に消える。**だから数が『いま使われている』を指す。人であることは、名乗るときだけ1回確かめます」 | 灯が1本ずつ消える → 0 |
-| 2:50–3:05 | 系譜 | QR / tx | 「通したことも止めたことも、同じ1本に残る。**これは実際に 0G Storage に乗っています**」 | root hash と **chainscan の tx** |
-| 3:05–3:25 | 図（1枚） | — | 「**誰が何を知らないか**を設計で分けてあります。機器は要求の本文を知らない。World は何の鍵かを知らない。**0G は本文を読むが、我々には読めない**」 | `2026-11-06-stack.html` の1枚 |
-| 3:25–3:55 | 値札の1枚 | — | 「今日使えるのは、**API キーを人に預けている小さなチームと、スキルを配っている作り手。**課金は**判断の従量と、灯の掲示**。**流れた金額の%は取りません。止めるほど損をする会社にならないため**」 | 単位経済（1判定 約300トークン） |
-| 3:55–4:00 | 門（待機） | — | 「**レビューの点数は消えない。灯は消える。だから意味がある。**」 | タイトル |
+| 0:00–0:15 | Gate (idle) | — | "I do not want to hand my API key to an AI. But I do want the AI to do the work. **TOMOSHIBI is a gate that lets it use the key without holding it**" (one line of self-introduction) | Title and four lines |
+| 0:15–0:40 | Gate (1) routine | send | "A routine read passes silently. **The key never reached the agent.** The gate uses it on its behalf" | `ALLOWED` / 0G "routine" / **request id** |
+| 0:40–1:15 | Gate (2) heavy | send | "Inside the same scope. But the body is a $4,800 transfer to an account it does not know. **You cannot determine weight without reading the body. But we do not want to be shown that body.** So we have it read inside sealed inference" | `NEEDS_PRESS` / 0G "decisive" + reason / **request id** |
+| 1:15–1:40 | **Real device** | **press** | "Four lines, and only four, appear on the device in your hand. Key label, destination, operation, expiry. **Only once you press does this one call go through.** The key never leaves the device" | The frame turns flame-colored → `ALLOWED` (single use) |
+| 1:40–2:05 | Gate (4) out of scope | send | "A hijacked skill goes for a different destination. **It stops before it executes.** And **who requested it is recorded along with the skill's signature**. We did not show this one to 0G either" | `DENIED` / recorded as a violation |
+| 2:05–2:25 | Gate (6) unreachable | send | "When 0G cannot be reached, **we do not invent a default.** Not pass, not refuse — it says 'could not decide', and the call budget is not decremented. **A fabricated verdict is as bad as letting it through**" | `STOPPED` / remaining call budget unchanged |
+| 2:25–2:50 | Flame | bump the version | "A star is not a promise, it is **a fact**. **When the version changes they all go out at once.** That is why the count means 'in use right now'. Being a human is checked once, at the moment you put your name on it" | The flames go out one by one → 0 |
+| 2:50–3:05 | Trail | QR / tx | "What was let through and what was stopped stay in the same single trail. **This is actually on 0G Storage**" | Root hash and the **tx on chainscan** |
+| 3:05–3:25 | Diagram (one slide) | — | "**Who does not know what** is separated by design. The device does not know the body of the request. World does not know which key it is. **0G reads the body, but we cannot**" | The single slide from `2026-11-06-stack.html` |
+| 3:25–3:55 | Pricing slide | — | "Who can use it today: **small teams who have handed an API key to a person, and makers who are distributing skills.** We charge for **metered judgement and for displaying the flame**. **We take no percentage of the amount that moved. So that we are not a company that loses money the more it stops things**" | Unit economics (one verdict ≈ 300 tokens) |
+| 3:55–4:00 | Gate (idle) | — | "**A review score never goes out. A flame does. That is why it means something.**" | Title |
 
-**止められたら、どこで切ってもいい。** 1:40 まで行っていれば、言いたいことの芯は出ている。
+**If they stop you, any point is a fine place to cut.** If you got as far as 1:40, the core of the message is out.
 
-## 2. 時間が押したときに捨てる順
+## 2. What to drop if you are running over
 
-1. **3:05–3:25 の図**（口で1文に落とす：「誰が何を知らないかは設計で分けてあります」）
-2. **2:05–2:25 の `STOPPED`**（質疑でほぼ必ず聞かれるので、そこで出す）
-3. **0:15–0:40 のふだん**（②の冒頭で「ふだんは黙って通ります」と1言）
+1. **The diagram at 3:05–3:25** (reduce it to one spoken sentence: "who knows what is separated by design")
+2. **The `STOPPED` at 2:05–2:25** (it is almost always asked in Q&A, so show it there)
+3. **The routine case at 0:15–0:40** (open (2) with one line: "routine requests pass silently")
 
-**絶対に捨てない：** ②重い → 押す → ④範囲外 → 灯の版上げ。
+**Never drop:** (2) heavy → press → (4) out of scope → bumping the flame's version.
 
-## 3. 質疑3分（定番3つ ＋ 来るとわかっている突っ込み）
+## 3. Q&A, 3 minutes (the three standard questions + the pushback we know is coming)
 
-### 定番
+### Standard
 
-| 聞かれること | 答えの芯（15秒で） |
+| What they ask | The core of the answer (in 15 seconds) |
 |---|---|
-| **何に着想を得たか** | 「**レビューの点数は消えない。灯は消える。**エージェントに評判を持たせるなら、消えるものでないと意味がない」 |
-| **どの道具をなぜ使ったか** | 「**中身を読まないと重さは決まらないのに、中身を見せたくない** → 0G の封印された推論。**押すのは人でなければならない** → 手元の機器（Ledger の自作アプリ）。**誰が保証したかが要る** → World。3つとも、**外すと設計が壊れる位置**に置いてあります」 |
-| **どの困難をどう解いたか** | 「『0G に届かない』を**安全側の既定値で埋めなかった**こと。埋めると実装は楽になるが、**止まったことが見えなくなる。**届かないときは判断を作らず `STOPPED` にし、回数も減らしません」 |
+| **What inspired you** | "**A review score never goes out. A flame does.** If you are going to give an agent a reputation, it has to be something that can go out, or it means nothing" |
+| **Which tools you used and why** | "**You cannot determine weight without reading the body, but we do not want to be shown it** → 0G's sealed inference. **The press has to come from a human** → the device in your hand (a custom Ledger app). **You need to know who vouched** → World. All three sit **where removing them breaks the design**" |
+| **What difficulty you solved and how** | "Not papering over '0G is unreachable' **with a safe-side default**. Papering over it makes the implementation easier, but **it makes the stop invisible.** When it is unreachable we do not manufacture a verdict — it becomes `STOPPED`, and the call budget is not decremented" |
 
-### 来るとわかっている突っ込み（**隠さずに認めてから答える**）
+### The pushback we know is coming (**admit it openly, then answer**)
 
-| 突っ込み | 答え |
+| Pushback | Answer |
 |---|---|
-| **「Broker が鍵を持っているなら、結局そこが信頼点では？」** | 「**そのとおりで、今回 Broker は TEE に載せていません。**README にもそう書いています。いま分けられているのは**機器・World・0G・系譜**で、門は残った1点。次に載せるならここです」 |
-| 「0G が落ちたらデモは？」 | 「**落ちた状態を見せます。**`STOPPED` が出て、回数が減らない。隠す経路を作っていません」 |
-| 「星は sybil に耐えるか」 | 「星は**鍵の使用という事実**で、数ではなく**誰の星か**を見ます。灯を出すには **World で人であることを1回**通す必要があります」 |
-| 「誰が金を払う？」 | 「**判断の従量**（1判定 約300トークン）と、**作り手の掲示（灯）**。流量の%は取りません」 |
-| 「実機は本物か」 | 「Ledger Flex で**自作アプリが実機で動いています。**画面上の『押す』で代用するときは、**代用だと画面に出します**」 |
-| 「AI でどこまで書いた？」 | 「**README の『どう作ったか』に、どのファイルをどう使ったか書いてあります。**仕様（`spec/`）と決定の記録（`ideation/`）は**全部リポジトリに入れてあります**」 |
+| **"If the Broker holds the key, isn't that the trust point after all?"** | "**Exactly right, and in this build the Broker is not inside a TEE.** The README says so. What is separated right now is **the device, World, 0G and the trail**; the gate is the one point left. That is the next thing to move in" |
+| "What happens to the demo if 0G goes down?" | "**We show it down.** `STOPPED` appears and the call budget does not decrease. We built no path that hides it" |
+| "Do stars survive sybil attacks?" | "A star is **the fact that a key was used**, and we look not at the count but at **whose stars they are**. To light a flame you have to pass **World once, to prove you are a human**" |
+| "Who pays?" | "**Metered judgement** (one verdict ≈ 300 tokens) and **the maker's display (the flame)**. We take no percentage of flow" |
+| "Is the device real?" | "**A custom app is running on a real Ledger Flex.** When we substitute an on-screen 'press', **we say on screen that it is a substitute**" |
+| "How much did AI write?" | "**The README's 'how it was made' says which files were used and how.** The spec (`spec/`) and the decision log (`ideation/`) are **all in the repository**" |
 
-## 4. 当日の持ち物と手順
+## 4. What to bring on the day, and the procedure
 
-- [ ] **提出を先に済ませる**（審査の時間は提出後に Dashboard に出る）
-- [ ] 実機（Flex）＋ ケーブル。`bridge.py` が動く**そのマシン**でブラウザを開く（**スマホからは押せない**）
-- [ ] `/health` に `simulated` が無いこと
-- [ ] `?s=heavy` のような深いリンクで、**どの場面からでも始められる**ようにしておく
-- [ ] 画面の倍率を上げる（立って見る審査員は小さい字を読まない）
-- [ ] **4分で切られる前提で、1:40 までに芯を出す**
+- [ ] **Submit first** (the judging time appears on the Dashboard after submission)
+- [ ] The real device (Flex) + cable. Open the browser on **the same machine** that `bridge.py` runs on (**you cannot press from a phone**)
+- [ ] `/health` must have no `simulated`
+- [ ] Set up deep links like `?s=heavy` so you can **start from any scene**
+- [ ] Increase the screen zoom (judges standing up will not read small text)
+- [ ] **Assume you get cut off at 4 minutes; get the core out by 1:40**

@@ -1,107 +1,117 @@
-# なぜムンバイで、このプロダクトなのか（2026-11-06 調査）
+# Why Mumbai, and why this product (2026-11-06 research)
 
-**結論：偶然ではない。インドは、TOMOSHIBI の設計が「意見」ではなく「規則」になっている
-世界で唯一の市場である。** しかも規則・プロトコル・提案の3段が、全部この1年に揃った。
-**調べる前の想定（「インドは市場が大きい」）は、いちばん弱い根拠だった。**
+**Conclusion: this is not a coincidence. India is the only market in the world where TOMOSHIBI's
+design is a rule rather than an opinion.** And all three layers — rule, protocol, proposal — fell
+into place within this one year.
+**Our assumption before researching ("India is a big market") was the weakest reason of all.**
 
 ---
 
-## 1. 三段の一致 — 規則／プロトコル／提案
+## 1. Three layers of alignment — rule / protocol / proposal
 
-### ① 規則：エージェントが払っても、1回ごとに動的な認証が要る【確】
+### (1) Rule: even when an agent pays, a dynamic factor is required for each transaction [verified]
 
-**RBI（Authentication Mechanisms for Digital Payment Transactions）Directions, 2025**
-（2025-09-25 発出、**2026-04-01 から適用**）。
+**RBI (Authentication Mechanisms for Digital Payment Transactions) Directions, 2025**
+(issued 2025-09-25, **effective from 2026-04-01**).
 
-- デジタル決済は**2つ以上の独立した認証要素**を要する
-- カード非提示の取引では、**少なくとも1つは「動的」＝その取引に固有であることが証明されるもの**
-- そして報道によれば、これは **人が始めたか、エージェントが始めたかを問わず適用される**
+- Digital payments require **two or more independent authentication factors**
+- For card-not-present transactions, **at least one must be "dynamic" = provably unique to that
+  transaction**
+- And according to press reports, this **applies whether a human or an agent initiated it**
 
-> **TOMOSHIBI の許可は、まさにこの「動的な要素」そのものだ。**
-> EIP-712 のダイジェストは「どの鍵・どの宛先・どの操作・何回・いつまで」から作られ、
-> **その要求にしか対応しない。** 端末の画面に出る4行と、署名されるバイト列が同じであることは、
-> 「uniquely proven for that specific transaction」の実装そのものである。
+> **The TOMOSHIBI permit is exactly that "dynamic factor."**
+> The EIP-712 digest is built from "which key, which destination, which operation, how many times,
+> until when," and **it corresponds to that request and nothing else.** The fact that the four lines
+> shown on the device screen and the byte string being signed are the same thing is itself the
+> implementation of "uniquely proven for that specific transaction."
 
-### ② プロトコル：NPCI が、エージェントに払わせる土台を作っている【確】
+### (2) Protocol: NPCI is building the foundation for letting agents pay [verified]
 
-NPCI が **UPI 上のエージェント決済の枠組み**を準備している（Reuters 2026-09-01 報道）。
-中身は **規則ベースの指示（いつ・いくらまで払ってよいか）＋ 上限 ＋ 監査証跡 ＋ 本人確認**、
-そして **責任（liability）の枠組み**。土台は既存の2つ：
+NPCI is preparing **a framework for agentic payments on UPI** (Reuters, reported 2026-09-01).
+The contents are **rule-based instructions (when and up to how much it may pay) + spending limits +
+audit trails + identity verification**, plus **a liability framework**. The foundation is two
+existing pieces:
 
-- **UPI Circle** — 口座の持ち主が、**エージェントを含む第三者に支払い権限を委譲する**
-- **Reserve Pay** — 複数回の引き落としのために**資金を先にブロックする**
+- **UPI Circle** — the account holder **delegates payment authority to a third party, including an
+  agent**
+- **Reserve Pay** — **blocks funds up front** for multiple future debits
 
-> **これは TOMOSHIBI の許可の、銀行側の対応物だ。**
-> 「権限を委譲する」「上限を決める」「監査証跡を残す」「責任の所在を決める」——
-> 我々が4種類の拒否を**混ぜずに**残しているのは、最後の1つ（責任の所在）のためだった。
+> **This is the bank-side counterpart to the TOMOSHIBI permit.**
+> "Delegate authority," "set a limit," "keep an audit trail," "decide where liability sits" —
+> the reason we keep the four kinds of refusal **unmixed** was the last one (where liability sits).
 
-### ③ 提案：閾値を超えたら人を挟め、監査証跡つきで【確・ただし規則ではない】
+### (3) Proposal: put a human in the loop above a threshold, with audit trails [verified, but not a rule]
 
-**CERT-In（IT省のサイバー部門）の Digital Threat Report 2025-26**：
+**CERT-In (the cyber arm of the Ministry of IT), Digital Threat Report 2025-26:**
 
 > **"Mandate human-in-the-loop controls for agentic AI actions above defined financial
 > thresholds, with full audit trails."**
 
-**これは TOMOSHIBI の1文要約である。** 「定められた金額の閾値を超えるエージェントの行為には、
-人を挟むことを義務づけ、完全な監査証跡を付けよ」。
-我々の `NEEDS_PRESS`（重い要求は人が押すまで通さない）と、追記のみの系譜が、そのまま対応する。
+**That is a one-sentence summary of TOMOSHIBI.** "For agentic actions above defined financial
+thresholds, mandate human-in-the-loop controls, with full audit trails."
+Our `NEEDS_PRESS` (a heavy request does not go through until a person presses) and the append-only
+trail map onto it directly.
 
-**ただし正直に**：これは脅威報告書の**提案であって、規則ではない**。そう書く。
+**But to be honest**: this is **a proposal in a threat report, not a rule**. Say so.
 
 ---
 
-## 2. 一致を、こちらの部品と突き合わせる
+## 2. Matching the alignment against our own parts
 
-| インド側（制度・インフラ） | TOMOSHIBI 側（実装） | 一致の度合い |
+| India side (regulation / infrastructure) | TOMOSHIBI side (implementation) | Degree of match |
 |---|---|---|
-| AFA はマンデート**登録時**と**初回**に要る（e-mandate 2026） | **許可の署名（Ledger で1回押す）** | 構造が同じ |
-| 登録後は **₹15,000/件まで** AFA 無しで自動引き落とし可 | **範囲・回数・期限の中は黙って通る** | 構造が同じ |
-| 閾値を超える1件は、**都度の動的認証** | **`NEEDS_PRESS`** — 重い1件だけ人を起こす | 構造が同じ |
-| 24時間前の**事前通知**（相手・金額・日時） | **端末に出る4行**（事前に、人が読んで押す） | 同じ目的・より強い（事前署名） |
-| **監査証跡**（NPCI の枠組み・CERT-In の提案） | **追記のみの系譜 ＋ 0G Storage への封印** | 同じ。封印は本番チェーンに乗っている |
-| **責任の枠組み**（NPCI・詳細未公開） | **4種類の拒否を混ぜない**（DENIED / STOPPED / NEEDS_PRESS / human_denied） | **ここが我々の固有**。止まり方が違えば責任の所在が違う |
+| AFA is required **at mandate registration** and **on the first transaction** (e-mandate 2026) | **Signing the permit (one press on the Ledger)** | Same structure |
+| After registration, auto-debit **up to ₹15,000 per transaction** without AFA | **Inside the scope, call budget and expiry, things go through silently** | Same structure |
+| A transaction above the threshold needs **per-transaction dynamic authentication** | **`NEEDS_PRESS`** — wake the person only for the one heavy request | Same structure |
+| **Pre-notification 24 hours ahead** (counterparty, amount, date) | **The four lines shown on the device** (in advance, read and pressed by a person) | Same purpose, stronger (signed in advance) |
+| **Audit trail** (NPCI's framework, CERT-In's proposal) | **Append-only trail + a seal to 0G Storage** | Same. The seal is on mainnet |
+| **Liability framework** (NPCI, details not published) | **The four kinds of refusal are not mixed** (DENIED / STOPPED / NEEDS_PRESS / human_denied) | **This is what is ours.** A different way of stopping means a different place for liability |
 
-**コードは1行も変えなくてよい。** 形がすでに合っている。提出文に、この対応表の上3行を入れる。
-
----
-
-## 3. なぜ「ムンバイ」なのか — 都市の必然
-
-- **RBI の中央事務所はムンバイにある。** 上の①を出した当局がこの街にいる
-- **NPCI の本社はムンバイにある。** ②を作っている組織がこの街にいる
-- NPCI のエージェント決済の枠組みは、**ムンバイの Global Fintech Fest で披露される流れ**にある
-
-**規則を書く側と、鉄道を敷く側と、我々が、同じ週に同じ街にいる。**
-これは「インドは大きい」より具体的で、審査員が検証できる。
+**Not one line of code needs to change.** The shape already matches. Put the top three rows of this
+table into the submission text.
 
 ---
 
-## 4. 数字（桁だけ使う）
+## 3. Why "Mumbai" — the city is not incidental
+
+- **RBI's central office is in Mumbai.** The authority that issued (1) is in this city
+- **NPCI's headquarters is in Mumbai.** The organization building (2) is in this city
+- NPCI's agentic payments framework is **on track to be unveiled at the Global Fintech Fest in
+  Mumbai**
+
+**The people writing the rules, the people laying the rails, and us, in the same city in the same week.**
+That is more concrete than "India is big," and a judge can verify it.
+
+---
+
+## 4. Numbers (use only the order of magnitude)
 
 | | |
 |---|---|
-| UPI 2026年10月 | **254.7億件 / ₹31.53 lakh crore**（月。初めて250億件と₹30 lakh crore を超えた） |
-| 1日あたり | **8.22億件**、1日の取引額が初めて **₹1 lakh crore** を超えた |
-| インドの開発者（GitHub・2026年9月） | **3,200万人。** 米国 3,830万人に次ぐ**世界2位**で、1年で **+1,008万人**。2030年に米国を抜く見込み |
+| UPI, October 2026 | **25.47 billion transactions / ₹31.53 lakh crore** (per month. The first time it passed 25 billion transactions and ₹30 lakh crore) |
+| Per day | **822 million transactions**; daily value passed **₹1 lakh crore** for the first time |
+| Developers in India (GitHub, September 2026) | **32 million. Second in the world** behind the US at 38.3 million, and **+10.08 million** in one year. Projected to pass the US in 2030 |
 
-**開発者数が効く理由**：TOMOSHIBI の P2（スキルの作り手）は開発者だ。
-**灯を点ける側も、灯される側も、ここにいる。**
+**Why the developer count matters**: TOMOSHIBI's P2 (the skill maker) is a developer.
+**Both the people who light flames and the people who get lit are here.**
 
 ---
 
-## 5. 弱いところ（先に書く。聞かれてから認めない）
+## 5. The weak spots (write them first. Do not admit them only when asked)
 
-- **UPI にも Ledger にも、我々はまだ繋いでいない。** 上の一致は**構造の一致**であって、統合ではない。
-  「UPI 対応」と言ったら嘘になる。言わない
-- **CERT-In のは提案で、規則ではない。** 「義務化されている」と言わない
-- **RBI の規則は決済の話で、TOMOSHIBI は API キー全般**。決済はその部分集合。
-  広げすぎると「規制を根拠にした誇張」に見える。**決済を例として使い、主張は広げない**
-- インド固有の通貨・言語・決済手段への対応は**何もしていない**。
-  やったのは「インドの制度が、我々の設計を先に正解と呼んでいた」ことの確認だけ
+- **We have not connected to UPI or to Ledger yet.** The alignment above is **structural alignment**,
+  not integration. Saying "UPI support" would be a lie. We do not say it
+- **CERT-In's is a proposal, not a rule.** Do not say "it is mandated"
+- **RBI's rule is about payments; TOMOSHIBI is about API keys in general.** Payments are a subset.
+  Stretch it too far and it looks like "exaggeration dressed up as regulation."
+  **Use payments as an example and do not widen the claim**
+- We have done **nothing** for India-specific currency, languages or payment methods.
+  All we did was confirm that "India's institutions had already called our design correct"
 
-## 6. ピッチでの使い方（メインにはしない）
+## 6. How to use this in the pitch (do not make it the main line)
 
-**メインは変えない**（AIが審判になる世界と、灯が消えること）。インドは**1枚・20秒**で置く。
+**Do not change the main line** (a world where AI becomes the judge, and flames going out).
+India goes in as **one slide, 20 seconds**.
 
 > "We did not pick this problem for India. But India picked it first.
 > From April 2026, RBI requires a dynamic, per-transaction factor for non-card-present
@@ -110,27 +120,31 @@ NPCI が **UPI 上のエージェント決済の枠組み**を準備している
 > asked for human-in-the-loop above a financial threshold, with full audit trails.
 > That last sentence is our product description. We just wrote it in code."
 
-**質疑で来る突っ込みと答え：**
-- 「UPI に繋いだのか」→ **繋いでいない。構造が同じだと示しただけ**（正直に）
-- 「規制対応製品なのか」→ **違う。規制はこれが要ると言っている証拠として出している**
-- 「インド向けに何を作ったのか」→ **何も。作ったものが、たまたまインドの制度と同じ形だった**
+**The pushback that will come in Q&A, and the answers:**
+- "Did you connect to UPI?" → **No. We only showed that the structure is the same** (be honest)
+- "Is this a regulatory compliance product?" → **No. We are citing the regulation as evidence that
+  this is needed**
+- "What did you build for India?" → **Nothing. What we built happened to have the same shape as
+  India's institutions**
 
 ---
 
-## 出典（2026-11-06 取得）
+## Sources (retrieved 2026-11-06)
 
-- RBI (Authentication mechanisms for digital payment transactions) Directions, 2025（2025-09-25 発出 / 2026-04-01 適用）
-  — https://www.rbi.org.in/scripts/bs_viewcontent.aspx?Id=4477 ほか解説（Khaitan & Co / Saraf Partners / legal500）
-- RBI Digital Payments – E-mandate Framework, 2026（2026-04-21）：AFA は登録時と初回。₹15,000/件（保険・投信・カード請求は₹1 lakh）。24時間前の事前通知
+- RBI (Authentication mechanisms for digital payment transactions) Directions, 2025 (issued 2025-09-25 / effective 2026-04-01)
+  — https://www.rbi.org.in/scripts/bs_viewcontent.aspx?Id=4477 and commentary (Khaitan & Co / Saraf Partners / legal500)
+- RBI Digital Payments – E-mandate Framework, 2026 (2026-04-21): AFA at registration and on the first transaction. ₹15,000 per transaction (₹1 lakh for insurance, mutual funds and card bills). Pre-notification 24 hours ahead
   — https://www.businesstoday.in/personal-finance/news/story/rbi-caps-recurring-payments-at-rs15000-without-otp-under-new-e-mandate-framework-526759-2026-04-21 / https://ksandk.com/newsletter/rbi-e-mandate-framework/
-- NPCI のエージェント決済の枠組み（Reuters 2026-09-01 報道）：上限・監査証跡・本人確認・責任の枠組み／UPI Circle・Reserve Pay が土台
+- NPCI's agentic payments framework (Reuters, reported 2026-09-01): limits, audit trails, identity verification, liability framework / built on UPI Circle and Reserve Pay
   — https://thepaypers.com/payments/news/india-prepares-agentic-payments-rollout-on-upi-network
-- CERT-In Digital Threat Report 2025-26：human-in-the-loop の義務化**提案**
+- CERT-In Digital Threat Report 2025-26: a **proposal** to mandate human-in-the-loop
   — https://www.medianama.com/2026/07/223-meity-proposes-mandatory-human-interventions-agentic-ai-payments/
-- UPI 2026年10月：254.7億件 / ₹31.53 lakh crore / 日次8.22億件
+- UPI, October 2026: 25.47 billion transactions / ₹31.53 lakh crore / 822 million per day
   — https://entrackr.com/news/upi-hits-record-2547-bn-transactions-in-october-daily-value-crosses-rs-1-lakh-crore-12772871
-- GitHub Octoverse 2026：インド3,200万人（世界2位・+1,008万人/年）
+- GitHub Octoverse 2026: India at 32 million (second in the world, +10.08 million/year)
   — https://github.blog/news-insights/octoverse/octoverse-commits-pushes-reach-new-highs-in-2026-as-developers-build-with-agents/ / https://www.digit.in/features/general/github-octoverse-2026-india-is-the-second-largest-developer-hub-and-growing-faster-than-the-us.html
 
-**取得はすべて 2026-11-06。一次資料（RBI 原文 PDF・NPCI 発表・CERT-In 報告書本体）には当たっていない【未確認】。**
-引用した条文の文言は報道と法律事務所の解説による。**ピッチでは「報道によれば」を落とさない。**
+**Everything was retrieved on 2026-11-06. We have not consulted the primary sources (the RBI PDF
+itself, NPCI's announcement, the CERT-In report itself) [unverified].**
+The wording of the provisions quoted comes from press reports and law firm commentary.
+**In the pitch, do not drop "according to reports."**

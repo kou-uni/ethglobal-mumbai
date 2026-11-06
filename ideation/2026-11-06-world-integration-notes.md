@@ -1,71 +1,66 @@
-# World 導入の振り返り（D6・両方の World 賞で必須）
+# Retrospective on the World integration (D6, required for both World prizes)
 
-**2026-11-06 IST。書いている時点で実装済みのことだけを書く。** 未確認は未確認と書く。
-提出にそのまま貼れる英語版は末尾（§6）。
+**2026-11-06 IST. Only what is implemented as of writing is written here.** What is unverified is written as unverified.
+The English version you can paste straight into the submission is at the end (§6).
 
 ---
 
-## 1. どこから入ったか
+## 1. Where we came in
 
-`docs.world.org`（IDKit）ではなく **`auth.world.org`（Agent Pass）** から入った。
-**この2つが別の入口だと気づくのに時間がかかった。** 賞ページの「Agent Pass」で検索すると
-IDKit の記事が混ざって出てくる。
+We came in through **`auth.world.org` (Agent Pass)**, not `docs.world.org` (IDKit).
+**It took time to realize these are two different entry points.** Searching for "Agent Pass" on the prize page turns up IDKit articles mixed in.
 
-**いちばん効いたのは `/.well-known/openid-configuration` を直接読んだこと。**
-文章を読むより速く、確実だった（`grant_types_supported` に
-`urn:ietf:params:oauth:grant-type:device_code` があることを、ここで確かめた【実測】）。
+**The single most effective thing was reading `/.well-known/openid-configuration` directly.**
+Faster and more certain than reading prose (this is where we confirmed that `grant_types_supported` contains `urn:ietf:params:oauth:grant-type:device_code` [measured]).
 
-## 2. 入れてよかった点
+## 2. What was good about adopting it
 
-- **標準の OIDC そのもの。** 独自 SDK を入れずに、`fetch` と `jose` だけで終わった。
-  Broker 側の実装は `src/world.js` の 1 ファイル・約110行
-- **`device_code` グラントがあること。** Broker は画面を持たないので、
-  ブラウザのリダイレクトを前提にした方式だと設計が歪む。
-  **「機械が始めて、人が自分の端末で終える」が最初から用意されている**
-- **拒否の経路を自分で作らなくていい。** `access_denied` と `expired_token` が
-  プロトコルに入っているので、「本人が断った」と「期限が切れた」を**別のものとして**扱える。
-  我々はこの2つを別の記録として系譜に残した（`human_denied` / `proof_expired`）
-- **scope が `openid` だけ**なのは、こちらの設計（仮名しか要らない）と合っていた。
-  余計なものを要求しない作りになっている
+- **It is plain standard OIDC.** No proprietary SDK; it was done with just `fetch` and `jose`.
+  The Broker-side implementation is one file, `src/world.js`, about 110 lines
+- **The `device_code` grant exists.** The Broker has no screen, so a scheme that assumes a browser redirect distorts the design.
+  **"The machine starts it, the person finishes it on their own device" is available from the start**
+- **We did not have to build the refusal paths ourselves.** `access_denied` and `expired_token` are part of the protocol, so we can treat "the owner refused" and "it expired" as **different things**.
+  We kept these two as separate records in the trail (`human_denied` / `proof_expired`)
+- **The scope being only `openid`** matched our design (we only need a pseudonym).
+  It is built so that it asks for nothing extra
 
-## 3. 詰まった点（正直に）
+## 3. Where we got stuck (honestly)
 
-- **IDKit と Agent Pass の関係が、入口のページから読み取れない。**
-  「どちらを使うべきか」を1枚で示すページが欲しい。
-  我々は賞の要件を読んで初めて「別物」と分かった
-- **エラーが返るまで、登録が要ることに気づけない。**
-  未登録の `client_id` で `POST /api/v1/device_authorization` を叩くと
-  `400 invalid_client`（"Check the environment, registered authentication method, and credentials."）【実測】。
-  **文言自体は親切だが、「portal で登録する」という次の一手は書いていない**
-- **`verification_uri_complete` が返るかどうかが、ドキュメントから判断できなかった。**
-  QR を出す側（画面 A）は、これが有るかないかで作りが変わる。**未確認**（登録後に実測する）
-- **sector 単位の識別子がどの claim に入るか**が、実際に `id_token` を取るまで確定できなかった。
-  我々は `sub` を仮名として扱う実装にしてある。**未確認**
-- **会場の証明は mock** と聞いている。mock で device flow が最後まで回るかは**未確認**
+- **The relationship between IDKit and Agent Pass cannot be worked out from the entry pages.**
+  We want one page that shows "which one should you use."
+  We only found out they are separate products by reading the prize requirements
+- **You cannot tell that registration is required until an error comes back.**
+  Calling `POST /api/v1/device_authorization` with an unregistered `client_id` returns `400 invalid_client` ("Check the environment, registered authentication method, and credentials.") [measured].
+  **The message itself is helpful, but it does not state the next step, "register in the portal"**
+- **We could not determine from the documentation whether `verification_uri_complete` is returned.**
+  The side that shows the QR (screen A) is built differently depending on whether it is there. **Unverified** (we will measure after registration)
+- **Which claim carries the sector-scoped identifier** could not be settled until we obtained a real `id_token`.
+  Our implementation treats `sub` as the pseudonym. **Unverified**
+- **We hear that proofs at the venue are mocks.** Whether the device flow runs to the end with a mock is **unverified**
 
-## 4. 我々が置いた場所（設計の判断）
+## 4. Where we put it (a design decision)
 
-**初版は「鍵を使う直前に Agent Pass を呼ぶ」だった。これは間違いだったので直した。**
-Ledger の長押しと機能が重複し、人から見ると同じ1回の行為に2回聞かれる。
+**The first version called Agent Pass right before a key was used. That was wrong, so we fixed it.**
+It duplicates the function of the Ledger's long press, and from a person's point of view they are asked twice for a single action.
 
-| | 何を確かめるか | いつ |
+| | What it confirms | When |
 |---|---|---|
-| **World** | **誰であるか**（人であること・同じ人であること） | **星を出すとき。1回** |
-| **Ledger** | **いま、これを許すか**（範囲と期限） | **鍵を使うとき。毎回** |
+| **World** | **Who you are** (that you are a person, and the same person) | **When issuing a star. Once** |
+| **Ledger** | **Whether you permit this, now** (scope and expiry) | **Every time a key is used** |
 
-**守られる動作＝星を出すこと。** 自分の評判を賭けて「私はこれを使っている」と言う行為に
-人の証明を置いた。**鍵を使うたびには World を呼ばない。**
+**The action being protected is issuing a star.** We put proof of personhood on the act of staking your own reputation to say "I use this."
+**We do not call World every time a key is used.**
 
-## 5. 安全側の扱い
+## 5. Fail-safe handling
 
-- `id_token` は **JWKS で検証**する（`iss` / `aud` / `exp`）。読んで済ませない
-- **client secret は Broker の中だけ。** ブラウザにもスキルにも出さない
-- **同じ仮名は、同じ版に二度星を出せない**（`store.claimStar` が atomic に弾く）
-- **待ち切れないときは通さない。** 期限切れとして扱う
+- The `id_token` is **verified against the JWKS** (`iss` / `aud` / `exp`). We do not just read it
+- **The client secret stays inside the Broker.** It is never exposed to the browser or to a skill
+- **The same pseudonym cannot issue a star twice for the same version** (`store.claimStar` rejects it atomically)
+- **If we cannot wait any longer, we do not let it through.** We treat it as expired
 
 ---
 
-## 6. 提出用（英語・そのまま貼る）
+## 6. For the submission (English, paste as is)
 
 **What we built with World ID**
 

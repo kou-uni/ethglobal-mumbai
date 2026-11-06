@@ -1,136 +1,148 @@
-# AIが採点する前提で、採点基準を分析する（2026-11-06）
+# Analyzing the judging criteria on the assumption that an AI does the scoring (2026-11-06)
 
-**前提**（本人・2026-11-06）：**一次審査はAIが採点すると想定する。**
-基準の原文は `2026-11-06-submission-rules.md` §3（Technicality / Originality / Practicality /
-Usability / WOW Factor）。ここではその基準を、**「LLM が読むもの」の側から**分解する。
+**Premise** (the owner, 2026-11-06): **assume the first round of judging is scored by an AI.**
+The original criteria are in `2026-11-06-submission-rules.md` §3 (Technicality / Originality /
+Practicality / Usability / WOW Factor). Here we break those criteria down **from the side of
+"what an LLM actually reads."**
 
 ---
 
-## 1. いちばん重要な前提 — AIは、デモを見ていない
+## 1. The most important premise — the AI does not watch the demo
 
-**パートナーの審査は提出物だけで行われる**と公式に書いてある（規則 §1）。
-AI が採点するなら、見えるものはさらに狭い：
+The official rules say **partner judging is done on the submission alone** (rules §1).
+If an AI does the scoring, what it can see is narrower still:
 
-| AIが見るもの | 確度 |
+| What the AI sees | Confidence |
 |---|---|
-| 提出フォームの Name / Short description / Description / How it's made | **ほぼ確実** |
-| リポジトリの URL → **README の上から数百語** | 高い |
-| リポジトリの構造（ファイル名・ディレクトリ名・コミット履歴） | 中 |
-| 画面の画像（README に貼ってあれば。multimodal なら） | 中 |
-| **動画の中身・実機のデモ・ブースでの会話** | **ほぼ見ていない** |
+| Submission form Name / Short description / Description / How it's made | **Near certain** |
+| The repository URL → **the first few hundred words of the README** | High |
+| Repository structure (file names, directory names, commit history) | Medium |
+| Screenshots (if embedded in the README; if multimodal) | Medium |
+| **The content of the video, the live hardware demo, conversations at the booth** | **Almost certainly not seen** |
 
-**帰結：いま 2:55 の動画と実機デモに乗っている説得力は、一次採点には1点も入らない。**
-動画は Showcase と Finalist（人が見る）のためのもので、**AI採点の対象は文章と構造**。
+**Consequence: the persuasive weight currently carried by the 2:55 video and the live hardware demo
+scores zero points in the first round.**
+The video is for the Showcase and the Finalist round (where humans watch). **What AI scoring looks at
+is the prose and the structure.**
 
 ---
 
-## 2. 基準ごとに「AIが何で採点するか」
+## 2. What the AI scores, criterion by criterion
 
-### Technicality — 問題の難しさと解の洗練
+### Technicality — difficulty of the problem and sophistication of the solution
 
-LLM は難しさを**推定できない**。書いてあるかどうかで決まる。
-いまの `How it's made` は「何を作ったか」は書いてあるが、**「何が難しかったか」が無い。**
+An LLM **cannot estimate** difficulty. It is decided by whether it is written down.
+The current `How it's made` says what we built, but **it does not say what was hard.**
 
-**足す（3つだけ、名指しで）：**
-1. **画面と署名が食い違えない**ようにした（端末内で4つの値から EIP-712 ダイジェストを計算。
-   ホストはダイジェストを送らない＝ブラインド署名が構造的に不可能）
-2. **確認と記録のあいだに `await` を挟まない**回数制約（100本同時でも上限を超えない。テストで実証）
-3. **フォールバックを作らない**こと自体が難しい（0Gに届かなければ `STOPPED`。
-   既定値で通さない。**偽の判断は、判断の不在より悪い**）
+**Add (just three, named explicitly):**
+1. **The screen and the signature cannot disagree** (the EIP-712 digest is computed on the device from
+   four values. The host never sends a digest = blind signing is structurally impossible)
+2. The **call budget constraint with no `await` between the check and the record** (100 concurrent
+   requests still cannot exceed the limit. Proven by test)
+3. **Not building a fallback** is itself hard (if 0G is unreachable, `STOPPED`.
+   We do not let things through on a default value. **A fake judgment is worse than no judgment**)
 
-### Originality — 新しさ
+### Originality — newness
 
-LLM は「新しい」を**周辺との差分**でしか判定できない。差分が書いていなければ既存品に丸められる。
-`market-and-model.html` §01 に隣接3市場の表があるのに、**提出文に無い。** 1段落で入れる。
+An LLM can only judge "new" **as a difference from the neighbors**. If the difference is not written,
+it gets rounded off into an existing product.
+`market-and-model.html` §01 has a table of the three adjacent markets, but **it is not in the
+submission text.** Put it in as one paragraph.
 
 > Secrets managers decide where a key lives. Certificate systems decide which machine it is.
 > Agent payment rails decide that it can pay. **None of them decide whether this one request,
 > right now, was allowed by a human — and none of them keep the refusals.**
 
-### Practicality — 完成しているか／対象の人が今日使えるか
+### Practicality — is it finished / can the target user use it today
 
-**配点がいちばん取りやすく、いちばん落としやすい。** LLM は「今日使えるか」を
-**検証可能な信号の密度**で代理評価する。いま手元にあるのに提出文に出ていない信号：
+**The easiest points to win and the easiest to drop.** An LLM proxies "can this be used today" by
+**the density of verifiable signals**. Signals we already have in hand but that are not in the
+submission text:
 
-| 信号 | 値 |
+| Signal | Value |
 |---|---|
-| 本番チェーンに乗った封印の tx | `0x74c7cdf9…` / block **64103318** / `status 0x1` |
-| 0G Storage の root hash | `0xc0e0c7a9…` |
-| テスト | **50/50** |
-| 本番 0G への実測 | **467件**、1判定 2.0秒・**$0.000036** |
-| 触れる画面（**3本とも 200 を確認済 2026-11-06**） | `/ui/index.html` `/ui/stars.html` `/web/gate.html` |
-| 再現手順 | **3コマンド**（`START-HERE.md` §2） |
+| The seal tx on mainnet | `0x74c7cdf9…` / block **64103318** / `status 0x1` |
+| 0G Storage root hash | `0xc0e0c7a9…` |
+| Tests | **50/50** |
+| Measured against production 0G | **467 calls**, 2.0 s and **$0.000036** per judgment |
+| Screens you can touch (**all three confirmed 200 on 2026-11-06**) | `/ui/index.html` `/ui/stars.html` `/web/gate.html` |
+| Reproduction steps | **3 commands** (`START-HERE.md` §2) |
 
-**ハッシュと件数は、LLM にとって「検証できる形をしている」というだけで効く。**
-形容詞（robust, production-ready）は逆効果。**数字とハッシュに置き換える。**
+**Hashes and counts work on an LLM simply because they have the shape of something verifiable.**
+Adjectives (robust, production-ready) backfire. **Replace them with numbers and hashes.**
 
-### Usability (UI/UX/DX) — ここがいま、いちばん低く出る
+### Usability (UI/UX/DX) — this is where we currently score lowest
 
-**README に画像が0枚。** AI は画面を見ずに UI を採点できない。
-`assets/` に SVG はあるが README に貼っていない。
+**Zero images in the README.** An AI cannot score a UI it does not see.
+There are SVGs in `assets/`, but they are not embedded in the README.
 
-**手（30分）：**
-- **スクリーンショット3枚**を README 上部に貼る（門の4通りの止まり方／端末の4行／灯が消える前後）
-- **DX を3行で**：`git clone` → `npm i` → `node src/server.js`、そして `npm test` が 50/50
-- UI が日本語なら、**英語のキャプションを画像の下に1行**付ける（AIは画像内の日本語より
-  キャプションを読む）
+**Work (30 minutes):**
+- Embed **three screenshots** at the top of the README (the four ways the gate stops / the four lines
+  on the device / before and after a flame goes out)
+- **DX in three lines**: `git clone` → `npm i` → `node src/server.js`, and `npm test` is 50/50
+- If the UI is in Japanese, **add a one-line English caption under the image** (the AI reads the
+  caption rather than the Japanese inside the image)
 
-### WOW Factor — 1文で決まる。位置が全て
+### WOW Factor — decided by one sentence. Position is everything
 
-LLM は長文の**最初**に強く引きずられる（位置バイアス）。
-我々の最強の1文は既にある：**「レビューの点数は消えない。灯は消える。だから意味がある。」**
+An LLM is strongly pulled by **the beginning** of a long text (position bias).
+Our strongest sentence already exists: **"Review scores never go away. Flames go out. That is why
+they mean something."**
 
-**いまこれは README の11行目**にあり、その上には日本語の見出しと表がある。**最初の3行に上げる。**
+**Right now it is on line 11 of the README**, with a Japanese heading and a table above it.
+**Move it into the first three lines.**
 
 ---
 
-## 3. 構造的な最大の問題 — README の第一画面
+## 3. The biggest structural problem — the first screen of the README
 
-**いまの README の最初の200語は、`ideation/` 20本の日本語の目次である。**
+**The first 200 words of the current README are a Japanese table of contents for 20 `ideation/` files.**
 
-AI採点者にも、急いでいる人間の審査員にも、これは
-**「プロダクト」ではなく「メモの山」に見える。** 日本語比率 54%。
+To an AI scorer, and to a human judge in a hurry, this looks like
+**a pile of notes, not a product.** Japanese ratio: 54%.
 
-**直す（最優先）：** README の先頭を差し替える。
-1. 英語1文のコピー
-2. 1段落の英語の説明（＝提出フォームの Short description と同じ文）
-3. **スクリーンショット3枚**
-4. **Try it now**（デモURL 3本 ＋ 3コマンドの再現手順）
-5. **Verifiable facts**（tx ハッシュ・block・テスト 50/50・実測467件）
-6. そのあとに「What was hard / Why it's new」
-7. **目次は、その下へ。** 1行断る：
+**Fix (highest priority):** replace the top of the README.
+1. One sentence of English copy
+2. One paragraph of English explanation (= the same text as the submission form's Short description)
+3. **Three screenshots**
+4. **Try it now** (3 demo URLs + the 3-command reproduction steps)
+5. **Verifiable facts** (tx hash, block, tests 50/50, 467 measured calls)
+6. Then "What was hard / Why it's new"
+7. **The table of contents goes below that.** With one line of explanation:
    "Design records below are in Japanese — that is the team's working language."
 
-**日本語の全訳はしない。** 残り時間でやる価値は、冒頭の英語化とスクショに全部ある。
+**Do not translate all of the Japanese.** All of the value left in the remaining time is in
+English-ifying the opening and in the screenshots.
 
 ---
 
-## 4. AI利用の開示が、減点に転びうる点
+## 4. Where the AI-usage disclosure could turn into a deduction
 
-規則は **「AI だけで作ったものは、パートナー賞と Finalist の対象外になりうる」**
-と同時に **「spec・プロンプト・計画を全部リポジトリに入れよ。審査員は生成物ではなく、
-どう指示したかを見る」** と書いている。
+The rules say **"anything made purely by AI may be excluded from partner prizes and the Finalist
+round"** and at the same time **"put all specs, prompts and plans in the repository. Judges look at
+how you instructed it, not at the output."**
 
-**いまの開示（README §AI ツールの使い方）は良い。だが足りないものが1つある：
-「人がどこで判断を変えたか」の具体例。**
+**The current disclosure (README §How we used AI tools) is good. But one thing is missing:
+a concrete example of where a human changed a decision.**
 
-**足す（2行）：**
-- **minta の PR #4 で設計が変わった**（「星は約束ではなく事実にする」）——人の提案で方針が反転した
-- **決定を23件、却下の理由つきで残している**（`ideation/2026-11-06-decisions.md`）。
-  **捨てたもの**：預け金・保険・決済額の%課金・スタックチャン・ENS
+**Add (two lines):**
+- **The design changed in minta's PR #4** ("make stars facts, not promises") — a human proposal
+  reversed the direction
+- **We keep 23 decisions, with reasons for the rejections** (`ideation/2026-11-06-decisions.md`).
+  **What we threw away**: escrow deposits, insurance, percentage-of-payment pricing, Stack-chan, ENS
 
-**「何を却下したか」は、AI だけで作ったものには出てこない。** そこが人の痕跡として最も強い。
+**"What we rejected" does not appear in something made purely by AI.** That is the strongest trace
+of a human.
 
----
+## 5. Order of work (priority for the remaining time)
 
-## 5. やる順（残り時間での優先度）
-
-| | やること | 時間 | 効く基準 |
+| | What to do | Time | Criteria it hits |
 |---|---|---|---|
-| 1 | **README の第一画面を英語＋スクショ3枚に差し替え** | 40分 | WOW / Usability / Practicality |
-| 2 | 提出文に **tx ハッシュ・block・50/50・467件** を入れる | 15分 | Practicality / Technicality |
-| 3 | 提出文に **「何が難しかったか」3つ**と**隣接3市場との差分1段落** | 20分 | Technicality / Originality |
-| 4 | 開示に **「人が判断を変えた具体例」2行** | 5分 | 失格回避 |
-| 5 | インドの一致（`2026-11-06-why-mumbai.md`）を**1枚20秒**で足す | 10分 | Originality / WOW |
+| 1 | **Replace the first screen of the README with English + 3 screenshots** | 40 min | WOW / Usability / Practicality |
+| 2 | Put **the tx hash, block, 50/50 and 467 calls** into the submission text | 15 min | Practicality / Technicality |
+| 3 | Put **the three "what was hard" items** and **one paragraph of difference from the three adjacent markets** into the submission text | 20 min | Technicality / Originality |
+| 4 | Add **two lines of "a concrete example where a human changed a decision"** to the disclosure | 5 min | Avoiding disqualification |
+| 5 | Add the India alignment (`2026-11-06-why-mumbai.md`) as **one slide, 20 seconds** | 10 min | Originality / WOW |
 
-**1〜4 は提出文と README だけで、コードを触らない。** 撮影（22:00 IST）の前に終わる。
+**1 through 4 touch only the submission text and the README, no code.** They finish before filming
+(22:00 IST).

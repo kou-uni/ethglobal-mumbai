@@ -1,57 +1,57 @@
-# アーキテクチャ（叩き台 v2）— 2026-11-06
+# Architecture (draft v2) — 2026-11-06
 
-> **【古い】2026-11-06 朝に `2026-11-06-architecture-v3.md` に置き換えた。**
-> v2 の図には、捨てたもの（M5Stick・スタックチャン・ENS・ViolationRegistry）が残っている。
-> **いまの正は v3。** ここは経緯として残す。
+> **[OUTDATED] Replaced by `2026-11-06-architecture-v3.md` on the morning of 2026-11-06.**
+> The v2 diagram still contains things we threw away (M5Stick, Stack-chan, ENS, ViolationRegistry).
+> **v3 is the current truth.** This is kept as a record of how we got here.
 
-> v2: HW は **Ledger に絞る**。他の機器は「アレンジ（任意）」。Broker の位置付けを追記。図は `2026-11-06-architecture-v2.html`（ブラウザで開く）
+> v2: for hardware, **narrow down to the Ledger**. Other devices are "optional add-ons." Added a note on where the Broker sits. The diagram is `2026-11-06-architecture-v2.html` (open it in a browser)
 
-> 統合版（`2026-11-06-integrated.md`）の仕組みを、部品と流れに落としたもの。
-> **未決・未確認には印を付けた。** 推測で埋めていない。
+> This takes the mechanism from the integrated version (`2026-11-06-integrated.md`) and breaks it down into parts and flows.
+> **Undecided and unverified items are marked.** Nothing is filled in by guesswork.
 
-## 0. 原則（ここから外れる設計はしない）
-1. **元鍵は PC に置かない。** PC の上のAI（スキル・エージェント）は信頼しない前提
-2. **証明できる裏切りだけを罰し、疑わしいものは知らせるだけ**
-3. **人間の情報は持たない。** 事業者に渡るのはゼロ知識の証明と仮名だけ
-4. **「誰が自分の知り合いか」は手元から出さない。** 評判は見る人の端末で計算する
+## 0. Principles (no design departs from these)
+1. **The root key is not kept on the PC.** We assume the AI on the PC (skills, agents) is not trusted
+2. **Punish only provable betrayal; for anything merely suspicious, just notify**
+3. **Hold no human information.** What reaches the operator is only a zero-knowledge proof and a pseudonym
+4. **"Who my acquaintances are" never leaves the device.** Reputation is computed on the viewer's device
 
-## 1. 全体図
+## 1. Overall diagram
 
 ```mermaid
 flowchart LR
-  subgraph PC["PC（信頼しない）"]
-    SK["スキル / エージェント<br/>要求に署名する"]
+  subgraph PC["PC (not trusted)"]
+    SK["Skill / agent<br/>signs the request"]
   end
-  subgraph HAND["手元（AIが届かない）"]
-    LG["Ledger<br/>元鍵・子トークンに署名"]
-    M5["M5Stick<br/>立会ボタン"]
-    SC["スタックチャン<br/>声で警告"]
-    SW["M5 stopwatch<br/>トークン残り寿命"]
-    BR["鍵解放側 Broker<br/>範囲チェック・代理実行"]
-    GR["自分のつながり<br/>（端末内のみ）"]
+  subgraph HAND["In hand (out of the AI's reach)"]
+    LG["Ledger<br/>root key, signs child tokens"]
+    M5["M5Stick<br/>attestation button"]
+    SC["Stack-chan<br/>warns by voice"]
+    SW["M5 stopwatch<br/>token time remaining"]
+    BR["Key-release-side Broker<br/>scope check, proxied execution"]
+    GR["My own connections<br/>(on-device only)"]
   end
-  subgraph CHAIN["0G Galileo（EVM）"]
-    ID["ERC-8004 Identity<br/>スキルの agentId"]
-    VR["VouchRegistry<br/>仮名×agentId×濃さ"]
-    VL["ViolationRegistry<br/>違反の証拠"]
-    RP["ERC-8004 Reputation<br/>違反から自動で書く"]
+  subgraph CHAIN["0G Galileo (EVM)"]
+    ID["ERC-8004 Identity<br/>the skill's agentId"]
+    VR["VouchRegistry<br/>pseudonym x agentId x strength"]
+    VL["ViolationRegistry<br/>evidence of violations"]
+    RP["ERC-8004 Reputation<br/>written automatically from violations"]
   end
   subgraph ZG["0G"]
-    ST["Storage Log層<br/>系譜（追記専用）"]
-    TE["Private Computer<br/>TeeML：返答を読む"]
+    ST["Storage Log layer<br/>trail (append-only)"]
+    TE["Private Computer<br/>TeeML: reads the response"]
   end
-  WD["World ID<br/>ゼロ知識の人間証明"]
-  ENS["ENS<br/>スキルの名前・宣言のハッシュ"]
+  WD["World ID<br/>zero-knowledge proof of personhood"]
+  ENS["ENS<br/>the skill's name, hash of the declaration"]
 
-  SK -- "use(鍵, 宛先, 操作)" --> BR
+  SK -- "use(key, destination, operation)" --> BR
   BR --> LG
   BR --> M5
-  BR -- 実行 --> API[(外部API)]
+  BR -- execute --> API[(external API)]
   BR --> ST
   BR --> TE
-  TE -- 疑わしい --> SC
+  TE -- suspicious --> SC
   BR --> SW
-  BR -- 範囲外 --> VL
+  BR -- out of scope --> VL
   VL --> VR
   VL --> RP
   WD --> VR
@@ -60,100 +60,100 @@ flowchart LR
   GR --> BR
 ```
 
-## 2. 部品
+## 2. Parts
 
-### 手元（AIが届かない側）
-| 部品 | 持つもの | やること |
+### In hand (the side the AI cannot reach)
+| Part | What it holds | What it does |
 |---|---|---|
-| **Ledger** | 元鍵 | 子トークンに EIP-712 で署名。**範囲（鍵・宛先・回数・期限）が Ledger の画面に出る** ※EIP-712 の表示形式は要確認 |
-| **Broker（鍵解放側）** | 子トークン・宣言 | 要求と範囲を突き合わせる／範囲内なら**自分で API を叩く**（平文は PC を通らない）／系譜を書く ※**どの機械で動かすか未決**（PC の外であること） |
-| **（Ledger）立会** | — | 危ない使用は Ledger の画面で範囲を見て、ボタンで承認。承認しなければ拒否 |
-| **アレンジ（任意）** | — | 通知や立会ができる機器なら何でも足せる。例: M5Stick（立会）／スタックチャン（声で警告）／時計（トークンの残り寿命） |
-| **自分のつながり** | 知り合いの仮名と濃さ | **端末の外に出さない。** 評判の計算はここで |
+| **Ledger** | The root key | Signs child tokens with EIP-712. **The scope (key, destination, call budget, expiry) appears on the Ledger's screen** ※the EIP-712 display format needs checking |
+| **Broker (key-release side)** | Child tokens, declarations | Checks the request against the scope / if within scope, **calls the API itself** (plaintext never passes through the PC) / writes the trail ※**which machine it runs on is undecided** (it must be outside the PC) |
+| **(Ledger) attestation** | — | For dangerous uses, look at the scope on the Ledger's screen and approve with a button. Without approval, it is refused |
+| **Optional add-ons** | — | Any device that can notify or attest can be added. Examples: M5Stick (attestation) / Stack-chan (warns by voice) / a watch (token time remaining) |
+| **My own connections** | Acquaintances' pseudonyms and strengths | **Never leaves the device.** Reputation is computed here |
 
-### チェーン（0G Galileo。EVM）
-| コントラクト | 中身 |
+### Chain (0G Galileo. EVM)
+| Contract | Contents |
 |---|---|
-| ERC-8004 Identity（**既存・デプロイ済み** `0x8004A818…`） | スキルの agentId。agentWallet＝要求に署名する鍵 |
-| ERC-8004 Reputation（**既存** `0x8004B663…`） | 人が書かない。**違反から自動で書く**だけ |
-| **VouchRegistry（新規）** | `(nullifier, agentId, 濃さ, VCハッシュ)`。1人1AIに1票をここで守る |
-| **ViolationRegistry（新規）** | 範囲外の要求（スキルの署名付き）＋子トークン。誰でも検証できる証拠 |
+| ERC-8004 Identity (**existing, already deployed** `0x8004A818…`) | The skill's agentId. agentWallet = the key that signs requests |
+| ERC-8004 Reputation (**existing** `0x8004B663…`) | Humans do not write to it. **Only written automatically from violations** |
+| **VouchRegistry (new)** | `(nullifier, agentId, strength, VC hash)`. One vote per person per AI is enforced here |
+| **ViolationRegistry (new)** | Out-of-scope requests (with the skill's signature) plus the child token. Evidence anyone can verify |
 
-### 外部
-| 部品 | 役 |
+### External
+| Part | Role |
 |---|---|
-| **World ID** | ①使用の瞬間の人間証明 ②保証人の仮名。※会場は mock proof |
-| **ENS** | スキルの名前（例 `weather.skills.<x>.eth`）。text record に agentId と宣言のハッシュ |
-| **0G Storage** | 系譜（Log層・追記専用）。root hash を提出物に出す |
-| **0G Private Computer** | 返ってきた中身を TeeML のモデルが読み、疑わしければ知らせる。request ID を系譜に入れる |
+| **World ID** | (1) proof of personhood at the moment of use (2) the voucher's pseudonym. ※at the venue it is a mock proof |
+| **ENS** | The skill's name (e.g. `weather.skills.<x>.eth`). agentId and the hash of the declaration in a text record |
+| **0G Storage** | The trail (Log layer, append-only). The root hash goes into the submission |
+| **0G Private Computer** | A TeeML model reads the returned content and notifies if it is suspicious. The request ID goes into the trail |
 
-## 3. 4つの流れ
+## 3. Four flows
 
-### A. スキルの登録
-1. 開発者が ERC-8004 Identity に登録 → agentId
-2. **宣言**（使う鍵・宛先・回数・期限）のハッシュを ENS の text record に置く
+### A. Registering a skill
+1. The developer registers in ERC-8004 Identity → agentId
+2. Put the hash of the **declaration** (keys used, destinations, call budget, expiry) in an ENS text record
 
-### B. 保証する（人 → AI）
-1. 保証人が World ID の証明を出す。**action = `vouch`（固定）**、signal = `hash(agentId, 濃さ)`
-2. 証明から出る nullifier が**アプリ内で固定の仮名**になる（実名には結びつかない）
-3. VouchRegistry に `(nullifier, agentId, 濃さ)`。同じ組は1回だけ
-4. 書式は VC（W3C Verifiable Credentials）に合わせ、ハッシュを置く。**VC は運ぶだけ。重みと罰はチェーン**
+### B. Vouching (person → AI)
+1. The voucher produces a World ID proof. **action = `vouch` (fixed)**, signal = `hash(agentId, strength)`
+2. The nullifier derived from the proof becomes **a pseudonym that is fixed within the app** (it is not linked to a real name)
+3. `(nullifier, agentId, strength)` goes into VouchRegistry. The same pair only once
+4. The format follows VC (W3C Verifiable Credentials), and the hash is placed on chain. **The VC only carries; the weight and the penalty are on chain**
 
-**仮名と知り合いの対応づけ**: 会ったときに仮名を交換する（M5 同士・QR 等。叩き台）。
-交換した記録が「会った」の根拠になり、**端末の中だけ**に残る。
+**Mapping pseudonyms to acquaintances**: exchange pseudonyms when you meet (between M5s, by QR, etc. Draft).
+The record of the exchange is what grounds "we met," and it stays **only inside the device**.
 
-### C. 使う（正常系）
-1. スキルが `use(鍵, 宛先, 操作)` を署名付きで Broker に送る
-2. Broker が手元で重みを計算：VouchRegistry のうち、**自分のつながりにある仮名**の保証だけを濃さで足す
-3. 重み → 子トークンの太さ。Ledger が署名（範囲が画面に出る）。stopwatch に寿命
-4. 危ない操作なら：World ID（signal = 要求のハッシュ）＋ M5Stick の立会
-5. Broker が API を実行 → 返却データのハッシュに署名
-6. 系譜を 0G Storage へ（下の5点を同じ要求ハッシュでつなぐ）
-7. TeeML が返答を読む → 疑わしければスタックチャンが警告（**重みは動かさない**）
+### C. Using it (the normal path)
+1. The skill sends `use(key, destination, operation)` to the Broker with a signature
+2. The Broker computes the weight locally: among the vouches in VouchRegistry, it sums only those from **pseudonyms in its own connections**, by strength
+3. Weight → the thickness of the child token. The Ledger signs (the scope appears on the screen). The stopwatch gets the lifetime
+4. For a dangerous operation: World ID (signal = hash of the request) + M5Stick attestation
+5. The Broker executes the API → signs the hash of the returned data
+6. The trail goes to 0G Storage (the five items below are linked by the same request hash)
+7. TeeML reads the response → if suspicious, Stack-chan warns (**the weight does not move**)
 
-**系譜の5点**: ①nullifier（誰が許した）②子トークン（何を・どこへ・いつまで）③実行した呼び出し ④返却ハッシュ＋署名（内容証明）⑤TeeML の request ID
+**The five items in the trail**: (1) nullifier (who permitted it) (2) the child token (what, to where, until when) (3) the call that was executed (4) the returned hash plus a signature (proof of content) (5) the TeeML request ID
 
-### D. 違反（範囲外の要求）
-1. Broker が範囲外を検出 → 拒否
-2. **スキルの署名付き要求＋子トークン**を ViolationRegistry へ。誰でも「範囲外だった」と検証できる
-3. 自動で：スキルに違反の印／ERC-8004 Reputation に負の記録／**保証していた仮名の重みが下がる**
-4. その仮名が保証していた他のスキルは、次から子トークンが細くなる
+### D. Violation (an out-of-scope request)
+1. The Broker detects out-of-scope → refuses
+2. **The signed request from the skill plus the child token** go to ViolationRegistry. Anyone can verify that it was out of scope
+3. Automatically: a violation mark on the skill / a negative record in ERC-8004 Reputation / **the weight of the pseudonyms that vouched for it goes down**
+4. Other skills that pseudonym vouched for get thinner child tokens from then on
 
-## 4. 何を、どこに置くか
-| データ | 置き場所 | 理由 |
+## 4. What goes where
+| Data | Location | Reason |
 |---|---|---|
-| 元鍵 | Ledger | AIが届かない |
-| 平文の API キー | Broker の中だけ | PC を通さない |
-| 自分のつながり | 自分の端末 | 外に出す理由がない |
-| 保証（仮名×AI×濃さ） | 0G チェーン | 誰でも数えられる必要がある |
-| 違反の証拠 | 0G チェーン | 誰でも検証できる必要がある |
-| 系譜の本体 | 0G Storage | 量が多い。root hash だけチェーンへ |
-| 人間の名前・顔 | **どこにも置かない** | ゼロ知識証明だけ |
+| The root key | Ledger | Out of the AI's reach |
+| API keys in plaintext | Only inside the Broker | Does not pass through the PC |
+| My own connections | My own device | No reason to let it out |
+| Vouches (pseudonym x AI x strength) | 0G chain | Anyone needs to be able to count them |
+| Evidence of violations | 0G chain | Anyone needs to be able to verify it |
+| The body of the trail | 0G Storage | It is large. Only the root hash goes on chain |
+| Human names and faces | **Nowhere** | Zero-knowledge proofs only |
 
-## 5. ゼロ知識をどこに使うか
-- **使う**: ①使用の瞬間の人間証明 ②保証人の仮名 — どちらも World ID の流用で、新しく作らない
-- **使わない**: 「知り合いが何人保証しているか」— 見る人が手元で計算すれば済む
-- **36時間では作らない**: API 応答の内容証明（zkTLS）→ 自前署名で代える／AI の判断の証明（zkML）→ TeeML で代える
+## 5. Where zero-knowledge is used
+- **Used**: (1) proof of personhood at the moment of use (2) the voucher's pseudonym — both reuse World ID; we build nothing new
+- **Not used**: "how many acquaintances have vouched" — the viewer can compute it locally
+- **Not building in 36 hours**: proof of API response content (zkTLS) → replaced with our own signature / proof of the AI's judgment (zkML) → replaced with TeeML
 
-## 6. スポンサーへの写り方
-| 社 | どこに出るか | 提出物 |
+## 6. How it looks to sponsors
+| Company | Where it appears | Submission |
 |---|---|---|
-| World | B-1（保証）／C-4（立会）／**D（拒否パス）** | Agent Pass の統合＋拒否の実演 |
-| ENS | A-2（スキルの名前と宣言） | ENSv2 の利用 |
-| 0G | Storage の系譜／TeeML／ERC-8004（Galileo）／実機 | request ID・root hash・コントラクトアドレス |
+| World | B-1 (vouching) / C-4 (attestation) / **D (the refusal path)** | Agent Pass integration plus a live demonstration of refusal |
+| ENS | A-2 (the skill's name and declaration) | Use of ENSv2 |
+| 0G | The trail in Storage / TeeML / ERC-8004 (Galileo) / the real device | Request ID, root hash, contract addresses |
 
-## 6.5 Broker の位置付け（提案・未合意）
-- **サービスとして提供する。ただし Broker 単独では鍵を開けない。** 鍵（DEK）を 2-of-2 に割り、片方は Ledger、片方は Broker
-- 運営者でも単独では平文を見られない → 「事業者は持たない」が守れる
-- 提供者はスキル市場の運営者など。**B2B の「信用の層」の本体**になる
-- 端末内（PC の別プロセス）は不可: PC の上のAIから届く。別端末は一般の人には重い
-- 36時間のデモ: 片方の PC を「サービス側」に見立てて動かす。本番は TEE に載せる（TEE の提供元は未調査）
+## 6.5 Where the Broker sits (proposal, not agreed)
+- **Offer it as a service. But the Broker alone cannot open the key.** Split the key (DEK) 2-of-2: one half on the Ledger, one half on the Broker
+- Even the operator cannot see plaintext alone → "the operator does not hold it" holds
+- Providers would be skill marketplace operators and the like. **This becomes the core of the B2B "trust layer"**
+- On-device (a separate process on the PC) is not acceptable: the AI on the PC can reach it. A separate device is heavy for ordinary people
+- The 36-hour demo: use a second PC as a stand-in for "the service side." In production it runs in a TEE (the TEE provider has not been researched)
 
-## 7. 未決・未確認
-- Broker: 上の提案（サービス＋2-of-2）で合意するか
-- Ledger の EIP-712 表示で、範囲がどこまで読める形で出るか
-- 子トークンの方式：Ledger で都度署名か、Macaroon / UCAN 型の減衰か
-- World ID の nullifier を action 固定で仮名として使う設計が、Agent Pass / IDKit の規約・API で成り立つか
-- ENSv2 のチェーンと 0G Galileo の行き来（text record で参照する想定）
-- 重みの式（濃さ3段の点数・違反でどれだけ下げるか）
-- 仮名を交換する手段（QR が基本。機器を足すアレンジもあり）
+## 7. Undecided and unverified
+- Broker: whether we agree on the proposal above (service + 2-of-2)
+- How much of the scope is actually readable in the Ledger's EIP-712 display
+- The child token scheme: signing on the Ledger each time, or Macaroon / UCAN-style attenuation
+- Whether the design of using a World ID nullifier with a fixed action as a pseudonym holds under the Agent Pass / IDKit terms and API
+- Moving between the ENSv2 chain and 0G Galileo (assumed to be referenced via a text record)
+- The weight formula (points for the three strength tiers, how far a violation drops it)
+- The means of exchanging pseudonyms (QR as the base. Add-on devices are also an option)

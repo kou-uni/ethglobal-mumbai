@@ -1,81 +1,93 @@
-# お金の流れの再評価（2026-11-06 朝 IST）
+# Re-evaluating the money flow (2026-11-06 morning IST)
 
-**きっかけ**: 本人「お金の流れやその理由、サステナブルとなるための確証やその価格妥当性を
-今一度評価してほしい」。`2026-11-06-market-and-model.html` を原価まで下ろして見直した。
-
----
-
-## 1. 確証が1つ増えた — 原価は論点ではなかった
-
-→ 決定22。**1判定 $0.000036（0.0056円）。実測。**
-
-資料は「原価の幅10倍を潰すのが値付けの第一歩」と書いていた。潰したら、
-**第一歩そのものが消えた。** $9/月の上限まで使われても粗利80%、無料枠は月$0.07。
-
-**これは良い知らせだが、落とし穴でもある。** 原価が無視できる商品は、
-**価格を原価から説明できない。** いまの資料には「なぜ $9 なのか」の根拠が
-原価側にしか無い（「粗利が出るから」）。買い手側の根拠はまだ1行も無い。
+**Trigger**: the owner — "I want you to re-evaluate the money flow, the reasons behind it,
+the evidence that it is sustainable, and whether the pricing holds up."
+We took `2026-11-06-market-and-model.html` back down to unit cost and went over it again.
 
 ---
 
-## 2. 直すべき矛盾が1つある — A は「止めるほど損をする」構造が残っている
+## 1. One more thing is now verified — unit cost was never the issue
 
-決定16で **「決済額の%を取らない。流量が収益になった瞬間、止めるほど損をする会社になる」**
-と決めた。しかし収益A の定義は **「判定の従量。重い判定だけ数える」**。
+→ Decision 22. **$0.000036 (0.0056 yen) per judgment. Measured.**
 
-**通った判定だけを数えるなら、構造は決済手数料と同じだ。** 止めれば止めるほど売上が減る。
-%か固定かの違いでしかなく、決定16が消そうとしたものは消えていない。
+The deck said "closing the 10x spread in unit cost is the first step in pricing."
+Once we closed it, **the first step itself disappeared.** Even if a user maxes out the
+$9/month plan, gross margin is 80%, and the free tier costs $0.07 a month.
 
-**叩き台（×なら戻す）: `DENIED` と `STOPPED` も1判定として課金する。**
-- 判断を求められた回数に値札が付く。**結末がどちらでも収益は同じ**＝止める動機が歪まない
-- 原価の側でも正しい。**拒否の判定にも 0G の推論は同じだけかかっている**（$0.000036）
-- 言い方が強くなる:「**我々は、通した数ではなく、考えた数で課金します**」
-- 反証: 利用者から見ると「止められた上に課金された」。→ **違反（スキルが範囲を外れた）の
-  判定は無料**にする手もある。悪いのは利用者ではなくスキルなので、こちらのほうが筋がいい
+**This is good news, but it is also a trap.** A product whose unit cost is negligible
+**cannot explain its price from unit cost.** In the current deck, the only justification for
+"why $9" is on the cost side ("because it leaves a margin"). There is not one line of
+justification from the buyer's side yet.
 
-## 3. 思想と衝突しかけているものが1つ — B（灯の掲示 $29/月）
+---
 
-決定「**灯を買えるようにしない。金で付く灯は冷たい**」と、
-B「**灯の掲示に $29/月**」は、外から見ると区別がつかない。
-星の数は買えなくても、**掲示が有料なら、払わない作り手の灯は見えない。見えない灯は無いのと同じ。**
+## 2. There is one contradiction to fix — A still has a "we lose money by stopping things" structure
 
-**叩き台: 灯そのものは常に誰でも無料で見える。$29 は「自分のページに貼るバッジ」と
-「版ごとの推移・誰が消えたかの分析」に付ける。**
-これなら売っているのは灯ではなく**見せる手間と、自分用の鏡**で、Vanta と同じ棚に乗る
-（Vanta も監査そのものではなく、見せる作業を売っている）。
+Decision 16 said **"we do not take a percentage of payment volume. The moment flow becomes
+revenue, we become a company that loses money by stopping things."**
+But revenue stream A is defined as **"per-judgment usage pricing. Only heavy judgments count."**
 
-## 4. 未確認が1つ増えた — C（$20k/年）は負債になりうる
+**If we only count the judgments that went through, the structure is the same as a payment fee.**
+The more we stop, the less revenue. It is only the difference between a percentage and a flat fee,
+and what Decision 16 tried to eliminate has not been eliminated.
 
-C は「系譜の保全（監査に出せる形）」を含む。だが **0G Storage の保存料が
-一回払いか継続課金かを、我々はまだ確かめていない【未確認】。**
-**永久保存を売って、こちらの支払いが継続なら、解約後もコストだけが残る。**
-調べるまで、C の説明に「永久」と書かない。書くなら「契約期間中」。
+**Proposal (revert if rejected): bill `DENIED` and `STOPPED` as judgments too.**
+- The price tag is attached to the number of times a decision was asked for. **Revenue is the same
+  whichever way it ends** = the incentive to stop is not distorted
+- It is also correct on the cost side. **A denial judgment costs exactly the same 0G inference**
+  ($0.000036)
+- The phrasing gets stronger: "**we charge for the number of things we thought about, not the number
+  we let through**"
+- Counter-argument: from the user's point of view it reads as "I got blocked and billed for it."
+  → one option is to **make judgments on violations (where the skill went outside its scope) free**.
+  The one at fault is the skill, not the user, so this is the cleaner line
 
-## 5. 価格妥当性 — $9/月の比較対象は、SaaS ではなく端末
+## 3. One thing is on a collision course with the philosophy — B (flame display, $29/month)
 
-P1（鍵の持ち主）がいちばん最近払った似た支出は、**ハードウェアウォレット本体の買い切り**だ。
-月額は、金額ではなく**形が**重い。
+The decision **"do not let people buy flames. A flame bought with money is cold"** and
+B, **"$29/month for flame display,"** are indistinguishable from the outside.
+Even if the star count cannot be bought, **if display costs money then the flames of makers who do
+not pay are invisible. An invisible flame is the same as no flame.**
 
-| 案 | 形 | 効き方 |
+**Proposal: the flame itself is always visible to anyone, for free. The $29 buys "a badge you embed
+on your own page" and "per-version trend analysis — who went out."**
+Then what we sell is not the flame but **the work of displaying it, and a mirror for yourself**,
+which puts us on the same shelf as Vanta (Vanta also sells the work of showing, not the audit itself).
+
+## 4. One more unverified item — C ($20k/year) could become a liability
+
+C includes "preservation of the trail (in a form you can hand to an auditor)." But **we have not yet
+confirmed whether 0G Storage's storage fee is a one-time payment or a recurring charge [unverified].**
+**If we sell permanent preservation and our own payment is recurring, only the cost remains after
+a customer cancels.**
+Until we check, do not write "permanent" in the description of C. If we write anything, write
+"for the duration of the contract."
+
+## 5. Price validity — the comparison for $9/month is a device, not SaaS
+
+The most recent similar spend by P1 (the key holder) is **an outright purchase of a hardware wallet**.
+For a monthly plan, **the shape** matters more than the amount.
+
+| Option | Shape | How it works |
 |---|---|---|
-| 現行 $9/月 | 継続 | 粗利80%。だが「もう1個サブスクが増える」 |
-| **年払い $79** | 1回×毎年 | **端末1台と同じ値段**。比較が成立する。$9×12=$108 より安く見えて、解約率が消える |
-| D（端末同梱）を先に | 相手が払う | **P1 は何も払わない。** 決定の数が減る。§05 の逆風（人に押させるのは重い）に効く |
+| Current $9/month | Recurring | 80% margin. But "one more subscription" |
+| **$79 billed annually** | Once a year | **The same price as one device.** The comparison holds. Looks cheaper than $9x12=$108, and churn disappears |
+| D (bundled with a device) first | Someone else pays | **P1 pays nothing.** Fewer decisions. Works against the headwind in §05 (making a person press is heavy) |
 
-**順番の提案: D（提携）→ A（年払い）→ B。** いまの資料は A→B→C→D の順で、
-いちばん摩擦が少ない D が最後に置かれている。
+**Proposed order: D (partnership) → A (annual) → B.** The current deck is ordered A→B→C→D,
+which puts D — the lowest-friction one — last.
 
 ---
 
-## 6. サステナブルの確証は、いま何本あるか
+## 6. How many pieces of evidence for sustainability do we have right now?
 
-| 主張 | 確証の強さ |
+| Claim | Strength of evidence |
 |---|---|
-| 原価が収益を食わない | **実測で確定**（決定22） |
-| 版が上がると灯が消える＝買い直しが起きる | **仕組みとしては内蔵。払うかは未検証**（P2に10人聞く） |
-| B が死んでも倒れない | **数字で言える。** A 単独 8,000人×$108 = $0.86M ＝ SOM $1.4M の **61%** |
-| 決済各社に吸収されない | 論証のみ（彼らは鍵を預かる側）。反証はまだ出ていない |
-| P1 が月額を払う | **根拠ゼロ。** ここが最大の穴で、原価が潰れた今は**ここだけが残っている** |
+| Unit cost does not eat revenue | **Confirmed by measurement** (Decision 22) |
+| Flames go out when the version goes up = re-purchase happens | **Built into the mechanism. Whether people pay is untested** (ask 10 people in P2) |
+| We do not fall over if B dies | **We can say it in numbers.** A alone: 8,000 users x $108 = $0.86M = **61%** of the $1.4M SOM |
+| We do not get absorbed by the payment companies | Argument only (they are the side that holds the keys). No counter-evidence yet |
+| P1 pays a monthly fee | **Zero evidence.** This is the biggest hole, and now that unit cost is settled, **it is the only one left** |
 
-**ピッチで言ってよいのは上の2行まで。** 3行目は「Bが死んでも成立する」という
-**守りの強さ**として使える。4行目以降は聞かれたら答える。
+**In the pitch, only the top two lines may be stated.** The third line can be used as
+**defensive strength**: "it works even if B dies." Lines four and below are answered if asked.

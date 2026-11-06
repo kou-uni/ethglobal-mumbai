@@ -16,6 +16,7 @@ ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/
 | `ideation/2026-11-06-decisions.md` | **決定の記録。** 何を決めたか（最新） |
 | `ideation/2026-11-06-minta-proposal.md` | minta の提案：星は約束ではなく事実にする（採用） |
 | **`ui/`** | **動くデモ画面（試作）。** `index.html`＝門（4通りの止まり方が見える）／`stars.html`＝灯（版が上がると消える）。値は本番の 0G に実際に投げた応答 |
+| **`ideation/2026-11-06-market-and-model.html`** | **市場規模（TAM/SAM/SOM）とビジネスモデル。** TAM $24B・SAM $2–6B・SOM $1.4M（3年目）／収益3本と、1判定の原価（実測300トークン）／やらないこと |
 | `ideation/2026-11-06-touchpoints.html` | **誰が・いつ・どの画面に出会い、何を変えるか。** 決めてほしいこと9個の内訳／スタックチャンを入れるなら③だけ |
 | `ideation/2026-11-06-screen-flow.html` | **画面遷移とプロセス。** 画面5枚・遷移表・使用のプロセス・World のプロセス・決めてほしいこと3つ |
 | `ideation/2026-11-06-demo-scenario.md` | **デモの筋書き。** 3分の進行表・90秒版・壊れたときの退避・撮影前の確認 |

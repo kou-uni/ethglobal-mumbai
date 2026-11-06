@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOMOSHIBI — 市場規模（TAM/SAM/SOM）とビジネスモデル</title>
+<style>
+:root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
+--hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
+html{color-scheme:light}
+body{margin:0;background:var(--paper);color:var(--ink);
+font-family:"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic",Meiryo,sans-serif;
+font-size:15px;line-height:1.9;border-top:6px solid var(--accent);-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:56px clamp(24px,6vw,48px) 96px}
+.doc-header{padding-bottom:28px;border-bottom:1px solid var(--ink)}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin:0 0 20px}
+h1{font-size:27px;line-height:1.5;letter-spacing:.02em;margin:0 0 12px;font-feature-settings:"palt" 1}
+.lead{font-size:14px;color:var(--ink-2);margin:0 0 24px;max-width:38em}
+.doc-meta{font-size:12px;color:var(--ink-3);display:flex;gap:24px;flex-wrap:wrap}
+.page>section{border-top:1px solid var(--hairline);padding-top:44px;margin-top:64px}
+.page>section:first-of-type{border-top:0;padding-top:0;margin-top:56px}
+h2{font-size:19px;letter-spacing:.03em;margin:0;font-feature-settings:"palt" 1}
+h2 .no{color:var(--accent);margin-right:14px;font-variant-numeric:tabular-nums}
+.msg{font-size:16px;font-weight:600;line-height:1.8;margin:18px 0 24px;max-width:36em}
+h3{font-size:15px;margin:36px 0 8px}
+p{margin:0 0 16px;max-width:42em}
+ul,ol{margin:0 0 16px;padding-left:1.4em;max-width:41em}
+li{margin-bottom:6px}
+ul{list-style:none;padding-left:1.2em}
+ul li::before{content:"–";float:left;margin-left:-1.2em;color:var(--ink-3)}
+.summary{list-style:none;margin:24px 0 0;padding:0;counter-reset:s;max-width:44em}
+.summary li{counter-increment:s;position:relative;padding-left:2.4em;margin-bottom:14px}
+.summary li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:.4em;
+font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.kpis{display:flex;flex-wrap:wrap;row-gap:24px;margin:32px 0 8px}
+.kpi{padding:2px 32px}
+.kpi:first-child{padding-left:0}
+.kpi+.kpi{border-left:1px solid var(--hairline)}
+.kpi .v{font-size:30px;font-weight:700;color:var(--accent);line-height:1.3;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:14px;font-weight:600;margin-left:2px}
+.kpi .l{font-size:11.5px;color:var(--ink-3);letter-spacing:.06em;margin-top:6px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:28px 0 8px;font-size:13px;line-height:1.6}
+caption{text-align:left;font-size:12.5px;font-weight:600;margin-bottom:10px}
+th{font-size:12px;font-weight:600;text-align:left;padding:10px 12px;
+border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom}
+td{padding:10px 12px;border-bottom:1px solid var(--hairline);vertical-align:top}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-top:1px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:600;background:var(--accent-tint)}
+figure{margin:32px 0 8px}
+figcaption{font-size:12.5px;font-weight:600;margin-bottom:14px}
+figure svg{width:100%;height:auto;display:block}
+svg text{font-family:inherit}
+.fig-scroll{overflow-x:auto}
+.src{font-size:11.5px;color:var(--ink-3);margin:6px 0 0}
+.note{font-size:12.5px;color:var(--ink-2);border-left:2px solid var(--hairline);padding:2px 0 2px 14px;margin:24px 0 16px;max-width:40em}
+.chevrons{display:flex;margin:28px 0 8px;min-width:520px}
+.chev{flex:1;padding:9px 10px 9px 22px;font-size:12px;font-weight:600;line-height:1.5;text-align:center;
+background:var(--fill-gray);margin-left:4px;
+clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%)}
+.chev:first-child{margin-left:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%)}
+.chev.on{background:var(--accent);color:#fff}
+.chev small{display:block;font-size:10.5px;font-weight:500;opacity:.75}
+.matrix{display:grid;grid-template-columns:var(--mx-label,140px) repeat(var(--mx-cols,2),1fr);
+gap:18px 20px;margin:28px 0 8px;min-width:560px}
+.mx-h{font-size:11.5px;font-weight:600;color:var(--ink-2);text-align:center;align-self:end;
+padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.mx-label{background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;
+justify-content:center;text-align:center;gap:2px;font-size:12px;font-weight:700;line-height:1.5;padding:12px 10px}
+.mx-label small{font-size:10px;font-weight:600;opacity:.7;letter-spacing:.08em}
+.mx-label.alt{background:var(--fill-gray);color:var(--ink)}
+.mx-cell{font-size:12px;line-height:1.75}
+.mx-cell ul{margin:0}
+.mx-cell li{margin-bottom:5px}
+b,strong{font-weight:700}
+.em{color:var(--accent);font-weight:700}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--hairline);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--accent)}
+.doc-footer{margin-top:88px;padding-top:20px;border-top:1px solid var(--hairline);
+font-size:11.5px;color:var(--ink-3);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media print{@page{size:A4;margin:16mm}
+body{border-top-width:4px}.page{max-width:none;padding:0}
+.page>section{margin-top:48px;padding-top:32px}
+table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="doc-header">
+  <p class="eyebrow">TOMOSHIBI ／ 市場とビジネスモデル ／ ETHGlobal Mumbai 2026</p>
+  <h1>エージェントに鍵を渡す時代の「承認」を、誰が買うのか</h1>
+  <p class="lead">守る側の市場（機械の身元・秘密情報の管理）は <b>2030年に約240億ドル</b>。その上を流れるエージェントの決済は <b>2030年に1.5兆ドル</b>（2026年の188倍）。TOMOSHIBI はその二つの間、<b>「人が1回だけ押す」層</b>に立つ。ここに値札が付くかを、原価まで下ろして検討した。</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>数値の出所は末尾（推計は推計と明記）</span></div>
+</header>
+
+<section>
+  <h2>エグゼクティブサマリー</h2>
+  <ol class="summary">
+    <li><b>TAM 240億ドル（2030年）。</b>機械の身元の管理（163億ドル）＋ 秘密情報の管理（78億ドル）の推計。別の読み方として、<b>エージェント決済1.5兆ドルの0.1%＝15億ドル</b>が「承認レイヤの取り分」になる。</li>
+    <li><b>SAM は20〜60億ドル。</b>決め手は我々の実測だ。<b>0G は「金額」ではなく「お金が動くか」で判定する</b>——$4,800 でも <b>$1 でも「決定的」</b>。つまりエージェントの決済は<b>ほぼ全件が承認の対象</b>で、SAM はエージェント経済と同じ速さで伸びる。</li>
+    <li><b>収益は3本。うち1本は、継続課金の動機が製品の仕組みに内蔵されている。</b>版を上げると灯が一斉に消える——だから<b>スキルの作り手は、版を出すたびに信用を買い直す</b>。チャーン対策を機能で足す必要がない。</li>
+    <li><b>原価は実測で1判定 300トークン</b>（入力277〜304／出力24〜28）。価格の見当は <b>1判定 0.02〜0.2円</b>。<b>いちばん先にやることは値付けではなく、0G の単価を確かめること</b>——原価の幅がまだ10倍ある。</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">01</span>どの市場にいるのか</h2>
+  <p class="msg">隣の3市場のどれでもない。<b>「鍵を預からずに、1回ずつ人の承認を取る」層は、まだ値札が付いていない。</b></p>
+
+  <div class="fig-scroll"><div class="matrix" style="--mx-cols:3;--mx-label:150px">
+    <div class="mx-h"></div>
+    <div class="mx-h">やっていること</div>
+    <div class="mx-h">エージェントが来ると壊れる点</div>
+    <div class="mx-h">代表</div>
+
+    <div class="mx-label alt"><small>隣01</small>秘密情報の管理</div>
+    <div class="mx-cell">鍵を金庫に入れ、取り出し口を監査する</div>
+    <div class="mx-cell"><b>取り出したあとを見ていない。</b>エージェントは正しく取り出して、間違ったことに使う</div>
+    <div class="mx-cell">Vault, AWS Secrets Manager</div>
+
+    <div class="mx-label alt"><small>隣02</small>機械の身元</div>
+    <div class="mx-cell">証明書で「どの機械か」を証す</div>
+    <div class="mx-cell"><b>どの機械かは分かるが、その1回を人が許したかは分からない</b></div>
+    <div class="mx-cell">CyberArk, Venafi</div>
+
+    <div class="mx-label alt"><small>隣03</small>エージェント決済</div>
+    <div class="mx-cell">エージェントが払えるようにする</div>
+    <div class="mx-cell"><b>払えるようにする側に、止める理由がない</b>（流量が収益なので）</div>
+    <div class="mx-cell">Stripe ACP, x402, Visa</div>
+
+    <div class="mx-label"><small>ここ</small>TOMOSHIBI</div>
+    <div class="mx-cell"><b>鍵を預からない。</b>重い1回だけ、手元の機器で人に押させる。断った記録も残す</div>
+    <div class="mx-cell">—</div>
+    <div class="mx-cell">—</div>
+  </div></div>
+
+  <p class="note"><b>隣との関係は競合ではなく、上に乗る形。</b>秘密情報の管理は「鍵をどこに置くか」、TOMOSHIBI は「その鍵が<b>いま</b>使われてよいか」。両方必要で、後者はまだ誰も売っていない。</p>
+</section>
+
+<section>
+  <h2><span class="no">02</span>TAM / SAM / SOM</h2>
+  <p class="msg">守る側の市場で測ると <b>TAM 240億ドル</b>。そのうち人の承認が要る領域が <b>SAM 20〜60億ドル</b>、3年で届く範囲が <b>SOM 140万ドル</b>。</p>
+
+  <figure>
+    <figcaption>図表1　TOMOSHIBI の市場（2030年・年あたり。<b>面積は比率ではない</b>——金額は右に書いた）</figcaption>
+    <svg viewBox="0 0 760 310" role="img" aria-label="TAM SAM SOM">
+      <rect x="8" y="16" width="420" height="276" fill="#e7e9ec"/>
+      <rect x="8" y="120" width="290" height="172" fill="#c9ccd1"/>
+      <rect x="8" y="232" width="150" height="60" fill="#173f66"/>
+
+      <text x="20" y="42" font-size="13" font-weight="700" fill="#1a1a1a">TAM</text>
+      <text x="20" y="62" font-size="11.5" fill="#555555">エージェントの権限を守る市場</text>
+      <text x="310" y="146" font-size="13" font-weight="700" fill="#1a1a1a">SAM</text>
+      <text x="310" y="166" font-size="11.5" fill="#555555">人の承認が要る要求</text>
+      <text x="172" y="258" font-size="13" font-weight="700" fill="#173f66">SOM</text>
+      <text x="172" y="276" font-size="11.5" fill="#555555">3年で届く範囲</text>
+
+      <line x1="440" y1="30" x2="740" y2="30" stroke="#d9d9d9"/>
+      <text x="440" y="56" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$24B<tspan font-size="13" fill="#555555">／年（2030）</tspan></text>
+      <text x="440" y="78" font-size="11.5" fill="#555555">機械の身元 $16.3B ＋ 秘密情報の管理 $7.8B</text>
+      <text x="440" y="96" font-size="11.5" fill="#8e8e8e">別の読み方: エージェント決済 $1.5T × 0.1% = $1.5B</text>
+
+      <line x1="440" y1="130" x2="740" y2="130" stroke="#d9d9d9"/>
+      <text x="440" y="158" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$2–6B<tspan font-size="13" fill="#555555">／年</tspan></text>
+      <text x="440" y="180" font-size="11.5" fill="#555555">上から: TAM の25%（承認が要る権限）＝ $6B</text>
+      <text x="440" y="198" font-size="11.5" fill="#555555">下から: 開発者 7.3M 人 × $120/年 ＝ $0.87B</text>
+
+      <line x1="440" y1="232" x2="740" y2="232" stroke="#d9d9d9"/>
+      <text x="440" y="260" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$1.4M<tspan font-size="13" fill="#555555">／年（3年目）</tspan></text>
+      <text x="440" y="282" font-size="11.5" fill="#555555">8,000人 ＋ スキル1,000件 ＋ 企業10社</text>
+    </svg>
+    <p class="src">出所: 機械の身元 $9.85B（2025）CAGR 10.62%、秘密情報の管理 $4.17B（2025）CAGR 13.4% から5年複利で kou が計算（推計）。エージェント決済は Juniper Research。SAM・SOM は下表の仮定による推計で、顧客での検証はしていない。</p>
+  </figure>
+
+  <div class="tbl"><table>
+    <caption>表1　導出（太字が仮定。仮定を動かせば答えも動く）</caption>
+    <thead><tr><th>層</th><th>作り方</th><th class="num">金額（年）</th><th>仮定の置き方</th></tr></thead>
+    <tbody>
+      <tr><td><b>TAM</b></td><td>機械の身元 $16.3B ＋ 秘密情報 $7.8B（2030推計）</td><td class="num">$24.1B</td><td>重複を引くと <b>$20.5B</b>。<b>どちらの数字でも「エージェントの権限」は百億ドル台</b></td></tr>
+      <tr><td><b>TAM（別解）</b></td><td>エージェント決済 $1.5T × 手数料 <b>0.1%</b></td><td class="num">$1.5B</td><td>決済に乗せる読み方。McKinsey の $3–5T を採れば $3–5B</td></tr>
+      <tr><td><b>SAM 上から</b></td><td>TAM × <b>25%</b>（人の承認が要る＝不可逆な権限の割合）</td><td class="num">$6.0B</td><td>我々の実測では<b>金が動く要求は $1 でも「決定的」</b>。25% は保守側に置いた</td></tr>
+      <tr><td><b>SAM 下から</b></td><td>開発者 48.4M × <b>15%</b>（実鍵をエージェントに渡す層）× <b>$120/年</b></td><td class="num">$0.87B</td><td>15% は推計。10% なら $0.58B</td></tr>
+      <tr class="total"><td><b>SAM 採用値</b></td><td>上下の幅をそのまま出す</td><td class="num">$2–6B</td><td>一本の数字に丸めない</td></tr>
+      <tr><td><b>SOM 1年目</b></td><td>個人 400人 ＋ スキル 80件</td><td class="num">$0.07M</td><td>ハッカソン後に手で獲る範囲</td></tr>
+      <tr><td><b>SOM 3年目</b></td><td>個人 8,000人×$108 ＋ スキル 1,000件×$348 ＋ 企業 10社×$20k</td><td class="num">$1.41M</td><td>ハードウェアウォレット出荷 <b>8M台</b>の 5% がエージェントを使い、その <b>2%</b> が払う</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">03</span>なぜ、いまなのか</h2>
+  <p class="msg">エージェントが<b>お金を動かし始めた年</b>に、押す場所がまだ無い。</p>
+
+  <div class="kpis">
+    <div class="kpi"><div class="v">188<small>倍</small></div><div class="l">エージェント決済 2026→2030（$8B→$1.5T）</div></div>
+    <div class="kpi"><div class="v">3<small>%</small></div><div class="l">いまエージェントが関わる取引の割合（2026/6）</div></div>
+    <div class="kpi"><div class="v">48.4<small>M</small></div><div class="l">世界の開発者（2025 Q3）</div></div>
+    <div class="kpi"><div class="v">18<small>M</small></div><div class="l">World ID で確かめられた人（160か国）</div></div>
+  </div>
+
+  <p>3% という数字が効く。<b>まだ事故が起ききっていない。</b>事故が普通になってから「止める層」を売りに行くと、その頃には決済の各社が自分で薄い承認機能を内蔵している。<b>いま要るのは、鍵を預からない側から型を出しておくこと</b>。</p>
+  <p class="note"><b>追い風ではなく、逆風も書く。</b>「人に押させる」は体験として重い。<b>競合は他社ではなく「全部自動で通してしまう楽さ」</b>。だから TOMOSHIBI は<b>ふだん何も出さない</b>設計にしてある（§04 の価格もそこに合わせた——黙っている時間には課金しない）。</p>
+</section>
+
+<section>
+  <h2><span class="no">04</span>ビジネスモデル</h2>
+  <p class="msg"><b>流量ではなく、判断に値札を付ける。</b>鍵を預からないのが商品なので、預かって稼ぐ道は最初から断つ。</p>
+
+  <div class="tbl"><table>
+    <caption>表2　収益の3本＋1本</caption>
+    <thead><tr><th style="width:124px">誰が払う</th><th>何に払う</th><th style="width:150px">価格（叩き台）</th><th>なぜ払い続けるか</th></tr></thead>
+    <tbody>
+      <tr><td><b>A 鍵の持ち主</b><br>（P1）</td><td>判定の従量。<b>重い判定だけ数える</b></td><td>無料 2,000判定/月<br><b>$9/月</b> で 50,000判定<br>超過 $1 / 1,000判定</td><td>鍵を渡した相手が増えるほど判定が増える。<b>やめると「誰が何をしたか」の記録が途切れる</b></td></tr>
+      <tr><td><b>B スキルの作り手</b><br>（P2）</td><td><b>灯の掲示</b>（いまの版に何人がともしているか）</td><td><b>$29/月・スキル</b></td><td><b>版を上げると灯が一斉に消える。</b>出すたびに信用を買い直す——<b>継続の動機が仕様に内蔵されている</b></td></tr>
+      <tr><td><b>C 企業</b></td><td>自社に置く Broker と、系譜の保全（監査に出せる形）</td><td><b>$20k/年〜</b></td><td>監査の要件は毎年来る。止めると過去の証跡が読めなくなる</td></tr>
+      <tr><td>D 機器メーカー<br>（提携・将来）</td><td>端末に同梱する承認アプリ</td><td>端末1台あたりの分配</td><td>端末を売る側は<b>「使い道」が欲しい</b>。眠っている機器が動く</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>やらないこと（製品と矛盾するため）</h3>
+  <ul>
+    <li><b>鍵・資金を預からない。</b>預かれば保険と規制が要り、「預けなくていい」という主張そのものが消える</li>
+    <li><b>決済額の%を取らない。</b>流量が収益になった瞬間、<b>止めるほど損をする会社</b>になる。§03 の逆風そのものになってしまう</li>
+    <li><b>要求の中身を売らない・学習に使わない。</b>中身は 0G の封印の中にあり、<b>我々も読めない</b>。読めないことが売り物</li>
+    <li><b>灯を買えるようにしない。</b>買える星は冷たい。<b>金で付く灯を1個でも許すと、商品価値がゼロになる</b></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">05</span>単位経済（原価は実測から）</h2>
+  <p class="msg">1判定あたり <b>300トークン</b>。原価の見当は <b>0.02〜0.2円</b>——まだ10倍の幅があり、<b>これを潰すのが値付けの第一歩</b>。</p>
+
+  <div class="tbl"><table>
+    <caption>表3　1判定の原価（トークン数は 2026-11-06 の本番 0G の記録から実測）</caption>
+    <thead><tr><th>項目</th><th class="num">実測</th><th>備考</th></tr></thead>
+    <tbody>
+      <tr><td>入力トークン</td><td class="num">277〜304</td><td>うち <b>192 はキャッシュ済み</b>（型文が固定なので効く）</td></tr>
+      <tr><td>出力トークン</td><td class="num">24〜28</td><td>思考を切ってあるので短い（決定10）</td></tr>
+      <tr><td>応答時間</td><td class="num">約 2.0 秒</td><td>思考ありは 17.2 秒でタイムアウトに当たる</td></tr>
+      <tr><td>推論の単価</td><td class="num"><b>未確認</b></td><td><b>0G の価格表を見ていない。</b>$5/M 入力なら $0.0019、$0.5/M なら $0.0002</td></tr>
+      <tr class="total"><td><b>1判定の原価</b></td><td class="num">$0.0002〜0.0019</td><td>価格 $0.001/判定 なら、粗利は <b>−90%〜+80%</b>。<b>ここが決まらないと値段は決められない</b></td></tr>
+    </tbody>
+  </table></div>
+
+  <p><b>効く手は2つある。</b>ひとつは<b>ふだんの要求を 0G に投げないこと</b>——範囲の中の読み取り（GET）は規則だけで通し、<b>お金が動きうる要求だけを 0G に渡す</b>。実測では課金系だけが「決定的」になるので、判定の数は<b>1桁減る</b>。もうひとつはキャッシュで、すでに入力の 63% が当たっている。</p>
+  <p class="note"><b>ただし、投げないと決めた瞬間に「読まずに通した」経路ができる。</b>どこまでを規則で通すかは<b>安全と原価の取引</b>で、こっそり決めてはいけない。<b>規則で通した要求も、系譜に「0G に聞かずに通した」と残す</b>のが条件。</p>
+</section>
+
+<section>
+  <h2><span class="no">06</span>サステナブルに回るか</h2>
+  <p class="msg">回る条件は1つ。<b>「消える」ことが、こちらの都合ではなく利用者の利益であり続けること。</b></p>
+
+  <div class="fig-scroll"><div class="chevrons">
+    <div class="chev">鍵を預けずに使える<small>入口は無料</small></div>
+    <div class="chev on">重い要求が増える<small>判定の従量（A）</small></div>
+    <div class="chev">使った事実が灯になる<small>作り手に価値が出る</small></div>
+    <div class="chev on">版が上がると消える<small>買い直し（B）</small></div>
+    <div class="chev">灯が看板になる<small>新しい利用者（P3）</small></div>
+  </div></div>
+
+  <div class="tbl"><table>
+    <caption>表4　壊れ方と、先に置いた歯止め</caption>
+    <thead><tr><th style="width:190px">壊れ方</th><th>何が起きるか</th><th>歯止め</th></tr></thead>
+    <tbody>
+      <tr><td><b>うるさくて切られる</b></td><td>P1 が最も怖れること。切られたら収益はゼロ</td><td><b>ふだんは何も出さない。</b>割り込みは3場面のみ。<b>黙っている時間に課金しない</b>ので、こちらにも増やす動機がない</td></tr>
+      <tr><td><b>灯が消えるのが嫌がられる</b></td><td>B の収益源が、作り手にとっての罰に見える</td><td>消えるのは<b>版が変わったときだけ</b>。使い続けている人は出し直せる。<b>「古い評価を新しく見せない」という買い手の利益</b>と一致している</td></tr>
+      <tr><td><b>決済各社が内蔵する</b></td><td>承認が決済に吸収される</td><td><b>彼らは鍵を預かる側</b>。預からない承認は作れない。<b>手元の機器と、断った記録</b>が境界</td></tr>
+      <tr><td><b>0G の単価が上がる</b></td><td>A の粗利が消える</td><td>判定の数を減らす設計（§05）。<b>ただし「読まずに通す」は系譜に明記する</b></td></tr>
+      <tr><td><b>灯を売れと言われる</b></td><td>短期の売上と引き換えに商品価値が消える</td><td><b>売らない</b>（§04）。ここは値段の話ではない</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">07</span>3年の形</h2>
+  <div class="fig-scroll"><div class="roadmap">
+    <div class="rm-row rm-head">
+      <div class="rm-lane"></div>
+      <div class="rm-h">1年目 前半</div><div class="rm-h">1年目 後半</div><div class="rm-h">2年目 前半</div>
+      <div class="rm-h">2年目 後半</div><div class="rm-h">3年目 前半</div><div class="rm-h">3年目 後半</div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-lane">無料で配る</div>
+      <div class="rm-bar on" style="grid-column:2/4">OSS の Broker ＋ 機器アプリ</div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-lane">A 判定の従量</div>
+      <div class="rm-bar" style="grid-column:3/5">有料の線を引く</div>
+      <div class="rm-bar on" style="grid-column:5/8">8,000人</div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-lane">B 灯の掲示</div>
+      <div class="rm-bar" style="grid-column:4/6">作り手を入れる</div>
+      <div class="rm-bar on" style="grid-column:6/8">1,000スキル</div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-lane">C 企業</div>
+      <div class="rm-ms" style="grid-column:6">◆ 最初の10社</div>
+    </div>
+    <div class="rm-row">
+      <div class="rm-lane">収益（年）</div>
+      <div class="rm-bar" style="grid-column:3/5">$0.07M</div>
+      <div class="rm-bar" style="grid-column:5/7">$0.4M</div>
+      <div class="rm-bar on" style="grid-column:7/8">$1.4M</div>
+    </div>
+  </div></div>
+  <p class="src">推計。顧客での検証はしていない。前提は表1（ハードウェアウォレット出荷8M台の5%がエージェントを使い、その2%が払う）。</p>
+</section>
+
+<section>
+  <h2><span class="no">08</span>次のアクション</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>やること</th><th style="width:96px">誰</th><th style="width:128px">いつまで</th></tr></thead>
+    <tbody>
+      <tr><td><b>0G の推論単価を確かめる</b>（原価の幅10倍を潰す。値付けはその後）</td><td>kou</td><td>ハッカソン後すぐ</td></tr>
+      <tr><td>「お金が動きうる要求だけ 0G に渡す」規則の線を引く（通した経路は系譜に明記）</td><td>kou</td><td>2週間</td></tr>
+      <tr><td>P1 に20人聞く：<b>月 $9 を払うのは、何件目の「止めた」を見たときか</b></td><td>kou</td><td>1か月</td></tr>
+      <tr><td>P2 に10人聞く：<b>版を上げて灯が消えるのは、損か得か</b>（B の生死はここ）</td><td>minta・kou</td><td>1か月</td></tr>
+      <tr><td>ピッチでは <b>TAM $24B・SAM $2–6B</b> を出し、<b>SOM は3年目 $1.4M と正直に出す</b></td><td>kou</td><td>11/7 提出</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>出所</h2>
+  <ul>
+    <li>機械の身元の管理: $9.85B（2025）→ $26.97B（2035）、CAGR 10.62% — <a href="https://www.snsinsider.com/reports/machine-identity-security-market">SNS Insider</a>（2026）</li>
+    <li>秘密情報の管理: $4.17B（2025）→ $10.09B（2032）、CAGR 13.4% — <a href="https://www.kbvresearch.com/secrets-management-solutions-market/">KBV Research</a>／別推計 $2.47B→$11.40B, CAGR 18.5% — <a href="https://trendxinsights.com/syndicated-market-research-reports/secrets-management-market/">TrendX</a></li>
+    <li>エージェント決済: $8B（2026）→ $1.5T（2030） — Juniper Research（<a href="https://stellagent.ai/insights/agentic-commerce-1-5-trillion-forecast-2030">報道</a>）。McKinsey は 2030年に $3–5T</li>
+    <li>エージェントが関わる取引の割合 3%（2026/6） — Checkout.com 調査（<a href="https://www.growthcentr.com/agentic-payments-statistics-2026/">まとめ</a>）</li>
+    <li>AI エージェント市場: $7.84B（2025）→ $52.62B（2030）、CAGR 46.3% — <a href="https://www.marketsandmarkets.com/Market-Reports/ai-agents-market-15761548.html">MarketsandMarkets</a></li>
+    <li>世界の開発者 48.4M（2025 Q3） — SlashData（<a href="https://shiftmag.dev/there-are-47-million-developers-in-the-world-5200/">報道</a>）</li>
+    <li>ハードウェアウォレット市場 $506–680M（2025）、Ledger 累計出荷 8M台超 — <a href="https://www.imarcgroup.com/hardware-wallet-market">IMARC</a>／<a href="https://coinlaw.io/ledger-statistics/">CoinLaw</a></li>
+    <li>World ID で確かめられた人 18M・160か国（2026） — <a href="https://www.biometricupdate.com/202610/world-brings-biometric-proof-of-human-to-banking-and-ai-agents">Biometric Update</a></li>
+    <li><b>1判定のトークン数・応答時間</b>: 2026-11-06 に本番 0G へ投げた記録（<span class="mono">ui/scenes.json</span>）から実測。<b>推論の単価は未確認</b></li>
+    <li><b>「$1 でも決定的」</b>: 2026-11-06 の実測（<span class="mono">ideation/2026-11-06-decisions.md</span> 13）</li>
+  </ul>
+  <p class="note"><b>調査会社の数字は会社ごとに2倍以上ばらつく。</b>この資料は<b>一次の価格表に当たっていない推計</b>で、出てくる金額は「桁」として読むもの。桁が動かない主張（百億ドル台の市場／決済はほぼ全件が承認対象）だけを、ピッチで使う。</p>
+</section>
+
+<footer class="doc-footer">
+  <span>TOMOSHIBI — 市場とビジネスモデル（2026-11-06）</span>
+  <span>関連: ideation/2026-11-06-touchpoints.html ／ 2026-11-06-final-image.md</span>
+</footer>
+
+</div>
+</body>
+</html>

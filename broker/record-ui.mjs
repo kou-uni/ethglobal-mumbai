@@ -2,7 +2,7 @@
 // デモ画面が読む scenes.json を作る。**作り話は書かない。本番の 0G に実際に投げた応答をそのまま保存する。**
 //   node record-ui.mjs http://127.0.0.1:8797 http://127.0.0.1:8798
 // 第2引数は「0G に届かない Broker」。STOPPED を本物として録るために要る。
-import { writeFileSync } from 'node:fs'
+import { writeFileSync, existsSync } from 'node:fs'
 import { privateKeyToAccount } from 'viem/accounts'
 import { DOMAIN, TYPES, normalize, lines, requestHash } from './src/permit.js'
 import { skillMessage, skillIdFrom } from './src/skill.js'
@@ -101,10 +101,13 @@ const seal = await (await fetch(`${BASE}/seal`, { method: 'POST', headers: { 'co
 const trace = await (await fetch(`${BASE}/trace/${ok.thread}`)).json()
 const health = await (await fetch(`${BASE}/health`)).json()
 
-writeFileSync(new URL('../ui/scenes.json', import.meta.url), JSON.stringify({
+// 録画の正本は ui/scenes.json。web/ があれば同じものを置く（**2つの録画が食い違わないように**）
+const payload = JSON.stringify({
   recordedAt: new Date().toISOString(),
   note: '本番の 0G Private Computer（TeeML）に実際に投げた応答をそのまま保存したもの。作り話ではない。',
   endpoint: health.zg.endpoint, model: health.zg.model, simulated: Boolean(health.zg.simulated),
   scenes, live, seal, trace: { thread: trace.thread, count: trace.records.length, records: trace.records },
-}, null, 2) + '\n')
+}, null, 2) + '\n'
+writeFileSync(new URL('../ui/scenes.json', import.meta.url), payload)
+if (existsSync(new URL('../web/', import.meta.url))) writeFileSync(new URL('../web/scenes.json', import.meta.url), payload)
 console.log(`\n../ui/scenes.json に ${scenes.length} 場面。root ${seal.rootHash ?? '—'}`)

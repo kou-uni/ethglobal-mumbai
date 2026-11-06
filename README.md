@@ -63,7 +63,9 @@ None of them is asked to trust the others.
 
 ## How it works
 
-![TOMOSHIBI, the switchboard: labels in, the real key only at the edge](assets/nat.png)
+[![One call through the switchboard: her laptop holds the AI tool and TOMOSHIBI as two separate processes, her Ledger is a separate device on a USB lead; a routine call is put through, a heavy one waits for her hand, a call to another host is refused, and every call lands on the trail and is sealed into 0G Storage](assets/switchboard.gif)](https://kou-uni.github.io/ethglobal-mumbai/web/switchboard.html)
+
+<sub>**[▶ The same animation on its own page, with captions · 77 s](https://kou-uni.github.io/ethglobal-mumbai/web/switchboard.html)** — where each thing runs, the table, a routine call, a heavy call, a refusal, no verdict, and what accumulates.</sub>
 
 Her tools do not hold keys. They hold **labels** — `stripe-live`. TOMOSHIBI keeps one table on the laptop,
 *label → where it goes → the real key*, and the swap happens at the moment of sending, nowhere else. The Ledger
@@ -86,7 +88,7 @@ button on her Ledger. **Then, for every call:**
 
 The refusal is the product. A tool that cannot say *which* kind of no it got is a tool you cannot leave alone.
 
-Moving, one call at a time: [`web/switchboard.html`](https://kou-uni.github.io/ethglobal-mumbai/web/switchboard.html) · the figure, link by link: [`web/flow.html`](https://kou-uni.github.io/ethglobal-mumbai/web/flow.html)
+The figure, link by link: [`web/flow.html`](https://kou-uni.github.io/ethglobal-mumbai/web/flow.html) · as one still: [`assets/nat.png`](assets/nat.png)
 · drawn out, step by step: [`assets/sequence.png`](assets/sequence.png)
 · read off the code: [`docs/HOW-IT-RUNS.md`](docs/HOW-IT-RUNS.md)
 

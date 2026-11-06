@@ -14,6 +14,7 @@ ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/
 | 場所 | 中身 |
 |---|---|
 | `ideation/2026-11-06-decisions.md` | **決定の記録。** 何を決めたか（最新） |
+| **`ideation/2026-11-07-finalist-4min.md`** | **Finalist 審査（7分）の台本。** デモ4分の進行表・押されたら捨てる順・質疑3分（定番3つ＋来るとわかっている突っ込み6つ） |
 | **`ideation/2026-11-06-submission-rules.md`** | **提出と審査の規則（ETHGlobal 公式）。** 締切・禁止事項・審査基準・動画の規則と、こちらの適合状況 |
 | **`ideation/2026-11-06-stack.html`** | **システムスタック。** 7段（プロトコル／ツール／プロダクト）と、借りものが落ちたときの振る舞い |
 | `ideation/2026-11-06-minta-proposal.md` | minta の提案：星は約束ではなく事実にする（採用） |

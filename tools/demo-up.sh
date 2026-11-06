@@ -34,3 +34,14 @@ start agent    sh -c "cd broker && exec node demo-agent.mjs http://127.0.0.1:879
 start web      "$PYTHON" -m http.server 8790 --bind 127.0.0.1 --directory web
 sleep 3
 node tools/demo-check.mjs "$BRIDGE_PORT"
+
+# TUNNEL=1: give the tool (and, through it, the Broker) a temporary public address, so the app can
+# be opened on a phone. The address is printed here and nowhere else. Do not commit it or post it:
+# anyone who has it can make the tool ask (they still cannot press the Ledger).
+if [ "${TUNNEL:-}" = 1 ]; then
+  start tunnel cloudflared tunnel --no-autoupdate --url http://127.0.0.1:8792
+  for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
+    U=$(grep -o 'https://[a-z0-9-]*\.trycloudflare\.com' "$LOGS/tunnel.log" 2>/dev/null | head -1); [ -n "$U" ] && break; sleep 2
+  done
+  [ -n "${U:-}" ] && printf '\nOpen on the phone:\n  https://mintannn.github.io/tomoshibi/start.html?agent=%s\n' "$U" || echo 'tunnel: no address yet (see .demo-logs/tunnel.log)'
+fi

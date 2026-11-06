@@ -199,6 +199,17 @@ createServer(async (req, res) => {
   const send = (code, obj) => { res.writeHead(code, { 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type' }); res.end(JSON.stringify(obj)) }
   if (req.method === 'OPTIONS') return send(204, {})
   const url = new URL(req.url, 'http://x')
+  // /b/… is passed straight on to the Broker. A phone then needs one public address (this process)
+  // to reach both the tool and the record. Nothing is added or changed on the way.
+  if (url.pathname.startsWith('/b/')) {
+    let raw = ''
+    for await (const c of req) raw += c
+    try {
+      const r = await fetch(BROKER + url.pathname.slice(2) + url.search, { method: req.method, body: req.method === 'GET' ? undefined : raw, signal: AbortSignal.timeout(660000) })
+      res.writeHead(r.status, { 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type' })
+      return res.end(await r.text())
+    } catch (e) { return send(502, { error: `Broker not reachable: ${String(e.message ?? e)}` }) }
+  }
   const route = routes[`${req.method} ${url.pathname}`]
   if (!route) return send(404, { error: 'not found' })
   let raw = ''

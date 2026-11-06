@@ -5,15 +5,14 @@ In the agent era, that secret is no longer only a seed phrase — it is an API k
 
 [![Watch TOMOSHIBI: an AI asks for a Stripe key in a .env file; she sends one link instead; the key is parked once and approved on a Ledger; routine calls go through, a refund waits for her hold, a call to another destination is refused; 0G's request id and the 0G Storage transaction are shown; she lights the tool she built with World ID.](assets/walkthrough.gif)](https://kou-uni.github.io/ethglobal-mumbai/web/watch.html)
 
-**[▶ Watch in HD · 2 min 45 s](https://kou-uni.github.io/ethglobal-mumbai/web/watch.html)**
+**[▶ Watch in HD · 1 min 56 s](https://kou-uni.github.io/ethglobal-mumbai/web/watch.html)**
  · **[Try the app](https://mintannn.github.io/tomoshibi/app.html)**
  · **[See one call move through it](https://kou-uni.github.io/ethglobal-mumbai/web/switchboard.html)**
  · **[How it runs](docs/HOW-IT-RUNS.md)**
 
 <sub>The walkthrough is the real app, driven click by click, with footage of the device and the phone beside it:
 a real Ledger, 0G Private Computer and 0G Storage, and World ID. Stripe is a stand-in in this take and the chat is
-scripted (the app marks both MOCK). Two scenes, the list of APIs and the email, were recorded on a second laptop.
-The last 49 seconds are an animation of one call going through the switchboard.</sub>
+scripted (the app marks both MOCK). Two scenes, the list of APIs and the email, were recorded on a second laptop.</sub>
 
 <p align="center">
   <img src="assets/hero-ledger.jpg" width="330" alt="A Ledger Flex at the venue asking &quot;Lend stripe-live?&quot; — Goes to api.stripe.com, Can * /v1 up to 1x, Ends 6 Nov 2026 19:10 UTC, Hold to light. A thumb is on the device." />
@@ -77,7 +76,7 @@ button on her Ledger. **Then, for every call:**
 | 4 | Heavy? The tool has to come back with a signature from the Ledger, good for one call | `NEEDS_PRESS` — nothing runs while it waits. **This is the only step with a person in it** |
 | 5 | One call of the count is reserved, the label is swapped for the key, and the call is sent | `DENIED` — the count is used up |
 | 6 | The answer goes back to the tool, with a hash of it. Never the key | — |
-| 7 | The call is appended to the trail, and the thread is sealed into **0G Storage** | — |
+| 7 | The call is appended to the trail (the Broker's own append-only file, on the same machine as the Broker), and the thread is sealed into **0G Storage** | — |
 
 The refusal is the product. A tool that cannot say *which* kind of no it got is a tool you cannot leave alone.
 

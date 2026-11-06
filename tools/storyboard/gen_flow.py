@@ -16,18 +16,18 @@ def ch(m='awake',s=120):
     if m=='unlit': return v+WICK+DISH+'</svg>'
     return v+BODY+FACE[m]+(SPK if m=='happy' else '')+DISH+'</svg>'
 
-def nav(mode, cur):
+def nav(mode, cur, who="Priya's shop"):
     if mode=='steps':
         items=['Leave your key','Choose what it may do','Hold to light']
         mid='<div class="stepper">'+''.join(f'<span class="{"on" if i==cur else "done" if i<cur else ""}"><em>{"✓" if i<cur else i+1}</em>{t}</span>' for i,t in enumerate(items))+'</div>'
     else:
         mid='<div class="links">'+''.join(f'<span class="{"on" if t==cur else ""}">{t}</span>' for t in ['Home','Activity','Lights'])+'</div>'
-    return f'<div class="nav"><div class="logo">{ch("awake",30)}<b>tomoshibi</b></div>{mid}<div class="who">Priya\'s shop</div></div>'
+    return f'<div class="nav"><div class="logo">{ch("awake",30)}<b>tomoshibi</b></div>{mid}<div class="who">{who}</div></div>'
 def nowbar(now,why): return f'<div class="nowbar"><div><i>NOW</i><b>{now}</b></div><div class="y"><i>WHY IT MATTERS</i><b>{why}</b></div></div>'
 def chrome(active='t'):
     return f'<div class="chrome"><i></i><i></i><i></i><span class="tab {"off" if active=="t" else ""}">Billing assistant</span>'+(f'<span class="tab">tomoshibi.app</span>' if active=='t' else '')+'</div>'
-def win(navmode,cur,now,why,bg,left,right,strip=''):
-    return f'<div class="win">{chrome()}{nav(navmode,cur)}{nowbar(now,why)}<div class="body" style="background:{bg}"><div class="l">{left}</div><div class="r">{right}</div></div>{strip}</div>'
+def win(navmode,cur,now,why,bg,left,right,strip='',who="Priya's shop"):
+    return f'<div class="win">{chrome()}{nav(navmode,cur,who)}{nowbar(now,why)}<div class="body" style="background:{bg}"><div class="l">{left}</div><div class="r">{right}</div></div>{strip}</div>'
 def hero(m,say,h,p,size=150): return f'<div class="hero"><div class="c">{ch(m,size)}</div><div class="say">{say}</div></div><h3>{h}</h3><p>{p}</p>'
 def ai(msgs,thoughts=''):
     b=''.join(f'<div class="m {c}">{t}</div>' for c,t in msgs)
@@ -135,8 +135,40 @@ P.append(('自分の光を、ほかの人に見せる','次の人は、数では
   ''),
 ]))
 
+# ---------- lights that are lit, and the friend who chooses by them
+lamps=lambda names,others: '<div class="field">'+''.join(f'<div class="me">{ch("happy" if i==0 else "awake",66)}<b>{nm}</b></div>' for i,nm in enumerate(names))+''.join(f'<div class="an">{ch("awake",34)}</div>' for _ in range(others))+'</div>'
+tgl=lambda on: '<div class="tgl">'+''.join(f'<span class="{"on" if t==on else ""}">{t}</span>' for t in ['Everyone','People I know'])+'</div>'
+DEMO='<span class="kind mock">デモ用のデータで見せる</span>'
+now6,why6,star6,sc6=P[5]
+P[5]=(now6,'光は、本当に使った人だけのもの。だから意味がある。',star6,sc6)
+_s=list(sc6[0]); _s[5]='World App で Confirm を押すと'; sc6[0]=tuple(_s)
+sc6.append(('金曜、そのあと','ともっている光が、見える',REAL,
+ 'Lights のページに、このツールにともっている光が並ぶ。1つ1つが、自分のキーで本当に使った、実在する1人。その中の1つが Priya の光。光は買えない。版が変わると、いったん全部消える。',
+ win('links','Lights','Your light is showing','Every light is one real person who really used this tool.','#FFF3E4',
+  hero('happy','There you are!','14 lights are on<br>for this tool.','Each one is a real person who used billing-assistant 1.0.0 with their own key. One of them is you.'),
+  '<div class="card"><div class="cardh2"><b>billing-assistant 1.0.0</b>'+tgl('Everyone')+'</div>'+lamps(['You'],13)+'<small>Lights cannot be bought. They all go out when the version changes, and are earned again.</small></div>'),
+ '金曜の夜、Priya は友だちの Arjun にこの話をする'))
+P.append(('友だちが、あなたの光を見て選ぶ','数ではなく「誰の光か」で選べる。人への信頼が、光になる。',False,[
+ ('次の週、Arjun の PC','Arjun は、Priya の光があるほうを選ぶ',DEMO,
+  'となり町で雑貨店をやっている Arjun も、同じことで困っていた。ツールを探すと、光が212個ついたものもある。でも Arjun が選んだのは、光が14個のほう。<b>その中に、Priya の光があったから。</b>知らない212人より、会ったことのある1人。',
+  win('links','Lights','Choosing a tool','Choose by whose light it is, not by how many.','#FFF3E4',
+   hero('awake','Someone you know uses this.','Priya’s light<br>is on.','You met Priya in person. She has used this tool with her own key, 13 times this month.'),
+   '<div class="card"><div class="cardh2"><b>Tools for chasing unpaid orders</b>'+tgl('People I know')+'</div>'
+   '<div class="tool"><b>invoice-wizard 2.3</b><span>212 lights</span><em>nobody you know</em></div>'
+   '<div class="tool pick"><b>billing-assistant 1.0.0</b><span>14 lights</span><em>'+ch('happy',30)+' Priya</em></div>'
+   '<div class="tool"><b>pay-helper 0.9</b><span>3 lights</span><em>nobody you know</em></div>'
+   '<button>Use it with TOMOSHIBI →</button></div>',who="Arjun's shop"),
+  'Arjun も、キーを預けて、選んで、自分の Ledger を長押しする'),
+ ('その次の週、Priya の PC','Arjun の光も、ともっている',DEMO,
+  'Priya が Lights を開くと、自分の光のとなりに、Arjun の光がともっている。キーを AI に貼らずに済む人が、1人ふえた。次にだれかが探すときは、2人の光が見える。<b>人への信頼が、光になる。</b>',
+  win('links','Lights','Lights from people you know','Trust between people becomes the light.','#FFF3E4',
+   hero('happy','Look who is here!','Arjun’s light<br>is on, too.','He chose this tool because your light was on. The next person will see both of you.'),
+   '<div class="card"><div class="cardh2"><b>billing-assistant 1.0.0</b>'+tgl('People I know')+'</div>'+lamps(['You','Arjun'],0)+'<small>15 lights in all · 2 from people you know</small></div>'),
+  ''),
+]))
+
 n=0; body=[]; rows=[]
-DO=['AI に頼む','1行貼る','キーを1回貼る','4つ選ぶ','Ledger を3秒 長押し','タブを閉じる','何もしない','帰宅して1回 長押し','寝ている','10秒見る','World App で確認']
+DO=['AI に頼む','1行貼る','キーを1回貼る','4つ選ぶ','Ledger を3秒 長押し','タブを閉じる','何もしない','帰宅して1回 長押し','寝ている','10秒見る','World App で確認','見るだけ','（Arjun が選んで、長押し）','見るだけ']
 for pi,(now,why,star,scenes) in enumerate(P,1):
     body.append(f'<div class="phase {"star" if star else ""}" id="p{pi}"><span class="pn">{pi}</span><div class="now"><small>今していること</small><b>{now}</b></div><span class="to">→</span><div class="why"><small>だから、こういう価値</small><b>{why}</b></div></div>')
     for (w,t,k,st,scr,arr) in scenes:

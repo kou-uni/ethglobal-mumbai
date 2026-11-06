@@ -159,19 +159,20 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 
       <line x1="440" y1="30" x2="740" y2="30" stroke="#d9d9d9"/>
       <text x="440" y="56" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$43B<tspan font-size="13" fill="#555555">／年</tspan></text>
-      <text x="440" y="78" font-size="11.5" fill="#555555">守る $24B ＋ 信用を見せる $3B ＋ 損失を移す $16B</text>
-      <text x="440" y="96" font-size="11.5" fill="#8e8e8e">別の読み方: エージェント決済 $1.5T × 0.1% = $1.5B</text>
+      <text x="440" y="78" font-size="11.5" fill="#555555">守る（身元・秘密）$24B</text>
+      <text x="440" y="96" font-size="11.5" fill="#555555">見せる（作り手）$3B ／ 移す（保険）$16B</text>
+      <text x="440" y="112" font-size="11.5" fill="#8e8e8e">別解: 決済 $1.5T × 0.1% = $1.5B</text>
 
       <line x1="440" y1="130" x2="740" y2="130" stroke="#d9d9d9"/>
       <text x="440" y="158" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$2–7B<tspan font-size="13" fill="#555555">／年</tspan></text>
-      <text x="440" y="180" font-size="11.5" fill="#555555">守る $6B ＋ 灯の掲示 $0.17B ＋ エージェント起因の事故 $0.8B</text>
+      <text x="440" y="180" font-size="11.5" fill="#555555">守る $6B ＋ 灯 $0.17B ＋ 事故 $0.8B</text>
       <text x="440" y="198" font-size="11.5" fill="#555555">下から: 開発者 7.3M 人 × $120/年 ＝ $0.87B</text>
 
       <line x1="440" y1="232" x2="740" y2="232" stroke="#d9d9d9"/>
       <text x="440" y="260" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$1.4M<tspan font-size="13" fill="#555555">／年（3年目）</tspan></text>
       <text x="440" y="282" font-size="11.5" fill="#555555">8,000人 ＋ スキル1,000件 ＋ 企業10社</text>
     </svg>
-    <p class="src">出所: 機械の身元 $9.85B（2025）CAGR 10.62%、秘密情報の管理 $4.17B（2025）CAGR 13.4% から5年複利で kou が計算（推計）。エージェント決済は Juniper Research。SAM・SOM は下表の仮定による推計で、顧客での検証はしていない。</p>
+    <p class="src">出所: 機械の身元 $9.85B（2025）CAGR 10.62%、秘密情報の管理 $4.17B（2025）CAGR 13.4% から5年複利で kou が計算（推計）。エージェント決済は Juniper Research。信用を見せる側（コンプライアンス自動化 $2.7B）と損失を移す側（サイバー保険 $16.3B）は §03。SAM・SOM は下表の仮定による推計で、顧客での検証はしていない。</p>
   </figure>
 
   <div class="tbl"><table>
@@ -179,6 +180,8 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
     <thead><tr><th>層</th><th>作り方</th><th class="num">金額（年）</th><th>仮定の置き方</th></tr></thead>
     <tbody>
       <tr><td><b>TAM</b></td><td>機械の身元 $16.3B ＋ 秘密情報 $7.8B（2030推計）</td><td class="num">$24.1B</td><td>重複を引くと <b>$20.5B</b>。<b>どちらの数字でも「エージェントの権限」は百億ドル台</b></td></tr>
+      <tr><td><b>TAM 見せる</b></td><td>コンプライアンス自動化（信用を見せるための支出）2028予測</td><td class="num">$2.7B</td><td><b>作り手が「信用できる」を見せるために実際に払っている額</b>。Vanta は1社 $18.8k/年</td></tr>
+      <tr><td><b>TAM 移す</b></td><td>サイバー保険の保険料（2025）</td><td class="num">$16.3B</td><td><b>買う側が損失を減らすために払っている額</b>。侵害1件の平均は $4.44M</td></tr>
       <tr><td><b>TAM（別解）</b></td><td>エージェント決済 $1.5T × 手数料 <b>0.1%</b></td><td class="num">$1.5B</td><td>決済に乗せる読み方。McKinsey の $3–5T を採れば $3–5B</td></tr>
       <tr><td><b>SAM 上から</b></td><td>TAM × <b>25%</b>（人の承認が要る＝不可逆な権限の割合）</td><td class="num">$6.0B</td><td>我々の実測では<b>金が動く要求は $1 でも「決定的」</b>。25% は保守側に置いた</td></tr>
       <tr><td><b>SAM 下から</b></td><td>開発者 48.4M × <b>15%</b>（実鍵をエージェントに渡す層）× <b>$120/年</b></td><td class="num">$0.87B</td><td>15% は推計。10% なら $0.58B</td></tr>

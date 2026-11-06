@@ -4,7 +4,7 @@ Three figures of the same system, so that the pages, the Broker and the pitch de
 
 Written from [`HOW-IT-RUNS.md`](HOW-IT-RUNS.md) and the code. It adds what that page leaves out:
 the pages a person sees (`web/app.html`) and how they reach the rest. About the Broker, if this
-page disagrees with `HOW-IT-RUNS.md`, that page is right. Section 5 lists where the branch
+page disagrees with `HOW-IT-RUNS.md`, that page is right. Section 6 lists where the branch
 `minta/story` is different from it today.
 
 The figures are also kept as pictures in [`figures/`](figures/), for the deck.
@@ -75,9 +75,99 @@ flowchart TB
 - **While filming there is no real key and no real call**: `EXECUTE=0`, `SECRETS` unset. The *Custody* screen
   sends and stores nothing.
 - The Broker without 0G (8798, to show `STOPPED`) and the static file server (8790) are left out of the figure.
-- A hosted copy exists on the branch only. See section 5.
+- Where each of these runs, what it is made of, and where 0G is used: section 3.
 
-## 3. Functions
+## 3. Where things run, and what they are made of
+
+### 3.1 Where the Broker is
+
+The Broker is one small program, `broker/src/server.js`. It is not a contract and not a cloud service.
+
+```mermaid
+flowchart TB
+  subgraph AIR["Filming - one laptop - tools/demo-up.sh"]
+    direction LR
+    A1["Pages<br/>static files, 8790"]
+    A2["The tool<br/>8792"]
+    A3["BROKER<br/>8797<br/>data/ledger.jsonl"]
+    A4["Broker without 0G<br/>8798, to show STOPPED"]
+    A5["Bridge<br/>127.0.0.1"]
+    A6["Ledger Flex"]
+    A1 --> A2
+    A2 --> A3
+    A2 --> A4
+    A2 --> A5
+    A5 -- "USB" --> A6
+  end
+  subgraph HOSTED["Hosted copy - to try the pages from any device - tools/hosted-start.sh"]
+    direction LR
+    H1["Pages<br/>GitHub Pages"]
+    subgraph BOX["One container"]
+      direction LR
+      H2["The tool<br/>the only public port"]
+      H3["BROKER<br/>8797, inside only<br/>data/ledger.jsonl"]
+    end
+    H4["Ledger Flex<br/>opened by the page"]
+    H1 --> H2
+    H2 --> H3
+    H1 -- "WebHID" --> H4
+  end
+  subgraph LATER["Design, not built"]
+    T1["BROKER in a TEE<br/>away from the agent (A2)"]
+  end
+```
+
+| Where | How it is started | Address | Its state | Who can reach it |
+|---|---|---|---|---|
+| **Filming laptop** | `tools/demo-up.sh` → `node broker/src/server.js` | port 8797 (a second one on 8798 that cannot reach 0G) | `broker/data/ledger.jsonl` on that laptop | The tool on the same machine. The pages, for stars and the record page. It listens on every interface of the laptop, not only `127.0.0.1`. |
+| **Hosted copy** | `tools/hosted-start.sh`, inside one container (`Dockerfile`) | 8797 inside the container, not published | `data/ledger.jsonl` inside the container. It is gone when the free instance sleeps. | Only the tool beside it. From outside, the tool passes on reads and the two World calls (`/vouch/start`, `/vouch/finish`), nothing else. |
+| **Design** | not built | a TEE, away from the agent | | On a laptop where the agent has a shell, the agent can read the Broker's environment. The README says so (A2). |
+
+### 3.2 What each part is made of
+
+| Part | Language, libraries | Size | Where its state is | Real, or stubbed while filming |
+|---|---|---|---|---|
+| **Broker** `broker/src/` | Node.js, plain `node:http`. No framework, no database. `viem` (EIP-712 signature check, hashes), `jose` (World id token), `ethers` + `@0gfoundation/0g-storage-ts-sdk` (0G Storage). | about 990 lines in 13 files | One append-only file, `data/ledger.jsonl`, re-read at start. Counts and stars are derived from it in memory. | Scope check, 0G weighing, press rule, trail, World: **real**. The call to the real API: **stub** (`EXECUTE=0`, `SECRETS` unset), so no real key exists anywhere. |
+| **The tool** `broker/demo-agent.mjs` | Node.js. A scripted agent called `billing-assistant` with four fixed requests. It signs every request with its own skill key. | 339 lines | In memory: the signed permit and the list of events. | The requests are scripted. Everything it asks the Broker and the Ledger is real. |
+| **Bridge** `bridge/bridge.py` | Python. Speaks the Ledger's USB protocol on one side and HTTP on the other (`/permit`, `/notice`, `/health`). | 324 lines | None | Real |
+| **Ledger app** `ledger-app/` | Rust, on a Ledger Flex. Shows the four lines and signs the permit (EIP-712) after a long press. | | The device's own key | Real, on a development device with no funds |
+| **Pages** `web/` | Static HTML, CSS and JavaScript. No build step. `app.html` + `flow.js`. | `flow.js` 592 lines | The browser only | Real when a tool answers. Otherwise a recorded replay, marked as a preview. |
+
+### 3.3 Where 0G is used
+
+Two places, both inside the Broker. Nothing else talks to 0G.
+
+```mermaid
+flowchart LR
+  U["POST /use"] --> S{"scope check<br/>scope.js"}
+  S -- "outside" --> DN["DENIED<br/>0G is not asked"]
+  S -- "inside" --> WZ["weigh()<br/>weigh.js"]
+  WZ == "four lines + method, URL, body<br/>never the key" ==> ZC[["0G PRIVATE COMPUTER<br/>sealed model (TeeML)<br/>router-api.0g.ai/v1"]]
+  ZC == "weight + reason + request id" ==> WZ
+  WZ -- "no answer" --> ST["STOPPED"]
+  WZ -- "heavier" --> NP["NEEDS_PRESS"]
+  WZ -- "routine" --> AL["reserve, execute<br/>ALLOWED"]
+  SE["POST /seal"] --> EP["store()<br/>episode.js"]
+  EP == "one thread of the trail<br/>no keys, no bodies" ==> ZS[["0G STORAGE<br/>Galileo testnet"]]
+  ZS == "root hash + transaction" ==> EP
+  EP --> SL["SEALED<br/>appended to the trail"]
+```
+
+| | **1. 0G Private Computer** | **2. 0G Storage** |
+|---|---|---|
+| What for | To decide the weight of a request: `routine`, `significant` or `decisive`. This is what decides whether her Ledger is woken up. | To keep one thread of the trail where it cannot be quietly changed. |
+| Code | `broker/src/weigh.js`, called from `use()` in `server.js` | `broker/src/episode.js`, called from `seal()` in `server.js` |
+| When | Once for every request that is inside the scope, and once more for the same request after a press. Never for a request the scope check refused. | Only when someone calls `POST /seal` with a thread. |
+| How | `POST {ZG_ENDPOINT}/chat/completions` with `ZG_API_KEY`. Model `ZG_MODEL` (TeeML), temperature 0, reasoning off. | `Indexer.upload()` from the 0G Storage SDK, paid from the wallet in `ZG_PRIVATE_KEY`, on the Galileo testnet. |
+| What is sent | The four lines of the permit, the method and URL, and the body (cut at 4,000 characters). **Never the key.** | The records of that thread as JSON lines. **No keys and no bodies.** |
+| What comes back, and where it goes | The weight and a short reason, the 0G request id, the time taken, the token count and the `x-0g-e2ee` header. All of it is written into the trail record as `zg{…}`. | The root hash and the transaction. Appended to the trail as `SEALED` with `storage{…}`. If it was not stored, the record says so and why. |
+| If 0G does not answer | `STOPPED`. No default, and no rule in its place. | `SEALED` with `uploaded: false` and the reason. |
+| Who triggers it today | Every request from the tool, so every button in the app except a refused one. | `broker/demo.mjs` and `broker/record-ui.mjs` only. **The app and the tool do not call it**, and the hosted copy has no wallet key. |
+
+Also from 0G: the Broker can read the remaining credits (`GET /zg/balance`), and the permit's EIP-712 domain
+uses chain id 16602. Neither is a call on the request path.
+
+## 4. Functions
 
 The four parts of the README, the six functions of the journey, and the code behind each.
 
@@ -123,9 +213,9 @@ flowchart LR
 | **Trail** | Every request, allowed or refused, is appended with its reason. A thread can be sealed into 0G Storage. | `store.js`, `episode.js` | 0G Storage | `ALLOWED`, `DENIED`, `NEEDS_PRESS`, `STOPPED`, `SEALED` in one file | `TRAIL` (tab) | You can say what was stopped, and whose code tried it. |
 | **Flame** | A star on one version. Only the owner of a permit that was used can light it, confirmed once through World. Stars are counted per version. | `owner.js`, `world.js` | World | `STAR`, or `VOUCH_DENIED`: `NOT_OWNER`, `NOT_USED`, `human_denied`, `proof_expired`, `BAD_ID_TOKEN`, `ALREADY_VOUCHED` | `FLAME` (tab) | You choose by whose star it is, not by how many. |
 
-## 4. Sequences
+## 5. Sequences
 
-### 4.1 Once: the key, then the permit (Monday)
+### 5.1 Once: the key, then the permit (Monday)
 
 ```mermaid
 sequenceDiagram
@@ -157,7 +247,7 @@ sequenceDiagram
 
 The route is still called `/lend` in the tool's code. Nothing a person reads says so.
 
-### 4.2 One request (every time)
+### 5.2 One request (every time)
 
 ```mermaid
 sequenceDiagram
@@ -196,7 +286,7 @@ sequenceDiagram
 - While `EXECUTE=0` the request to the real API is a stub.
 - After a `DENIED`, the tool asks the bridge to show a notice on her Ledger (`POST /notice`). Nobody has to tap.
 
-### 4.3 A press (Wednesday)
+### 5.3 A press (Wednesday)
 
 ```mermaid
 sequenceDiagram
@@ -232,7 +322,7 @@ sequenceDiagram
   end
 ```
 
-### 4.4 A star (Friday)
+### 5.4 A star (Friday)
 
 ```mermaid
 sequenceDiagram
@@ -273,7 +363,7 @@ sequenceDiagram
 Her wallet address is never written into the star. When the version changes, the stars of the old version are
 simply not counted any more.
 
-## 5. Where the branch `minta/story` differs from `HOW-IT-RUNS.md`
+## 6. Where the branch `minta/story` differs from `HOW-IT-RUNS.md`
 
 To settle between us. Each row is a fact about the branch, not a proposal.
 

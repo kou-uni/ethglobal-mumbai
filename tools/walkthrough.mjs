@@ -10,7 +10,11 @@
 //     with none, the page's stand-in button is pressed, and the page says MOCK
 //   - HEADFUL=1 opens a visible window, so a Stripe test key can be pasted by hand when the screen asks
 //     (the recording pauses while it waits); otherwise the mock key is used, and the page says MOCK
-// Env: PAGES (http://127.0.0.1:8790), CHROME, FFMPEG, HEADFUL, KEEP=1 (keep the frames)
+//   - REAL=1 refuses the stand-in: it waits until the Ledger is awake before the row is asked for, and stops if
+//     the page had to offer its stand-in button. Use it for the take that is shown to people.
+// Next to the video it writes <out>.cues.json: the moments of the two holds, so footage of the hand on the
+// Ledger can be laid in at the right places (tools/walkthrough-edit.mjs).
+// Env: PAGES (http://127.0.0.1:8790), CHROME, FFMPEG, HEADFUL, REAL, KEEP=1 (keep the frames)
 import { spawn, spawnSync } from 'node:child_process'
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -22,9 +26,10 @@ const PAGES = process.env.PAGES || 'http://127.0.0.1:8790'
 const OUT = resolve(process.argv[2] || 'walkthrough.mp4'), PORT = 9334
 const W = 1440, H = 810, SCALE = 1920 / W            // a 16:9 page, recorded at 1920×1080
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+const REAL = Boolean(process.env.REAL)
 const dir = mkdtempSync(join(tmpdir(), 'walkthrough-'))
 
-const chrome = spawn(CHROME, [...(process.env.HEADFUL ? [] : ['--headless=new']), `--remote-debugging-port=${PORT}`, `--user-data-dir=${join(dir, 'profile')}`, '--no-first-run', '--no-default-browser-check', '--hide-scrollbars', `--window-size=${W},${H + (process.env.HEADFUL ? 90 : 0)}`, 'about:blank'], { stdio: 'ignore' })
+const chrome = spawn(CHROME, [...(process.env.HEADFUL ? [] : ['--headless=new']), `--remote-debugging-port=${PORT}`, `--user-data-dir=${join(dir, 'profile')}`, '--no-first-run', '--no-default-browser-check', '--hide-scrollbars', '--window-position=0,0', `--window-size=${W},${H + (process.env.HEADFUL ? 90 : 0)}`, 'about:blank'], { stdio: 'ignore' })
 let page = null
 for (let i = 0; i < 60 && !page; i++) { await sleep(250); try { page = (await (await fetch(`http://127.0.0.1:${PORT}/json`)).json()).find((t) => t.type === 'page') } catch {} }
 if (!page) { chrome.kill(); throw new Error('Chrome did not start') }
@@ -47,6 +52,8 @@ const send = (method, params = {}) => new Promise((r) => { const n = ++id; waiti
 const js = async (expression) => { const r = await send('Runtime.evaluate', { expression: `(async () => { ${expression} })()`, awaitPromise: true, returnByValue: true }); if (r.result?.exceptionDetails) throw new Error(r.result.exceptionDetails.exception?.description || 'page error'); return r.result?.result?.value }
 const pause = () => { if (recording) { recording = false; pausedAt = Date.now() / 1000 } }
 const resume = () => { if (!recording) { if (pausedAt) cut += Date.now() / 1000 - pausedAt; pausedAt = 0; recording = true } }
+// The moments worth finding again in the finished video (on the video's own clock).
+const cues = []; const cue = (name) => cues.push({ name, t: Date.now() / 1000 - cut })
 
 await send('Page.enable')
 await send('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: SCALE, mobile: false })
@@ -93,14 +100,29 @@ const say = (chip, text, ms = 0) => js(`await wt.say(${JSON.stringify(chip)}, ${
 const click = (sel, ms = 0) => js(`const ok = await wt.click(${JSON.stringify(sel)}); await wt.W(${ms}); return ok`)
 const wait = (ms) => sleep(ms)
 const until = (cond, ms) => js(`return await wt.until(() => (${cond}), ${ms})`)
+/** REAL: the first row is only real if the tool can see the Ledger at the moment it asks. Wait for it, off camera. */
+async function ledgerAwake() {
+  if (!REAL) return
+  const seen = () => js(`try { return (await (await fetch(window.appAgent + '/health', { cache: 'no-store' })).json()).device === true } catch { return false }`)
+  if (await seen()) return
+  console.log('  waiting for the Ledger: unlock it and open TOMOSHIBI…'); pause()
+  for (let i = 0; i < 240 && !(await seen()); i++) await sleep(1500)
+  if (!(await seen())) throw new Error('no Ledger was seen')
+  await sleep(1500); resume(); console.log('  the Ledger is there')
+}
 /** A hold. On the page's stand-in if there is no Ledger (the page says MOCK); otherwise wait for the real one, and leave the waiting out of the video. */
 async function hold(what) {
-  await until(`wt.st().asking === '${what}'`, 20000)
+  // If the Ledger went to sleep, the tool waits for it before it asks. That waiting is left out too.
+  if (!(await until(`wt.st().asking === '${what}'`, 6000))) { pause(); const asked = await until(`wt.st().asking === '${what}'`, 120000); resume(); if (!asked) throw new Error(`"${what}" was never asked for`) }
+  cue(`${what}-asked`)
   await wait(900)
-  if (await js('return Boolean(document.querySelector("[data-hold]"))')) { await js('await wt.hold()'); console.log(`  ${what}: the page's stand-in was held (no Ledger)`) }
-  else { console.log(`  ${what}: waiting for the hold on the Ledger…`); await wait(2600); pause() }
-  const ok = await until(what === 'lend' ? 'wt.st().lent' : `String(wt.st().last).includes('pressed')`, 180000)
+  if (await js('return Boolean(document.querySelector("[data-hold]"))')) {
+    if (REAL) throw new Error(`the Ledger was not there for "${what}": the page offered its stand-in`)
+    await js('await wt.hold()'); console.log(`  ${what}: the page's stand-in was held (no Ledger)`)
+  } else { console.log(`  ${what}: waiting for the hold on the Ledger…`); await wait(2600); cue(`${what}-waiting`); pause() }
+  const ok = await until(what === 'lend' ? 'wt.st().lent' : `String(wt.st().last).includes('pressed')`, 240000)
   resume(); if (!ok) throw new Error(`no hold arrived for "${what}"`)
+  cue(`${what}-done`)
 }
 
 await send('Page.startScreencast', { format: 'jpeg', quality: 92, maxWidth: 1920, maxHeight: 1080, everyNthFrame: 1 })
@@ -124,6 +146,7 @@ await say('1 · ADD A ROW', 'Stripe is on the list, so it already knows where th
 const canType = Boolean(process.env.HEADFUL) && await js('return tomoshibi.mode === "live"')
 if (canType) { console.log('  paste the Stripe test key into the window now (or click "Use a mock key")'); await wait(1500); pause(); await until('document.getElementById("keyIn") && document.getElementById("keyIn").value.trim().length > 6', 240000); resume(); await wait(900) }
 else { await click('[data-act="key-test"]'); await wait(2300) }
+await ledgerAwake()
 await click('[data-act="park"]')
 await say('2 · APPROVE', 'Only her Ledger can add the row. An AI cannot press this button.')
 await hold('lend')
@@ -137,8 +160,8 @@ await click('.tabs [data-act="open-tomo"]')
 await say('3 · A ROUTINE CALL', 'The label goes in, the key is swapped in, the answer comes back. She is not asked.', 4300)
 await say('4 · A HEAVY CALL', 'A refund is heavy. A sealed model on 0G says so, and it waits for her Ledger.')
 await js(`document.querySelector('[data-act="run:heavy"]').click()`)
-await until(`wt.st().asking === 'press' || wt.st().last === 'STOPPED' || wt.st().last === 'ALLOWED'`, 45000); await wait(2600)
-if ((await js('return wt.st().asking')) === 'press') { await hold('press'); await until(`wt.view() === 'paid'`, 15000); await say('4 · A HEAVY CALL', 'One hold. It goes out once.', 3600); await click('[data-act="seen"]') }
+await until(`wt.st().last === 'NEEDS_PRESS' || wt.st().last === 'STOPPED' || wt.st().last === 'ALLOWED'`, 45000); await wait(1700)
+if ((await js('return wt.st().last')) === 'NEEDS_PRESS') { await hold('press'); await until(`wt.view() === 'paid'`, 15000); await say('4 · A HEAVY CALL', 'One hold. It goes out once.', 3600); await click('[data-act="seen"]') }
 else { console.log('  the heavy call did not ask for a press:', await js('return wt.st().last')); await wait(2500); await click('[data-act="seen"]') }
 await say('5 · REFUSED', 'Another destination? This label only reaches Stripe. Refused, and recorded.')
 await js(`document.querySelector('[data-act="run:denied-host"]').click()`)
@@ -164,6 +187,7 @@ const t0 = frames[0].t
 const list = frames.map((f, i) => `file '${f.name}'\nduration ${Math.max(0.001, ((frames[i + 1]?.t ?? end) - f.t)).toFixed(4)}`).join('\n') + `\nfile '${frames[frames.length - 1].name}'\n`
 writeFileSync(join(dir, 'frames.txt'), 'ffconcat version 1.0\n' + list)
 console.log(`${frames.length} frames, ${(end - t0).toFixed(1)} s`)
+writeFileSync(OUT.replace(/\.mp4$/, '') + '.cues.json', JSON.stringify({ duration: +(end - t0).toFixed(2), real: REAL, cues: cues.map((c) => ({ name: c.name, t: +(c.t - t0).toFixed(2) })) }, null, 1))
 const r = spawnSync(FFMPEG, ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', 'frames.txt', '-vf', 'fps=30,scale=1920:1080:flags=lanczos,format=yuv420p', '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-movflags', '+faststart', OUT], { cwd: dir, stdio: 'inherit' })
 if (r.status !== 0) throw new Error('ffmpeg failed')
 if (!process.env.KEEP) rmSync(dir, { recursive: true, force: true }); else console.log('frames kept in', dir)

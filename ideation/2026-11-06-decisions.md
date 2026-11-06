@@ -145,3 +145,33 @@
    - Cost and latency are unchanged: 284.9 input / 29.3 output tokens, ~1.30 s (Japanese ~1.30 s).
    - **This is a behaviour change, not a translation.** It is recorded here because the tier words are
      compared against `broker/src/tier.js` and appear in the trail, the screens and the recordings.
+
+## 26. The three money documents now say the same thing — and what had to move to get there
+
+**2026-11-06 afternoon IST.** Writing the lean canvas (`LEAN-CANVAS.md`) forced a line-by-line
+comparison of `STORY.md`, `ideation/2026-11-06-market-and-model.html` and
+`ideation/2026-11-06-money-review.md`. **Six disagreements were found; all six are now closed.**
+
+1. **Billing is on verdicts, not on throughput.** The deck still billed *"only heavy judgements"*,
+   which is the same shape as a payment fee: stop more, earn less — the exact thing Decision 16
+   forbids. **`ALLOWED`, `NEEDS_PRESS` and `DENIED` are billed identically. `STOPPED` is not
+   (no verdict exists, and it is our outage). A scope violation by the skill is not (the customer
+   did not misbehave).**
+2. **`money-review.md` §2's proposal to bill `STOPPED` is withdrawn**, and the withdrawal is left
+   visible in that file rather than edited away. Billing `STOPPED` would mean **we earn when we are
+   unreachable**, which is the first thing a judge would push on.
+3. **The flame is free for everyone to see.** B sells **the embeddable badge and per-version
+   analytics**, never the light. Charging for display makes an unpaid maker's flame invisible, and
+   an invisible flame is indistinguishable from a purchased one.
+4. **C says "for the duration of the contract", never "permanent"**, and names the dependency:
+   0G Storage's fee model is still `[unverified]`.
+5. **Go-to-market order is D → A → B**, written under the revenue table. The table's own order was
+   being read as a sequence, and it put the only line where the customer decides nothing last.
+6. **A is now $108/year, billed once** — not $9/month. The comparison P1 actually makes is a device
+   bought outright, so the *shape* was wrong even though the amount was fine.
+   **The amount is deliberately unchanged**: an earlier draft said $79/year, which would have broken
+   the SOM build (8,000 x $108 + 1,000 x $348 + 10 x $20k = $1.41M) for a cosmetic gain.
+   **When a number appears in five documents, change its shape before you change its value.**
+
+**What this cost:** nothing in the code. All six lived in prose, which is exactly where a
+contradiction survives longest, because prose has no test.

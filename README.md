@@ -64,6 +64,15 @@ leave alone.
 **What we did not finish, said here rather than buried:** the Broker is the single point of trust and
 is **not** in a TEE this time, and the anonymous read path for stars is designed but not built.
 
+## Where to look, by how long you have
+
+| You have | Open |
+|---|---|
+| **30 seconds** | The two tables above, then the demo: **https://mintannn.github.io/tomoshibi/start.html** |
+| **5 minutes** | `ideation/2026-11-06-decisions.md` (numbered decisions, each with what we rejected) · `LEAN-CANVAS.md` · [the figures, drawn](https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-business-model.html) |
+| **30 minutes** | `spec/permit-signature.md` (the frozen domain, with a cross-side test vector) · `broker/src/weigh.js`, `world.js`, `execute.js` · `broker/test` — **58 tests**, including 100 concurrent requests against a budget of 3 |
+| **You are looking for one thing** | Every directory has a `README.md` saying what is in it. `ideation/README.md` indexes all 47 working documents by purpose |
+
 ## Verifiable facts (not adjectives)
 
 | | |

@@ -2,6 +2,15 @@
 
 **A review score never expires. A flame goes out. That is the whole idea.**
 
+> ### Your agent is holding a spare key that works until you cancel it.
+>
+> **For anyone who hands an AI agent a real key** — a Stripe secret, a wallet, a logged-in session —
+> **TOMOSHIBI is the approval layer that hands over one use instead of the key.**
+> It does for every action an agent takes what your bank does for a single card payment:
+> you approve this one, not all future ones.
+> **Unlike a password manager, the secret is never handed over at all** — and every refusal is
+> kept, named and signed.
+
 AI agents are starting to ask for our API keys the way apps once asked for passwords — a secret
 with no scope, no expiry and no receipt, handed to code we did not read. **TOMOSHIBI puts one
 button in front of the key that an AI cannot press.** You sign a scope on a Ledger device — which

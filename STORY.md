@@ -8,6 +8,15 @@ file, this file wins and the older one gets corrected.
 
 ## The claim
 
+> ### Your agent is holding a spare key that works until you cancel it.
+>
+> **For anyone who hands an AI agent a real key** — a Stripe secret, a wallet, a logged-in session —
+> **TOMOSHIBI is the approval layer that hands over one use instead of the key.**
+> It does for every action an agent takes what your bank does for a single card payment:
+> you approve this one, not all future ones.
+> **Unlike a password manager, the secret is never handed over at all** — and every refusal is
+> kept, named and signed.
+
 **A key is a standing permission. What anyone actually wants to give an agent is a one-time one.**
 
 We make the one-time permission cheap to give, impossible to forge, and impossible to erase.

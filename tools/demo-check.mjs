@@ -29,7 +29,7 @@ say(br.body?.ready ? OK : NO, 'Ledger', br.body?.ready ? `Tomoshibi ${br.body.ve
 const a = await get('http://127.0.0.1:8792/health')
 say(a.body?.ok ? OK : NO, 'AI tool (agent, 8792)', a.body?.ok ? `sees Ledger: ${a.body.device} · STOPPED scene: ${a.body.deaf}` : (a.error ?? ''))
 const p = await get('http://127.0.0.1:8790/scenes.json')
-say(p.status === 200 ? OK : NO, 'Pages (8790)', p.status === 200 ? 'http://localhost:8790/gate.html' : (p.error ?? `status ${p.status}`))
+say(p.status === 200 ? OK : NO, 'Pages (8790)', p.status === 200 ? 'http://localhost:8790/app.html' : (p.error ?? `status ${p.status}`))
 
 for (const [m, w, n] of rows) console.log(`${m} ${w.padEnd(26)} ${n}`)
 const bad = rows.filter((r) => r[0] === NO).length, sim = rows.filter((r) => r[0] === SIM).length

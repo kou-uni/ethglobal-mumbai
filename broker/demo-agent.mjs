@@ -230,7 +230,7 @@ async function lend({ uses, days } = {}) {
 async function run(id) {
   if (!REQUESTS[id]) return { ok: false, error: 'unknown request' }
   if (busy) return { ok: false, error: 'busy' }
-  if (!standing) { emit({ type: 'error', error: 'The key has not been lent yet.' }); return { ok: false, error: 'not lent' } }
+  if (!standing) { emit({ type: 'error', error: 'No permit has been signed yet.' }); return { ok: false, error: 'not lent' } }
   if (id === 'stopped' && !DEAF) { emit({ type: 'error', error: 'No Broker without 0G was started (third argument), so this cannot be shown live.' }); return { ok: false, error: 'no deaf broker' } }
   busy = true
   try {
@@ -277,7 +277,7 @@ const routes = {
   // So the outcome is kept: asking again with the same code gets the same answer, and it also goes out as an
   // event, which the page reads the next time it looks.
   'POST /vouch/finish': async ({ deviceCode }) => {
-    if (!standing) return { decision: 'VOUCH_DENIED', reason: 'NOT_LENT', message: 'No key has been lent from this computer.' }
+    if (!standing) return { decision: 'VOUCH_DENIED', reason: 'NOT_LENT', message: 'No permit has been signed on this computer.' }
     if (!vouches.has(deviceCode)) {
       const s = standing
       vouches.set(deviceCode, (async () => {

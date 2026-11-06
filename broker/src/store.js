@@ -9,6 +9,7 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
   const owners = new Map()   // `${holder}:${nonce}` → { skill }。**holder の署名が通った要求だけ**
   const byThread = new Map()
   const stars = new Map()    // `${skill}:${version}` → Set(nullifier)。**版ごとに別の集合**
+  const checked = new Map()  // `${skill}:${version}` → 持ち主の署名と使用を確かめた星の数
 
   const key = (holder, nonce) => `${String(holder).toLowerCase()}:${nonce}`
   const starKey = (skill, version) => `${skill}:${version}`
@@ -37,6 +38,7 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
       const k = starKey(rec.skill, rec.version)
       if (!stars.has(k)) stars.set(k, new Set())
       stars.get(k).add(rec.nullifier)
+      if (rec.ownerChecked) checked.set(k, (checked.get(k) ?? 0) + 1)
     }
     if (!rec.thread) return
     const t = byThread.get(rec.thread) ?? []
@@ -83,6 +85,9 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
     },
 
     starCount: (skill, version) => stars.get(starKey(skill, version))?.size ?? 0,
+
+    /** そのうち、持ち主の署名と実際の使用を確かめてから出た星の数。 */
+    starChecked: (skill, version) => checked.get(starKey(skill, version)) ?? 0,
 
     /**
      * その版に星を出している人の仮名（World の識別子）。**数ではなく「誰の」を出すための口。**

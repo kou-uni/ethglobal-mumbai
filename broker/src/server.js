@@ -12,6 +12,7 @@ import { store as storeEpisode } from './episode.js'
 import { offlineWeigh } from './offline.js'
 import { deviceStart, waitForHuman, verifyIdToken, ISSUER } from './world.js'
 import { offlineWorld } from './world-offline.js'
+import { ownerOf, OWNER_REASONS } from './owner.js'
 
 const ledger = createStore()
 const EXECUTE = process.env.EXECUTE === '1'
@@ -125,10 +126,18 @@ export async function seal(thread, deps = {}) {
  * 星を出す — **World で「誰であるか」を1回だけ確かめ、確かめられたときだけ刻む。**
  * 断られた・期限切れも、同じ系譜に残す（拒否の経路は作り物ではなく device flow のもの）。
  */
-export async function vouch({ deviceCode, skill, version }, deps = {}) {
+export async function vouch({ deviceCode, skill, version, permit, signature }, deps = {}) {
   const store = deps.store ?? ledger
   const w = deps.world ?? world
   const base = { skill, version, world: { issuer: ISSUER } }
+
+  // 星を出せるのは鍵の持ち主だけ（Q1-b = B）。**World を呼ぶ前に**確かめる。持ち主でない人のために本人を煩わせない。
+  // VOUCH_OWNER=0 で外せる（World だけを確かめる試作の画面用）。
+  const ownerOnly = deps.ownerOnly ?? process.env.VOUCH_OWNER !== '0'
+  if (ownerOnly) {
+    const o = await ownerOf({ permit, signature, skill, version }, store)
+    if (!o.ok) return store.append({ ...base, decision: 'VOUCH_DENIED', reason: o.reason, message: OWNER_REASONS[o.reason], detail: o.detail })
+  }
 
   const waited = await w.waitForHuman(deviceCode, deps.pollOpts ?? {})
   if (!waited.ok) {
@@ -157,6 +166,8 @@ export async function vouch({ deviceCode, skill, version }, deps = {}) {
     ...base,
     decision: 'STAR',
     nullifier: v.nullifier,
+    // 持ち主の署名と使用を確かめた星か。**持ち主のアドレスは刻まない**（仮名と財布を結び付けないため）
+    ownerChecked: ownerOnly || undefined,
     stars: store.starCount(skill, version),
     world: { ...base.world, simulated: v.simulated || undefined },
   })
@@ -222,6 +233,7 @@ export const app = createServer(async (req, res) => {
         version,
         stars: version ? ledger.starCount(skill, version) : undefined,
         who: version ? ledger.starWho(skill, version) : undefined,
+        ownerChecked: version ? ledger.starChecked(skill, version) : undefined,
         byVersion: ledger.starsOf(skill),
       })
     }

@@ -8,6 +8,9 @@ import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
+// この試験は World だけを見る。持ち主の検査（test/owner.test.js）は外す。
+process.env.VOUCH_OWNER = '0'
+
 let vouch
 before(async () => { ({ vouch } = await import('../src/server.js')) })
 

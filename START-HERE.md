@@ -1,88 +1,88 @@
-# 続きはここから（2026-11-06 11:00 JST / 07:30 IST 更新）
+# Pick up here (updated 2026-11-06 11:00 JST / 07:30 IST)
 
-**新しいセッションを開いたら、このファイルだけ読めば再開できる。**
-作業ディレクトリは `~/ch/seeds/ethglobal-mumbai/repo`（この公開リポジトリのクローン）。
+**Open a new session and this file alone is enough to resume.**
+The working directory is `~/ch/seeds/ethglobal-mumbai/repo` (a clone of this public repository).
 
 ---
 
-## 1. いまの一行
+## 1. Where we are, in one line
 
-**Broker は本番の 0G につながって動いている。通しの5本も全部出る。
-止まっているのは gas だけ。次にやるのは3分のピッチ台本。**
+**The Broker is wired to the live 0G and it works. All five end-to-end runs come out.
+The only thing stuck is gas. Next up is the three-minute pitch script.**
 
-## 2. 動くことを確かめた手順（この順で打てば、そのまま再現する）
+## 2. The steps we confirmed work (type them in this order and it reproduces)
 
 ```bash
 cd ~/ch/seeds/ethglobal-mumbai/repo/broker
 
-# 本番の 0G につないだ Broker
+# the Broker wired to the live 0G
 (set -a; . ./.env.local; set +a; PORT=8797 EXECUTE=0 node src/server.js &)
 
-# 「0G に届かない」Broker（STOPPED を実演するため。届かない宛先を渡すだけ）
+# a Broker that "cannot reach 0G" (to demonstrate STOPPED; just hand it an unreachable endpoint)
 (set -a; . ./.env.local; set +a; ZG_ENDPOINT=https://router-api.invalid/v1 PORT=8798 EXECUTE=0 node src/server.js &)
 
-curl -s http://127.0.0.1:8797/health            # apiKey:true / storageKey:true / simulated が無いこと
-node demo.mjs http://127.0.0.1:8797 http://127.0.0.1:8798   # 通しの5本
+curl -s http://127.0.0.1:8797/health            # apiKey:true / storageKey:true / no simulated field
+node demo.mjs http://127.0.0.1:8797 http://127.0.0.1:8798   # the five end-to-end runs
 npm test                                        # 50/50
 ```
 
-**注意:** 以前のセッションの古い Broker が 8787〜8789 に残っていることがある。
-`kill` は環境に止められるので、**空いているポートを使う**（8797 / 8798 は空き）。
-`.env.local` は gitignore。無い環境では `ZG_API_KEY` と `ZG_PRIVATE_KEY` を自分で置く。
+**Note:** old Brokers from earlier sessions may still be sitting on 8787-8789.
+`kill` is blocked in this environment, so **use free ports** (8797 / 8798 are free).
+`.env.local` is gitignored. On a machine without it, set `ZG_API_KEY` and `ZG_PRIVATE_KEY` yourself.
 
-## 3. 終わっていること
+## 3. What is done
 
-| | 状態 |
+| | State |
 |---|---|
-| Broker（範囲・回数・違反・代理実行・系譜） | 動く。テスト 50/50 |
-| 0G Private Computer（重さ判定） | **本番キーで動作確認済**。1.3〜2.2秒、request id 取得済 |
-| 通しの5本（ALLOWED / NEEDS_PRESS / 一押しで通る / DENIED 5種 / STOPPED） | **全部出る** |
-| Ledger アプリ（minta） | 実機で動作。`origin/minta/ledger-app` |
-| 提出フォームの初稿・アーキ1枚・TODO1枚・アドレス一覧 | ある（§6） |
+| Broker (scope, call budget, violations, proxied execution, trail) | Works. Tests 50/50 |
+| 0G Private Computer (weight judgement) | **Confirmed working with the production key**. 1.3-2.2s, request id captured |
+| The five end-to-end runs (ALLOWED / NEEDS_PRESS / passes with one press / 5 kinds of DENIED / STOPPED) | **All of them come out** |
+| Ledger app (minta) | Works on the device. `origin/minta/ledger-app` |
+| First draft of the submission form, one-page architecture, one-page TODO, address list | Exist (§6) |
 
-## 4. 止まっていること
+## 4. What is stuck
 
-| 待ち | 影響 | 外れなかったら |
+| Waiting on | Impact | If it does not land |
 |---|---|---|
-| **gas**（`0xdfcbC73bEC15dD080545f77f8B702832a2b142A4`） | 0G Storage に書けない。root hash は出るが tx が無い | 「系譜はローカル追記のみ」と提出文に書く。tx があるフリはしない |
-| **World のクライアント登録** | 星の人証明が本番で動かない | 星は実演せず設計の説明に落とす |
+| **gas** (`0xdfcbC73bEC15dD080545f77f8B702832a2b142A4`) | Cannot write to 0G Storage. The root hash comes out but there is no tx | Write "the trail is local append only" in the submission. Do not pretend there is a tx |
+| **World client registration** | Proof of personhood for stars will not run in production | Drop the star from the live demo and explain it as design |
 
-gas は **0.0000002〜0.0000005 0G** で足りる（実測）。faucet（`https://faucet.0g.ai`）が来ないので
-Telegram で直接送ってもらう依頼を出している。
+Gas needs **0.0000002-0.0000005 0G** (measured). The faucet (`https://faucet.0g.ai`) is not coming through,
+so we have asked for a direct send over Telegram.
 
-## 5. 次にやること（上から順）
+## 5. What to do next (top first)
 
-1. **3分のピッチ台本**（日本語で話す版＋英語で読む版）。`ideation/2026-11-06-storyboard.md` と
-   アーキ v3 の「拒否が4種類」を土台にする
-2. gas が着いたら `/seal` を1回回し、**tx と root hash を控える**（提出文に実物を貼る）
-3. World のクライアント登録が済んだら device flow を通す
-4. **撮影 11-06 22:00 IST**。その前に `/health` で `simulated` が出ていないことを目視
-5. **仮提出 11-07 03:00 IST**（締切 09:00 IST）
+1. **The three-minute pitch script** (a version spoken in Japanese plus a version read in English).
+   Build it on `ideation/2026-11-06-storyboard.md` and the "four kinds of denial" section of architecture v3
+2. Once gas lands, run `/seal` once and **note the tx and root hash** (paste the real values into the submission)
+3. Once the World client registration is done, run the device flow through
+4. **Filming 11-06 22:00 IST**. Before that, eyeball `/health` to confirm `simulated` does not appear
+5. **Provisional submission 11-07 03:00 IST** (deadline 09:00 IST)
 
-## 6. どこに何があるか
+## 6. Where things are
 
-| 見るもの | 場所 |
+| What to look at | Location |
 |---|---|
-| **提出までのTODO（1枚・チェックできる）** | `ideation/2026-11-06-todo.html` |
-| 提出フォームに貼る初稿（全項目） | `ideation/2026-11-06-submission-form.md` |
-| 提出文の長い版（英語） | `ideation/2026-11-06-submission-draft.md` |
-| **アーキテクチャ（いまの正）** | `ideation/2026-11-06-architecture-v3.md` ／ 1枚HTMLは同名 `.html` |
-| アドレス・エンドポイント・環境変数の全部 | `ADDRESSES.md` |
-| 端末と Broker の境界（**動かすと署名が壊れる**） | `spec/permit-signature.md`（§6 にテストベクタ） |
-| 決めたこと・まだ確かめていないこと | `ideation/2026-11-06-decisions.md` |
-| 手順書の正本（事務・賞要件・撮影） | `ideation/2026-11-06-submission-checklist.md` |
+| **TODO up to submission (one page, checkable)** | `ideation/2026-11-06-todo.html` |
+| First draft to paste into the submission form (all fields) | `ideation/2026-11-06-submission-form.md` |
+| The long version of the submission text (English) | `ideation/2026-11-06-submission-draft.md` |
+| **Architecture (current source of truth)** | `ideation/2026-11-06-architecture-v3.md`, one-page HTML under the same name `.html` |
+| All addresses, endpoints and environment variables | `ADDRESSES.md` |
+| The boundary between the device and the Broker (**move it and signatures break**) | `spec/permit-signature.md` (test vector in §6) |
+| What is decided and what is not yet confirmed | `ideation/2026-11-06-decisions.md` |
+| Source of truth for procedure (admin, prize requirements, filming) | `ideation/2026-11-06-submission-checklist.md` |
 
-**古い資料**: `ideation/2026-11-06-architecture.md`（v2）は捨てた部品が残っている。先頭に印がある。
+**Old material**: `ideation/2026-11-06-architecture.md` (v2) still contains parts we dropped. There is a marker at the top.
 
-## 7. 動かしてはいけないもの
+## 7. Things that must not move
 
-- `spec/permit-signature.md` の **domain**（`verifyingContract` はゼロアドレスで凍結、chainId 16602）。
-  変えると minta の実機と `ecrecover` が合わなくなる
-- **ETHGlobal Tokyo 2026 の成果物（別件・凍結中）とその公開経路**。TOMOSHIBI では一切使わない。
-  デモ URL は GitHub Pages ＋ 動画で出す
-- **インドの語・象徴を借りない**（🪔 を使わない理由。`interests/ethglobal-mumbai-hackathon-plan` に経緯）
+- The **domain** in `spec/permit-signature.md` (`verifyingContract` frozen at the zero address, chainId 16602).
+  Change it and minta's device no longer agrees with `ecrecover`
+- **The ETHGlobal Tokyo 2026 artifacts (a separate, frozen project) and their public routes.** TOMOSHIBI uses none of them.
+  The demo URL goes out via GitHub Pages plus video
+- **Do not borrow Indian words or symbols** (the reason we do not use 🪔; background in `interests/ethglobal-mumbai-hackathon-plan`)
 
-## 8. 分担
+## 8. Who does what
 
-- **minta** = 見えるもの（Ledger アプリ・星の画面・撮影）
-- **kou + Claude** = 見えないもの（Broker・0G・World・設計・文章・提出）
+- **minta** = the visible side (Ledger app, star screen, filming)
+- **kou + Claude** = the invisible side (Broker, 0G, World, design, writing, submission)

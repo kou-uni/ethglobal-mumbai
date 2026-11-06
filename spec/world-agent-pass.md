@@ -1,21 +1,21 @@
-# World ID Agent Pass — 何者で、どう入れるか（2026-11-06 調査）
+# World ID Agent Pass — what it is and how to wire it in (researched 2026-11-06)
 
-**一言：Agent Pass は IDKit と別物で、中身は標準の OIDC。
-`device_code` グラントがあるので、Broker（画面を持たない側）からそのまま呼べる。**
+**In one line: Agent Pass is not IDKit; underneath it is plain OIDC.
+It has the `device_code` grant, so the Broker — which has no screen — can call it directly.**
 
-出典（一次）：
-- 賞ページ https://ethglobal.com/events/mumbai/prizes/world
-- https://auth.world.org/docs ／ https://auth.world.org/docs/guides/getting-started
-- **https://auth.world.org/.well-known/openid-configuration**（実際に読んだ）
+Sources (primary):
+- Prize page https://ethglobal.com/events/mumbai/prizes/world
+- https://auth.world.org/docs and https://auth.world.org/docs/guides/getting-started
+- **https://auth.world.org/.well-known/openid-configuration** (read directly)
 
 ---
 
-## 1. 正体
+## 1. What it actually is
 
-**OIDC の Identity Provider。** 発行者は `https://auth.world.org`。
-IDKit（`docs.world.org` / `developer.worldcoin.org`）とは別の入口。
+**An OIDC identity provider.** The issuer is `https://auth.world.org`.
+It is a different entry point from IDKit (`docs.world.org` / `developer.worldcoin.org`).
 
-| | 値 |
+| | Value |
 |---|---|
 | issuer | `https://auth.world.org` |
 | discovery | `https://auth.world.org/.well-known/openid-configuration` |
@@ -25,88 +25,88 @@ IDKit（`docs.world.org` / `developer.worldcoin.org`）とは別の入口。
 | JWKS | `https://auth.world.org/.well-known/jwks.json` |
 | **device_authorization** | **`https://auth.world.org/api/v1/device_authorization`** |
 | revoke | `https://auth.world.org/api/v1/revoke` |
-| scope | `openid` **だけ** |
-| grant | `authorization_code` ／ **`urn:ietf:params:oauth:grant-type:device_code`** |
+| scope | `openid` **only** |
+| grant | `authorization_code` and **`urn:ietf:params:oauth:grant-type:device_code`** |
 | response_type | `code` |
 
-クライアント登録は portal（`https://auth.world.org/portal`）。
+Clients are registered in the portal (`https://auth.world.org/portal`).
 
-返るのは「**署名された認証の結果**」と「**sector 単位の口座識別子**」。
-受け入れる credential（Orb / Selfie Check）はこちら側で選ぶ。
-**一度きりの用途では、使用済みの nullifier を atomic に弾く**のがドキュメントの指示。
+What comes back is **a signed authentication result** and **a per-sector account identifier**.
+Which credentials to accept (Orb / Selfie Check) is our choice.
+**For one-time uses, the docs say to reject already-used nullifiers atomically.**
 
 ---
 
-## 2. どこに置くか（**2026-11-06 訂正**）
+## 2. Where it goes (**corrected 2026-11-06**)
 
-> **初版はここを間違えていた。** 「鍵を使う直前に Agent Pass を呼ぶ」と書いたが、
-> **それは Ledger の長押しと機能が重複する。**
-> 人から見ると、同じ1回の行為に2回聞かれ、なぜ2回なのか説明できない。
+> **The first version got this wrong.** It said "call Agent Pass right before the key is used",
+> but **that duplicates what the long press on the Ledger already does.**
+> To a person it looks like being asked twice for one single act, with no way to explain why.
 > → `ideation/2026-11-06-tech-value-review.md` §4
 
-**役割を分ける。**
+**Split the roles.**
 
-| | 何を確かめるか | いつ |
+| | What it confirms | When |
 |---|---|---|
-| **Agent Pass（World）** | **誰であるか**（人であること・同じ人であること） | **星を出すとき。1回** |
-| **Ledger** | **いま、これを許すか**（範囲と期限） | **鍵を使うとき。毎回** |
+| **Agent Pass (World)** | **who you are** (that you are a person, and the same person) | **when a star is given. Once** |
+| **Ledger** | **whether you allow this, now** (scope and expiry) | **every time the key is used** |
 
-**保護された動作 ＝ 星を出すこと**（VouchRegistry に書くこと）。
+**The protected action is giving a star** (writing to the VouchRegistry).
 
-**星を出すのは重い行為。** 自分の評判を賭けて「私はこれを使っている」と言う。
-**ここに人の証明を置くのは自然で、賞の要件（要求 → 本人が完了 → 検証 → 保護された動作）
-がそのまま一列に並ぶ。**
+**Giving a star is a heavy act.** You stake your own reputation to say "I use this".
+**Putting proof of personhood here is natural, and it lines the prize requirements up in a row
+(request → the owner completes it → verification → protected action).**
 
 ```
-誰かが「このスキルを使っている」と星を出そうとする
-  → Broker が device_authorization を叩く
-  → 本人の端末に World の確認が出る
-  → 本人が完了する
-  → Broker が token を取り、JWKS で検証する
-  → VouchRegistry に書く（＝星が出る）
+someone tries to give a star, saying "I use this skill"
+  → the Broker calls device_authorization
+  → the World confirmation appears on the owner's device
+  → the owner completes it
+  → the Broker takes the token and verifies it against JWKS
+  → it writes to the VouchRegistry (= the star appears)
 ```
 
-**鍵を使うたびに World を呼ばない。それは Ledger の仕事。**
+**Do not call World every time the key is used. That is the Ledger's job.**
 
-**`device_code` グラントがあることの意味は変わらない。**
-画面を持たない Broker が認証を開始し、人は自分の端末で完了する。
+**What the `device_code` grant buys us does not change.**
+The Broker, which has no screen, starts the authentication, and the person completes it on their own device.
 
-## 3. 賞の要件が、どこで埋まるか
+## 3. Where each prize requirement is met
 
-| 要件（原文） | どこで埋まるか |
+| Requirement (original wording) | Where it is met |
 |---|---|
-| 公式の Agent Pass に統合する | OIDC クライアントを portal で登録して `device_code` で回す |
-| **一連の流れを全部見せる**（要求 → 本人が完了 → 結果の検証 → 保護された動作） | 上の5行がそのまま。**保護された動作＝API 呼び出し** |
-| **拒否／期限切れ／取り消し／失敗の経路** | **device flow に標準で入っている。** `access_denied`（本人が断る）／`expired_token`（`device_code` の期限切れ）。**作らなくても手に入る** |
-| **安全なバックエンドで検証。client secret を晒さない** | Broker が JWKS で署名を検証する。client secret は Broker の中。**ブラウザに出さない** |
-| 導入の振り返り | 別途（D6） |
+| Integrate the official Agent Pass | Register an OIDC client in the portal and drive it with `device_code` |
+| **Show the whole flow** (request → the owner completes it → verifying the result → protected action) | The five lines above, exactly. **Protected action = the API call** |
+| **Denial / expiry / revocation / failure paths** | **Built into the device flow already.** `access_denied` (the owner refuses) and `expired_token` (the `device_code` expires). **We get them without building them** |
+| **Verify in a secure backend. Do not expose the client secret** | The Broker verifies the signature against JWKS. The client secret stays inside the Broker. **It never reaches the browser** |
+| Write-up of the integration | Separately (D6) |
 
-**「拒否の経路」が device flow に最初から入っているのが大きい。**
-`research/11-prize-gap.md` では「World の拒否経路が無い」を抜けとして挙げたが、
-**Agent Pass を使うなら作る必要がない。** 本人が World アプリで断れば `access_denied` が返る。
+**The big win is that the denial path is in the device flow from the start.**
+`research/11-prize-gap.md` listed "no denial path for World" as a gap, but
+**if we use Agent Pass there is nothing to build.** If the owner refuses in the World app, `access_denied` comes back.
 
-→ **拒否が2種類になる。** 「断る」と「押さない」は違う。
-**前者は人が拒否した（World／星を出すのをやめた）、後者は人が居ない（Ledger／鍵が使えない）。**
+→ **That gives us two kinds of denial.** "Refused" and "not pressed" are different things.
+**The first is a person refusing (World / no star given); the second is nobody being there (Ledger / the key cannot be used).**
 
-## 4. 最小の実装（Broker 側・こちらが書く）
+## 4. The minimum implementation (Broker side — ours to write)
 
-1. portal でクライアントを登録（`client_id` / `client_secret`）
-2. `POST /api/v1/device_authorization`（`client_id`, `scope=openid`）
+1. Register a client in the portal (`client_id` / `client_secret`)
+2. `POST /api/v1/device_authorization` (`client_id`, `scope=openid`)
    → `device_code` / `user_code` / `verification_uri` / `expires_in` / `interval`
-3. `verification_uri` と `user_code` を**画面 A に出す**（QR でよい）
-4. `POST /api/v1/token`（`grant_type=urn:ietf:params:oauth:grant-type:device_code`, `device_code`）を
-   `interval` 秒ごとに叩く
-   - `authorization_pending` → 続ける
-   - **`access_denied` → 本人が断った。`DENIED: human_denied`**
-   - **`expired_token` → 期限切れ。`DENIED: proof_expired`**
-   - 成功 → `id_token`
-5. `id_token` を **JWKS で検証**（`iss` が `https://auth.world.org`、`aud` が自分の `client_id`、`exp`）
-6. sector 単位の識別子を**仮名として星に刻む**。使用済みなら弾く
+3. **Show `verification_uri` and `user_code` on screen A** (a QR is fine)
+4. Poll `POST /api/v1/token` (`grant_type=urn:ietf:params:oauth:grant-type:device_code`, `device_code`)
+   every `interval` seconds
+   - `authorization_pending` → keep going
+   - **`access_denied` → the owner refused. `DENIED: human_denied`**
+   - **`expired_token` → expired. `DENIED: proof_expired`**
+   - success → `id_token`
+5. **Verify the `id_token` against JWKS** (`iss` is `https://auth.world.org`, `aud` is our `client_id`, and `exp`)
+6. **Engrave the per-sector identifier on the star as a pseudonym.** Reject it if already used
 
-## 5. まだ確かめていないこと
+## 5. Not yet confirmed
 
-- **会場の証明は mock。** mock で `device_code` フローが回るか
-- `id_token` の claim 名（sector 単位の識別子がどの claim に入るか）
+- **On-site proof is mocked.** Whether the `device_code` flow runs against the mock
+- The claim name in the `id_token` (which claim carries the per-sector identifier)
   → `https://auth.world.org/docs/guides/id-token`
-- Sandbox（`https://auth.world.org/docs/guides/testing`）で本番鍵なしに回せるか
-- **IDKit 賞と Agent Pass 賞の両方に、同じプロジェクトで出せるか**
+- Whether the sandbox (`https://auth.world.org/docs/guides/testing`) runs without production keys
+- **Whether the same project can enter both the IDKit prize and the Agent Pass prize**

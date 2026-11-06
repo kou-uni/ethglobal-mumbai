@@ -1,5 +1,5 @@
-// Tomoshibi Broker — use → 範囲チェック → **0G に重さを聞く** → 代理実行 → 系譜。
-// ここは信頼点。本番は TEE に載せる（今回は載せていない。README に明記）。
+// Tomoshibi Broker — use -> scope check -> **ask 0G for the weight** -> proxied execution -> the trail.
+// This is the trust point. In production it runs in a TEE (it does not here; that is stated in the README).
 import { createServer } from 'node:http'
 import { check, REASONS } from './scope.js'
 import { createStore } from './store.js'
@@ -15,21 +15,21 @@ import { offlineWorld } from './world-offline.js'
 
 const ledger = createStore()
 const EXECUTE = process.env.EXECUTE === '1'
-// 【模擬】0G を呼ばない開発モード。記録に simulated: true が残る（撮影では使わない）
+// [SIMULATED] A development mode that never calls 0G. Records carry simulated: true (not used while filming)
 const OFFLINE = process.env.ZG_OFFLINE === '1'
 const weigher = OFFLINE ? offlineWeigh : weigh
-// 【模擬】World を呼ばない開発モード（撮影では外す）
+// [SIMULATED] A development mode that never calls World (turned off while filming)
 const WORLD_OFF = process.env.WORLD_OFFLINE === '1'
 const world = WORLD_OFF ? offlineWorld : { deviceStart, waitForHuman, verifyIdToken }
 const secrets = JSON.parse(process.env.SECRETS ?? '{}')
 
 const json = (res, code, body) => {
-  // allow-headers: ブラウザが JSON を POST する前の問い合わせ（preflight）に答える。無いと画面から /vouch・/use が呼べない
+  // allow-headers: answers the browser's preflight before it POSTs JSON. Without it the page cannot call /vouch or /use
   res.writeHead(code, { 'content-type': 'application/json; charset=utf-8', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type' })
   res.end(JSON.stringify(body, (_, v) => (typeof v === 'bigint' ? String(v) : v), 2))
 }
 
-/** 1件の使用要求を処理する。判定 → **0G に重さを聞く** → 回数を押さえる → 実行 → 記録。 */
+/** Handle one use request: judge -> **ask 0G for the weight** -> reserve a call -> execute -> record. */
 export async function use({ permit, signature, request, skillSignature }, deps = {}) {
   const store = deps.store ?? ledger
   const judge = deps.weigh ?? weigher
@@ -38,7 +38,7 @@ export async function use({ permit, signature, request, skillSignature }, deps =
   const p = normalize(permit)
   const shown = lines(permit)
 
-  // 要求そのものがスキルの署名付きか。付いていなければ、違反としては刻まない（#14-4）
+  // Does the request itself carry the skill's signature? If not, it is not recorded as a violation (#14-4)
   const skill = await verifySkill(thread, skillSignature)
   const skillBound = skill.bound && skillIdFrom(skill.signer) === p.skill
 
@@ -59,16 +59,16 @@ export async function use({ permit, signature, request, skillSignature }, deps =
 
   const denied = (reason, outOfRange, extra = {}) =>
     stop('DENIED', reason, REASONS[reason], {
-      // 刻むのは「宣言した範囲を外れた要求」で、かつスキルの署名が付いているものだけ
+      // Only a request outside the declared scope that also carries the skill's signature gets recorded as one
       violation: Boolean(outOfRange && skillBound),
       unsignedRequest: outOfRange && !skillBound ? true : undefined,
       ...extra,
     })
 
-  // 範囲を外れた要求は、0G に見せる前に止める。中身を外に出さないし、クレジットも使わない
+  // A request outside the scope is stopped before 0G ever sees it: the body never leaves, and no credits are spent
   if (!verdict.ok) return denied(verdict.reason, verdict.outOfRange, { detail: verdict.detail })
 
-  // ── 0G Private Computer（TeeML）。**中身を読んで重さを決めるのはここだけ** ──
+  // -- 0G Private Computer (TeeML). **This is the only place that reads the body to decide the weight** --
   const w = await judge(shown, request)
   const zg = {
     simulated: w.simulated ? true : undefined,
@@ -79,9 +79,9 @@ export async function use({ permit, signature, request, skillSignature }, deps =
     sealed: w.sealed ?? undefined,
   }
 
-  // 届かない／答えが読めない → **判断を作らない。止まる。**（偽装したフォールバックは失格）
+  // Unreachable, or the answer cannot be read -> **make no judgement. Stop.** (a faked fallback is disqualifying)
   if (!w.ok) {
-    return stop('STOPPED', 'ZG_UNREACHABLE', '重さを決められないので止めた', {
+    return stop('STOPPED', 'ZG_UNREACHABLE', 'stopped: the weight could not be decided', {
       zg: { ...zg, error: w.error, reachable: w.reachable },
       safeStop: true,
     })
@@ -90,15 +90,15 @@ export async function use({ permit, signature, request, skillSignature }, deps =
   zg.tier = w.tier
   zg.reason = w.reason
 
-  // 重い要求は、その場で押された使い切りの許可でしか通さない（立っている許可では通さない）
+  // A heavy request passes only on a single-use permit pressed right now (never on a standing permit)
   if (needsPress(w.tier, p)) {
-    return stop('NEEDS_PRESS', 'ESCALATED', `${w.tier}：その場の一押しが要る`, {
+    return stop('NEEDS_PRESS', 'ESCALATED', `${w.tier}: a press right now is required`, {
       zg,
-      press: { from: ESCALATE_FROM, need: 'maxCalls=1 の許可に、いま署名する', lines: shown },
+      press: { from: ESCALATE_FROM, need: 'sign a maxCalls=1 permit, now', lines: shown },
     })
   }
 
-  // 回数は実行の前に押さえる。確認と記録のあいだに await を挟まない（#14-3）
+  // Reserve the call before executing. No await between the check and the write (#14-3)
   const slot = store.reserve(p.holder, p.nonce, p.maxCalls)
   if (!slot) return denied('EXHAUSTED', false, { zg, detail: `${p.maxCalls}/${p.maxCalls}` })
 
@@ -111,19 +111,19 @@ export async function use({ permit, signature, request, skillSignature }, deps =
   }
 }
 
-/** 糸ひと組を 0G Storage に置き、置けたかどうかを系譜にも刻む。 */
+/** Put one thread's records into 0G Storage, and record in the trail whether that worked. */
 export async function seal(thread, deps = {}) {
   const store = deps.store ?? ledger
   const records = store.trace(thread)
-  if (!records.length) return { thread, uploaded: false, reason: 'その糸の記録が無い' }
+  if (!records.length) return { thread, uploaded: false, reason: 'there are no records for that thread' }
   const put = await (deps.put ?? storeEpisode)(thread, records)
   store.append({ thread, decision: 'SEALED', storage: put })
   return { thread, ...put }
 }
 
 /**
- * 星を出す — **World で「誰であるか」を1回だけ確かめ、確かめられたときだけ刻む。**
- * 断られた・期限切れも、同じ系譜に残す（拒否の経路は作り物ではなく device flow のもの）。
+ * Give a star — **confirm who the person is through World, once, and record only if that is confirmed.**
+ * Refusals and expiries go into the same trail (the refusal path is not invented; it comes from the device flow).
  */
 export async function vouch({ deviceCode, skill, version }, deps = {}) {
   const store = deps.store ?? ledger
@@ -136,9 +136,9 @@ export async function vouch({ deviceCode, skill, version }, deps = {}) {
       ...base,
       decision: 'VOUCH_DENIED',
       reason: waited.denied ?? 'WORLD_ERROR',
-      message: waited.denied === 'human_denied' ? '本人が断った（星を出さない）'
-        : waited.denied === 'proof_expired' ? '期限が切れた（星を出さない）'
-        : (waited.error ?? 'World に届かない'),
+      message: waited.denied === 'human_denied' ? 'the owner refused (no star given)'
+        : waited.denied === 'proof_expired' ? 'expired (no star given)'
+        : (waited.error ?? 'cannot reach World'),
       world: { ...base.world, simulated: waited.simulated || undefined },
     })
   }
@@ -148,9 +148,9 @@ export async function vouch({ deviceCode, skill, version }, deps = {}) {
     return store.append({ ...base, decision: 'VOUCH_DENIED', reason: 'BAD_ID_TOKEN', message: v.error })
   }
 
-  // 同じ人は、同じ版に二度星を出せない（使用済みの識別子を atomic に弾く）
+  // The same person cannot star the same version twice (already-used identifiers are rejected atomically)
   if (!store.claimStar(v.nullifier, skill, version)) {
-    return store.append({ ...base, decision: 'VOUCH_DENIED', reason: 'ALREADY_VOUCHED', message: 'この版にはもう星を出している', nullifier: v.nullifier })
+    return store.append({ ...base, decision: 'VOUCH_DENIED', reason: 'ALREADY_VOUCHED', message: 'this version has already been starred by you', nullifier: v.nullifier })
   }
 
   return store.append({
@@ -194,17 +194,17 @@ export const app = createServer(async (req, res) => {
       const out = await use(await read(req))
       return json(res, CODE[out.decision] ?? 400, out)
     }
-    // 系譜。QR はここを指す（一覧 UI は作らない。D7）
+    // The trail. The QR points here (no index UI is built; D7)
     if (url.pathname.startsWith('/trace/')) {
       const t = url.pathname.slice(7)
       return json(res, 200, { thread: t, records: ledger.trace(t) })
     }
-    // 0G Storage へ置く（root hash と tx を返す）
+    // Store into 0G Storage (returns the root hash and the tx)
     if (url.pathname === '/seal' && req.method === 'POST') {
       const { thread } = await read(req)
       return json(res, 200, await seal(thread))
     }
-    // 星を出す（World）。鍵を使うたびには呼ばない。**星を出すときだけ**
+    // Give a star (World). Not called every time the key is used. **Only when a star is given**
     if (url.pathname === '/vouch/start' && req.method === 'POST') {
       const started = await world.deviceStart({})
       return json(res, started.ok ? 200 : 503, started)
@@ -213,7 +213,7 @@ export const app = createServer(async (req, res) => {
       const out = await vouch(await read(req))
       return json(res, out.decision === 'STAR' ? 200 : 403, out)
     }
-    // 版ごとの星。**版が変わると、前の版の星は数に入らない**
+    // Stars per version. **When the version changes, the previous version's stars stop counting**
     if (url.pathname.startsWith('/stars/')) {
       const skill = url.pathname.slice(7)
       const version = url.searchParams.get('version')
@@ -225,11 +225,11 @@ export const app = createServer(async (req, res) => {
         byVersion: ledger.starsOf(skill),
       })
     }
-    // credits が減るのを画面に出すため（0G PC の iAI ボーナス）
+    // For showing the credits going down on screen (the 0G PC iAI bonus)
     if (url.pathname === '/zg/balance') return json(res, 200, { balance: await balance() })
-    // 端末に出る4行を、Broker 側からも同じ関数で出す（画面とハッシュを別経路にしない）
+    // The Broker renders the device's four lines with the same function (so screen and hash never take different paths)
     if (url.pathname === '/lines' && req.method === 'POST') return json(res, 200, { lines: lines(await read(req)) })
-    // スキルが署名すべき文字列（スキル側の実装用）
+    // The string a skill should sign (for implementing the skill side)
     if (url.pathname === '/skill-message' && req.method === 'POST') {
       const { permit, request } = await read(req)
       return json(res, 200, { message: skillMessage(requestHash(permit, request)) })

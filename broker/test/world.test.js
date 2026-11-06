@@ -1,4 +1,4 @@
-// World（Agent Pass）の試験。**網には出ない**（fetch と JWKS を替え玉にする）。
+// Tests for World (Agent Pass). **No network** (fetch and JWKS are stubbed out).
 import { test, before, describe } from 'node:test'
 import assert from 'node:assert/strict'
 import { generateKeyPair, SignJWT, exportJWK, createLocalJWKSet } from 'jose'
@@ -15,8 +15,8 @@ const reply = (status, body) => async () => ({ status, text: async () => JSON.st
 const CLIENT = 'app_tomoshibi'
 const freshStore = () => createStore(join(mkdtempSync(join(tmpdir(), 'tomoshibi-')), 'l.jsonl'))
 
-describe('本人の端末に出す合図', () => {
-  test('device_code と user_code を受け取る', async () => {
+describe('the cue shown on the owner\'s device', () => {
+  test('receives a device_code and a user_code', async () => {
     const r = await deviceStart({ clientId: CLIENT, fetch: reply(200, {
       device_code: 'dc_1', user_code: 'WXYZ-1234', verification_uri: 'https://world.org/device', expires_in: 600, interval: 5,
     }) })
@@ -25,31 +25,31 @@ describe('本人の端末に出す合図', () => {
     assert.equal(r.interval, 5)
   })
 
-  test('client_id が無ければ、呼ばずに失敗を返す', async () => {
-    const r = await deviceStart({ clientId: '', fetch: async () => { throw new Error('呼んではいけない') } })
+  test('with no client_id it fails without calling out', async () => {
+    const r = await deviceStart({ clientId: '', fetch: async () => { throw new Error('must not be called') } })
     assert.equal(r.ok, false)
     assert.equal(r.error.includes('WORLD_CLIENT_ID'), true)
   })
 })
 
-describe('「断る」と「押さない」を混ぜない', () => {
-  test('待っている間は pending', async () => {
+describe('refusing and not pressing are kept apart', () => {
+  test('while waiting it is pending', async () => {
     const r = await pollOnce('dc_1', { clientId: CLIENT, fetch: reply(400, { error: 'authorization_pending' }) })
     assert.equal(r.pending, true)
     assert.equal(r.denied, undefined)
   })
 
-  test('本人が断れば human_denied', async () => {
+  test('if the owner refuses, human_denied', async () => {
     const r = await pollOnce('dc_1', { clientId: CLIENT, fetch: reply(400, { error: 'access_denied' }) })
     assert.equal(r.denied, WORLD_DENIED.access_denied)
   })
 
-  test('期限切れは proof_expired', async () => {
+  test('an expiry becomes proof_expired', async () => {
     const r = await pollOnce('dc_1', { clientId: CLIENT, fetch: reply(400, { error: 'expired_token' }) })
     assert.equal(r.denied, WORLD_DENIED.expired_token)
   })
 
-  test('待ち切れなければ expired にする（勝手に通さない）', async () => {
+  test('when the wait runs out it becomes expired (never let through on our own)', async () => {
     const r = await waitForHuman('dc_1', {
       clientId: CLIENT, interval: 1, expiresIn: 1, sleep: 0,
       fetch: reply(400, { error: 'authorization_pending' }),
@@ -59,7 +59,7 @@ describe('「断る」と「押さない」を混ぜない', () => {
   })
 })
 
-describe('id_token は JWKS でしか信じない', () => {
+describe('an id_token is only trusted via JWKS', () => {
   const make = async (over = {}) => {
     const { publicKey, privateKey } = await generateKeyPair('RS256')
     const jwk = { ...(await exportJWK(publicKey)), alg: 'RS256', kid: 'k1' }
@@ -73,46 +73,46 @@ describe('id_token は JWKS でしか信じない', () => {
     return { token, jwks: createLocalJWKSet({ keys: [jwk] }) }
   }
 
-  test('正しい署名・発行者・宛先なら通り、sub を仮名にする', async () => {
+  test('a correct signature, issuer and audience pass, and sub becomes the pseudonym', async () => {
     const { token, jwks } = await make()
     const r = await verifyIdToken(token, { clientId: CLIENT, jwks })
     assert.equal(r.ok, true)
     assert.equal(r.nullifier, '0xsector_abc')
   })
 
-  test('宛先が違えば通さない', async () => {
+  test('a wrong audience does not pass', async () => {
     const { token, jwks } = await make({ aud: 'someone_else' })
     const r = await verifyIdToken(token, { clientId: CLIENT, jwks })
     assert.equal(r.ok, false)
   })
 
-  test('発行者が違えば通さない', async () => {
+  test('a wrong issuer does not pass', async () => {
     const { token, jwks } = await make({ iss: 'https://evil.example' })
     const r = await verifyIdToken(token, { clientId: CLIENT, jwks })
     assert.equal(r.ok, false)
   })
 
-  test('期限が切れていれば通さない', async () => {
+  test('an expired token does not pass', async () => {
     const { token, jwks } = await make({ exp: Math.floor(Date.now() / 1000) - 10 })
     const r = await verifyIdToken(token, { clientId: CLIENT, jwks })
     assert.equal(r.ok, false)
   })
 })
 
-describe('星は、確かめられたときだけ出る', () => {
+describe('a star only appears once it is confirmed', () => {
   const human = (nullifier) => ({
     waitForHuman: async () => ({ ok: true, idToken: 't' }),
     verifyIdToken: async () => ({ ok: true, nullifier }),
   })
 
-  test('STAR が刻まれ、版ごとに数えられる', async () => {
+  test('a STAR is recorded and counted per version', async () => {
     const store = freshStore()
     const r = await vouch({ deviceCode: 'dc', skill: 'skill_a', version: '1.0.0' }, { store, world: human('0xA') })
     assert.equal(r.decision, 'STAR')
     assert.equal(store.starCount('skill_a', '1.0.0'), 1)
   })
 
-  test('同じ人は、同じ版に二度出せない', async () => {
+  test('the same person cannot star the same version twice', async () => {
     const store = freshStore()
     await vouch({ deviceCode: 'dc', skill: 'skill_a', version: '1.0.0' }, { store, world: human('0xA') })
     const again = await vouch({ deviceCode: 'dc', skill: 'skill_a', version: '1.0.0' }, { store, world: human('0xA') })
@@ -121,7 +121,7 @@ describe('星は、確かめられたときだけ出る', () => {
     assert.equal(store.starCount('skill_a', '1.0.0'), 1)
   })
 
-  test('**版が変われば、星は一斉に消える**（前の版の数は残る）', async () => {
+  test('**when the version changes, the stars all go out at once** (the previous count stays)', async () => {
     const store = freshStore()
     await vouch({ deviceCode: 'd1', skill: 'skill_a', version: '1.0.0' }, { store, world: human('0xA') })
     await vouch({ deviceCode: 'd2', skill: 'skill_a', version: '1.0.0' }, { store, world: human('0xB') })
@@ -130,7 +130,7 @@ describe('星は、確かめられたときだけ出る', () => {
     assert.deepEqual(store.starsOf('skill_a'), { '1.0.0': 2 })
   })
 
-  test('本人が断れば、断ったことが系譜に残る（星は出ない）', async () => {
+  test('if the owner refuses, the refusal stays in the trail (and no star appears)', async () => {
     const store = freshStore()
     const denied = { waitForHuman: async () => ({ ok: false, denied: 'human_denied', error: 'access_denied' }) }
     const r = await vouch({ deviceCode: 'dc', skill: 'skill_a', version: '1.0.0' }, { store, world: denied })
@@ -139,9 +139,9 @@ describe('星は、確かめられたときだけ出る', () => {
     assert.equal(store.starCount('skill_a', '1.0.0'), 0)
   })
 
-  test('id_token を信用できなければ星は出ない', async () => {
+  test('no star appears if the id_token cannot be trusted', async () => {
     const store = freshStore()
-    const bad = { waitForHuman: async () => ({ ok: true, idToken: 't' }), verifyIdToken: async () => ({ ok: false, error: '署名が違う' }) }
+    const bad = { waitForHuman: async () => ({ ok: true, idToken: 't' }), verifyIdToken: async () => ({ ok: false, error: 'wrong signature' }) }
     const r = await vouch({ deviceCode: 'dc', skill: 'skill_a', version: '1.0.0' }, { store, world: bad })
     assert.equal(r.reason, 'BAD_ID_TOKEN')
   })

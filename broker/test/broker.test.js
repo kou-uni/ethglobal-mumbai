@@ -38,44 +38,44 @@ const sign = (permit, who = holder) =>
 
 const req = (over = {}) => ({ method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY, ...over })
 
-/** 試験では 0G を呼ばない。既定は「ふだん」を返す替え玉（本物は test/zg.test.js） */
-const fakeWeigh = (tier = 'ふだん') => async () => ({
-  ok: true, reachable: true, tier, reason: '試験', requestId: 'req_test', model: 'fake', ms: 1, usage: null,
+/** The tests never call 0G. By default this stand-in returns routine (the real thing is in test/zg.test.js) */
+const fakeWeigh = (tier = 'routine') => async () => ({
+  ok: true, reachable: true, tier, reason: 'test', requestId: 'req_test', model: 'fake', ms: 1, usage: null,
 })
 
-/** 既定では、スキルの署名も正しく付けて投げる */
+/** By default, send the request with a valid skill signature attached as well */
 async function run(permit, request = req(), { signer = holder, skillKey = skill, sign: withSkill = true, weigh = fakeWeigh() } = {}) {
   const body = { permit, signature: await sign(permit, signer), request }
   if (withSkill) body.skillSignature = await skillKey.signMessage({ message: skillMessage(requestHash(permit, request)) })
   return use(body, { weigh })
 }
 
-describe('範囲の中なら通る', () => {
-  test('ALLOWED で、残り回数が1つ減る', async () => {
+describe('inside the scope it passes', () => {
+  test('ALLOWED, and the remaining call budget drops by one', async () => {
     const p = basePermit()
     assert.equal((await run(p)).remaining, 1)
     assert.equal((await run(p)).remaining, 0)
   })
 
-  test('返った中身に内容証明が付く', async () => {
+  test('the returned body comes with an attestation', async () => {
     const a = await run(basePermit())
     assert.match(a.attestation.bodyHash, /^0x[0-9a-f]{64}$/)
   })
 
-  test('同じ要求は同じ糸（thread）になる', async () => {
+  test('the same request produces the same thread', async () => {
     const p = basePermit()
     assert.equal((await run(p)).thread, (await run(p)).thread)
   })
 })
 
-describe('範囲を外れたら止まり、違反として刻まれる', () => {
+describe('outside the scope it stops, and is recorded as a violation', () => {
   const cases = [
     ['WRONG_KEY', () => [basePermit(), req({ keyRef: '0x' + 'ee'.repeat(32) })]],
     ['OUT_OF_TARGET', () => [basePermit(), req({ url: 'https://evil.com/v1/charges' })]],
     ['OUT_OF_TARGET', () => [basePermit(), req({ url: 'https://evil.com/api.stripe.com/v1/charges' })]],
     ['OUT_OF_SCOPE', () => [basePermit(), req({ method: 'DELETE' })]],
     ['OUT_OF_SCOPE', () => [basePermit(), req({ url: 'https://api.stripe.com/v1/chargesX' })]],
-    // #14-5 平文の経路では鍵が流れる
+    // #14-5 a plaintext route leaks the key
     ['INSECURE_TRANSPORT', () => [basePermit(), req({ url: 'http://api.stripe.com/v1/charges' })]],
   ]
   for (const [reason, mk] of cases) {
@@ -87,7 +87,7 @@ describe('範囲を外れたら止まり、違反として刻まれる', () => {
     })
   }
 
-  test('REPLAY — 同じ nonce を別のスキルが使い回せない', async () => {
+  test('REPLAY - another skill cannot reuse the same nonce', async () => {
     const n = Math.floor(Math.random() * 1e12)
     await run(basePermit({ nonce: n }))
     const out = await run(basePermit({ nonce: n, skill: skillIdFrom(otherSkill.address) }), req(), { skillKey: otherSkill })
@@ -96,42 +96,42 @@ describe('範囲を外れたら止まり、違反として刻まれる', () => {
   })
 })
 
-describe('#14-1 設計どおりに細った状態は、違反ではない', () => {
-  test('EXHAUSTED は違反にしない', async () => {
+describe('#14-1 a permit that narrowed as designed is not a violation', () => {
+  test('EXHAUSTED is not treated as a violation', async () => {
     const p = basePermit({ maxCalls: 1 })
     await run(p)
     const out = await run(p)
     assert.equal(out.reason, 'EXHAUSTED')
-    assert.equal(out.violation, false, '普通に使い切ったスキルを違反者にしない')
+    assert.equal(out.violation, false, 'a skill that simply ran out is not an offender')
   })
 
-  test('EXPIRED は違反にしない', async () => {
+  test('EXPIRED is not treated as a violation', async () => {
     const out = await run(basePermit({ expiry: Math.floor(Date.now() / 1000) - 1 }))
     assert.equal(out.reason, 'EXPIRED')
     assert.equal(out.violation, false)
   })
 
-  test('BAD_SIGNATURE も違反にしない（刻む相手が確定しない）', async () => {
+  test('BAD_SIGNATURE is not a violation either (there is nobody to record it against)', async () => {
     const out = await run(basePermit(), req(), { signer: other })
     assert.equal(out.reason, 'BAD_SIGNATURE')
     assert.equal(out.violation, false)
   })
 })
 
-describe('#14-2 署名なしで nonce を横取りできない', () => {
-  test('偽署名の先行要求があっても、正規の要求は通る', async () => {
+describe('#14-2 a nonce cannot be hijacked without a signature', () => {
+  test('an earlier forged-signature request does not block the legitimate one', async () => {
     const n = Math.floor(Math.random() * 1e12)
-    // 攻撃者：holder の署名を持たないまま、その nonce を別スキルで先に使う
+    // the attacker: without the holder's signature, use that nonce first under a different skill
     const bad = await run(basePermit({ nonce: n, skill: skillIdFrom(otherSkill.address) }), req(), { signer: other, skillKey: otherSkill })
     assert.equal(bad.reason, 'BAD_SIGNATURE')
-    // 本人の正規の要求が、あとから REPLAY にされない
+    // the owner's legitimate request is not turned into a REPLAY afterwards
     const good = await run(basePermit({ nonce: n }))
     assert.equal(good.decision, 'ALLOWED')
   })
 })
 
-describe('#14-3 連打で回数を超えられない', () => {
-  test('maxCalls=3 に 50 本同時に投げても、通るのは3本', async () => {
+describe('#14-3 hammering cannot exceed the call budget', () => {
+  test('50 concurrent requests against maxCalls=3 and only 3 pass', async () => {
     const p = basePermit({ maxCalls: 3 })
     const outs = await Promise.all(Array.from({ length: 50 }, () => run(p)))
     assert.equal(outs.filter((o) => o.decision === 'ALLOWED').length, 3)
@@ -139,8 +139,8 @@ describe('#14-3 連打で回数を超えられない', () => {
   })
 })
 
-describe('#14-4 スキルの署名がない要求は、違反として刻まない', () => {
-  test('署名なしの範囲外要求は DENIED だが violation ではない', async () => {
+describe('#14-4 a request without the skill signature is not recorded as a violation', () => {
+  test('an unsigned out-of-scope request is DENIED but not a violation', async () => {
     const out = await run(basePermit(), req({ url: 'https://evil.com/x' }), { sign: false })
     assert.equal(out.decision, 'DENIED')
     assert.equal(out.violation, false)
@@ -148,20 +148,20 @@ describe('#14-4 スキルの署名がない要求は、違反として刻まな�
     assert.equal(out.skillSigner, null)
   })
 
-  test('別の鍵で署名された要求で、そのスキルの違反を作れない', async () => {
+  test('a request signed with a different key cannot manufacture a violation against that skill', async () => {
     const out = await run(basePermit(), req({ url: 'https://evil.com/x' }), { skillKey: otherSkill })
-    assert.equal(out.violation, false, 'permit の skill と署名者が一致しない')
+    assert.equal(out.violation, false, 'the permit skill and the signer do not match')
   })
 
-  test('正しい署名が付けば、署名者が記録に残る', async () => {
+  test('with a valid signature, the signer stays in the record', async () => {
     const out = await run(basePermit(), req({ url: 'https://evil.com/x' }))
     assert.equal(out.violation, true)
     assert.equal(out.skillSigner.toLowerCase(), skill.address.toLowerCase())
   })
 })
 
-describe('画面の4行', () => {
-  test('ハッシュと同じ値から作られ、範囲が読める', () => {
+describe('the four lines on screen', () => {
+  test('built from the same values as the hash, and the scope is readable', () => {
     const l = lines(basePermit())
     assert.equal(l.length, 4)
     assert.ok(l[1].includes('api.stripe.com'))
@@ -169,9 +169,9 @@ describe('画面の4行', () => {
   })
 })
 
-// ── 固定の試験ベクタ（spec/permit-signature.md §6）──
-// **ここが動いたら、Ledger 側と食い違っている。** 片方だけ直さないこと。
-describe('試験ベクタ（Ledger と Broker の境界を固定する）', () => {
+// -- the frozen test vector (spec/permit-signature.md §6) --
+// **If this moves, it no longer agrees with the Ledger side.** Never fix just one side.
+describe('test vector (pins the boundary between Ledger and Broker)', () => {
   const VECTOR = {
     permit: {
       holder: '0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A',
@@ -189,16 +189,16 @@ describe('試験ベクタ（Ledger と Broker の境界を固定する）', () =
     signature: '0x9814354237a00bfe1d1b182f4a6d5974eb52c38b3d186f32bea0ca0a26341b981fd5acc30eac9f1eab839e75554a12d4ef726a4f120a6774b4dc92461ac812491c',
   }
 
-  test('digest が動かない', async () => {
+  test('the digest does not move', async () => {
     const { digest } = await import('../src/permit.js')
     assert.equal(digest(VECTOR.permit), VECTOR.digest)
   })
 
-  test('端末に出る4行が動かない', () => {
+  test('the four lines shown on the device do not move', () => {
     assert.deepEqual(lines(VECTOR.permit), VECTOR.lines)
   })
 
-  test('この署名から holder が戻る', async () => {
+  test('this signature recovers the holder', async () => {
     const { signer } = await import('../src/permit.js')
     assert.equal((await signer(VECTOR.permit, VECTOR.signature)).toLowerCase(), VECTOR.permit.holder.toLowerCase())
   })

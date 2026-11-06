@@ -1,18 +1,18 @@
-// エピソードログ — 1回の使用（糸）の記録を、0G Storage の Log 層（追記専用）へ置く。
+// Episode log — put the records of one use (one thread) into 0G Storage's Log layer (append only).
 //
-// **置けたときだけ「置いた」と書く。** 置けなければ理由ごと残す。
-// root hash は手元でも計算できるが、それは「置いた証拠」ではないので別の欄に書く。
+// **Only write "stored" when it actually stored.** If it did not, keep the reason alongside.
+// The root hash can be computed locally, but that is not evidence of storing, so it goes in its own field.
 import { Wallet, JsonRpcProvider } from 'ethers'
 
 export const RPC = process.env.ZG_RPC ?? 'https://evmrpc-testnet.0g.ai'
 export const INDEXER = process.env.ZG_INDEXER ?? 'https://indexer-storage-testnet-turbo.0g.ai'
 export const EXPLORER = process.env.ZG_EXPLORER ?? 'https://chainscan-galileo.0g.ai'
 
-/** 糸の記録を JSONL の1枚にする。**鍵も本文も入れない**（系譜は公開前提）。 */
+/** Turn a thread's records into a single JSONL blob. **No keys and no bodies** (the trail is meant to be public). */
 export const serialize = (thread, records) =>
   records.map((r) => JSON.stringify({ thread, ...r })).join('\n') + '\n'
 
-/** 置かずに root hash だけ出す。**「置いた」とは言えない値。** */
+/** Produce only the root hash, without storing. **This value does not mean it was stored.** */
 export async function rootOf(bytes) {
   const { MemData } = await import('@0gfoundation/0g-storage-ts-sdk')
   const [tree, err] = await new MemData(bytes).merkleTree()
@@ -21,16 +21,16 @@ export async function rootOf(bytes) {
 }
 
 /**
- * 0G Storage へ置く。
+ * Store into 0G Storage.
  * @returns {Promise<{uploaded:boolean, rootHash:string|null, tx?:string, url?:string, reason?:string}>}
  */
 export async function store(thread, records, opts = {}) {
   const key = opts.privateKey ?? process.env.ZG_PRIVATE_KEY
   const bytes = new TextEncoder().encode(serialize(thread, records))
   let rootHash = null
-  try { rootHash = await rootOf(bytes) } catch (e) { return { uploaded: false, rootHash: null, reason: `root が出せない: ${e.message}` } }
+  try { rootHash = await rootOf(bytes) } catch (e) { return { uploaded: false, rootHash: null, reason: `cannot compute root: ${e.message}` } }
 
-  if (!key) return { uploaded: false, rootHash, reason: 'ZG_PRIVATE_KEY がない（置いていない）' }
+  if (!key) return { uploaded: false, rootHash, reason: 'no ZG_PRIVATE_KEY (nothing was stored)' }
 
   try {
     const { Indexer, MemData } = await import('@0gfoundation/0g-storage-ts-sdk')
@@ -47,6 +47,6 @@ export async function store(thread, records, opts = {}) {
       indexer: opts.indexer ?? INDEXER,
     }
   } catch (e) {
-    return { uploaded: false, rootHash, reason: `0G Storage に届かない: ${e.message}` }
+    return { uploaded: false, rootHash, reason: `cannot reach 0G Storage: ${e.message}` }
   }
 }

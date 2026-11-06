@@ -7,7 +7,7 @@
 
 const $ = (id) => document.getElementById(id)
 const qs = new URLSearchParams(location.search)
-const AGENT = (qs.get('agent') || 'http://127.0.0.1:8792').replace(/\/$/, '')
+const AGENT = window.appAgent
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
 const short = (h, n = 4) => (typeof h === 'string' && h.length > 2 * n + 4 ? `${h.slice(0, n + 2)}…${h.slice(-n)}` : h)
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
@@ -82,7 +82,7 @@ function reduce() {
     else if (e.type === 'verdict') { const c = card(e.rid); if (c) { c.verdicts.push(e); c.declined = false } if (st.lent && !e.pressed && typeof e.response.remaining === 'number') st.lent.left = e.response.remaining }
     else if (e.type === 'asking') { st.asking = e; st.lendDeclined = false }
     else if (e.type === 'waiting-device') st.waitingDevice = true
-    else if (e.type === 'signed') { st.asking = null; st.waitingDevice = false; if (e.device) st.byHand = true; if (e.why === 'lend') st.lent = { holder: e.holder, device: e.device, uses: e.uses, left: e.uses } }
+    else if (e.type === 'signed') { st.asking = null; st.waitingDevice = false; if (e.device) st.byHand = true; if (e.why === 'lend') st.lent = { holder: e.holder, device: e.device, uses: e.uses, left: e.uses, at: e.at } }
     else if (e.type === 'declined') { st.asking = null; st.waitingDevice = false; const c = card(e.rid); if (c) c.declined = true; else st.lendDeclined = true }
     else if (e.type === 'device') { const c = card(e.rid); if (c) c.showedOnDevice = e.ok }
     else if (e.type === 'error') st.error = e
@@ -111,8 +111,8 @@ function nowCard(st) {
   if (!c) {
     el.className = 'now'
     el.innerHTML = st.lent
-      ? `<div class="quiet">${FLAME}<b>All quiet.</b><p>billing-assistant can use <code>stripe-live</code> within the range you signed.<br>You will only be asked when something is heavy.</p></div>`
-      : `<div class="quiet">${FLAME}<b>billing-assistant wants to use your Stripe key.</b><p>Do not paste the key into it. Lend it instead: a range, signed on your Ledger.<br>The tool never gets the key itself, and an AI on this computer cannot press that button.</p><ol class="first"><li class="${mode === 'live' && agent.device ? 'ok' : ''}">Plug in your Ledger and open Tomoshibi</li><li>Press <b>Lend</b>, read the range on the device, hold the button</li><li>Leave the Ledger on your desk. It stays quiet until you are needed</li></ol></div>`
+      ? `<div class="quiet">${FLAME}<b>All quiet.</b><p>billing-assistant can use your shop’s payment key inside the range you signed.<br>You will only be asked when money moves.</p></div>`
+      : `<div class="quiet">${FLAME}<b>billing-assistant wants your shop’s payment key.</b><p>Do not paste the key into it. Lend it instead: a range, signed on your Ledger.<br>The tool never gets the key itself, and an AI on this computer cannot press that button.</p><ol class="first"><li class="${mode === 'live' && agent.device ? 'ok' : ''}">Plug in your Ledger and open Tomoshibi</li><li>Press <b>Lend</b>, read the range on the device, hold the button</li><li>Leave the Ledger on your desk. It stays quiet until you are needed</li></ol></div>`
     return
   }
   const last = final(c), b = last?.response, zg = b?.zg || {}
@@ -138,9 +138,28 @@ function trail(st) {
   }).join('')
   $('trail').innerHTML = rows || '<li class="empty">Nothing yet.</li>'
 }
+// The same record, on your phone: one line first ("1 thing was stopped"), then the rest.
+// A phone cannot reach this computer's localhost. With ?pub=<public Broker URL> the QR points at the
+// hosted page and that Broker; without it, the link only works on this machine and says so.
+const PAGES = 'https://mintannn.github.io/tomoshibi/'
+function carry(st) {
+  const el = $('carry'); if (!el) return
+  if (mode !== 'live' || !st.lent || !st.cards.length) { el.hidden = true; return }
+  const pub = (qs.get('pub') || '').replace(/\/$/, '')
+  const q = `?broker=${encodeURIComponent(pub || agent.broker)}&holder=${encodeURIComponent(st.lent.holder)}&since=${encodeURIComponent(st.lent.at || '')}`
+  const link = pub ? PAGES + 'morning.html' + q : 'morning.html' + q
+  if (el.dataset.link === link) { el.hidden = false; return }
+  el.dataset.link = link; el.hidden = false
+  try { localStorage.setItem('tomoshibi.last', JSON.stringify({ broker: pub || agent.broker, holder: st.lent.holder, since: st.lent.at || '' })) } catch {}
+  let qr = ''
+  if (pub) try { qr = `<div class="qrbox">${qrSvg(link, 150)}</div>` } catch {}
+  el.innerHTML = `${qr}<div><h3>Read it on your phone</h3><p class="sub">One line first: what was stopped. Then what you let through, and what never needed you.</p>
+    <a class="btn" href="${esc(link)}" target="_blank" rel="noopener">Open the summary →</a>
+    ${pub ? '' : '<p class="note">To scan it from a phone, the Broker needs a public address: open this page with <code>?pub=https://…</code> (a temporary tunnel). Without it, the summary opens on this computer only.</p>'}</div>`
+}
 function keyCard(st) {
   const r = agent?.range || { key: 'stripe-live', target: 'api.stripe.com', scope: '* /v1', uses: 10 }
-  $('keyCard').innerHTML = `<h2>Your key</h2><div class="name">${esc(r.key)}</div>` + (st.lent
+  $('keyCard').innerHTML = `<h2>Your key</h2><div class="name human">Your shop’s payment key</div><code>${esc(r.key)}</code>` + (st.lent
     ? `<dl><dt>Lent to</dt><dd>billing-assistant <code>v1.0.0</code></dd><dt>May reach</dt><dd><code>${esc(r.target)}</code></dd><dt>May do</dt><dd><code>${esc(r.scope)}</code></dd><dt>Uses left</dt><dd>${esc(st.lent.left)} of ${esc(st.lent.uses)}</dd><dt>Signed by</dt><dd>${st.lent.device ? `your Ledger <code>${esc(short(st.lent.holder))}</code>` : '<span class="warnt">a software key (no Ledger)</span>'}</dd></dl>
        <div class="meter"><i style="width:${Math.max(0, Math.min(100, (st.lent.left / st.lent.uses) * 100))}%"></i></div>`
     : `<p class="sub">Not lent to anyone.${st.lendDeclined ? ' You declined on the device: nothing was signed.' : ''}</p><button class="btn primary" id="lendBtn" ${st.asking ? 'disabled' : ''}>Lend to billing-assistant</button>`)
@@ -181,16 +200,60 @@ function lightCard(st) {
     ? `<p class="sub">You really use this tool: ${st.uses} request${st.uses === 1 ? '' : 's'} on record${st.byHand ? ', lent by hand on your Ledger' : ''}. You can let the people who know you see that.</p><a class="btn primary" href="${esc(href)}">Show that you use it →</a><p class="sub">That is a different question, asked once, by World: are you one real person?</p>`
     : `<p class="sub">Once the tool has really worked with your key, you can show the people who know you that you use it.</p>`)
 }
+// The flame says what is going on, in one line. This is the first thing a person reads.
+function mascot(st) {
+  const el = $('mascot'); if (!el) return
+  const c = st.cards[st.cards.length - 1], last = c && final(c), b = last?.response
+  let mood = 'awake', tone = 'bob', line, sub
+  if (st.asking?.why === 'lend') { mood = 'alert'; tone = 'alert'; line = 'Look at your Ledger.'; sub = 'Read the range, then hold the button.' }
+  else if (!st.lent) { line = 'Don’t paste your key. Lend it.'; sub = 'The tool never gets the key itself.' }
+  else if (st.asking || (b?.decision === 'NEEDS_PRESS' && !c.declined)) { mood = 'alert'; tone = 'alert'; line = 'Money is about to move. Your call.'; sub = 'Hold the button on your Ledger, or do nothing.' }
+  else if (!c) { mood = 'asleep'; line = 'All quiet.'; sub = 'I’ll wake you only when money moves.' }
+  else if (!last) { line = 'Checking…'; sub = '' }
+  else if (c.declined) { mood = 'guard'; tone = 'bob'; line = 'Not let through.'; sub = 'You said no. The key was not used.' }
+  else if (b.decision === 'DENIED') { mood = 'guard'; tone = 'bad'; line = 'Blocked it.'; sub = 'You didn’t have to do anything.' }
+  else if (b.decision === 'STOPPED') { mood = 'guard'; tone = 'bob'; line = 'I stopped. No guessing.'; sub = '0G gave no answer, so nothing ran.' }
+  else if (last.pressed) { mood = 'happy'; tone = 'ok'; line = 'Done. Once, because you said so.'; sub = 'The tool still doesn’t have your key.' }
+  else { mood = 'asleep'; tone = 'ok'; line = 'Went through. You weren’t needed.'; sub = 'Nothing that moves money.' }
+  const key = mood + tone + line
+  if (el.dataset.key === key) return
+  el.dataset.key = key
+  el.className = `mascot ${tone}`
+  el.innerHTML = `<div class="face">${flameFace(mood)}</div><div class="bubble"><b>${esc(line)}</b><span>${esc(sub)}</span></div>`
+}
+
+// What the tool does next. In real life it does these on its own; here a button makes each one happen now.
+function storyBar(st) {
+  const el = $('story'); if (!el) return
+  const busy = Boolean(st.asking) || st.cards.some((c) => !final(c))
+  const done = (id) => st.cards.some((c) => c.id === id)
+  const b = (id, n, t, s) => `<button data-id="${id}" class="${done(id) ? 'done' : ''}" ${!st.lent || busy ? 'disabled' : ''}><span>${n}</span><b>${t}</b><small>${s}</small></button>`
+  el.innerHTML = `<p>${st.lent ? 'The tool is at work. What does it do next?' : 'Lend the key first. Then the tool can start work.'}</p><div>` +
+    b('usual', 'A normal morning', 'It checks who hasn’t paid', 'Reading only') +
+    b('heavy', 'A customer returns a bag', 'It tries to refund $62', 'Money leaves your account') +
+    b('denied-host', 'That night', 'The tool is hijacked', 'It tries your key somewhere else') + '</div>'
+  el.querySelectorAll('button').forEach((x) => (x.onclick = () => src().post('/run', { id: x.dataset.id })))
+}
 function render() {
-  const st = reduce(); nowCard(st); trail(st); keyCard(st); ledgerCard(st); lightCard(st)
-  journey(!st.lent ? 'lend' : 'work', ['choose', ...(st.lent ? ['lend'] : [])])
+  const st = reduce(); nowCard(st); trail(st); keyCard(st); ledgerCard(st); lightCard(st); carry(st)
+  // Which of the three scenes are we in? It follows what has actually happened.
+  const lastCard = st.cards[st.cards.length - 1], lastDec = lastCard && final(lastCard)?.response.decision
+  const blocked = st.cards.some((c) => final(c)?.response.decision === 'DENIED')
+  const scene = !st.lent ? 'lend' : lastDec === 'DENIED' ? 'stopped' : 'woken'
+  journey(scene, [...(st.lent ? ['lend'] : []), ...(blocked && scene !== 'stopped' ? ['stopped'] : []), ...(scene === 'stopped' ? ['woken'] : [])])
+  storyBar(st); mascot(st)
+  document.querySelector('.console').classList.toggle('unlent', !st.lent)
+  document.querySelector('.console').classList.toggle('asking', Boolean(st.asking) || Boolean(st.waitingDevice))
 }
 
 async function init() {
   try { agent = await (await fetch(AGENT + '/health', { signal: AbortSignal.timeout(2500) })).json(); if (agent.ok && agent.brokerUp) mode = 'live' } catch {}
   if (mode === 'replay') for (const u of ['../ui/scenes.json', 'scenes.json']) { if (REC) break; try { const r = await fetch(u, { cache: 'no-store' }); if (r.ok) REC = await r.json() } catch {} }
+  // Opened from somewhere else (a phone): the Broker is reached through the agent's own address.
+  if (mode === 'live' && window.appAgentIsRemote) agent.broker = AGENT + '/b'
   const broker = qs.get('broker') || (mode === 'live' ? agent.broker : '')
-  $('navSky').href = 'index.html' + (broker ? '?broker=' + encodeURIComponent(broker) : '')
+  const nav = new URLSearchParams(); if (broker && !window.appAgentIsRemote) nav.set('broker', broker)
+  $('navSky').href = 'index.html' + (nav.toString() ? '?' + nav : '')
   if (mode === 'live') {
     $('chipZg').textContent = agent.simulated ? '0G simulated' : `0G live · ${agent.model || ''}`; $('chipZg').className = 'chip ' + (agent.simulated ? 'warn' : 'live')
     if (agent.simulated) { $('banner').hidden = false; $('banner').textContent = 'The Broker is in simulated mode: 0G is not being asked. Judgements here come from a stand-in.' }
@@ -201,7 +264,7 @@ async function init() {
     $('banner').hidden = false
     $('banner').innerHTML = REC ? `Replay. Nothing is sent from this page. These are the answers the real Broker and 0G (<code>${esc(REC.model || '')}</code>) gave at ${esc(REC.recordedAt)}. Run it live with <code>broker/demo-agent.mjs</code>.` : 'No agent is running and no recording was found.'
   }
-  $('foot').innerHTML = 'The AI tool is its own process. To make it ask from here: <kbd>1</kbd> routine · <kbd>2</kbd> heavy · <kbd>3</kbd> taken over · <kbd>4</kbd> disguised · <kbd>5</kbd> 0G unreachable · <kbd>L</kbd> lend · <kbd>R</kbd> reset'
+  $('foot').innerHTML = 'The AI tool is its own process (<code>broker/demo-agent.mjs</code>). The buttons above stand in for it doing its job. Also <kbd>4</kbd> a disguised address · <kbd>5</kbd> 0G unreachable · <kbd>R</kbd> start over'
   render()
 }
 const KEYS = { 1: 'usual', 2: 'heavy', 3: 'denied-host', 4: 'denied-sneak', 5: 'stopped' }

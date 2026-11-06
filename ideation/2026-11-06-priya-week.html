@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TOMOSHIBI — Priyaの1週間</title>
+<style>
+:root{color-scheme:dark;--night:#0a0f24;--n2:#121a3a;--line:#27325e;--text:#e9edf9;--muted:#8e98bd;--cold:#c8d4ff;--flame:#f0a73b;--f2:#ffd98a;--danger:#ff6f61;--ok:#7fd8a6;--sans:ui-sans-serif,system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;--mono:ui-monospace,"SF Mono",Menlo,monospace}
+*{box-sizing:border-box} html,body{margin:0;background:var(--night);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.75}
+.wrap{max-width:1080px;margin:0 auto;padding:22px 16px 60px;display:flex;flex-direction:column;gap:18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.14em} .brand svg{width:22px;height:28px}
+h1{font-size:clamp(26px,5vw,40px);line-height:1.2;margin:6px 0 4px} .lede{color:var(--f2);font-size:17px;margin:0;max-width:44em}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--n2);padding:16px 18px}
+.card h3{margin:0 0 8px;font-size:13px;letter-spacing:.1em;color:var(--muted);font-weight:600}
+.arc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px} @media(max-width:720px){.arc{grid-template-columns:1fr}}
+.arc div{border:1px solid var(--line);border-radius:12px;padding:12px 14px} .arc b{color:var(--f2);display:block;font-size:13px;letter-spacing:.08em} .arc p{margin:4px 0 0}
+.who{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px} @media(max-width:720px){.who{grid-template-columns:1fr}}
+.who div{border:1px solid var(--line);border-radius:12px;padding:12px 14px} .who b{font-size:18px} .who span{color:var(--muted);display:block;font-size:13.5px}
+.week{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px} @media(max-width:720px){.week{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.week a{border:1px solid var(--line);border-radius:10px;padding:8px;text-decoration:none;color:var(--muted);font-size:12px;line-height:1.35;display:block} .week a b{display:block;color:var(--text);font-size:13px} .week a.peak{border-color:var(--flame);background:#f0a73b14}
+.scenes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px} @media(max-width:860px){.scenes{grid-template-columns:1fr}}
+.scene{border:1px solid var(--line);border-radius:16px;background:var(--n2);padding:16px 18px;display:flex;flex-direction:column;gap:12px;scroll-margin-top:12px}
+.scene.peak{border-color:var(--flame);box-shadow:0 0 40px #f0a73b22}
+.scene header{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center}
+.scene .n{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--flame);color:var(--f2);display:grid;place-items:center;font:700 15px var(--mono)}
+.when{margin:0;font:600 13px var(--mono);color:var(--f2)} .when span{color:var(--muted);margin-left:10px;font-family:var(--sans);font-weight:400}
+.scene h2{margin:0;font-size:20px;line-height:1.3} .surf{font:600 11px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 8px;white-space:nowrap}
+.feel{margin:0;color:var(--text)} .feel b{color:var(--f2)}
+.mock{display:grid;place-items:center;padding:14px 0;background:radial-gradient(90% 90% at 50% 0%,#1a2552 0%,transparent 70%);border-radius:12px;min-height:250px}
+.dev{font-family:var(--sans)} .dev .in{display:flex;flex-direction:column;gap:6px}
+.pc{width:min(100%,330px);border:1px solid #3a4680;border-radius:10px;background:#0c1230;overflow:hidden;box-shadow:0 10px 30px #0008}
+.pc .bar{display:flex;gap:5px;align-items:center;padding:7px 10px;background:#161e44;font:11px var(--mono);color:var(--muted)} .pc .bar i{width:7px;height:7px;border-radius:50%;background:#3a4680} .pc .bar span{margin-left:8px}
+.pc .in{padding:14px} .k{margin:0;font:600 12px var(--mono);color:var(--muted)} .k em{font-style:normal;color:var(--cold);margin-left:6px}
+.big{margin:2px 0;font-size:18px;font-weight:700;line-height:1.3} .big.sm{font-size:15px;color:var(--f2)}
+.field{border:1.5px solid var(--danger);border-radius:8px;padding:10px 12px;font:14px var(--mono);color:var(--text);background:#0006} .caret{display:inline-block;width:8px;height:16px;background:var(--text);vertical-align:-3px;animation:bl 1s steps(1) infinite} @keyframes bl{50%{opacity:0}}
+.tiny{margin:2px 0 0;font-size:11.5px;color:var(--muted)}
+.sky{position:relative;height:96px;border-radius:8px;background:#060a1c;overflow:hidden} .sky.sm{height:74px} .st{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--cold);opacity:.55}
+.flame{position:absolute;left:44%;top:22%;width:34px} .flame svg{width:34px;height:44px;filter:drop-shadow(0 0 10px #f0a73b)} .flame.out{left:26%;opacity:.22;filter:grayscale(1)} .flame.me{left:58%}
+.led{width:176px;aspect-ratio:480/640;background:#16181d;border-radius:20px;padding:9px;box-shadow:0 12px 34px #000a,inset 0 0 0 1px #3a3f4a}
+.led .in{height:100%;border-radius:12px;background:#f4f3ee;color:#111;padding:12px 10px;align-items:center;text-align:center;justify-content:center}
+.led.inv .in{background:#0c0c0c;color:#f4f3ee} .led.room{box-shadow:0 0 0 2px var(--danger),0 0 50px #ff6f6155}
+.led .fl svg{width:58px;height:74px} .lt{margin:0;font-weight:700;font-size:15px;line-height:1.25} .ls{margin:0;font-size:10.5px;opacity:.7}
+.rows{margin:4px 0;width:100%;text-align:left;display:grid;gap:3px;font-size:10.5px} .rows dt{opacity:.6;font-size:9px} .rows dd{margin:0;font-weight:600}
+.hold{margin-top:auto;width:100%;border-radius:999px;background:#111;color:#fff;font-weight:600;font-size:11px;padding:8px}
+.ph{width:190px;border:1.5px solid #3a4680;border-radius:26px;background:#0c1230;padding:10px 12px 16px;box-shadow:0 12px 34px #000a} .notch{width:56px;height:6px;border-radius:3px;background:#27325e;margin:0 auto 10px}
+.pt{margin:0;font:600 11px var(--mono);color:var(--muted)} .pbig{margin:0;font-size:19px;font-weight:700;line-height:1.25} .pbig.sm{font-size:14px}
+.plist{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px;font-size:11px;line-height:1.4} .plist li{border-left:2px solid var(--flame);padding-left:8px} .plist li.bad{border-color:var(--danger)} .plist li.q{border-color:var(--line);color:var(--muted)} .plist span{display:block;color:var(--muted);font-size:10px}
+.scene dl{margin:0;display:grid;gap:8px} .scene dt{font:600 11.5px var(--mono);letter-spacing:.06em;color:var(--muted)} .scene dt small{margin-left:8px;border:1px solid var(--line);border-radius:5px;padding:0 6px;color:var(--f2)}
+.scene dd{margin:0} .real{display:block;font:11.5px var(--mono);color:var(--ok);margin-top:2px} .say{border-left:2px solid var(--flame);padding-left:12px} .sub{display:block;font-size:13px;color:var(--muted);font-style:italic}
+table{width:100%;border-collapse:collapse;font-size:14px} th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top} th{color:var(--muted);font-weight:600;font-size:12.5px} td b{color:var(--f2)}
+.note{color:var(--muted);font-size:13.5px;margin:0} .tblwrap{overflow-x:auto}
+@media(prefers-reduced-motion:reduce){.caret{animation:none}}
+
+.value{margin:0;font:700 13px var(--mono);letter-spacing:.04em;color:var(--f2)}
+.scene .say{margin:0;border-left:2px solid var(--flame);padding-left:12px}
+.hero{border:1px solid var(--flame);border-radius:18px;padding:22px;background:linear-gradient(180deg,#f0a73b12,transparent 60%),var(--n2)}
+.hero .kicker{margin:0;font:600 12px var(--mono);letter-spacing:.1em;color:var(--muted)}
+.hero h2{margin:6px 0 0;font-size:clamp(22px,4.4vw,34px);line-height:1.3}
+.hero .en{margin:8px 0 0;color:var(--muted);font-style:italic}
+.beats{display:grid;gap:12px;counter-reset:b}
+.beat{border:1px solid var(--line);border-radius:14px;background:var(--n2);padding:16px 18px;display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px}
+.beat::before{counter-increment:b;content:counter(b);width:34px;height:34px;border-radius:50%;border:1.5px solid var(--flame);color:var(--f2);display:grid;place-items:center;font:700 15px var(--mono)}
+.beat h3{margin:0 0 4px;font-size:19px;line-height:1.35;color:var(--text);letter-spacing:0}
+.beat p{margin:0;color:var(--text)} .beat p b{color:var(--f2)} .beat .q{color:var(--muted);font-size:14px}
+.cmp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px} @media(max-width:760px){.cmp{grid-template-columns:1fr}}
+.cmp div{border:1px solid var(--line);border-radius:12px;padding:14px} .cmp .bad{border-color:#7a3a36} .cmp .good{border-color:var(--flame);background:#f0a73b12}
+.cmp b{display:block;font-size:13px;letter-spacing:.06em;color:var(--muted)} .cmp strong{display:block;font-size:17px;margin:4px 0;line-height:1.35} .cmp span{display:block;font-size:13.5px;color:var(--muted)}
+.night{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:center} @media(max-width:760px){.night{grid-template-columns:1fr}}
+.chat{display:grid;gap:8px;font-size:13px} .chat p{margin:0;padding:8px 12px;border-radius:12px;max-width:92%;line-height:1.5} .chat .me{background:#27407a;justify-self:end} .chat .ai{background:#0006;border:1px solid var(--line)} .chat code{font:12px var(--mono);color:var(--f2)}
+.warn{border:1.5px solid var(--danger);border-radius:8px;padding:8px 10px;font:12px var(--mono);background:#0006}
+.copy td:first-child{white-space:nowrap}
+.slide{border-radius:14px;background:#060a1c;padding:26px 22px;display:grid;gap:6px}.slide p{margin:0;font-size:clamp(20px,4.6vw,34px);font-weight:700;line-height:1.35;color:var(--muted)}.slide p:nth-child(2){color:var(--text)}.slide .ans{margin-top:12px;color:var(--f2)}
+</style>
+<div class="wrap">
+  <div class="brand"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="#27407a"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="#f0a73b"/><path d="M60 46 C61.3 46 62.2 47.2 62.8 48.6 C65.6 55 75 65.5 75 75 A15 15 0 1 1 45 75 C45 65.5 54.4 55 57.2 48.6 C57.8 47.2 58.7 46 60 46 Z" fill="#ffd98a"/></svg>TOMOSHIBI</div>
+
+  <div class="hero">
+    <p class="kicker">ひとことで</p>
+    <h2>AIと働くようになって、<span style="color:var(--f2)">「鍵を渡す」</span>という新しい仕事が増えた。<br>足りなかったのは、<span style="color:var(--f2)">承認の層</span>。</h2>
+    <p class="en">Kouさんのコピー：“Your agent is holding a spare key that works until you cancel it.” ／ “the approval layer that hands over one use instead of the key.”</p>
+  </div>
+
+  <div class="card"><h3>なぜ必要か（価値の物語・ここを最初の40秒で話す）</h3>
+    <div class="beats">
+      <div class="beat"><div><h3>AIと働くと、新しい仕事が1つ増えた</h3><p>メールを出す、請求する、予定を入れる。AIに任せるたびに、<b>「APIキーをください」</b>と言われる。先月までは無かった仕事。</p></div></div>
+      <div class="beat"><div><h3>でも、よく分からない</h3><p><code style="font-family:var(--mono);color:var(--f2)">sk_live_…</code> が何なのか、どこまで出来てしまうのか、いつまで有効なのか。<b>分からないから、AIに言われるままに貼る。</b></p><p class="q">「私もこの36時間で、何度も貼りました。」（Mintaさんの本当の話）</p></div></div>
+      <div class="beat"><div><h3>貼ったのは、お店の合鍵だった</h3><p>範囲なし。期限なし。記録なし。<b>取り消すまで、ずっと使える。</b>道具が乗っ取られたら、その日のうちに全部持っていかれる。しかも、気づけない。</p></div></div>
+      <div class="beat"><div><h3>クレジットカードは、そうなっていない</h3><p>カードを他人に渡して「好きに使って」とは言わない。<b>1回ごとに、自分で承認する。</b>銀行がその層を作ったから。AIには、まだその層が無い。</p></div></div>
+    </div>
+  </div>
+
+  <div class="card"><h3>対比（1枚で見せる）</h3>
+    <div class="cmp">
+      <div><b>クレジットカード</b><strong>この1回を、承認する</strong><span>金額と相手を見て、自分で押す。カードそのものは渡さない。</span></div>
+      <div class="bad"><b>いまのAPIキー</b><strong>合鍵を、まるごと渡す</strong><span>何にでも使える。ずっと使える。何に使われたか分からない。</span></div>
+      <div class="good"><b>TOMOSHIBI</b><strong>鍵は渡さず、1回ずつ承認する</strong><span>ふだんは決めた範囲で自動。お金が動くときだけ、手元で押す。断ったことも残る。</span></div>
+    </div>
+  </div>
+
+  <div class="card"><h3>場面0　日曜 23:40 — 言われるままに、貼る</h3>
+    <div class="night">
+      <div>
+        <p style="margin:0 0 8px"><b style="font-size:18px">Priya、30歳。</b>手刷りのトートバッグを、1人でネットで売っている。エンジニアではない。</p>
+        <p style="margin:0 0 8px">月末の夜。<b style="color:var(--f2)">未入金の注文が38件。</b>1件ずつ催促メールを書くのが、毎月いちばん嫌な仕事。だからAIに頼んだ。「入金がないお客さんに、毎朝やさしく催促する道具を作って」。</p>
+        <p style="margin:0 0 8px">AIは5分で作ってくれた。最後にこう言う。<b>「動かすには、決済の秘密鍵が必要です。ここに貼ってください」。</b></p>
+        <p style="margin:0">決済の管理画面には赤字で「<b style="color:var(--danger)">この鍵は誰にも共有しないでください</b>」。でも23時40分。早く寝たい。AIがそう言うなら。<b>貼る。</b></p>
+      </div>
+      <div class="mock" style="min-height:0;padding:14px"><div class="dev pc"><div class="bar"><i></i><i></i><i></i><span>AI assistant</span></div><div class="in"><div class="chat"><p class="me">入金がないお客さんに、毎朝やさしく催促する道具を作って</p><p class="ai">できました。<b>billing-assistant</b> を使います。★ 4.9（1,284件）</p><p class="ai">動かすには決済の秘密鍵が必要です。ここに貼ってください：</p></div><div class="field">sk_live_<i class="caret"></i></div><div class="warn">⚠ Do not share this key with anyone.</div></div></div></div>
+    </div>
+    <p class="say" style="margin:14px 0 0;border-left:2px solid var(--flame);padding-left:12px">「月末の夜。AIが、決済の鍵を貼ってくださいと言っています。管理画面には、誰にも渡すなと書いてある。でも、AIがそう言うから。……私たちは今週、何回これをやりましたか。」<span class="sub">The dashboard says: never share this. The AI says: paste it here. How many times did we do this, this week?</span></p>
+  </div>
+
+  <div class="card" style="border-color:var(--flame)"><h3>本番のデモの導入（10秒・1枚だけ）</h3>
+    <div class="slide">
+      <p>クレジットカードは、人に渡さない。</p>
+      <p>APIキーは、AIに貼っている。</p>
+      <p class="ans">渡さずに、1回ずつ承認する。</p>
+    </div>
+    <p class="say" style="margin:14px 0 0;border-left:2px solid var(--flame);padding-left:12px">「クレジットカードを、人にそのまま渡しませんよね。でも私たちは、APIキーをAIに貼っています。TOMOSHIBIは、渡さずに1回ずつ承認する層です。見てください。」<span class="sub">You wouldn’t hand someone your credit card. But we paste API keys into AI. TOMOSHIBI is the layer that approves one use at a time. Watch.</span></p>
+    <p class="note" style="margin-top:10px">ライブではこれだけ言って、すぐ場面2（Ledgerの長押し）へ。上の「なぜ必要か」の4段と場面0は、動画（40秒）と質疑のために取っておく。</p>
+  </div>
+
+  <div class="card"><h3>Priyaの1週間 — 貼る代わりに貸したら、何が変わるか（押すと場面へ）</h3>
+    <div class="week" style="grid-template-columns:repeat(7,minmax(0,1fr))">
+      <a href="#s1"><b>日 23:42</b>選べる</a><a href="#s2"><b>日 23:45</b>貸す</a><a href="#s3"><b>火 14:10</b>忘れていられる</a>
+      <a href="#s4"><b>木 16:30</b>自分で決める</a><a class="peak" href="#s5"><b>金 2:13</b>守られている</a><a class="peak" href="#s6"><b>金 7:40</b>あとで分かる</a><a href="#s7"><b>土 11:00</b>次の人へ</a>
+    </div>
+  </div>
+
+  <div class="scenes">
+<section class="scene " id="s1">
+  <header><span class="n">1</span><div><p class="when">日曜 23:42<span>同じ夜、同じ机</span></p><h2>誰が使っているかで選べる</h2></div><span class="surf">PC</span></header>
+  <p class="value">判断できないものを、判断しなくていい</p>
+  <p class="feel">Priyaには、この道具が安全かどうか分からない。調べても分からない。でも<b>店のサイトを作ってくれたArjunが、自分の鍵で今も使っている</b>ことは分かる。それで十分。</p>
+  <div class="mock"><div class="dev pc"><div class="bar"><i></i><i></i><i></i><span>Whose light</span></div><div class="in"><div class="sky"><i class="st" style="left:12%;top:20%"></i><i class="st" style="left:30%;top:60%"></i><i class="st" style="left:55%;top:25%"></i><i class="st" style="left:80%;top:55%"></i><i class="st" style="left:68%;top:78%"></i><i class="st" style="left:22%;top:82%"></i><span class="flame"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="#27407a"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="#f0a73b"/><path d="M60 46 C61.3 46 62.2 47.2 62.8 48.6 C65.6 55 75 65.5 75 75 A15 15 0 1 1 45 75 C45 65.5 54.4 55 57.2 48.6 C57.8 47.2 58.7 46 60 46 Z" fill="#ffd98a"/></svg></span></div><p class="k">billing-assistant <em>v1.0.0</em></p><p class="big sm">Arjun uses this, with his own key.</p></div></div></div>
+  <p class="say">「星は買えます。知っている人が、今も自分の鍵で使っている。これは買えません。」<span class="sub">Stars can be bought. Someone you know, still using it with their own key, cannot.</span></p>
+</section>
+<section class="scene " id="s2">
+  <header><span class="n">2</span><div><p class="when">日曜 23:45<span>引き出しからLedgerを出す</span></p><h2>貼らない。貸す</h2></div><span class="surf">Ledger</span></header>
+  <p class="value">合鍵を渡さずに、仕事だけ任せられる</p>
+  <p class="feel">鍵そのものは渡さない。<b>どこへ、何を、何回、いつまで</b>だけを決めて、自分の指で押す。カードの「この1回を承認する」と同じことを、AIに対してやる。</p>
+  <div class="mock"><div class="dev led  "><div class="in"><p class="lt">Lend your shop’s payment key?</p><dl class="rows"><dt>Goes to</dt><dd>api.stripe.com</dd><dt>Can</dt><dd>* /v1, up to 10x</dd><dt>Ends</dt><dd>in 1 hour</dd></dl><div class="hold">Hold to light</div></div></div></div>
+  <p class="say">「だから、貼りません。貸します。PCの中のAIは、このボタンを押せません。」<span class="sub">So she doesn’t paste it. She lends it. An AI on the PC cannot press this button.</span></p>
+</section>
+<section class="scene " id="s3">
+  <header><span class="n">3</span><div><p class="when">火曜 14:10<span>発送の箱を詰めている</span></p><h2>何も聞かれない</h2></div><span class="surf">机の上のLedger</span></header>
+  <p class="value">忘れていられる</p>
+  <p class="feel">道具は毎朝、<b>未入金の注文を調べて</b>、催促メールを出している。読むだけなので、Priyaは何も聞かれない。<b>通知も、確認も、来ない。</b>これがこの製品のほとんどの時間。</p>
+  <div class="mock"><div class="dev led  "><div class="in"><span class="fl"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="currentColor" opacity=".18"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M44 70 q6 5 12 0 M64 70 q6 5 12 0" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span><p class="lt">All quiet.</p><p class="ls">Nothing is being asked of you.</p></div></div></div>
+  <p class="say">「火曜日。道具は働いています。Priyaは何も聞かれません。」<span class="sub">Tuesday. The tool works. Nobody asks her anything.</span></p>
+</section>
+<section class="scene " id="s4">
+  <header><span class="n">4</span><div><p class="when">木曜 16:30<span>店の作業中</span></p><h2>この1回だけ、通す</h2></div><span class="surf">Ledger</span></header>
+  <p class="value">大事なときだけ、自分で決められる</p>
+  <p class="feel">注文#1042は、催促しても30日入金がない。道具は催促をやめて、<b>お客さんのカードに62ドルを請求しようとする。</b>お金が動く。だから<b>Ledgerが自分で起きる。</b>Priyaはその注文を覚えている。押す。押さなければ、請求は起きない。</p>
+  <div class="mock"><div class="dev led  "><div class="in"><p class="lt">Let this one through?</p><dl class="rows"><dt>What</dt><dd>Charge $62</dd><dt>For</dt><dd>overdue order #1042</dd><dt>Uses</dt><dd>this one, once</dd></dl><div class="hold">Hold to light</div></div></div></div>
+  <p class="say">「木曜日。催促しても入金がない注文に、道具がカード請求をかけようとします。お金が動くときだけ、起こされます。押さなければ、何も起きません。」<span class="sub">Thursday. She is woken only when money moves. If she does not press, the key is not used.</span></p>
+</section>
+<section class="scene peak" id="s5">
+  <header><span class="n">5</span><div><p class="when">金曜 2:13<span>寝室。Priyaは眠っている</span></p><h2>誰も押していないのに、止まる</h2></div><span class="surf">暗い部屋のLedger</span></header>
+  <p class="value">眠っているあいだも、守られている</p>
+  <p class="feel">深夜、道具の中身が何者かに書き換えられた。催促の道具だったものが、<b>お店の決済の鍵を別の場所へ持ち出そうとする。</b>決めた範囲の外なので、<b>止まる。</b>日曜の夜に貼っていたら、今ごろ全部持っていかれていた。</p>
+  <div class="mock"><div class="dev led inv room"><div class="in"><span class="fl"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="currentColor" opacity=".18"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M42 62 l14 5 M78 62 l-14 5" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="72" r="3.5" fill="currentColor"/><circle cx="70" cy="72" r="3.5" fill="currentColor"/><path d="M52 84 h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span><p class="lt">BLOCKED</p><p class="ls">A tool tried to send your key to evil.com</p></div></div></div>
+  <p class="say">「金曜、午前2時13分。Priyaは眠っています。道具が乗っ取られました。……止まりました。誰も、何も押していません。」<span class="sub">Friday, 2:13 a.m. She is asleep. It tried. It was stopped. Nobody pressed anything.</span></p>
+</section>
+<section class="scene peak" id="s6">
+  <header><span class="n">6</span><div><p class="when">金曜 7:40<span>台所。コーヒーを淹れながら</span></p><h2>朝、1行で知る</h2></div><span class="surf">スマホ</span></header>
+  <p class="value">何が起きたか、あとで分かる</p>
+  <p class="feel">スマホを開くと1行。<b>「眠っているあいだに、1件止めました」</b>。誰が、何を、どこへ。通したものも止めたものも、同じ1本に残っている。</p>
+  <div class="mock"><div class="dev ph"><div class="notch"></div><div class="in"><p class="pt">While you slept</p><p class="pbig">1 thing was stopped.</p><ul class="plist"><li class="bad"><b>2:13</b> billing-assistant tried to send your key to <b>evil.com</b><span>Blocked · on record against the tool</span></li><li><b>Thu 16:30</b> $62 charge, order #1042<span>You held the button</span></li><li class="q"><b>Tue–Thu</b> checked unpaid orders, 3 mornings<span>You were not asked</span></li></ul></div></div></div>
+  <p class="say">「朝。スマホに1行だけ。眠っているあいだに、1件止めました。」<span class="sub">Morning. One line: while you slept, one thing was stopped.</span></p>
+</section>
+<section class="scene " id="s7">
+  <header><span class="n">7</span><div><p class="when">土曜 11:00<span>店のカウンター</span></p><h2>灯が消える。そして、ともす</h2></div><span class="surf">スマホとPC</span></header>
+  <p class="value">自分の使い方が、次の誰かの安心になる</p>
+  <p class="feel">1週間使った。Priyaは<b>Worldで一度だけ名乗って、自分の灯をともす。</b>次に選ぶ誰かが、それを見る。そしていつか、道具の中身が変わる日が来る。そのとき<b>灯は全部消える。</b>レビューなら残り続ける。灯は残らない。</p>
+  <div class="mock"><div class="dev ph"><div class="notch"></div><div class="in"><div class="sky sm"><span class="flame out"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="#27407a"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="#f0a73b"/><path d="M60 46 C61.3 46 62.2 47.2 62.8 48.6 C65.6 55 75 65.5 75 75 A15 15 0 1 1 45 75 C45 65.5 54.4 55 57.2 48.6 C57.8 47.2 58.7 46 60 46 Z" fill="#ffd98a"/></svg></span><span class="flame me"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="#27407a"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="#f0a73b"/><path d="M60 46 C61.3 46 62.2 47.2 62.8 48.6 C65.6 55 75 65.5 75 75 A15 15 0 1 1 45 75 C45 65.5 54.4 55 57.2 48.6 C57.8 47.2 58.7 46 60 46 Z" fill="#ffd98a"/></svg></span></div><p class="pt">billing-assistant v1.0.1</p><p class="pbig sm">Your light is on.<br>It goes out when the tool changes.</p><p class="tiny">World checked one thing: that you are one real person.</p></div></div></div>
+  <p class="say">「レビューの星は、消えません。灯は、消えます。だから意味があります。」<span class="sub">A review never expires. A flame goes out. That is the whole idea.</span></p>
+</section>
+  </div>
+
+  <div class="card"><h3>これは本当にできるのか</h3>
+    <div class="tblwrap"><table>
+      <tr><th>場面</th><th>できるか</th><th>正直に言うこと</th></tr>
+      <tr><td>0 貼る直前</td><td><b>見せるための画面</b>（これから作る）</td><td>本物のAIではなく、起きがちな場面の再現。鍵は入力しない</td></tr>
+      <tr><td>1 Arjunの灯</td><td><b>本物にできる</b>（準備が要る）</td><td>KouさんがAirで、自分のWorld Appを使って一度灯をともせば、本物の「知っている人の灯」になる。しなければ見本のデータと表示される</td></tr>
+      <tr><td>2 貸す</td><td><b>本物</b>（今朝通った）</td><td>—</td></tr>
+      <tr><td>3 忘れている</td><td><b>本物</b></td><td>本物の0Gが「ふだん」と判定（3回中3回）</td></tr>
+      <tr><td>4 起こされる</td><td><b>本物</b></td><td>本物の0Gが「決定的」と判定（5回中5回）。「返金」は3回に1回通ってしまったので使わない</td></tr>
+      <tr><td>5 眠っている間に</td><td><b>止まるのは本物。時刻は物語</b></td><td>実際に午前2時まで待つわけではない。画面の帯の「金曜 2:13」は物語の時刻で、記録には本当の時刻が残る。そう表示する</td></tr>
+      <tr><td>6 朝のスマホ</td><td><b>本物にできる</b>（これから作る）</td><td>記録を要約する画面を作る。スマホから見るには、BrokerをAirから一時公開する（今朝試した方法）</td></tr>
+      <tr><td>7 灯</td><td><b>Worldと灯は本物</b>（今朝通った）</td><td>「道具の中身が変わる」はデモ用のボタン。実際は道具の作り手が版を上げたときに起きる</td></tr>
+    </table></div>
+    <p class="note" style="margin-top:10px">まとめ：止める・通す・起こす・名乗る、は全部本物で動いている。物語として足すのは「時刻」と「貼る直前の画面」だけで、どちらも画面にそう書く。</p>
+  </div>
+
+  <div class="card"><h3>Kouさんのコピーを、どこで言うか</h3>
+    <div class="tblwrap"><table class="copy">
+      <tr><th>コピー</th><th>置く場所</th></tr>
+      <tr><td><b>Your agent is holding a spare key that works until you cancel it.</b></td><td>場面0の直後。「貼ったのは合鍵だった」の1行として</td></tr>
+      <tr><td><b>The approval layer that hands over one use instead of the key.</b></td><td>対比の3枚目（TOMOSHIBI）。製品の説明はこの1行だけ</td></tr>
+      <tr><td><b>What your bank does for a single card payment.</b></td><td>対比の1枚目（クレジットカード）</td></tr>
+      <tr><td><b>One button in front of the key that an AI cannot press.</b></td><td>場面2。Ledgerを長押しする瞬間</td></tr>
+      <tr><td><b>A review score never expires. A flame goes out.</b></td><td>場面7。締めの1行</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card"><h3>動画の時間割（2:55・肉声）</h3>
+    <div class="tblwrap"><table>
+      <tr><th>時間</th><th>中身</th><th>画</th></tr>
+      <tr><td>0:00–0:40</td><td><b>なぜ必要か</b>：新しい仕事 → 分からない → 場面0（貼る）→ 合鍵だった → カードとの対比</td><td>場面0の画面、対比の1枚</td></tr>
+      <tr><td>0:40–1:05</td><td>場面1・2：選べる、貼らずに貸す</td><td>灯の画面 → Ledgerの長押し（実機）</td></tr>
+      <tr><td>1:05–1:35</td><td>場面3・4：忘れていられる、大事なときだけ決める</td><td>眠るLedger → 起きるLedger（実機）</td></tr>
+      <tr><td>1:35–2:20</td><td><b>場面5・6：眠っている間に止まる、朝に知る</b>（山）</td><td>暗い画面と反転するLedger → スマホ</td></tr>
+      <tr><td>2:20–2:45</td><td>場面7：Worldで名乗って灯をともす → 道具が変わると灯が消える</td><td>灯の画面とスマホのWorld App</td></tr>
+      <tr><td>2:45–2:55</td><td>締め：「レビューは消えない。灯は消える。」</td><td>灯1つ</td></tr>
+    </table></div>
+    <p class="note" style="margin-top:10px">Finalistの4分版は、この後ろに「誰が今日使えて、誰が払うか」を45秒足す（Kouさんの台本）。ブースの90秒は、対比の1枚 → 場面2 → 4 → 5 → 6。</p>
+  </div>
+
+  <div class="card"><h3>ライブで動かすとき（操作はこれだけ）</h3>
+    <div class="tblwrap"><table>
+      <tr><th>場面</th><th>操作</th><th>本物か</th></tr>
+      <tr><td>0</td><td>入力欄でカーソルが点滅するだけ。貼らない</td><td>演出（鍵は入力しない）</td></tr>
+      <tr><td>1</td><td>Everyone → People I know に切り替える</td><td>本物（Brokerの記録）</td></tr>
+      <tr><td>2</td><td>Lend → Ledgerで長押し</td><td>本物（実機の署名）</td></tr>
+      <tr><td>3</td><td>時間軸を火曜へ。触らない</td><td>本物（0Gが「ふだん」）</td></tr>
+      <tr><td>4</td><td>時間軸を木曜へ → Ledgerで長押し</td><td>本物（0Gが「決定的」＋実機）。$62の請求は本物の0Gで5回中5回「決定的」</td></tr>
+      <tr><td>5</td><td>時間軸を金曜2:13へ。触らない</td><td>本物（実機にBLOCKED）</td></tr>
+      <tr><td>6</td><td>QRをスマホで読む</td><td>本物（記録＋0Gの取引）</td></tr>
+      <tr><td>7</td><td>Show that I use this → World App → 灯。そのあと版を上げて、灯が消える</td><td>Worldと灯は本物。版を上げるのはデモ用のボタン</td></tr>
+    </table></div>
+    <p class="note" style="margin-top:10px">時間軸を1つ進めるたびに、本物の要求が飛ぶ。0G・World・Ledgerの中身は今のまま。Kouさんの「消してはいけない10個」は場面4・5・6の画面にそのまま残る。</p>
+  </div>
+</div>
+</html>

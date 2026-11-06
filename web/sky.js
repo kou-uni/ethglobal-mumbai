@@ -10,8 +10,8 @@
 
 const $ = (id) => document.getElementById(id)
 const qs = new URLSearchParams(location.search)
-const AGENT = (qs.get('agent') || 'http://127.0.0.1:8792').replace(/\/$/, '')
-const BROKER = (qs.get('broker') || localStorage.getItem('tomoshibi.broker') || 'http://127.0.0.1:8787').replace(/\/$/, '')
+const AGENT = window.appAgent
+const BROKER = (qs.get('broker') || window.appBroker(localStorage.getItem('tomoshibi.broker') || 'http://127.0.0.1:8787')).replace(/\/$/, '')
 // The bridge runs next to the Ledger (bridge/bridge.py). Without it, the Ledger step is skipped and said so.
 const BRIDGE = (qs.get('bridge') || localStorage.getItem('tomoshibi.bridge') || 'http://127.0.0.1:8791').replace(/\/$/, '')
 
@@ -348,4 +348,4 @@ refresh(); setInterval(refresh, 3000)
 // Arriving from the keys page to name yourself: open the tool you just used.
 const wantLight = new URLSearchParams(location.search).get('light') === '1'
 if (wantLight) { selected = CATALOG[0]; setMode('mine'); setTimeout(() => { paintSheet(); $('sheet').scrollIntoView({ block: 'nearest' }) }, 600) }
-journey(wantLight ? 'light' : 'choose', wantLight ? ['choose', 'lend', 'work'] : store.people.some((p) => p.tie === 'me') ? ['lend', 'work', 'light'] : [])
+journey('light', store.used && Object.keys(store.used).length ? ['lend', 'woken'] : [])

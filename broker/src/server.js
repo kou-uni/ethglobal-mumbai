@@ -208,6 +208,12 @@ export const app = createServer(async (req, res) => {
       return json(res, CODE[out.decision] ?? 400, out)
     }
     // The trail. The QR points here (no index UI is built; D7)
+    // What happened with one holder's key (the summary a person reads afterwards, on a phone).
+    // The holder address is already in every record; this only saves the reader from knowing each thread.
+    if (url.pathname.startsWith('/holder/')) {
+      const h = url.pathname.slice(8)
+      return json(res, 200, { holder: h, records: ledger.since(h) })
+    }
     if (url.pathname.startsWith('/trace/')) {
       const t = url.pathname.slice(7)
       return json(res, 200, { thread: t, records: ledger.trace(t) })

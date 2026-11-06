@@ -20,13 +20,11 @@
 
 <text class="ttl" x="60" y="54">TOMOSHIBI — the switchboard between your agents and your keys</text>
 <text class="sub" x="60" y="88">Your tools call by label. TOMOSHIBI puts the call through to the real service — or puts it to you first, when it is heavy.</text>
-<rect x="390" y="108" width="750" height="84" rx="16" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5"/>
-<text class="k" x="414" y="138" fill="#c2410c">THE LEDGER · plugged into the same laptop</text>
-<text class="m" x="414" y="172">hardware, in your hand — not in the laptop, and not in the cloud</text>
+<g id="u-laptop">
 <rect x="40" y="200" width="1120" height="545" rx="22" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="10 8"/>
 <text class="k" x="64" y="234">INSIDE THIS LAPTOP</text>
-<path d="M765 192 L765 246" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>
-<g id="b4"><circle cx="765" cy="219" r="14" fill="#f2600c"/><text class="num" x="765" y="224" text-anchor="middle">4</text></g>
+</g><!--/u-laptop-->
+<g id="u-tools">
 <rect class="card" x="64" y="290" width="280" height="84" rx="14"/>
 <text class="h" x="86" y="324" font-size="19">Claude Code, on this PC</text>
 <text class="m" x="86" y="354">calls: model-main</text>
@@ -40,9 +38,13 @@
 <text class="h" x="86" y="532" font-size="19">a tool you handed out</text>
 <text class="m" x="86" y="562">calls: resend-tx</text>
 <path d="M344 540 L386 540" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+</g><!--/u-tools-->
+<g id="u-box">
 <rect class="card" x="390" y="250" width="750" height="470" rx="18"/>
 <text class="h" x="414" y="288">TOMOSHIBI · the switchboard, on the laptop</text>
 <text class="m" x="414" y="316">two parts: the page you look at, and the broker that holds this table</text>
+</g><!--/u-box-->
+<g id="u-table">
 <text class="k" x="450" y="360">LABEL</text>
 <text class="k" x="590" y="360">WHAT IT MAY DO</text>
 <text class="k" x="1010" y="360">THE REAL KEY</text>
@@ -60,6 +62,15 @@
 <path d="M980 386 L980 588" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="7 6"/>
 <text class="note" x="414" y="620">The right column is never printed, never logged, and never returned to a tool.</text>
 <text class="m" x="414" y="672">What leaves this laptop: the request itself, its weight, and the trail. Never the right column.</text>
+</g><!--/u-table-->
+<g id="u-ledger">
+<rect x="390" y="108" width="750" height="84" rx="16" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5"/>
+<text class="k" x="414" y="138" fill="#c2410c">THE LEDGER · plugged into the same laptop</text>
+<text class="m" x="414" y="172">hardware, in your hand — not in the laptop, and not in the cloud</text>
+<path d="M765 192 L765 246" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>
+<g id="b4"><circle cx="765" cy="219" r="14" fill="#f2600c"/><text class="num" x="765" y="224" text-anchor="middle">4</text></g>
+</g><!--/u-ledger-->
+<g id="u-zg">
 <text class="k" x="1200" y="234">OUTSIDE · OVER THE NETWORK</text>
 <rect class="card" x="1200" y="250" width="440" height="116" rx="14" style="fill:#fffdf8"/>
 <text class="k" x="1222" y="280">0G PRIVATE COMPUTER</text>
@@ -68,12 +79,16 @@
 <text class="m" x="1222" y="350">Its operator cannot read the body</text>
 <path d="M1146 306 L1196 306" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)" marker-start="url(#a)"/>
 <g id="b3"><circle cx="1171" cy="282" r="14" fill="#1b1630"/><text class="num" x="1171" y="287" text-anchor="middle">3</text></g>
+</g><!--/u-zg-->
+<g id="u-storage">
 <rect class="card" x="1200" y="372" width="440" height="116" rx="14" style="fill:#fffdf8"/>
 <text class="k" x="1222" y="402">0G STORAGE</text>
 <text class="m" x="1222" y="428">where the trail is sealed — the lineage</text>
 <text class="m" x="1222" y="450">of one version of one tool</text>
 <path d="M1146 428 L1196 428" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 <g id="b7"><circle cx="1171" cy="404" r="14" fill="#1b1630"/><text class="num" x="1171" y="409" text-anchor="middle">7</text></g>
+</g><!--/u-storage-->
+<g id="u-world">
 <rect class="card" x="1200" y="494" width="440" height="116" rx="14" style="fill:#fffdf8"/>
 <text class="k" x="1222" y="524">WORLD ID</text>
 <text class="m" x="1222" y="550">one person, once. The only way a star</text>
@@ -81,6 +96,8 @@
 <text class="m" x="1222" y="594">never written into it</text>
 <path d="M1146 550 L1196 550" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 <g id="b8"><circle cx="1171" cy="526" r="14" fill="#1b1630"/><text class="num" x="1171" y="531" text-anchor="middle">8</text></g>
+</g><!--/u-world-->
+<g id="u-services">
 <rect class="card" x="1200" y="616" width="440" height="116" rx="14" style="fill:#fffdf8"/>
 <text class="k" x="1222" y="646">THE REAL SERVICES</text>
 <text class="m" x="1222" y="672">api.anthropic.com · api.stripe.com</text>
@@ -88,6 +105,8 @@
 <path d="M1146 672 L1196 672" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)" marker-start="url(#a)"/>
 <g id="b5"><circle cx="1171" cy="648" r="14" fill="#1b1630"/><text class="num" x="1171" y="653" text-anchor="middle">5</text></g>
 <g id="b6"><circle cx="1171" cy="696" r="14" fill="#1b1630"/><text class="num" x="1171" y="701" text-anchor="middle">6</text></g>
+</g><!--/u-services-->
+<g id="u-order">
 <text class="k" x="60" y="790">The order of one call</text>
 <rect class="card" x="60" y="810" width="860" height="314" rx="16"/>
 <g id="o1">
@@ -122,6 +141,8 @@
 <g><circle cx="96" cy="1088" r="14" fill="#1b1630"/><text class="num" x="96" y="1093" text-anchor="middle">8</text></g>
 <text class="m" x="124" y="1094">afterwards: World ID, one person once — a star on this version</text>
 </g>
+</g><!--/u-order-->
+<g id="u-who">
 <text class="k" x="960" y="790">Who it is for</text>
 <rect x="960" y="810" width="680" height="314" rx="16" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="8 7"/>
 <text class="t" x="984" y="852">You build with Claude Code on this laptop. Shipping anything means</text>
@@ -130,4 +151,5 @@
 <text class="t" x="984" y="954">their usage on your key. TOMOSHIBI is where those keys live: every</text>
 <text class="t" x="984" y="988">tool is given a label, each label keeps a history, and only the heavy</text>
 <text class="t" x="984" y="1022">calls reach your hand.</text>
+</g><!--/u-who-->
 </svg>

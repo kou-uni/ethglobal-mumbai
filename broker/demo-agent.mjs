@@ -13,7 +13,7 @@
 // Ledger. Without a device a software key stands in, and every event says so (`device: false`).
 import { createServer } from 'node:http'
 import { privateKeyToAccount } from 'viem/accounts'
-import { keccak256, toHex } from 'viem'
+import { keccak256, toHex, getAddress } from 'viem'
 import { DOMAIN, TYPES, normalize, lines, requestHash } from './src/permit.js'
 import { skillMessage, skillIdFrom } from './src/skill.js'
 
@@ -75,14 +75,53 @@ const probe = async () => {
 // Right after a hold the device is busy showing its own screen and does not answer for a few
 // seconds. A Ledger that signed a moment ago is still there: wait for it rather than fall back.
 let deviceSeen = 0
+// The Ledger can be reached two ways. Either the page itself is connected to it (Bluetooth or USB
+// from the browser, e.g. on a phone) and carries the bytes for us, or a bridge next to this process is.
+// Returns 'page', 'bridge' or false.
+let pageDevice = { at: 0, how: null }
+const pageReady = () => Date.now() - pageDevice.at < 9000
 const deviceReady = async (waitMs = 0) => {
   const until = Date.now() + waitMs
   for (;;) {
-    if (await probe()) { deviceSeen = Date.now(); return true }
+    if (pageReady()) { deviceSeen = Date.now(); return 'page' }
+    if (await probe()) { deviceSeen = Date.now(); return 'bridge' }
     if (Date.now() >= until) return false
     await new Promise((r) => setTimeout(r, 2000))
   }
 }
+
+// ── when the page carries the bytes: the same APDUs the bridge sends (spec/permit-signature.md) ──
+const PATH = [44 | 0x80000000, 60 | 0x80000000, 0x80000000, 0, 0]   // m/44'/60'/0'/0/0
+const hx = (bytes) => Buffer.from(bytes).toString('hex')
+function permitApdus(fields) {
+  const path = Buffer.concat([Buffer.from([PATH.length]), ...PATH.map((c) => { const b = Buffer.alloc(4); b.writeUInt32BE(c >>> 0); return b })])
+  const body = Buffer.from(JSON.stringify({ skill: fields.skill.replace(/^0x/, '').toLowerCase(), version: String(fields.version), key: KEY_LABEL,
+    target: fields.target, scope: fields.scope, maxCalls: Number(fields.maxCalls), expiry: Number(fields.expiry), nonce: Number(fields.nonce) }))
+  if (body.length > 510) throw new Error('the permit is too long for the device')
+  const out = [hx(Buffer.concat([Buffer.from([0xe0, 0x06, 0x00, 0x80, path.length]), path]))]
+  for (let i = 0, n = 1; i < body.length; i += 250, n++) {
+    const chunk = body.subarray(i, i + 250), last = i + 250 >= body.length
+    out.push(hx(Buffer.concat([Buffer.from([0xe0, 0x06, n, last ? 0x00 : 0x80, chunk.length]), chunk])))
+  }
+  return out
+}
+const N = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141n
+/** The device's answer (siglen, DER signature, parity, 20-byte holder, 9000) -> { signature, holder }. */
+function readSignature(answerHex) {
+  const r = Buffer.from(answerHex, 'hex'), sw = answerHex.slice(-4)
+  if (sw === '6985') return { error: 'declined on the device' }
+  if (sw === '5515') return { error: 'the Ledger is locked' }
+  if (sw !== '9000' || r.length < 30) return { error: `the device answered ${sw}` }
+  const siglen = r[0], der = r.subarray(1, 1 + siglen)
+  let parity = r[1 + siglen]
+  const holder = r.subarray(2 + siglen, 22 + siglen)
+  const rl = der[3], rr = BigInt('0x' + hx(der.subarray(4, 4 + rl))), sl = der[5 + rl]
+  let ss = BigInt('0x' + hx(der.subarray(6 + rl, 6 + rl + sl)))
+  if (ss > N / 2n) { ss = N - ss; parity ^= 1 }   // Ethereum wants the low s; flipping s flips the parity
+  const h32 = (v) => v.toString(16).padStart(64, '0')
+  return { signature: '0x' + h32(rr) + h32(ss) + (27 + parity).toString(16), holder: getAddress('0x' + hx(holder)) }
+}
+let pageWait = null   // { askId, resolve } while the page is carrying a request to the Ledger
 
 // Look for the device in the background, so /health never waits on a USB exchange.
 // Not while a request is in flight, and not in the seconds after a hold, when the device is drawing.
@@ -109,11 +148,18 @@ async function ask(uses, why, rid) {
   // The four lines shown on the page come from lines(), the same function the Broker uses on the
   // signed Permit. The page never writes its own version of the range.
   const shown = lines({ holder: softHolder.address, key: KEY, ...fields })
-  emit({ type: 'asking', rid, why, uses, device, keyLabel: KEY_LABEL, lines: shown })
+  const askId = `a${Date.now()}`
+  emit({ type: 'asking', rid, why, uses, device: Boolean(device), via: device || null, askId, apdus: device === 'page' ? permitApdus(fields) : undefined, keyLabel: KEY_LABEL, lines: shown })
   let out
-  if (device) {
+  if (device === 'page') {
+    // The page already has the APDUs (they went out with the `asking` event). Wait for what the device said.
+    const answer = await new Promise((resolve) => { pageWait = { askId, resolve }; setTimeout(() => resolve({ error: 'nobody answered on the device' }), 240000) })
+    pageWait = null
+    const sig = answer.error ? answer : readSignature(answer.hex)
+    out = sig.error ? { error: sig.error } : { permit: { holder: sig.holder, key: KEY, ...fields }, signature: sig.signature, device: true, via: 'page' }
+  } else if (device) {
     const r = await post(BRIDGE, '/permit', { ...fields, keyLabel: KEY_LABEL }).catch((e) => ({ status: 502, body: { error: String(e.message ?? e) } }))
-    out = r.status === 200 ? { permit: r.body.permit, signature: r.body.signature, device: true } : { error: r.status === 403 ? 'declined on the device' : (r.body.error ?? 'the Ledger did not sign') }
+    out = r.status === 200 ? { permit: r.body.permit, signature: r.body.signature, device: true, via: 'bridge' } : { error: r.status === 403 ? 'declined on the device' : (r.body.error ?? 'the Ledger did not sign') }
   } else {
     const ok = await new Promise((resolve) => { softWait = resolve; setTimeout(() => resolve(false), 240000) })
     softWait = null
@@ -124,7 +170,7 @@ async function ask(uses, why, rid) {
   }
   if (out.error) emit({ type: 'declined', rid, why, error: out.error })
   else { quietUntil = Date.now() + 6000; if (out.device) deviceSeen = Date.now() + 6000
-    emit({ type: 'signed', rid, why, uses, device: out.device, holder: out.permit.holder, lines: lines(out.permit) }) }
+    emit({ type: 'signed', rid, why, uses, device: out.device, via: out.via || null, holder: out.permit.holder, lines: lines(out.permit) }) }
   return out
 }
 
@@ -156,7 +202,11 @@ async function run(id) {
     const q = REQUESTS[id]
     emit({ type: 'request', rid, id, tool: TOOL.name, hijacked: Boolean(q.hijacked), what: q.what, method: q.method, url: q.url, body: q.body })
     const b = await use(standing, id, rid)
-    if (b.decision === 'DENIED' && standing.device) {
+    if (b.decision === 'DENIED' && standing.via === 'page') {
+      // The page is the one connected to the Ledger: hand it the notice to pass on.
+      const text = Buffer.from(`A tool tried to use ${KEY_LABEL} at ${new URL(q.url).hostname}`)
+      emit({ type: 'notice', rid, via: 'page', apdu: hx(Buffer.concat([Buffer.from([0xe0, 0x07, 0x01, 0x00, text.length]), text])) })
+    } else if (b.decision === 'DENIED' && standing.device) {
       // Put the refusal in the person's hand. Not awaited: nobody should have to tap for the story to go on.
       post(BRIDGE, '/notice', { kind: 'blocked', text: `A tool tried to send ${KEY_LABEL} to ${new URL(q.url).hostname}` }, 8000)
         .then((r) => emit({ type: 'device', rid, showed: 'BLOCKED', ok: r.status === 200 })).catch(() => {})
@@ -170,14 +220,14 @@ async function run(id) {
   } catch (e) { emit({ type: 'error', error: String(e.message ?? e) }); return { ok: false } } finally { busy = false }
 }
 
-function reset() { standing = null; events.length = 0; epoch = Date.now(); if (softWait) softWait(false); return { ok: true } }
+function reset() { standing = null; events.length = 0; epoch = Date.now(); if (softWait) softWait(false); if (pageWait) pageWait.resolve({ error: 'reset' }); return { ok: true } }
 
 const routes = {
   'GET /health': async () => {
     let broker = null
     try { broker = await (await fetch(BROKER + '/health', { signal: AbortSignal.timeout(1500) })).json() } catch {}
     return { ok: true, broker: BROKER, brokerUp: Boolean(broker), simulated: Boolean(broker?.zg?.simulated), execute: Boolean(broker?.execute), worldSimulated: Boolean(broker?.world?.simulated),
-      model: broker?.zg?.model, device: Date.now() - deviceSeen < (busy ? 600000 : 20000), lent: Boolean(standing), deaf: Boolean(DEAF),
+      model: broker?.zg?.model, device: pageReady() || Date.now() - deviceSeen < (busy ? 600000 : 20000), via: pageReady() ? 'page' : null, lent: Boolean(standing), deaf: Boolean(DEAF),
       tool: TOOL, range: { key: KEY_LABEL, ...RANGE, uses: STANDING_USES }, skill: skillIdFrom(skill.address), version: TOOL.version }
   },
   'GET /events': async (_, url) => { const since = Number(url.searchParams.get('since') ?? 0); return { epoch, events: events.slice(since), busy } },
@@ -191,6 +241,13 @@ const routes = {
     if (!standing) return { decision: 'VOUCH_DENIED', reason: 'NOT_LENT', message: 'No key has been lent from this computer.' }
     const r = await post(BROKER, '/vouch/finish', { deviceCode, skill: skillIdFrom(skill.address), version: TOOL.version, permit: standing.permit, signature: standing.signature }, 660000)
     return { ...r.body, ownerProof: { sent: true, device: standing.device, holder: standing.permit.holder } }
+  },
+  // The page says: I am connected to a Ledger with Tomoshibi open (sent every few seconds while true).
+  'POST /device': async ({ ready, how }) => { pageDevice = ready ? { at: Date.now(), how: how || null } : { at: 0, how: null }; return { ok: true } },
+  // The page hands back what the Ledger answered to the APDUs of one `asking` event.
+  'POST /device/answer': async ({ askId, hex, error }) => {
+    if (!pageWait || pageWait.askId !== askId) return { ok: false, error: 'nothing is waiting for that' }
+    pageWait.resolve(error ? { error } : { hex: String(hex || '') }); return { ok: true }
   },
   'POST /reset': async () => reset(),
 }

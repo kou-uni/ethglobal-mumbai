@@ -55,9 +55,18 @@ folder listing — can both be fixed without moving anything.
 
 **Every item is a new file or a README edit. No path that anyone has linked to changes.**
 
-## 4. Phase 2 — after the submission lands. Moves, on a branch, with minta
+## 4. Phase 2 — **decided against, 2026-11-06. We are not doing this.**
 
-Proposed target, for discussion — **not to be executed before the deadline**:
+> **Phase 1 took the benefit, so Phase 2 is left with the cost.** Every directory now has a README
+> and `ideation/README.md` indexes all 47 working documents by purpose, so nothing is hard to find
+> any more. What a move would still buy is a shorter top-level listing — 16 entries down to 8 —
+> which is appearance. What it would cost is concrete: **every public Pages URL in the submission
+> changes.** The SHA-pinned links to lines of code survive; the rest do not.
+>
+> If it is ever revisited, the only part worth doing is merging `ui/` into `web/`, after the
+> rewards are distributed. The target below is kept as the record of what we considered.
+
+Proposed target, considered and declined:
 
 ```
 README.md  LICENSE

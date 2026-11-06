@@ -36,6 +36,22 @@
 撮影は**1台にまとめるのが安全**（Kou さんの機械に Ledger を挿す。必要なのは `pip install hidapi` だけ）。
 2台に分けるなら、画面を `?broker=http://<Kou の機械>:8787` で開き、Broker を LAN に出す変更が要る。
 
+### 会場のスマホで QR を開けるようにする（公開の画面＋トンネル）
+
+画面は `https://mintannn.github.io/tomoshibi/` に置いてある。Broker を動かす機械でトンネルを張ると、
+Broker に HTTPS の公開 URL が付く（アカウント不要。鍵は機械から出ない）。
+
+```bash
+brew install cloudflared
+```
+
+```bash
+cloudflared tunnel --url http://127.0.0.1:8787
+```
+
+出てきた `https://….trycloudflare.com` を、画面の `?broker=` に付けて開く。記録の画面の QR は、その公開のリンクになる。
+**URL は起動のたびに変わる。機械を止めると切れる。** 11/6 に模擬の Broker で、公開の画面から読めることを確認した。
+
 ## 3. 撮影の30分前にやること
 
 1. **FLEX の自動ロックを 10 分にする**（Settings → Lock screen）。既定は短く、撮影中に鍵がかかる。

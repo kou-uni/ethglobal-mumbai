@@ -1,0 +1,15 @@
+# Render blueprint: the demo's back end as one free web service, built from the Dockerfile.
+# The three keys are entered in Render's dashboard (sync: false = never stored in this file).
+services:
+  - type: web
+    name: tomoshibi
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ZG_API_KEY
+        sync: false
+      - key: WORLD_CLIENT_ID
+        sync: false
+      - key: WORLD_CLIENT_SECRET
+        sync: false

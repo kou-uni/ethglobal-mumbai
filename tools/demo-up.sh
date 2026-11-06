@@ -19,10 +19,18 @@ stop
 if [ -f broker/.env.local ]; then set -a; . broker/.env.local; set +a; fi
 [ -n "${ZG_API_KEY:-}" ] || export ZG_OFFLINE=1
 [ -n "${WORLD_CLIENT_ID:-}" ] || export WORLD_OFFLINE=1
-unset SECRETS; export EXECUTE=0      # never a real API key, never a real call (decision 15)
+# No key comes from the environment (decision 15). The one way a call to Stripe becomes real is a Stripe **test-mode**
+# key parked from the "add a row" screen: it is kept in the Broker's memory only, and a live key is refused (keys.js).
+unset SECRETS; export EXECUTE=0
 # Ask for a press whenever money moves, not only when the model is certain it cannot be undone.
 # (A refund came back `significant` one time in three on the real 0G; with the default it would pass.)
 export ZG_ESCALATE=${ZG_ESCALATE:-significant}
+# 0G withdrew the model this was measured on (0gm-1.0-35b-a3b answered "Model not found" from 2026-11-06 17:32 IST,
+# after an hour of 502s, and is gone from GET /v1/models). Its sibling is still sealed (TeeML) and judges the same way,
+# measured the same evening: a read -> routine 3/3, a refund -> decisive 3/3, 1.3-4.3 s. It refuses JSON mode, so that
+# setting is left out; the answer is parsed as JSON either way. Set ZG_MODEL / ZG_JSON_MODE yourself to override.
+export ZG_MODEL=${ZG_MODEL:-0gm-1.0-35b-a3b-sia}
+export ZG_JSON_MODE=${ZG_JSON_MODE:-0}
 
 ( cd broker && [ -d node_modules ] || npm ci --silent )
 start broker   sh -c "cd broker && PORT=8797 LEDGER_PATH=data/ledger.jsonl exec node src/server.js"

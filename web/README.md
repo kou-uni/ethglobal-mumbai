@@ -1,6 +1,53 @@
 # Tomoshibi — the screens people see
 
-Three static pages. No build step, no web fonts, no trackers, no third-party requests.
+Static pages. No build step, no web fonts, no trackers. The only other host the app talks to is its own back end
+(the address in `live.json`, or the AI tool on this computer); the links to Stripe and to World App are opened by the person.
+
+## Start here: `app.html`
+
+**The app.** One page with two surfaces, shown as two tabs: the chat with the AI that helps her build, and TOMOSHIBI.
+The person is a builder who is tired of keeping API keys in `.env` files (see `docs/NEW-DIRECTION.md`).
+
+1. The AI asks for a Stripe key in a `.env` file. She sends the TOMOSHIBI link ([`llms.txt`](llms.txt), a page an AI can
+   read). The AI reads it, finds Stripe on the list of supported APIs, and decides to go through TOMOSHIBI.
+2. TOMOSHIBI opens: **add a row** (pick the API, park the key; the label and where it goes are fixed by the list; until when)
+   → **approve on the Ledger**. The Ledger is never drawn inside the page. The page says to pick up the device, and waits.
+3. **The label.** The tool gets a label (`stripe-live`), never the key, and the page shows the call the tool makes.
+4. After that TOMOSHIBI stays out of sight: a routine call is put through, a heavy call waits for the Ledger, a call to
+   another destination is refused. *Home* shows the table (label, goes to, until, the key hidden) and the last call.
+5. *Trail* is every call with its reason, and whether the thread was sealed in 0G Storage. *Lights* is where she lights the
+   tool she built (World confirms one real person; the Broker's trail confirms she really ran it), and where the lights
+   add up to her name as a builder.
+
+**What is real, and what is a mock.** Whatever is not real carries a `MOCK` tag where it is shown.
+
+- The chat is scripted (`MOCK`).
+- The key: next to a Broker on the same computer, a Stripe **test-mode** key (`sk_test_…`) is really parked. It goes to the
+  Broker (`POST /keys`), Stripe is asked whether it is good, and it stays in memory only. A live key is refused. The Broker
+  then makes a little test data in that test account (one paid order, two unpaid invoices), so the calls have something
+  real to read and to refund, and the page shows what Stripe answered. The public demo takes no keys at all (a key belongs on its
+  owner's own machine): there, and with the mock key, nothing is sent and Stripe is a stand-in (`MOCK`). 0G Storage sealing is off on the public demo, on purpose: it
+  would need a wallet key on a public server.
+- Lights are counted per tool version; "your name as a builder" shows this tool's count. The two screens of what someone
+  else sees are a mock.
+
+Every TOMOSHIBI screen says one thing: a bar under the name states the value in a few words, the headline states the
+moment. After each step a green line says what you gained; while something is on its way the screen says what comes next.
+
+| Mode | When | What it means |
+|---|---|---|
+| live | `broker/demo-agent.mjs` answers on `:8792` (or at `?agent=https://…`) | Requests go through the real Broker. With a Ledger connected, holds happen on the device; without one, a button on the page stands in and every record says so |
+| live, hosted | no AI tool on this device, and `live.json` names one | The same, through the hosted copy (`Dockerfile`, `tools/hosted-start.sh`). It has no USB and no wallet key: a Ledger is connected from the browser, or the page's button stands in |
+| preview | no AI tool reachable | Answers recorded from the real Broker and 0G (`scenes.json`) are replayed. The bottom bar says so. Nothing is sent |
+
+The dark bar at the bottom is the demo's remote control: it makes the AI tool do something *now* (keys `1` `2` `3` `5`, `R` to start over).
+In real life the tool does these on its own. `start.html` opens `app.html`; the earlier pages below are kept.
+`?preview=1` keeps the page on the recorded answers whatever is reachable.
+
+`window.tomoshibi` in the console shows the page's own state. `node tools/shots.mjs` renders `assets/tomoshibi-cover.png`
+and `assets/shots/*.png` from these screens (sample data, real screens).
+
+## The earlier pages
 
 | Page | What it is |
 |---|---|

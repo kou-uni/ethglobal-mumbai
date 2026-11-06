@@ -100,7 +100,7 @@ Everything below was produced against production systems during the hack, not mo
 | 0G Storage root hash for that episode | `0xc0e0c7a911547490680d545ad9d4638a9bf23bd72d8a3004edf9b4ffaa5be080` |
 | A second seal, after the tier vocabulary changed | tx `0x90ecc8a4e1ea97bb4ff4ff7784d2a18ce80729f6fe640d945077ad6266925455` |
 | Flow contract | `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296` |
-| Tests | **50 / 50**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
+| Tests | **58 / 58**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
 | Measured against the real TEE-attested model | **467 calls** · 283.9 input / 28.0 output tokens · ~2.0 s · **$0.000036 per verdict** (`pricing_usd` from `GET router-api.0g.ai/v1/models`) |
 | The weight prompt was measured before it was changed | 120 production calls across two languages, **58/60 agreement**; the change was kept only because it was **stricter**, not merely equal — `ideation/2026-11-06-decisions.md` Decision 25 |
 | Concurrency | 100 simultaneous requests against `maxCalls=3` let through **0** extra |

@@ -12,7 +12,7 @@ see §7.
 ## 1. Where we are, in one line
 
 **The broker runs against production 0G, all five paths come out, two trails are sealed on chain,
-and the tests pass 50/50. Nothing is blocked.**
+and the tests pass 58/58. Nothing is blocked.**
 
 ## 2. The commands that reproduce it
 
@@ -27,7 +27,7 @@ cd ~/ch/seeds/ethglobal-mumbai/repo/broker
 
 curl -s http://127.0.0.1:8801/health          # apiKey:true, storageKey:true, no "simulated", escalateFrom: decisive
 node demo.mjs http://127.0.0.1:8801 http://127.0.0.1:8802   # all five paths
-npm test                                      # 50/50
+npm test                                      # 58/58
 ```
 
 **Note:** old brokers from earlier sessions may still hold 8787–8798. `kill` is blocked in this
@@ -38,7 +38,7 @@ environment, so **use a free port**. `.env.local` is gitignored; without it, set
 
 | | State |
 |---|---|
-| Broker (scope, call budget, violations, proxy execution, trail) | works. 50/50 tests |
+| Broker (scope, call budget, violations, proxy execution, trail) | works. 58/58 tests |
 | 0G Private Computer (weight judgement) | **verified with the production key.** ~1.3–2.0 s, request ids recorded |
 | All five paths (ALLOWED / NEEDS_PRESS / press-and-pass / 5 kinds of DENIED / STOPPED) | **all come out** |
 | **0G Storage seal, on chain** | **two transactions.** `0x74c7cdf9…aef1` (block 64103318) and `0x90ecc8a4…5455` |

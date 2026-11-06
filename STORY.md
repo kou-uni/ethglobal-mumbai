@@ -97,7 +97,7 @@ and it must carry it in the form a reader can check.
 
 - the four stops, named and distinguished — this is the originality claim, and it is one table
 - a trail sealed on 0G Galileo: tx `0x74c7cdf9…aef1`, block **64103318**, `status 0x1`
-- **50/50** tests, including the frozen cross-side signature vector
+- **58/58** tests, including the frozen cross-side signature vector
 - **467** measured calls against the real TEE-attested model, 2.0 s, $0.000036
 - three pages anyone can open right now, and a three-command local reproduction
 

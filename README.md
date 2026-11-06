@@ -79,7 +79,7 @@ is **not** in a TEE this time, and the anonymous read path for stars is designed
 |---|---|
 | A trail sealed on **0G mainnet-testnet (Galileo, chainId 16602)** | tx [`0x74c7cdf9…aef1`](https://chainscan-galileo.0g.ai/tx/0x74c7cdf9bca055c502918e62a7ac9fc7634d1326471433ab10161045aa97aef1) · block **64103318** · `status 0x1` |
 | 0G Storage root hash | `0xc0e0c7a911547490680d545ad9d4638a9bf23bd72d8a3004edf9b4ffaa5be080` |
-| Tests | **50 / 50**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
+| Tests | **58 / 58**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
 | Measured against the **real** 0G Private Computer (TeeML, TDX-attested) | **467 calls** · 2.0 s per verdict · **$0.000036** per verdict |
 | Hardware | A custom **Ledger** app in Rust. No blind signing: the host never sends a digest |
 

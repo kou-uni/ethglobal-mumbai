@@ -25,7 +25,9 @@ export async function rootOf(bytes) {
  * @returns {Promise<{uploaded:boolean, rootHash:string|null, tx?:string, url?:string, reason?:string}>}
  */
 export async function store(thread, records, opts = {}) {
-  const key = opts.privateKey ?? process.env.ZG_PRIVATE_KEY
+  // Accept a key written without 0x (64 hex digits is the same key)
+  const raw = opts.privateKey ?? process.env.ZG_PRIVATE_KEY
+  const key = raw && /^[0-9a-fA-F]{64}$/.test(raw) ? '0x' + raw : raw
   const bytes = new TextEncoder().encode(serialize(thread, records))
   let rootHash = null
   try { rootHash = await rootOf(bytes) } catch (e) { return { uploaded: false, rootHash: null, reason: `cannot compute root: ${e.message}` } }

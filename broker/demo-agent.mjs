@@ -169,7 +169,7 @@ const routes = {
   'GET /health': async () => {
     let broker = null
     try { broker = await (await fetch(BROKER + '/health', { signal: AbortSignal.timeout(1500) })).json() } catch {}
-    return { ok: true, broker: BROKER, brokerUp: Boolean(broker), simulated: Boolean(broker?.zg?.simulated), worldSimulated: Boolean(broker?.world?.simulated),
+    return { ok: true, broker: BROKER, brokerUp: Boolean(broker), simulated: Boolean(broker?.zg?.simulated), execute: Boolean(broker?.execute), worldSimulated: Boolean(broker?.world?.simulated),
       model: broker?.zg?.model, device: Date.now() - deviceSeen < (busy ? 600000 : 20000), lent: Boolean(standing), deaf: Boolean(DEAF),
       tool: TOOL, range: { key: KEY_LABEL, ...RANGE, uses: STANDING_USES }, skill: skillIdFrom(skill.address), version: TOOL.version }
   },
@@ -177,6 +177,14 @@ const routes = {
   'POST /lend': async () => { lend(); return { ok: true } },          // answers at once; the outcome arrives as events
   'POST /run': async ({ id }) => { run(id); return { ok: true } },
   'POST /hold': async ({ ok = true }) => { if (softWait) softWait(Boolean(ok)); return { ok: Boolean(softWait) } },
+  // Lighting a light is for the person who lent the key. The page starts World itself, but the
+  // last step goes through here so the Permit signed on the Ledger travels with it. The page
+  // never sees the signature.
+  'POST /vouch/finish': async ({ deviceCode }) => {
+    if (!standing) return { decision: 'VOUCH_DENIED', reason: 'NOT_LENT', message: 'No key has been lent from this computer.' }
+    const r = await post(BROKER, '/vouch/finish', { deviceCode, skill: skillIdFrom(skill.address), version: TOOL.version, permit: standing.permit, signature: standing.signature }, 660000)
+    return { ...r.body, ownerProof: { sent: true, device: standing.device, holder: standing.permit.holder } }
+  },
   'POST /reset': async () => reset(),
 }
 

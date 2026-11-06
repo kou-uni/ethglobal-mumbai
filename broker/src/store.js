@@ -9,6 +9,7 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
   const owners = new Map()   // `${holder}:${nonce}` -> { skill }. **Only requests whose holder signature checked out**
   const byThread = new Map()
   const stars = new Map()    // `${skill}:${version}` -> Set(nullifier). **A separate set per version**
+  const checked = new Map()  // `${skill}:${version}` -> how many of those stars were issued after the owner check
 
   const key = (holder, nonce) => `${String(holder).toLowerCase()}:${nonce}`
   const starKey = (skill, version) => `${skill}:${version}`
@@ -37,6 +38,7 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
       const k = starKey(rec.skill, rec.version)
       if (!stars.has(k)) stars.set(k, new Set())
       stars.get(k).add(rec.nullifier)
+      if (rec.ownerChecked) checked.set(k, (checked.get(k) ?? 0) + 1)
     }
     if (!rec.thread) return
     const t = byThread.get(rec.thread) ?? []
@@ -83,6 +85,9 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
     },
 
     starCount: (skill, version) => stars.get(starKey(skill, version))?.size ?? 0,
+
+    /** Of those, how many were issued after checking the owner's signature and a real use. */
+    starChecked: (skill, version) => checked.get(starKey(skill, version)) ?? 0,
 
     /**
      * The pseudonyms (World identifiers) of the people who starred that version. **A way to show whose, not how many.**

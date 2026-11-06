@@ -10,6 +10,7 @@
 
 const $ = (id) => document.getElementById(id)
 const qs = new URLSearchParams(location.search)
+const AGENT = (qs.get('agent') || 'http://127.0.0.1:8792').replace(/\/$/, '')
 const BROKER = (qs.get('broker') || localStorage.getItem('tomoshibi.broker') || 'http://127.0.0.1:8787').replace(/\/$/, '')
 // The bridge runs next to the Ledger (bridge/bridge.py). Without it, the Ledger step is skipped and said so.
 const BRIDGE = (qs.get('bridge') || localStorage.getItem('tomoshibi.bridge') || 'http://127.0.0.1:8791').replace(/\/$/, '')
@@ -89,7 +90,9 @@ async function refresh() {
     health = await get('/health')
     await Promise.all(CATALOG.map(async (s) => {
       const r = await get(`/stars/${s.skill}?version=${encodeURIComponent(versionOf(s))}`)
-      stars[s.name] = { who: r.who || [], count: r.stars || 0, byVersion: r.byVersion || {}, noWho: r.who === undefined }
+      const n = r.stars || 0, ok = n > 0 && (r.ownerChecked || 0) >= n
+      // The Broker checked, for every light here, the owner's signature on this version and a real use.
+      stars[s.name] = { who: r.who || [], count: n, byVersion: r.byVersion || {}, noWho: r.who === undefined, pressed: ok, used: ok }
     }))
     live = true
   } catch {
@@ -240,10 +243,10 @@ function paintSheet() {
     </dl>
     <div class="dots">
       <div class="dot ${human ? 'on' : ''}"><i></i>A real person <small>World${sim ? ' (simulated)' : ''}</small></div>
-      <div class="dot ${st.pressed || pressedHere ? 'on' : ''}"><i></i>Pressed by hand <small>Ledger${pressedHere && !st.pressed ? ' · seen by this browser' : ''}</small></div>
-      <div class="dot ${st.used || usedHere ? 'on' : ''}"><i></i>Actually in use <small>0G record${usedHere && !st.used ? ' · seen by this browser' : ''}</small></div>
+      <div class="dot ${st.pressed || pressedHere ? 'on' : ''}"><i></i>Signed by the owner <small>${st.pressed ? 'checked by the Broker' : pressedHere ? 'Ledger · seen by this browser' : 'Ledger'}</small></div>
+      <div class="dot ${st.used || usedHere ? 'on' : ''}"><i></i>Actually in use <small>${st.used ? 'on record · checked by the Broker' : usedHere ? '0G record · seen by this browser' : '0G record'}</small></div>
     </div>
-    ${human && !st.pressed ? `<p class="note">The Broker checks the first one today. It does not yet tie a light to a Ledger approval or to recorded use${pressedHere ? '; the second dot is on only because this browser itself received the signed permit from your Ledger' : ', so those two stay dark here rather than pretending'}.</p>` : ''}
+    ${human && st.pressed ? '<p class="note">Every light here was lit by someone who signed for this exact version and really used it, and who is one real person. The Broker sees a signature, not the device: that the key lives on a Ledger is the owner’s choice.</p>' : human ? '<p class="note">Some lights here were lit before the Broker checked ownership and use, so those two stay dark rather than pretending.</p>' : ''}
     ${st.noWho ? '<p class="note warn">This Broker reports how many lights, but not whose. Update the Broker to see people you know.</p>' : ''}
     <div class="actions">
       ${s.name !== 'billing-assistant' ? '<button class="btn" disabled>Not installed on this computer</button>'
@@ -289,16 +292,24 @@ async function light(s) {
       <div><p class="code">${esc(b.userCode)}</p><p class="sub">${b.simulated ? 'Simulated: no phone is asked.' : esc(uri)}</p><p class="sub" id="wleft">${left()}</p></div></div>
     <p class="note">World learns that you are a person, and the same person as before. It does not learn which tool you are lighting, which key, or when you use it.</p>`
   const tick = setInterval(() => { const el = $('wleft'); if (el) el.textContent = left(); else clearInterval(tick) }, 15000)
-  const done = await post('/vouch/finish', { deviceCode: b.deviceCode, skill: s.skill, version: versionOf(s) })
+  // Only the person who lent the key may light it. The agent on this computer adds the Permit that
+  // was signed on the Ledger; this page never holds that signature. With no agent, the Broker is asked
+  // without it and decides for itself.
+  let o = null
+  if (s.name === 'billing-assistant') try {
+    const h = await (await fetch(AGENT + '/health', { signal: AbortSignal.timeout(2000) })).json()
+    if (h.lent) o = await (await fetch(AGENT + '/vouch/finish', { method: 'POST', body: JSON.stringify({ deviceCode: b.deviceCode }) })).json()
+  } catch {}
+  if (!o) o = (await post('/vouch/finish', { deviceCode: b.deviceCode, skill: s.skill, version: versionOf(s) })).body
   clearInterval(tick)
-  const o = done.body
   if (o.decision === 'STAR') {
     const list = store.people.filter((p) => p.id !== o.nullifier)
     list.push({ name: 'You', id: o.nullifier, tie: 'me' }); store.people = list; paintPeople()
-    flow.innerHTML = worldSteps(4) + `<p class="note">Lit${o.world?.simulated || b.simulated ? ' (World was simulated)' : ''}. Only a pseudonym is kept. It stays on while you keep using this exact version, and goes out by itself when the tool changes.</p>`
+    flow.innerHTML = worldSteps(4) + `<p class="note">Lit${o.world?.simulated || b.simulated ? ' (World was simulated)' : ''}.${o.ownerChecked ? ' The Broker checked that you signed for this version and that the tool really used it.' : ''} Only a pseudonym is kept. It stays on while you keep using this exact version, and goes out by itself when the tool changes.</p>`
   } else if (o.reason === 'ALREADY_VOUCHED') {
     flow.innerHTML = worldSteps(3, 'This person has already lit this version') + '<p class="note">One person, one light. Nothing was added.</p>'
   } else {
+    if (o.reason === 'NOT_OWNER' || o.reason === 'NOT_LENT' || o.reason === 'NOT_USED') { flow.innerHTML = worldSteps(3, 'Only the person who lent the key can light it') + `<p class="note">${esc(o.message || '')} Nothing was lit.</p>`; return }
     const end = o.reason === 'human_denied' ? 'You said no' : o.reason === 'proof_expired' ? 'Nobody confirmed in time' : (o.message || o.reason || 'Not confirmed')
     const text = o.reason === 'human_denied' ? 'Nothing was lit. That you declined is on the record too.' : o.reason === 'proof_expired' ? 'The code ran out. Nothing was lit. This is not the same as saying no.' : 'Nothing was lit.'
     flow.innerHTML = worldSteps(1, end) + `<p class="note">${esc(text)}</p><div class="actions"><button class="btn" id="again">Ask again</button></div>`

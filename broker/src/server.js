@@ -12,6 +12,7 @@ import { store as storeEpisode } from './episode.js'
 import { offlineWeigh } from './offline.js'
 import { deviceStart, waitForHuman, verifyIdToken, ISSUER } from './world.js'
 import { offlineWorld } from './world-offline.js'
+import { ownerOf, OWNER_REASONS } from './owner.js'
 
 const ledger = createStore()
 const EXECUTE = process.env.EXECUTE === '1'
@@ -125,10 +126,19 @@ export async function seal(thread, deps = {}) {
  * Give a star — **confirm who the person is through World, once, and record only if that is confirmed.**
  * Refusals and expiries go into the same trail (the refusal path is not invented; it comes from the device flow).
  */
-export async function vouch({ deviceCode, skill, version }, deps = {}) {
+export async function vouch({ deviceCode, skill, version, permit, signature }, deps = {}) {
   const store = deps.store ?? ledger
   const w = deps.world ?? world
   const base = { skill, version, world: { issuer: ISSUER } }
+
+  // Only the key owner can light a star (Q1-b = B). Checked **before World is asked**, so nobody is
+  // bothered on their phone for a request that would be refused anyway.
+  // VOUCH_OWNER=0 switches it off (for the prototype page that shows World alone).
+  const ownerOnly = deps.ownerOnly ?? process.env.VOUCH_OWNER !== '0'
+  if (ownerOnly) {
+    const o = await ownerOf({ permit, signature, skill, version }, store)
+    if (!o.ok) return store.append({ ...base, decision: 'VOUCH_DENIED', reason: o.reason, message: OWNER_REASONS[o.reason], detail: o.detail })
+  }
 
   const waited = await w.waitForHuman(deviceCode, deps.pollOpts ?? {})
   if (!waited.ok) {
@@ -157,6 +167,9 @@ export async function vouch({ deviceCode, skill, version }, deps = {}) {
     ...base,
     decision: 'STAR',
     nullifier: v.nullifier,
+    // Was this star issued after the owner check? **The owner's address is not recorded**, so the
+    // World pseudonym is never tied to a wallet.
+    ownerChecked: ownerOnly || undefined,
     stars: store.starCount(skill, version),
     world: { ...base.world, simulated: v.simulated || undefined },
   })
@@ -222,6 +235,7 @@ export const app = createServer(async (req, res) => {
         version,
         stars: version ? ledger.starCount(skill, version) : undefined,
         who: version ? ledger.starWho(skill, version) : undefined,
+        ownerChecked: version ? ledger.starChecked(skill, version) : undefined,
         byVersion: ledger.starsOf(skill),
       })
     }

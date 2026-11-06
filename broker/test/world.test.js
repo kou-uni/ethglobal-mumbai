@@ -8,6 +8,9 @@ import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
+// These tests look at World alone. The owner check has its own file (test/owner.test.js).
+process.env.VOUCH_OWNER = '0'
+
 let vouch
 before(async () => { ({ vouch } = await import('../src/server.js')) })
 

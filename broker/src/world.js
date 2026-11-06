@@ -37,7 +37,12 @@ const post = async (url, body, fetchImpl) => {
 export async function deviceStart(opts = {}) {
   const clientId = opts.clientId ?? process.env.WORLD_CLIENT_ID
   if (!clientId) return { ok: false, error: 'no WORLD_CLIENT_ID (register one at auth.world.org/portal)' }
-  const r = await post(DEVICE, { client_id: clientId, scope: 'openid' }, opts.fetch ?? fetch)
+  // A client registered with a secret (client_secret_post) must authenticate here too, or World answers
+  // 400 "Client authentication failed" (measured 2026-11-06).
+  const secret = opts.clientSecret ?? process.env.WORLD_CLIENT_SECRET
+  const body = { client_id: clientId, scope: 'openid' }
+  if (secret) body.client_secret = secret
+  const r = await post(DEVICE, body, opts.fetch ?? fetch)
   if (r.status >= 400 || !r.json?.device_code) {
     return { ok: false, error: `World ${r.status}: ${r.json?.error_description ?? r.json?.error ?? r.text.slice(0, 160)}` }
   }

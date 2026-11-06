@@ -27,13 +27,17 @@
 
 ## S1 — The problem (0:00–0:25)
 
-**On the slide:** a key, taped to a robot hand. Three short lines under it.
+**On the slide:** a key taped to a robot hand — and **behind it, a dozen more.** Three short lines under it.
 
 > **No limit. No expiry. No receipt.**
 
 **Said:** *"I suspect there are people in this room who pasted an API key into an AI agent this
 week. Maybe this morning. That key has no spending limit, it never expires, and it produces no
-receipt. We would never hand a credit card over like that."*
+receipt. We would never hand a credit card over like that.*
+>
+> *And it is never just one. Every agent, every skill, every service wants its own. **The thing the
+> AI era has quietly handed us to manage is not prompts, and not models. It is keys** — more of
+> them, in more places, held by more software than any of us is actually keeping track of."*
 
 **Do not put the product name on this slide.** The first twenty-five seconds belong to the problem.
 

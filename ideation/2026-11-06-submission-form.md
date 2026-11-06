@@ -60,7 +60,7 @@ weight → press → proxy execute → append-only trail. 50 tests, including th
 vector.
 
 **0G — in the decision loop, not as a log sink.** Before acting, the broker asks 0G Private Computer how
-heavy the request is: routine / important / irreversible, using 0gm-1.0-35b-a3b, a TeeML model
+heavy the request is: routine / significant / decisive, using 0gm-1.0-35b-a3b, a TeeML model
 (tee_attested, Intel TDX, verified by dstack). The body of the request is part of that judgement, and
 that is exactly why 0G is here: you cannot grade a request without reading it, and we do not want to
 read it. The sealed enclave reads it; we never do. The verdict changes the outcome — an irreversible
@@ -85,6 +85,47 @@ bodies. MIT licensed, no trackers, no analytics.
 **What is not done, said plainly.** The broker holds key material and is the single trusted point; the
 honest next step is to run the broker itself inside 0G Private Computer. Stars live in an append-only
 log — the on-chain registry is specified, not deployed.
+
+## Verifiable facts (paste these; they are checkable)
+
+Everything below was produced against production systems during the hack, not mocked.
+
+| | |
+|---|---|
+| A trail sealed on **0G Galileo** (chain id 16602) | tx `0x74c7cdf9bca055c502918e62a7ac9fc7634d1326471433ab10161045aa97aef1`, block **64103318**, `status 0x1`, gasUsed 306,371 |
+| 0G Storage root hash for that episode | `0xc0e0c7a911547490680d545ad9d4638a9bf23bd72d8a3004edf9b4ffaa5be080` |
+| A second seal, after the tier vocabulary changed | tx `0x90ecc8a4e1ea97bb4ff4ff7784d2a18ce80729f6fe640d945077ad6266925455` |
+| Flow contract | `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296` |
+| Tests | **50 / 50**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
+| Measured against the real TEE-attested model | **467 calls** · 283.9 input / 28.0 output tokens · ~2.0 s · **$0.000036 per verdict** (`pricing_usd` from `GET router-api.0g.ai/v1/models`) |
+| The weight prompt was measured before it was changed | 120 production calls across two languages, **58/60 agreement**; the change was kept only because it was **stricter**, not merely equal — `ideation/2026-11-06-decisions.md` Decision 25 |
+| Concurrency | 100 simultaneous requests against `maxCalls=3` let through **0** extra |
+| Live pages | `/ui/index.html`, `/ui/stars.html`, `/web/gate.html` on GitHub Pages (all returning 200) |
+| Local reproduction | three commands, `README.md` |
+
+## What was hard
+
+1. **The screen and the signature cannot disagree.** The EIP-712 digest is computed inside the Ledger
+   from the same four values it displays. The host never sends a digest, so blind signing is
+   structurally impossible rather than discouraged.
+2. **The call budget holds under concurrency.** The slot is reserved before execution with no `await`
+   between the check and the record.
+3. **Refusing to invent a verdict.** If the sealed model is unreachable we return `STOPPED` and change
+   nothing — no default, no rule-based stand-in. A fabricated verdict is worse than no verdict. We also
+   do not bill for it.
+
+## Why this is not the thing next to it
+
+Secrets managers decide *where a key lives*. Certificate systems decide *which machine it is*. Agent
+payment rails decide *that it can pay* — and have no reason to stop anything, since volume is their
+revenue. **None of them decide whether this one request, right now, was allowed by a human — and none
+of them keep the refusals.**
+
+Four stops are kept apart because a different stop means a different responsibility: `DENIED` (the
+human drew that line in advance) · `NEEDS_PRESS` (irreversible, nobody has pressed yet) · `STOPPED`
+(no verdict exists — ours) · `human_denied` / `proof_expired` (a person refused, and they are allowed
+to). A system that answers every stop with "failed" has thrown away the only thing worth having after
+something goes wrong.
 
 ## GitHub Repositories
 `kou-uni/ethglobal-mumbai` (public)

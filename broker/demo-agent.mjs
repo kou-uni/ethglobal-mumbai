@@ -67,12 +67,12 @@ const probe = async () => {
 // Right after a hold the device is busy showing its own screen and does not answer for a few
 // seconds. A Ledger that signed a moment ago is still there: wait for it rather than fall back.
 let deviceSeen = 0
-const deviceReady = async (patient = false) => {
-  const until = Date.now() + (patient && Date.now() - deviceSeen < 600000 ? 20000 : 0)
+const deviceReady = async (waitMs = 0) => {
+  const until = Date.now() + waitMs
   for (;;) {
     if (await probe()) { deviceSeen = Date.now(); return true }
     if (Date.now() >= until) return false
-    await new Promise((r) => setTimeout(r, 700))
+    await new Promise((r) => setTimeout(r, 2000))
   }
 }
 
@@ -88,7 +88,15 @@ let softWait = null    // resolve(true|false) while the page's own button stands
 
 /** Ask the person for a Permit. On the Ledger if there is one. Resolves when they hold or decline. */
 async function ask(uses, why, rid) {
-  const device = await deviceReady(true)
+  // A key that was lent on the Ledger is never continued with a software key. If the device
+  // has gone quiet, wait for it; if it does not come back, the answer is no.
+  const mustBeDevice = Boolean(standing?.device) && why !== 'lend'
+  let device = await deviceReady(Date.now() - deviceSeen < 600000 ? 8000 : 0)
+  if (!device && mustBeDevice) {
+    emit({ type: 'waiting-device', rid, why })
+    device = await deviceReady(90000)
+    if (!device) { emit({ type: 'declined', rid, why, error: 'the Ledger did not answer' }); return { error: 'the Ledger did not answer' } }
+  }
   const fields = { skill: skillIdFrom(skill.address), version: TOOL.version, ...RANGE, maxCalls: uses, expiry: now() + 3600, nonce: Date.now() }
   const shown = [`KEY ${KEY_LABEL}`, `TO ${RANGE.target}`, `CAN ${RANGE.scope}, up to ${uses}x`, 'ENDS in 1 hour']
   emit({ type: 'asking', rid, why, uses, device, lines: shown })

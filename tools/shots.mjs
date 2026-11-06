@@ -34,7 +34,7 @@ await shot('tomoshibi-cover.png')
 await size(1280, 900)
 await send('Page.navigate', { url: `${PAGES}/app.html?agent=http://127.0.0.1:9` })
 for (let i = 0; i < 80; i++) { await sleep(300); if (await evalJs('window.tomoshibi && tomoshibi.mode') === 'preview') break }
-await evalJs(`document.getElementById('demo').style.display='none'; const s=document.createElement('style'); s.textContent='*{animation:none!important;transition:none!important}.lit-in #hf{transform:scale(1)!important}'; document.head.appendChild(s); 1`)
+await evalJs(`tomoshibi.instant=true; document.getElementById('demo').style.display='none'; const s=document.createElement('style'); s.textContent='*{animation:none!important;transition:none!important}.lit-in #hf{transform:scale(1)!important}'; document.head.appendChild(s); 1`)
 const L = ['KEY stripe-live', 'TO api.stripe.com', 'SCOPE * /v1 x20', 'UNTIL 2026-11-13 09:10Z']
 const set = (events, ui, extra = '') => evalJs(`(()=>{ const t=window.tomoshibi; t.events.length=0; for (const [i,e] of ${JSON.stringify(events)}.entries()) t.events.push({ n:i, at:new Date().toISOString(), ...e }); Object.assign(t.ui, ${JSON.stringify(ui)}); ${extra}; t.paint(); return document.querySelector('.frame').dataset.view })()`)
 const clip = async () => JSON.parse(await evalJs(`(()=>{ const r=document.querySelector('.shell').getBoundingClientRect(), f=document.querySelector('.frame').getBoundingClientRect(); return JSON.stringify({ x: Math.max(0, r.left), y: 0, width: Math.min(1280, r.width), height: Math.ceil(f.bottom + 22) }) })()`))

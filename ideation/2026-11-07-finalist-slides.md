@@ -114,10 +114,10 @@ see that each one is a mechanism, not a promise.**
 
 | What the person gets | What produces it |
 |---|---|
-| **There is no key inside the agent to steal** | The secret is put in at the moment of sending. The agent only ever holds a label, so there is nothing in its context, its logs or its skills to take |
-| **A payment you did not press does not happen** | A **0G** sealed model weighs each request first, and only the heavy ones are sent to a **Ledger** for a long press. It rarely asks — which is why it does not get switched off |
-| **"It was being used and I had no idea" stops being possible** | An append-only trail, one line per use, and an out-of-scope attempt is kept **with the signature of whatever tried it** |
-| **When choosing a tool, you can see praise that cannot be bought** | A **World ID**-verified person, who actually used **that exact version**, is the only one who can light a star — and they all go out when the version changes |
+| **The key sits outside the agent** | The secret is put in at the moment of sending. The agent holds a label, so there is nothing in its context, its logs or its skills to take |
+| **A payment happens only when you press the button** | A **0G** sealed model weighs each request first, and only the heavy ones go to a **Ledger** for a long press. It rarely asks — which is why it stays switched on |
+| **Every use is visible afterwards** | An append-only trail, one line per use, and an out-of-scope attempt is kept **with the signature of whatever tried it** |
+| **You see the opinion of people who are actually using it** | Only a **World ID**-verified person who used **that exact version** can light a star — and the stars go out when the version changes |
 
 **Said:** *"Four things, and each one is something running rather than something promised."*
 

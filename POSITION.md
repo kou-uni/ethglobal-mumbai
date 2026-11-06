@@ -6,6 +6,33 @@ Where this file and an older document disagree, this file wins.
 
 ---
 
+## 0. The trunk
+
+**One sentence.**
+
+> **A key becomes a single use, approved on something an agent cannot press.**
+
+**Three pillars. Nothing else is load-bearing.**
+
+| | | |
+|---|---|---|
+| **1. Substitution** | The secret is put in at the edge and never given to the agent | *It cannot leak what it was never handed* |
+| **2. Escalation** | A sealed model decides when a person is needed. Otherwise, silence | *It only asks when it should* |
+| **3. Named refusal** | Every "no" is of a known kind, and carries whose code tried it | *The refusal is the product* |
+
+**The MVP — the smallest thing that makes the sentence true.**
+
+1. A permit **signed on hardware**, whose four readable lines are built from the same bytes that are signed
+2. A broker that **refuses outside it before anything runs** — no body forwarded, no credits spent
+3. A **sealed model in the decision loop**, whose silence stops the request rather than passing it
+4. An **append-only trail** where what was allowed and what was refused sit side by side
+
+**The flame is not the trunk; it is the branch.** A star can only be lit by someone who actually
+used the key — so it grows out of the trail the trunk produces, and cannot exist without it.
+That is also why it goes out when the version changes.
+
+---
+
 ## 1. The claim
 
 An API key is a credit card that never expires, has no spending limit and issues no receipt.

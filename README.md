@@ -5,14 +5,15 @@ In the agent era, that secret is no longer only a seed phrase — it is an API k
 
 [![Watch TOMOSHIBI: an AI asks for a Stripe key in a .env file; she sends one link instead; the key is parked once and approved on a Ledger; routine calls go through, a refund waits for her hold, a call to another destination is refused; 0G's request id and the 0G Storage transaction are shown; she lights the tool she built with World ID.](assets/walkthrough.gif)](https://kou-uni.github.io/ethglobal-mumbai/web/watch.html)
 
-**[▶ Watch in HD · 1 min 56 s](https://kou-uni.github.io/ethglobal-mumbai/web/watch.html)**
+**[▶ Watch in HD · 2 min 45 s](https://kou-uni.github.io/ethglobal-mumbai/web/watch.html)**
  · **[Try the app](https://mintannn.github.io/tomoshibi/app.html)**
- · **[See one call move through it](https://kou-uni.github.io/ethglobal-mumbai/web/flow.html)**
+ · **[See one call move through it](https://kou-uni.github.io/ethglobal-mumbai/web/switchboard.html)**
  · **[How it runs](docs/HOW-IT-RUNS.md)**
 
 <sub>The walkthrough is the real app, driven click by click, with footage of the device and the phone beside it:
 a real Ledger, 0G Private Computer and 0G Storage, and World ID. Stripe is a stand-in in this take and the chat is
-scripted (the app marks both MOCK). Two scenes, the list of APIs and the email, were recorded on a second laptop.</sub>
+scripted (the app marks both MOCK). Two scenes, the list of APIs and the email, were recorded on a second laptop.
+The last 49 seconds are an animation of one call going through the switchboard.</sub>
 
 <p align="center">
   <img src="assets/hero-ledger.jpg" width="330" alt="A Ledger Flex at the venue asking &quot;Lend stripe-live?&quot; — Goes to api.stripe.com, Can * /v1 up to 1x, Ends 6 Nov 2026 19:10 UTC, Hold to light. A thumb is on the device." />
@@ -80,7 +81,8 @@ button on her Ledger. **Then, for every call:**
 
 The refusal is the product. A tool that cannot say *which* kind of no it got is a tool you cannot leave alone.
 
-Drawn out, step by step: [`assets/sequence.png`](assets/sequence.png) · moving: [`web/flow.html`](https://kou-uni.github.io/ethglobal-mumbai/web/flow.html)
+Moving, one call at a time: [`web/switchboard.html`](https://kou-uni.github.io/ethglobal-mumbai/web/switchboard.html) · the figure, link by link: [`web/flow.html`](https://kou-uni.github.io/ethglobal-mumbai/web/flow.html)
+· drawn out, step by step: [`assets/sequence.png`](assets/sequence.png)
 · read off the code: [`docs/HOW-IT-RUNS.md`](docs/HOW-IT-RUNS.md)
 
 ## What accumulates: lights
@@ -184,7 +186,7 @@ Without keys in `broker/.env.local` the same thing runs with 0G and World simula
 |---|---|
 | **The app** | https://mintannn.github.io/tomoshibi/app.html |
 | The walkthrough | https://kou-uni.github.io/ethglobal-mumbai/web/watch.html |
-| One call, moving through the switchboard | https://kou-uni.github.io/ethglobal-mumbai/web/flow.html |
+| One call, moving through the switchboard | https://kou-uni.github.io/ethglobal-mumbai/web/switchboard.html |
 | The business model, the lean canvas and three years of cash | https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-business-model.html |
 
 ## Where it goes next

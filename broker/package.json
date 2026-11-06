@@ -1,7 +1,7 @@
 {
   "name": "tomoshibi-broker",
   "version": "1.0.0",
-  "description": "Tomoshibi Broker — 範囲チェックと代理実行。平文はPCを通らない。",
+  "description": "Tomoshibi Broker - scope check and proxy execution. The key never passes through this host in the clear.",
   "main": "index.js",
   "directories": {
     "test": "test"

@@ -1,88 +1,97 @@
-# Pick up here (updated 2026-11-06 11:00 JST / 07:30 IST)
+# Start here (updated 2026-11-06, 14:00 JST / 10:30 IST)
 
-**Open a new session and this file alone is enough to resume.**
-The working directory is `~/ch/seeds/ethglobal-mumbai/repo` (a clone of this public repository).
+**Open a new session, read this file only, and you can carry on.**
+Working directory: `~/ch/seeds/ethglobal-mumbai/repo` — a clone of the public repo.
+
+**The repository is written in English.** Conversation with the agent is in Japanese;
+everything committed is English (Decision 24). Already-recorded evidence is the one exception —
+see §7.
 
 ---
 
 ## 1. Where we are, in one line
 
-**The Broker is wired to the live 0G and it works. All five end-to-end runs come out.
-The only thing stuck is gas. Next up is the three-minute pitch script.**
+**The broker runs against production 0G, all five paths come out, two trails are sealed on chain,
+and the tests pass 50/50. The only thing still blocked is the World client registration.**
 
-## 2. The steps we confirmed work (type them in this order and it reproduces)
+## 2. The commands that reproduce it
 
 ```bash
 cd ~/ch/seeds/ethglobal-mumbai/repo/broker
 
-# the Broker wired to the live 0G
-(set -a; . ./.env.local; set +a; PORT=8797 EXECUTE=0 node src/server.js &)
+# the broker, wired to production 0G
+(set -a; . ./.env.local; set +a; PORT=8801 EXECUTE=0 node src/server.js &)
 
-# a Broker that "cannot reach 0G" (to demonstrate STOPPED; just hand it an unreachable endpoint)
-(set -a; . ./.env.local; set +a; ZG_ENDPOINT=https://router-api.invalid/v1 PORT=8798 EXECUTE=0 node src/server.js &)
+# a broker that cannot reach 0G, so STOPPED can be demonstrated (just an unreachable endpoint)
+(set -a; . ./.env.local; set +a; ZG_ENDPOINT=https://router-api.invalid/v1 PORT=8802 EXECUTE=0 node src/server.js &)
 
-curl -s http://127.0.0.1:8797/health            # apiKey:true / storageKey:true / no simulated field
-node demo.mjs http://127.0.0.1:8797 http://127.0.0.1:8798   # the five end-to-end runs
-npm test                                        # 50/50
+curl -s http://127.0.0.1:8801/health          # apiKey:true, storageKey:true, no "simulated", escalateFrom: decisive
+node demo.mjs http://127.0.0.1:8801 http://127.0.0.1:8802   # all five paths
+npm test                                      # 50/50
 ```
 
-**Note:** old Brokers from earlier sessions may still be sitting on 8787-8789.
-`kill` is blocked in this environment, so **use free ports** (8797 / 8798 are free).
-`.env.local` is gitignored. On a machine without it, set `ZG_API_KEY` and `ZG_PRIVATE_KEY` yourself.
+**Note:** old brokers from earlier sessions may still hold 8787–8798. `kill` is blocked in this
+environment, so **use a free port**. `.env.local` is gitignored; without it, set `ZG_API_KEY` and
+`ZG_PRIVATE_KEY` yourself.
 
-## 3. What is done
+## 3. Done
 
 | | State |
 |---|---|
-| Broker (scope, call budget, violations, proxied execution, trail) | Works. Tests 50/50 |
-| 0G Private Computer (weight judgement) | **Confirmed working with the production key**. 1.3-2.2s, request id captured |
-| The five end-to-end runs (ALLOWED / NEEDS_PRESS / passes with one press / 5 kinds of DENIED / STOPPED) | **All of them come out** |
-| Ledger app (minta) | Works on the device. `origin/minta/ledger-app` |
-| First draft of the submission form, one-page architecture, one-page TODO, address list | Exist (§6) |
+| Broker (scope, call budget, violations, proxy execution, trail) | works. 50/50 tests |
+| 0G Private Computer (weight judgement) | **verified with the production key.** ~1.3–2.0 s, request ids recorded |
+| All five paths (ALLOWED / NEEDS_PRESS / press-and-pass / 5 kinds of DENIED / STOPPED) | **all come out** |
+| **0G Storage seal, on chain** | **two transactions.** `0x74c7cdf9…aef1` (block 64103318) and `0x90ecc8a4…5455` |
+| Ledger app (minta) | runs on the device, `origin/minta/ledger-app` |
+| **Gas** | **arrived.** Broker key holds ~4.49 0G; minta's address `0x5f52…22bD` holds 5.5 0G |
+| **Cost per verdict** | **$0.000036**, measured — Decision 22 |
+| **Tier vocabulary in English** | **switched after measuring**, not before — Decision 25 |
+| Repository in English | done except the two batches noted in §5 |
 
-## 4. What is stuck
+## 4. Still blocked
 
-| Waiting on | Impact | If it does not land |
+| Waiting on | Effect | If it never arrives |
 |---|---|---|
-| **gas** (`0xdfcbC73bEC15dD080545f77f8B702832a2b142A4`) | Cannot write to 0G Storage. The root hash comes out but there is no tx | Write "the trail is local append only" in the submission. Do not pretend there is a tx |
-| **World client registration** | Proof of personhood for stars will not run in production | Drop the star from the live demo and explain it as design |
+| **World client registration** | the human proof behind a star does not run against production | do not demonstrate the star; explain it as design. The refusal paths are already real |
 
-Gas needs **0.0000002-0.0000005 0G** (measured). The faucet (`https://faucet.0g.ai`) is not coming through,
-so we have asked for a direct send over Telegram.
+## 5. Next, in order
 
-## 5. What to do next (top first)
-
-1. **The three-minute pitch script** (a version spoken in Japanese plus a version read in English).
-   Build it on `ideation/2026-11-06-storyboard.md` and the "four kinds of denial" section of architecture v3
-2. Once gas lands, run `/seal` once and **note the tx and root hash** (paste the real values into the submission)
-3. Once the World client registration is done, run the device flow through
-4. **Filming 11-06 22:00 IST**. Before that, eyeball `/health` to confirm `simulated` does not appear
-5. **Provisional submission 11-07 03:00 IST** (deadline 09:00 IST)
+1. **Screenshots — three of them, into the README** (the gate's four stops / the device's four lines /
+   stars before and after a version bump). **Usability cannot be scored without images**, and an AI
+   first-pass reader never sees the video. `ideation/2026-11-06-ai-judging.md` §2.
+2. Paste `ideation/2026-11-06-submission-form.md` into the Hacker Dashboard form. It already carries
+   the verifiable facts, what was hard, and the differentiation paragraph.
+3. If the World registration lands, run the device flow.
+4. **Filming 11-06 22:00 IST.** Before rolling, check `/health` shows no `simulated`.
+5. **Submit 11-07 06:00 IST** (hard deadline 09:00 IST). Choose **"Finalist and Partner Prizes"**.
 
 ## 6. Where things are
 
-| What to look at | Location |
+| To find | Look at |
 |---|---|
-| **TODO up to submission (one page, checkable)** | `ideation/2026-11-06-todo.html` |
-| First draft to paste into the submission form (all fields) | `ideation/2026-11-06-submission-form.md` |
-| The long version of the submission text (English) | `ideation/2026-11-06-submission-draft.md` |
-| **Architecture (current source of truth)** | `ideation/2026-11-06-architecture-v3.md`, one-page HTML under the same name `.html` |
-| All addresses, endpoints and environment variables | `ADDRESSES.md` |
-| The boundary between the device and the Broker (**move it and signatures break**) | `spec/permit-signature.md` (test vector in §6) |
-| What is decided and what is not yet confirmed | `ideation/2026-11-06-decisions.md` |
-| Source of truth for procedure (admin, prize requirements, filming) | `ideation/2026-11-06-submission-checklist.md` |
+| **The one story — money, judges and India as one claim** | **`STORY.md`** |
+| Decisions, and what was rejected | `ideation/2026-11-06-decisions.md` (25 entries) |
+| Submission form text, ready to paste | `ideation/2026-11-06-submission-form.md` |
+| How an AI first-pass reader scores this, and what to fix | `ideation/2026-11-06-ai-judging.md` |
+| Why Mumbai — RBI, NPCI, CERT-In, with the limits stated | `ideation/2026-11-06-why-mumbai.md` |
+| The money model, re-examined against measured cost | `ideation/2026-11-06-money-review.md` |
+| Architecture (current) | `ideation/2026-11-06-architecture-v3.md` and the same-named `.html` |
+| Every address, endpoint and env var | `ADDRESSES.md` |
+| The device/broker boundary (**moving it breaks signatures**) | `spec/permit-signature.md` (test vector in §6) |
+| Rules, deadlines, video constraints, our compliance | `ideation/2026-11-06-submission-rules.md` |
 
-**Old material**: `ideation/2026-11-06-architecture.md` (v2) still contains parts we dropped. There is a marker at the top.
+## 7. Do not move these
 
-## 7. Things that must not move
+- The **domain** in `spec/permit-signature.md` (`verifyingContract` frozen at the zero address,
+  chainId 16602). Change it and minta's device no longer agrees with `ecrecover`.
+- **`ui/scenes.json` and `web/scenes.json`** — verbatim responses recorded from the production model,
+  including Japanese verdict strings. **Editing them would be falsifying measurement.** New recordings
+  come out in English, because the prompt changed; old ones stay as they are.
+- The **ETHGlobal Tokyo 2026 artifacts (frozen, unrelated)** and their serving path. TOMOSHIBI uses
+  neither. The demo goes out on GitHub Pages and video.
+- **Do not borrow Indian words or symbols** (this is why the emoji is 🕯️ and not 🪔).
 
-- The **domain** in `spec/permit-signature.md` (`verifyingContract` frozen at the zero address, chainId 16602).
-  Change it and minta's device no longer agrees with `ecrecover`
-- **The ETHGlobal Tokyo 2026 artifacts (a separate, frozen project) and their public routes.** TOMOSHIBI uses none of them.
-  The demo URL goes out via GitHub Pages plus video
-- **Do not borrow Indian words or symbols** (the reason we do not use 🪔; background in `interests/ethglobal-mumbai-hackathon-plan`)
+## 8. Division of labour
 
-## 8. Who does what
-
-- **minta** = the visible side (Ledger app, star screen, filming)
-- **kou + Claude** = the invisible side (Broker, 0G, World, design, writing, submission)
+- **minta** — the visible half: the Ledger app, the screens, filming.
+- **kou + Claude** — the invisible half: broker, 0G, World, design, writing, submission.

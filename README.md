@@ -149,14 +149,34 @@ Not how many stars. Whose star.
 | `ideation/2026-11-06-architecture-v2.html` | Diagram (download it and open it in a browser) |
 | `research/10-ef-fit.md` | Fit with the EF prizes (CROPS > Anon-RPC) |
 
-## What is settled, and what we are building
+## Where this is now, and where it goes
+
+**Working today, end to end.** A request from an agent is checked against a permit signed on a
+Ledger, weighed by a sealed model on 0G, executed through a proxy that never hands the secret over,
+and written to an append-only trail sealed on 0G Storage. A flame can be lit only by a
+World-verified human who actually holds the key and has actually used it. 58 tests, including 100
+concurrent requests against a budget of 3, and a cross-side signature vector that both the device
+and the Broker must agree on.
+
+| When | What |
+|---|---|
+| **Now** | Permits on a Ledger · scope, destination, operation, call budget and expiry enforced · four distinct refusals · sealed weighing in the decision loop · public trail · flames that die on a version bump |
+| **Next** | **The Broker inside a TEE**, so the one remaining point of trust goes away · **anonymous star reads**, so looking up a skill does not say which skill you care about · revoking a flame · proxied execution against real APIs beyond the demo's `EXECUTE=0` |
+| **After that** | A permit format other wallets and devices can implement — the four lines are not Ledger-specific · a public register of refusals, so a skill's violations follow it across installs · the same gate in front of an x402 wallet |
+
+**The shape we are heading for:** a human signs scope, a machine enforces it, and everything that
+was refused stays legible to the person who drew the line. Nothing above requires a token or a new
+chain to work.
+
+## Reference, if you want the working documents
+
 
 | Where | What |
 |---|---|
 | `ideation/2026-11-06-plan.md` | **How we work and the timetable.** Who does what · the checkpoints · what we drop |
 | `ideation/2026-11-06-tech-value-review.md` | **Where World / Ledger / 0G each sit, and a re-check of whether they are really in the build** |
 | `research/11-prize-gap.md` | **Per prize: can we win it, what is missing, how to close the gap** (ceiling $11,250) |
-| **`broker/`** | **The working thing.** `use` → scope check → **0G decides the weight** → proxied execution → trail, plus **lighting a star with World**. `npm test` 50 tests / `node demo.mjs` |
+| **`broker/`** | **The working thing.** `use` → scope check → **0G decides the weight** → proxied execution → trail, plus **lighting a star with World**. `npm test` 58 tests / `node demo.mjs` |
 | `ideation/2026-11-06-world-integration-notes.md` | **Retrospective on the World integration** (required for both World prizes; §6 is the English text for the submission) |
 | `spec/permit-signature.md` | **The signing contract.** Derivation path · EIP-712 · how the Broker verifies. The boundary between Ledger and Broker |
 | `spec/world-agent-pass.md` | **What World Agent Pass actually is, and how to wire it in** (OIDC / device flow) |
@@ -183,15 +203,59 @@ The boundary is one JSON in `spec/permit-signature.md` and the Broker's HTTP.
 - **Lookups must not leak.** Star reads go through Anon-RPC by default: fetch everything, filter on the device
   (**not implemented.** `research/10-ef-fit.md`, decision #6)
 
-## 0G (why we need it, and why people come back tomorrow)
+## Why these three, and what each one gets back
 
-**What breaks without 0G, in one sentence:**
-**You cannot decide the weight without reading the request, and we must not be the ones reading it. Only sealed inference makes that work.**
-Drop 0G and the Broker has to read the body in the clear to decide the weight — which breaks the premise of the whole thing.
+Three sponsor technologies are load-bearing here. For each: what breaks without it, and — because
+a hackathon integration that only takes is not worth much to the sponsor — what using it this way
+demonstrates for them.
 
-**Why people come back (two lines):**
-One star means nothing. **The weight grows as the fact of still using it, with the same key, piles up.**
-And every star goes out at once when the version changes, so **only the people still using it notice, and light one again.**
+### 0G Private Computer
+
+**Without it, there is no product.** Deciding how heavy an action is requires reading the request.
+Reading the request is exactly what the operator of an approval layer must never do. Sealed
+inference is the only thing that resolves that, and it has to sit *in the decision loop* — a model
+that writes an opinion into a log after the fact changes nothing.
+
+**What it gets back:** most TEE inference demos are a chatbot with a badge, where the seal is
+decorative because nothing would change if you removed it. Here the seal is **the reason the
+feature can exist at all**, and the cost of being right about that is on record: 467 calls, 2.0 s
+per verdict, **$0.000036 each**, with the trail sealed on 0G Storage. It is a worked argument that
+privacy-preserving inference is cheap enough to put on the critical path of an ordinary product —
+and a rare measurement of what it actually costs per decision. We also return `STOPPED` and bill
+nothing when 0G is unreachable, which is the honest version of depending on someone else's service.
+
+### World
+
+**Without it, the flame is worth nothing.** A trust signal that money can buy is noise, and stars
+sell for $0.0027 apiece today. The signal only means something if one verified human can light at
+most one flame per version — and that requires personhood, not another account.
+
+**What it gets back:** Agent Pass used the way it was meant to be used, from a **daemon with no
+screen**, through the OIDC `device_code` grant. We bind the sector-scoped `sub` and nothing else,
+so World learns no name, no e-mail, no wallet, and never learns which skill was endorsed or when.
+It is a concrete answer to "what is proof of personhood actually *for* in the agent era": not
+airdrop defence, but **making a reputation that cannot be purchased**. The integration notes,
+including the hour lost to `device_authorization` returning 400 without `client_secret`, are in
+`ideation/2026-11-06-world-integration-notes.md`.
+
+### Ethereum Foundation (CROPS)
+
+**Without this constraint, we would have built something worse.** The easy version of this product
+reads every request in the clear and keeps a tidy log of it — and becomes the most attractive
+database in its customers' infrastructure. Designing for minimum disclosure is what pushed the
+reader inside a TEE and kept the trail to hashes.
+
+**What it gets back:** a case study of the hard version of the problem — **a third party that must
+read a payload in order to decide about it**, which is where "just don't collect it" stops being an
+answer. We also publish the part we did not solve: the Broker is not yet in a TEE, and anonymous
+star reads are designed but unbuilt. A privacy track is better served by an honest map of what is
+still open than by a claim nobody checked.
+
+### Why people come back tomorrow
+
+One star means nothing. **The weight grows as the fact of still using it, with the same key, piles
+up.** And every star goes out at once when the version changes, so **only the people still using it
+notice, and light one again.**
 
 ## How we built it (disclosure per the ETHGlobal rules)
 

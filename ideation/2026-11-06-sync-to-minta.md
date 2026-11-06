@@ -142,3 +142,26 @@ Just the key points:
 | Publish at `kou-uni.github.io/ethglobal-mumbai/` only; `mintannn.github.io/tomoshibi/` is the backup | Hand judges two and they'll look at the stale one | Both |
 
 **The real remaining hurdle is not the merge.** It is the World client registration, and one straight take on the real 0G with the real device in it.
+
+---
+
+## 追記 2026-11-07 — 提出動画の台本（minta さんへ）
+
+スライド10枚（`ETHGlobalTokyo2026.pdf`）に合わせたセリフを2枚置きました。**目立つ所には出していません。**
+
+- **`ideation/2026-11-07-video-script-readaloud.md`** — 読み上げ用。時刻と喋る文だけ。録るときはこれだけ
+- `ideation/2026-11-07-video-script.md` — 注記つき（日本語併記・言ってはいけないこと・削る順・スライドの直し）
+
+**9枚目に README のウォークスルーを差し込む前提で、全長 3:52。** 4:00 を超えると upload で弾かれます。
+README の表記は「1 min 56 s」なので、**1:56 版を使うなら S3 を8秒短くしてから**（削る順は §3）。
+
+**声が言ってはいけないこと（審査で辿られると嘘になる）:**
+
+- **「0G が範囲外を拒否する」** — 範囲外は `broker/src/server.js:69` で 0G に渡る前に止まります（本体が外に出ず、クレジットも減らない）。0G が読むのは範囲内の重さだけ
+- **炎の比喩を、製品の定義より先に出すこと** — S5 は「API key management, guarded by a hardware wallet」で言い切る形にしました
+
+**スライド側で直してほしい2点（録る前に）:**
+
+1. Demo 表の3行目と4行目が**入れ替わっています**。`runs the day's orders → ALLOWED / Nothing is asked`、
+   `ships a new version → THE LIGHT GOES OUT / Praise does not carry to new code` が正
+2. `STARS GO OUT` → **`THE LIGHT GOES OUT`**（star → light の統一）。配線図の中の `The only way a star is lit` も同じ

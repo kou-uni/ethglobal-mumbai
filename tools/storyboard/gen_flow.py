@@ -38,25 +38,39 @@ LS=[('Plug in your Ledger','USB cable'),('Unlock it','Enter your PIN'),('Open TO
 def strip(now): return '<div class="steps"><b class="lt">ON YOUR LEDGER</b>'+''.join(f'<div class="st {"ok" if j<now else "now" if j==now else ""}"><em>{"✓" if j<now else j+1}</em><span>{t}</span></div>' for j,(t,_) in enumerate(LS))+'</div>'
 MOCK,REAL='<span class="kind mock">モック（絵だけ）</span>','<span class="kind real">本物で動かす</span>'
 
-# ---------- the hold: the one scene that is interactive
-HOLD=f'''<div class="win hero5" id="hero5">{chrome()}{nav('steps',2)}
-{nowbar('Step 3 of 3 · Hold to light','Nothing starts without your hand. Your AI cannot press this button.')}
-<div class="stage">
-  <div class="headline"><small class="eyebrow">THE ONE THING ONLY YOU CAN DO</small>
-    <h3><span class="d">Nothing starts until you hold.</span><span class="lt2">It’s lit.</span></h3>
-    <p><span class="d">Your AI can type, click and read anything on this computer. It cannot press the button on your Ledger.</span><span class="lt2">Billing assistant may now read invoices on Stripe, up to 20 times, until 13 Nov. It holds a pass, not your key.</span></p></div>
-  <div class="cols">
-    <ol class="st5">{''.join(f'<li class="{"ok" if i<2 else "now" if i==2 else ""}"><em>{"✓" if i<2 else i+1}</em><div><b>{t}</b><small>{s}</small></div></li>' for i,(t,s) in enumerate(LS))}</ol>
-    <div class="mid"><div class="hold" id="hold" role="button" tabindex="0" aria-label="Hold for three seconds">
-        <svg viewBox="0 0 220 220" class="ring" aria-hidden="true"><circle cx="110" cy="110" r="98" class="tr"/><circle cx="110" cy="110" r="98" class="pr" id="pr" transform="rotate(-90 110 110)"/></svg>
-        <svg viewBox="0 0 120 120" class="lamp" aria-hidden="true">{WICK}<g id="hf">{BODY}<g class="fa">{FACE['awake']}</g><g class="fh">{FACE['happy']}{SPK}</g></g>{DISH}</svg></div>
-      <div class="status" id="st">Waiting for your hold…</div></div>
-    <div class="onledger"><i>YOUR LEDGER SHOWS</i><b class="q">Lend Stripe?</b>{kv('Goes to','api.stripe.com')}{kv('Can','Read invoices, up to 20x')}{kv('Ends','13 Nov')}<div class="pill">Hold to light</div><small>Same lines as you chose. If anything differs, do not hold.</small></div>
-  </div>
-  <div class="reasons"><span>Your AI cannot press it</span><span>You sign exactly what you see</span><span>One hold, one permission</span></div>
-  <div class="after"><button>Back to Billing assistant ↗</button><a id="again">もう一度見る</a></div>
-</div></div>
-<p class="try">↑ <b>試せます：</b>真ん中の器を <b>3秒 長押し</b>してください。本番では、Ledger を長押ししたときに同じことが起きます。</p>'''
+# ---------- the Ledger is a separate machine: never drawn inside the web app
+def chm(m,s):
+    B='<path d="M60 10 C64 30 97 44 97 68 C97 84 83 92 60 92 C37 92 23 84 23 68 C23 44 56 30 60 10 Z" fill="#fff" stroke="#000" stroke-width="6" stroke-linejoin="round"/>'
+    D='<path d="M20 92 H100 C98 105 85 111 60 111 C35 111 22 105 20 92 Z" fill="#fff" stroke="#000" stroke-width="6" stroke-linejoin="round"/>'
+    v=f'<svg viewBox="0 0 120 120" width="{s}" height="{s}" aria-hidden="true">'
+    if m=='asleep': return v+f'<g transform="translate(0 44) scale(1 .52)">{B}</g><path d="M42 74 q5 4 10 0 M68 74 q5 4 10 0 M56 82 q4 3 8 0" fill="none" stroke="#000" stroke-width="3.5" stroke-linecap="round"/>{D}<text x="92" y="44" font-size="18" font-weight="800">z</text><text x="104" y="28" font-size="13" font-weight="800">z</text></svg>'
+    F={'awake':'<circle cx="49" cy="68" r="5"/><circle cx="71" cy="68" r="5"/><path d="M54 78 q6 5 12 0" fill="none" stroke="#000" stroke-width="3.5" stroke-linecap="round"/>',
+       'happy':'<path d="M43 69 q6 -8 12 0 M65 69 q6 -8 12 0" fill="none" stroke="#000" stroke-width="4" stroke-linecap="round"/><path d="M52 77 q8 9 16 0 z"/><path d="M8 30 v14 M1 37 h14 M108 18 v12 M102 24 h12 M110 52 v10 M105 57 h10" stroke="#000" stroke-width="3.5" stroke-linecap="round"/>'}
+    return v+B+F[m]+D+'</svg>'
+LEND=(('Goes to','api.stripe.com'),('Can','GET /v1/invoices, up to 20x'),('Ends','13 Nov 2026, 09:10 UTC'))
+REFUND=(('Goes to','api.stripe.com'),('Can','POST /v1/refunds, up to 1x'),('Ends','5 Nov 2026, 23:59 UTC'))
+def ledger(state, rows=LEND, lit='Stripe · 20x · until 13 Nov', ids=False):
+    i=lambda x: f' id="{x}"' if ids else ''
+    dl=''.join(f'<dt>{k}</dt><dd>{v}</dd>' for k,v in rows)
+    return (f'<div class="ledger"{i("ledger")} data-s="{state}"><div class="lscreen">'
+     f'<div class="ls s-ask">{chm("awake",84)}<b>A skill is asking<br>for a key</b><span>Stripe</span><div class="lfoot"><button class="lb"{i("lno")}>Not now</button><button class="lb"{i("lsee")}>See it</button></div></div>'
+     f'<div class="ls s-review"><b class="ltl">Lend Stripe?</b><dl>{dl}</dl><div class="lhold"><i{i("lbar")}></i><span>Hold to light</span><button class="lh"{i("lh")} aria-label="Hold to light"></button></div></div>'
+     f'<div class="ls s-lit">{chm("happy",96)}<b>A light is lit.</b><span>{lit}</span></div>'
+     f'<div class="ls s-no">{chm("asleep",84)}<b>Nothing was signed.</b><span>The skill did not get the key.</span></div>'
+     '</div></div>')
+def duo(web, dev, note=''):
+    return f'<div class="duo"><div class="side"><span class="lab web">PC の画面（Web）</span>{web}</div><div class="handoff"><i>→</i>目と手を<br>Ledger へ</div><div class="side"><span class="lab dev">手元の Ledger（機械）</span>{dev}<small class="devnote">Web の中ではなく、机の上にある本物の機械。</small></div></div>{note}'
+_st5=''.join(f'<li class="{"ok" if i<3 else "now" if i==3 else ""}"><em>{"✓" if i<3 else i+1}</em><div><b>{t}</b><small>{u}</small></div></li>' for i,(t,u) in enumerate(LS))
+HOLDWEB=(f'<div class="win hero5" id="hero5">{chrome()}{nav("steps",2)}'
+ +nowbar('Step 3 of 3 · Continue on your Ledger','Your AI cannot go ahead on its own. Nothing starts until you hold.')
+ +'<div class="stage"><div class="headline"><small class="eyebrow">NOW, PICK UP YOUR LEDGER</small>'
+ '<h3><span class="d">Nothing starts until you hold.</span><span class="lt2">It’s lit.</span><span class="dn2">Nothing was signed.</span></h3>'
+ '<p><span class="d">Your AI cannot go ahead on its own, and it cannot press the button on your Ledger. Only your hand can.</span><span class="lt2">Billing assistant may now read invoices on Stripe, up to 20 times, until 13 Nov. It holds a pass, not your key.</span><span class="dn2">Nothing started. Billing assistant did not get anything.</span></p></div>'
+ f'<div class="cols2"><ol class="st5">{_st5}</ol><div class="mid"><div class="hold"><svg viewBox="0 0 220 220" class="ring" aria-hidden="true"><circle cx="110" cy="110" r="98" class="tr"/></svg>'
+ f'<svg viewBox="0 0 120 120" class="lamp" aria-hidden="true">{WICK}<g id="hf">{BODY}{FACE["happy"]}{SPK}</g>{DISH}</svg></div><div class="status" id="st">Waiting for your Ledger…</div></div></div>'
+ '<div class="chosen"><i>YOU CHOSE</i><div>Billing assistant may <b>read invoices</b> on <b>Stripe</b>, up to <b>20 times</b>, until <b>13 Nov</b>.</div><small>Your Ledger says it in its own words: <code>api.stripe.com</code> · <code>GET /v1/invoices, up to 20x</code> · <code>13 Nov</code>. If anything differs, do not hold.</small></div>'
+ '<div class="after"><button>Back to Billing assistant ↗</button></div></div></div>')
+HOLD=duo(HOLDWEB, ledger('ask',ids=True), '<p class="try">↑ <b>試せます：</b>右の Ledger で <b>See it</b> を押し、<b>Hold to light</b> の黒い丸を <b>3秒 長押し</b>。左の Web に光がともります。<b>Not now</b> を押すと、何も始まりません。<a id="again">最初に戻す</a></p>')
 
 P=[]  # phases: (now, why, star, [scenes]); scene=(when,title,kind,story,screen,arrow)
 P.append(('キーのことを、TOMOSHIBI に丸投げする','.env も、フォルダも、書き方も知らなくていい。貼るのは1回だけ。',False,[
@@ -79,19 +93,19 @@ P.append(('キーのことを、TOMOSHIBI に丸投げする','.env も、フォ
   '「請求書を読む・20回まで・7日間」。選んだ内容が、1つの文になって出る。渡すのはキーではなく、この小さな許可だけ。',
   win('steps',1,'Step 2 of 3 · Choose what it may do','You lend one small job, not the key.','#FFF3E4',
    hero('awake','What may it do?','Lend one small job.','Pick in plain words. This is all Billing assistant gets.'),
-   '<div class="card">'+kv('Key','Stripe ▾')+kv('Goes to','api.stripe.com ▾')+kv('Can','Read invoices ▾')+kv('Ends','20 uses · 7 days ▾')+'<div class="sentence">Billing assistant may <b>read invoices</b> on <b>Stripe</b>, up to <b>20 times</b>, until <b>13 Nov</b>.</div><button>Next: hold to light →</button></div>'),
+   '<div class="card">'+kv('Key','Stripe ▾')+kv('Goes to','api.stripe.com ▾')+kv('Can','Read invoices ▾')+kv('Ends','20 uses · 7 days ▾')+'<div class="sentence">Billing assistant may <b>read invoices</b> on <b>Stripe</b>, up to <b>20 times</b>, until <b>13 Nov</b>.</div><button>Continue on my Ledger →</button></div>'),
   'いよいよ、長押し'),
 ]))
-P.append(('Ledger を長押しして、光をともす','これがないと、何も始まらない。AI には押せない、あなただけのボタン。',True,[
+P.append(('Ledger に移って、長押しで光をともす','AI は勝手に進めない。あなたが手で押すまで、何も始まらない。',True,[
  ('TOMOSHIBI のタブ ＋ Ledger','長押しするまで、何も始まらない','<span class="kind star">★ 最大の見せ場</span>',
-  '画面の真ん中の器には、まだ光がない。Priya は引き出しから Ledger を出してつなぎ、ロックを外し、TOMOSHIBI アプリを開く。Ledger の小さな画面に、PC と同じ内容が出る。確かめて、3秒、長押しする。<b>その瞬間、PC の画面にも光がともる。</b>'
-  '<div class="whyhold"><h4>なぜ、長押しが要るの？</h4><div><em>1</em><b>AI には押せないから</b>AI は、この PC の中のことなら何でもできる。打つ・押す・読む。でも、Ledger のボタンだけは押せない。</div><div><em>2</em><b>見たものにだけサインするから</b>PC の画面と Ledger の画面に、同じ内容が出る。違っていたら、押さない。</div><div><em>3</em><b>長押し1回 ＝ 許可1つだから</b>長押ししなければ、AI も TOMOSHIBI も、何も始められない。</div></div>',
+  'PC の画面は「ここから先は Ledger で」と言って、待つだけになる。Priya は引き出しから Ledger を出してつなぎ、ロックを外し、TOMOSHIBI アプリを開く。<b>確かめるのも、押すのも、Ledger の上。</b>3秒、長押しする。その瞬間、PC の画面に光がともる。'
+  '<div class="whyhold"><h4>なぜ、長押しが要るの？</h4><div><em>1</em><b>AI が勝手に進められないように</b>AI は、PC の中のことなら何でもできる。打つ・押す・読む。でも Ledger は PC の外にある機械。そのボタンは、あなたの指でしか押せない。</div><div><em>2</em><b>だまされないように</b>PC の画面は、AI に書き換えられるかもしれない。だから最後の確認は Ledger の画面でする。違っていたら、押さない。</div><div><em>3</em><b>長押し1回 ＝ 許可1つだから</b>長押ししなければ、AI も TOMOSHIBI も、何も始められない。</div></div>',
   HOLD,'光がともると'),
  ('TOMOSHIBI のタブ → AI に戻る','光がともった。AI が動き出す',REAL,
   'TOMOSHIBI は「AI に戻ってください」と言う。AI はすぐ仕事を始める。Priya がやったのは「貼る・選ぶ・長押し」の3つ。<b>ファイルは1つも触っていない。</b>',
   win('steps',3,'Lit · Billing assistant is working','You pasted once, chose, and held. That is all.','#EAF7EF',
    hero('happy','A light is lit!','Done. Go back<br>to your AI.','Billing assistant holds a pass, not your key. I will only call you when money is about to move.'),
-   '<div class="card"><div class="did"><div><i>YOU DID</i><span class="y">Pasted a key, once</span><span class="y">Chose what it may do</span><span class="y">Held your Ledger</span></div><div><i>YOU DID NOT</i><span class="n">Create a file</span><span class="n">Look for a folder</span><span class="n">Give your key to an AI</span></div></div><button>Back to Billing assistant ↗</button></div>')
+   '<div class="card"><div class="did"><div><i>YOU DID</i><span class="y">Pasted a key, once</span><span class="y">Chose what it may do</span><span class="y">Held your Ledger</span></div><div><i>YOU DID NOT</i><span class="x">Create a file</span><span class="x">Look for a folder</span><span class="x">Give your key to an AI</span></div></div><button>Back to Billing assistant ↗</button></div>')
   +'<div class="mini">'+ai([('bot','Thank you. I am connected through TOMOSHIBI, no file needed. Found <b>7 unpaid orders</b> from last week. Drafting reminders now…')])+'</div>',
   'タブを閉じる。ここから TOMOSHIBI は見えなくなる'),
 ]))
@@ -107,9 +121,9 @@ P.append(('お金が動くときだけ、呼ばれる','あなたの指なしに
  ('水曜 14:20、郵便局の列 → 18:40 帰宅','知らせを押すと TOMOSHIBI が開く。もう一度、長押し',REAL,
   'お客さんが「届いたバッグを返品したい」。AI は ₹4,800 を返金しようとする。0G が「これは重い」と判定して、そこで止まる。Priya には知らせが1行だけ届く。急がなくていい、まだ何も起きていないから。帰宅して知らせを押し、Ledger をつないで長押しすると、返金は<b>1回だけ</b>出ていく。',
   '<div class="toast">'+ch('alert',34)+'<div><b>TOMOSHIBI</b><br>A refund of ₹4,800 is waiting for you.</div><span>Open ↗</span></div>'+
-  win('links','Home','Money is about to move','It waits for your hold. One hold, one refund.','#FFE9DC',
+  duo(win('links','Home','Money is about to move','It waits for your hold. One hold, one refund.','#FFE9DC',
    hero('alert','Money is about to move. Your call!','A refund of ₹4,800<br>is waiting for you.','Order #1042, a returned bag. Nothing happens until you hold your Ledger.'),
-   '<div class="card">'+tag('NEEDS YOUR HAND','hand')+kv('What','Refund ₹4,800')+kv('For','Order #1042')+kv('How many times','Once')+'<div class="two"><button>Send to my Ledger</button><button class="ghost">Not now</button></div><small>Your AI cannot press this button.</small></div>',strip(2)),
+   '<div class="card">'+tag('NEEDS YOUR HAND','hand')+kv('What','Refund ₹4,800')+kv('For','Order #1042')+kv('How many times','Once')+'<div class="two"><button>Continue on my Ledger →</button><button class="ghost">Not now</button></div><small>Your AI cannot press this button.</small></div>',strip(3)),ledger('review',rows=REFUND)),
   '長押しが済むと、また見えなくなる'),
 ]))
 P.append(('何かあっても、止まって、残る','何が起きたか、自分で説明できる。',False,[
@@ -183,11 +197,11 @@ CSS=open(__file__.replace('gen_flow.py','flow3.css')).read()
 JS=open(__file__.replace('gen_flow.py','flow3.js')).read()
 html=f'''<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>TOMOSHIBI — アプリの流れ（PC・Priya の1週間）</title><style>{CSS}</style><div class="wrap">
-<div class="top"><div>{ch('happy',120)}</div><div><small>TOMOSHIBI — アプリの流れ（PC の Web 画面）</small><h1>キーのことは、ぜんぶ TOMOSHIBI に丸投げ。<br>あなたがやるのは、長押しだけ。</h1><p class="en">Leave the key stuff to TOMOSHIBI. All you do is hold.</p></div></div>
-<div class="ba"><div class="b"><small>今まで</small><b>「このフォルダの .env にキーを書いてください」</b>どのファイル？ どう書くの？ ここで止まる。なんとか書けても、そのキーは期限なし・上限なし・記録なしで、ずっと AI の手元に残る。</div><div class="a"><small>TOMOSHIBI があると</small><b>「TOMOSHIBI を使って」と1行返すだけ</b>キーは TOMOSHIBI に1回貼るだけ。ファイルは触らない。あとは Ledger を長押しして、許可するだけ。お金が動くときだけ、また呼ばれる。</div></div>
+<div class="top"><div>{ch('happy',120)}</div><div><small>TOMOSHIBI — アプリの流れ（PC の Web 画面）</small><h1>キーのことは、ぜんぶ TOMOSHIBI に丸投げ。<br>あなたがやるのは、長押しだけ。</h1><p class="en">Leave the key stuff to TOMOSHIBI. Nothing starts until you hold.</p><p class="sub">AI は勝手に進めない。あなたが Ledger を手で押すまで、何も始まらない。</p></div></div>
+<div class="ba"><div class="b"><small>今まで</small><b>「このフォルダの .env にキーを書いてください」</b>どのファイル？ どう書くの？ ここで止まる。なんとか書けても、そのキーは期限なし・上限なし・記録なしで、ずっと AI の手元に残る。</div><div class="a"><small>TOMOSHIBI があると</small><b>「TOMOSHIBI を使って」と1行返すだけ</b>キーは TOMOSHIBI に1回貼るだけ。ファイルは触らない。<strong>AI は勝手に進めない。</strong>あなたが Ledger を手で長押しするまで、何も始まらない。お金が動くときも同じ。</div></div>
 <h2 class="sec">流れの全体 — 今していること → だから、こういう価値</h2>
 <div class="map">{pmap}</div>
-<p class="note">灰色の枠は AI のチャット（モック）。黒い枠が TOMOSHIBI（本物で動かす）。TOMOSHIBI の画面には、いつも上に「NOW（今していること）」と「WHY IT MATTERS（その価値）」が出ます。案内役は、Ledger の中にいるのと同じ「器にのった光」です。</p>
+<p class="note">灰色の枠は AI のチャット（モック）。黒い枠が TOMOSHIBI（本物で動かす）。TOMOSHIBI の画面には、いつも上に「NOW（今していること）」と「WHY IT MATTERS（その価値）」が出ます。案内役は、Ledger の中にいるのと同じ「器にのった光」です。<b>Ledger の画面は、Web の中には出しません。</b>Ledger を使う場面では、Web は「Ledger に移って」と言って待ちます。この資料では、となりに本物の機械を並べて見せます。</p>
 <div class="faces">{faces}</div>
 {''.join(body)}
 <h2 class="sec">まとめ</h2>

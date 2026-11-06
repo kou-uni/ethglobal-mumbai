@@ -11,7 +11,8 @@
 //
 // With bridge/bridge.py running and Tomoshibi open on the device, Permits are signed on the
 // Ledger. Without a device a software key stands in, and every event says so (`device: false`).
-import { createServer } from 'node:http'
+import { createServer, request as httpRequest } from 'node:http'
+import { request as httpsRequest } from 'node:https'
 import { privateKeyToAccount } from 'viem/accounts'
 import { keccak256, toHex, getAddress } from 'viem'
 import { DOMAIN, TYPES, normalize, lines, requestHash } from './src/permit.js'
@@ -75,6 +76,19 @@ const post = async (base, path, body, ms = 250000) => {
   const r = await fetch(base + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(ms) })
   return { status: r.status, body: await r.json() }
 }
+/** Like post(), for an answer that may take many minutes. fetch gives up after five (its wait for the first
+ *  byte of an answer), and a person confirming in World App can take longer than that. */
+const postLong = (base, path, body, ms) => new Promise((resolve, reject) => {
+  const u = new URL(base + path), data = JSON.stringify(body)
+  const req = (u.protocol === 'https:' ? httpsRequest : httpRequest)(u, { method: 'POST', headers: { 'content-type': 'application/json', 'content-length': Buffer.byteLength(data) } }, (res) => {
+    let raw = ''
+    res.setEncoding('utf8'); res.on('data', (c) => { raw += c })
+    res.on('end', () => { try { resolve({ status: res.statusCode, body: JSON.parse(raw) }) } catch (e) { reject(e) } })
+  })
+  req.setTimeout(ms, () => req.destroy(new Error('no answer in time')))
+  req.on('error', reject)
+  req.end(data)
+})
 const probe = async () => {
   if (BRIDGE === 'none') return false   // a hosted copy has no USB: the Ledger is reached through the page, or not at all
   try { return (await (await fetch(BRIDGE + '/health', { signal: AbortSignal.timeout(4000) })).json()).ready === true } catch { return false }
@@ -265,7 +279,7 @@ const routes = {
     if (!vouches.has(deviceCode)) {
       const s = standing
       vouches.set(deviceCode, (async () => {
-        const r = await post(BROKER, '/vouch/finish', { deviceCode, skill: skillIdFrom(skill.address), version: TOOL.version, permit: s.permit, signature: s.signature }, 660000)
+        const r = await postLong(BROKER, '/vouch/finish', { deviceCode, skill: skillIdFrom(skill.address), version: TOOL.version, permit: s.permit, signature: s.signature }, 660000)
           .catch((e) => ({ body: { decision: 'VOUCH_DENIED', reason: 'WORLD_ERROR', message: String(e.message ?? e) } }))
         const out = { ...r.body, ownerProof: { sent: true, device: s.device, holder: s.permit.holder } }
         emit({ type: 'light', decision: out.decision, reason: out.reason ?? null, message: out.message ?? null, nullifier: out.nullifier ?? null, ownerChecked: Boolean(out.ownerChecked), simulated: Boolean(out.world?.simulated) })

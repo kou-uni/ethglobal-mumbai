@@ -14,9 +14,11 @@ ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/
 | 場所 | 中身 |
 |---|---|
 | `ideation/2026-11-06-decisions.md` | **決定の記録。** 何を決めたか（最新） |
+| **`ideation/2026-11-06-submission-rules.md`** | **提出と審査の規則（ETHGlobal 公式）。** 締切・禁止事項・審査基準・動画の規則と、こちらの適合状況 |
+| **`ideation/2026-11-06-stack.html`** | **システムスタック。** 7段（プロトコル／ツール／プロダクト）と、借りものが落ちたときの振る舞い |
 | `ideation/2026-11-06-minta-proposal.md` | minta の提案：星は約束ではなく事実にする（採用） |
 | **`ui/`** | **動くデモ画面（試作）。** `index.html`＝門（4通りの止まり方が見える）／`stars.html`＝灯（版が上がると消える）。値は本番の 0G に実際に投げた応答 |
-| **`ideation/2026-11-06-market-and-model.html`** | **市場規模（TAM/SAM/SOM）とビジネスモデル。** TAM $24B・SAM $2–6B・SOM $1.4M（3年目）／収益3本と、1判定の原価（実測300トークン）／やらないこと |
+| **`ideation/2026-11-06-market-and-model.html`** | **市場規模（TAM/SAM/SOM）とビジネスモデル。** TAM $43B・SAM $2–7B・SOM $1.4M（3年目）／収益3本と、1判定の原価（実測300トークン）／やらないこと |
 | **`ideation/2026-11-06-diagrams.html`** | **アーキテクチャ図と5つのシーケンス図。** 通る／押させる／止める／決めない／灯をともす（生成: `ideation/build-diagrams.py`） |
 | `ideation/2026-11-06-touchpoints.html` | **誰が・いつ・どの画面に出会い、何を変えるか。** 決めてほしいこと9個の内訳／スタックチャンを入れるなら③だけ |
 | `ideation/2026-11-06-screen-flow.html` | **画面遷移とプロセス。** 画面5枚・遷移表・使用のプロセス・World のプロセス・決めてほしいこと3つ |
@@ -73,3 +75,37 @@ ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/
 **また来る理由（2行）:**
 星は1回では意味がない。**同じ鍵で使い続けている事実が積み上がるほど重くなる。**
 そして版が変われば星は一斉に消えるので、**使い続けている人だけが、消えたことに気づいて出し直す。**
+
+## どう作ったか（ETHGlobal の規定に沿った開示）
+
+**ハック期間中（11/5 21:00 IST 以降）に作った。** 事前のプロジェクト固有のコードは使っていない。
+
+### 再利用したもの（公開のスターターキット・ライブラリ）
+
+| 場所 | 由来 | ライセンス |
+|---|---|---|
+| `ledger-app/` | LedgerHQ **`app-boilerplate-rust`** から開始（アプリの中身は今回書いた） | Apache-2.0 |
+| `broker/` の依存 | `viem` / `jose` / `ethers` / `@0gfoundation/0g-storage-ts-sdk` | 各 OSS |
+| `bridge/bridge.py` | `hidapi`（Python） | 各 OSS |
+
+本体（`broker/src/`・`web/`・`ui/`・`spec/`・`ideation/`）は**今回書いたもの**。
+
+### AI ツールの使い方
+
+**使った：Claude Code（Anthropic）。2人のうち、人が見ない側の実装と文書で使っている。**
+
+| 範囲 | 使い方 |
+|---|---|
+| `broker/src/`・`broker/test/` | **人が設計を決め、AI に書かせ、人がテストで検証した。** 判定の境界（4つの止まり方・範囲照合・回数）は人が仕様として先に書いた（`spec/`） |
+| `ideation/`・`research/` | 構成と文章の起草に使用。**数字・判定・実測値は人が実行して確かめたものだけを載せている**（【確】の印） |
+| `web/`・`ui/` | **minta が設計・実装**（画面は人の手） |
+| `ledger-app/`（Rust） | **minta が実機で実装**（AI 補助あり） |
+
+**spec 駆動の成果物は全部このリポジトリにある：**
+`spec/permit-signature.md`（Ledger と Broker の契約）・`spec/world-agent-pass.md`・
+`ideation/2026-11-06-decisions.md`（何を決め、何を捨てたか・18件）・
+`ideation/2026-11-06-plan.md`（時間割と関門）。
+**生成物だけでなく、どう指示し、何を却下したかが残っている。**
+
+AI が作って人が確かめていないものは、提出物に入れていない。
+実測していない数字には【未確認】と書いてある。

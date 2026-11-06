@@ -1,0 +1,10 @@
+.git
+**/node_modules
+**/.env*
+broker/data
+.demo-logs
+assets
+ideation
+ledger-app
+web
+ui

@@ -21,6 +21,8 @@ const BROKER = (process.argv[2] ?? 'http://127.0.0.1:8787').replace(/\/$/, '')
 const BRIDGE = (process.argv[3] ?? 'http://127.0.0.1:8791').replace(/\/$/, '')
 const DEAF = process.argv[4] ? process.argv[4].replace(/\/$/, '') : null   // a Broker that cannot reach 0G
 const PORT = Number(process.env.PORT_AGENT ?? 8792)
+// On a person's own computer this listens on localhost only. A hosted copy sets HOST_AGENT=0.0.0.0 (tools/hosted-start.sh).
+const HOST = process.env.HOST_AGENT ?? '127.0.0.1'
 
 const TOOL = { name: 'billing-assistant', version: '1.0.0' }
 const skill = privateKeyToAccount('0x' + '33'.repeat(32))        // the tool's own key (a demo key)
@@ -73,6 +75,7 @@ const post = async (base, path, body, ms = 250000) => {
   return { status: r.status, body: await r.json() }
 }
 const probe = async () => {
+  if (BRIDGE === 'none') return false   // a hosted copy has no USB: the Ledger is reached through the page, or not at all
   try { return (await (await fetch(BRIDGE + '/health', { signal: AbortSignal.timeout(4000) })).json()).ready === true } catch { return false }
 }
 // Right after a hold the device is busy showing its own screen and does not answer for a few
@@ -279,8 +282,8 @@ createServer(async (req, res) => {
   let raw = ''
   for await (const c of req) raw += c
   try { send(200, await route(raw ? JSON.parse(raw) : {}, url)) } catch (e) { send(502, { ok: false, error: String(e.message ?? e) }) }
-}).listen(PORT, '127.0.0.1', () => {
-  console.log(`${TOOL.name} (demo agent) on http://127.0.0.1:${PORT}\n  broker ${BROKER} · bridge ${BRIDGE} · deaf ${DEAF ?? '—'}`)
+}).listen(PORT, HOST, () => {
+  console.log(`${TOOL.name} (demo agent) on http://${HOST}:${PORT}\n  broker ${BROKER} · bridge ${BRIDGE} · deaf ${DEAF ?? '—'}`)
   if (process.stdin.isTTY) {
     console.log('  keys: 1 routine · 2 heavy · 3 hijacked · 4 disguised · 5 0G unreachable · l lend · r reset · q quit\n')
     process.stdin.setRawMode(true); process.stdin.resume()

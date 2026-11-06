@@ -56,6 +56,38 @@ So the ladder of claims, from what we have to what is often implied:
 4. **Nobody, anywhere, ever holds the plaintext** — **not achievable against a bearer-token API
    at all**, by anyone, including us. See below
 
+## 2b. If the Broker runs on your own laptop, can the agent on that laptop read the key?
+
+**Yes. It can.** This has to be said plainly, because it is the first thing a careful person asks.
+
+`broker/.env.local` is mode `0600` and gitignored. That stops **other users** on the machine and
+stops it being committed by accident. **It does not stop a process running as you** — and an agent
+you launched is running as you. It can read the file, or read `/proc`-equivalent process
+environment, exactly as you could.
+
+**So what the design actually buys, in the local case:**
+
+| Protected against | Not protected against |
+|---|---|
+| The agent being **handed** the key as data to work with | A local process going and **taking** it off disk |
+| The key reaching a **remote** skill, or a skill you did not write | Anything running as your user on your machine |
+| The key appearing in the **trail**, in logs, or in a **model prompt** (tested: `secret-never-leaves.test.js`) | |
+| An agent **retaining** it for later, after the permit expires | |
+
+**The boundary we enforce is a protocol boundary, not an operating-system one.** Nothing in this
+project claims otherwise, and nothing in it tries to defend a machine against its own operator.
+
+This is why "run it on your laptop" is the **convenience** configuration, and the two
+configurations that actually mean something are:
+
+1. **The Broker somewhere the agent is not** — a different user, a different machine, a hosted
+   instance. Then the OS boundary exists, and the protocol boundary is the one we add on top
+2. **The Broker inside a TEE** — then even the person running it cannot read it
+3. **Request signing**, where there is no stored secret left to steal at all (next section)
+
+A judge may well ask this. **The answer is not "it is safe"; the answer is "on one machine the key
+is as safe as that machine, and here is what we remove from the problem."**
+
 ## 3. Why you cannot put the API key in the Ledger (as things stand)
 
 This is the crux. A Ledger can certainly *store* a secret. The problem is what you have to do with

@@ -67,7 +67,7 @@ curl -s http://127.0.0.1:8791/health
 
    2つ目は `"ready": true` であること。
 
-6. ブラウザで `http://localhost:8790/` を開く。右上が `live` であること。
+6. ブラウザで `http://localhost:8790/` を開く。右上が `Broker · live` であること（`simulated mode` や `sample data` は本番ではない）。
 7. **通しを1回やる**（§4 の順）。Ledger の `N lit` と、記録の件数がここで増える。本番の前に数を控える。
 
 ## 4. 場面ごとの手順
@@ -77,7 +77,7 @@ curl -s http://127.0.0.1:8791/health
 | **S1 沈黙** 0:20 | 奥：画面 A の `Everyone`。手前：眠っている灯 | 何もしない。Ledger に触らない |
 | **A 寄り** 0:30 | 画面 A | `People I know` を押す。白い点が消えて灯だけ残る |
 | **A 詳細** 0:52 | 画面 A | 灯を1つ押す。誰が／何を／3つの丸 |
-| **S2 生まれる** 1:08 | **Ledger と PC を同じ絵に** | 画面 A の詳細で `Lend my key` → Ledger に範囲が出る → **長押し** → `A light is lit.` → 画面で人の確認 → 空に灯が1つ増える |
+| **S2 生まれる** 1:08 | **Ledger と PC を同じ絵に** | 画面 A の詳細で `Show that I use this` → Ledger に範囲が出る → **長押し** → `A light is lit.` → 画面で人の確認 → 空に灯が1つ増える |
 | **S3 ふだん** 1:38 | 眠っている灯のまま | 下の `demo-ledger.mjs` の前半。Ledger は聞いてこない |
 | **S4 拒否** 1:48 | Ledger のマクロ | `demo-ledger.mjs` が範囲外を送る → 白黒反転して `BLOCKED`。**指を映さない** |
 | **A 引き** 2:18 | 画面 A | `Demo: the tool changes` を押す。その版の灯が一斉に消える |
@@ -89,7 +89,7 @@ S3 と S4 は1本のスクリプトで順に起きる。長押しは2回（最�
 cd broker && node demo-ledger.mjs
 ```
 
-出力の最後に `trace.html?thread=0x…` が出る。これが S5 で開く記録。
+出力の最後に `…/trace/0x…` が出る。この `0x…` を `http://localhost:8790/trace.html?thread=0x…` に付けて開くと、S5 の記録になる。
 
 ## 5. まだできていないこと
 

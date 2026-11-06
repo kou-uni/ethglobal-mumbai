@@ -41,20 +41,24 @@ node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
 
 > **Who this is for, what it stops, and what it assumes — stated plainly:** [`POSITION.md`](POSITION.md)
 
-## What it is: NAT, for API keys
+## What it is: the switchboard between your agents and your keys
 
-![TOMOSHIBI is NAT for API keys — a translation table inside one laptop](assets/nat.png)
+![TOMOSHIBI, the switchboard: labels in, the real key only at the edge](assets/nat.png)
 
-A home router does not give your laptop the public address. It gives it a private one, and
-swaps the two at the edge. TOMOSHIBI does that with credentials. A tool is given a **label**
-— `stripe-live`, `gh-readonly`. The real key stays in one table inside the laptop, with the
-range it may be used in beside it. The swap happens at the moment of sending, nowhere else,
-and the Ledger in your hand is the only thing that can add a row to that table or approve a
-heavy crossing.
+Your tools do not hold keys. They hold **labels** — `model-main`, `stripe-live`. TOMOSHIBI
+keeps one table on the laptop: `label → what it may do → the real key`. A tool calls by label,
+TOMOSHIBI puts the call through to the real service, and the swap happens at the moment of
+sending, nowhere else. The Ledger plugged into the same laptop is the only thing that can add
+a row to that table, and the only thing that can approve a call the weighing called heavy.
+Every label keeps a history, so you can say afterwards what each tool used your key for.
 
-It is for the person running a dozen keys across their own tools and other people's — today
-scattered across `.env` files, chat history and CI secrets, with no way to say what used
-which.
+It is for the person building with Claude Code on one laptop: shipping anything means
+collecting keys first — the model API itself, Stripe, mail — and the pile grows as you go.
+Hand one of those tools to someone else and you are carrying their usage on your key. Today
+those keys sit in `.env` files, chat history and CI secrets, each good for everything, forever.
+
+*If you know NAT, it is that: the label is the private address, the key is the public one, the
+permit is the firewall rule, and the Ledger is the administrator.*
 
 ## One request, end to end
 

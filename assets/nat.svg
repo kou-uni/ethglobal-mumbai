@@ -18,8 +18,8 @@
 </style>
   <rect width="1680" height="1180" fill="#F3EEE6"/>
 
-<text class="ttl" x="60" y="54">TOMOSHIBI is NAT for API keys</text>
-<text class="sub" x="60" y="88">The tools speak in labels. The real key exists on the far side of one table, and crossing it is the only thing a person is asked about.</text>
+<text class="ttl" x="60" y="54">TOMOSHIBI — the switchboard between your agents and your keys</text>
+<text class="sub" x="60" y="88">Your tools call by label. TOMOSHIBI puts the call through to the real service — or puts it to you first, when it is heavy.</text>
 <rect x="560" y="130" width="700" height="112" rx="16" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5"/>
 <text class="k" x="584" y="164" fill="#c2410c">THE LEDGER · plugged into the same laptop</text>
 <text class="t" x="584" y="196">The only thing that can add a row,</text>
@@ -27,29 +27,29 @@
 <path d="M910 242 L910 286" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>
 <text class="k" x="60" y="320">INSIDE · ONE LAPTOP</text>
 <rect class="card" x="60" y="340" width="340" height="88" rx="14"/>
-<text class="h" x="84" y="376">an agent + its skills</text>
-<text class="m" x="84" y="406">asks with: stripe-live</text>
+<text class="h" x="84" y="376">Claude Code, on this laptop</text>
+<text class="m" x="84" y="406">calls: model-main</text>
 <path d="M400 384 L476 384" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 <rect class="card" x="60" y="450" width="340" height="88" rx="14"/>
-<text class="h" x="84" y="486">a tool you wrote</text>
-<text class="m" x="84" y="516">asks with: gh-readonly</text>
+<text class="h" x="84" y="486">the tool you are building</text>
+<text class="m" x="84" y="516">calls: stripe-live</text>
 <path d="M400 494 L476 494" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 <rect class="card" x="60" y="560" width="340" height="88" rx="14"/>
-<text class="h" x="84" y="596">a tool someone else wrote</text>
-<text class="m" x="84" y="626">asks with: resend-tx</text>
+<text class="h" x="84" y="596">a tool you handed out</text>
+<text class="m" x="84" y="626">calls: resend-tx</text>
 <path d="M400 604 L476 604" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 <rect class="card" x="480" y="286" width="860" height="382" rx="18" fill="#fffdf8"/>
-<text class="h" x="504" y="324">TOMOSHIBI · the table, and the crossing</text>
+<text class="h" x="504" y="324">TOMOSHIBI · the switchboard, on the laptop</text>
 <text class="k" x="504" y="368">LABEL</text>
 <text class="k" x="700" y="368">WHAT IT MAY DO</text>
 <text class="k" x="1150" y="368">THE REAL KEY</text>
 <path d="M504 382 L1316 382" stroke="#d8d2c6" stroke-width="2"/>
-<text class="lab" x="504" y="418">stripe-live</text>
-<text class="m" x="700" y="418">api.stripe.com · * /v1 · 20 calls · 7 days</text>
-<text class="key" x="1150" y="418">sk_live_••••</text>
-<text class="lab" x="504" y="470">gh-readonly</text>
-<text class="m" x="700" y="470">api.github.com · GET /repos · 200 calls</text>
-<text class="key" x="1150" y="470">ghp_••••</text>
+<text class="lab" x="504" y="418">model-main</text>
+<text class="m" x="700" y="418">api.anthropic.com · POST /v1/messages · 2,000 calls</text>
+<text class="key" x="1150" y="418">sk-ant-••••</text>
+<text class="lab" x="504" y="470">stripe-live</text>
+<text class="m" x="700" y="470">api.stripe.com · * /v1 · 20 calls · 7 days</text>
+<text class="key" x="1150" y="470">sk_live_••••</text>
 <text class="lab" x="504" y="522">resend-tx</text>
 <text class="m" x="700" y="522">api.resend.com · POST /emails · 50 calls</text>
 <text class="key" x="1150" y="522">re_••••</text>
@@ -57,15 +57,15 @@
 <text class="note" x="504" y="624">The right column is never printed, never logged, never returned to a tool, and never shown on a screen.</text>
 <text class="k" x="1400" y="320">OUTSIDE · THE REAL SERVICES</text>
 <rect class="card" x="1400" y="340" width="220" height="88" rx="14"/>
-<text class="lab" x="1424" y="392">api.stripe.com</text>
+<text class="lab" x="1424" y="392">api.anthropic.com</text>
 <path d="M1340 384 L1396 384" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 <rect class="card" x="1400" y="450" width="220" height="88" rx="14"/>
-<text class="lab" x="1424" y="502">api.github.com</text>
+<text class="lab" x="1424" y="502">api.stripe.com</text>
 <path d="M1340 494 L1396 494" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 <rect class="card" x="1400" y="560" width="220" height="88" rx="14"/>
 <text class="lab" x="1424" y="612">api.resend.com</text>
 <path d="M1340 604 L1396 604" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
-<text class="k" x="60" y="740">The analogy, line by line</text>
+<text class="k" x="60" y="740">If you know NAT, it is that</text>
 <rect class="card" x="60" y="760" width="860" height="364" rx="16" fill="#fffdf8"/>
 <text class="k" x="84" y="794">NAT</text>
 <text class="k" x="470" y="794">TOMOSHIBI</text>
@@ -86,9 +86,10 @@
 <text class="m" x="470" y="1082">the Ledger. Not a password, and not the agent</text>
 <text class="k" x="960" y="740">Who it is for</text>
 <rect x="960" y="760" width="660" height="364" rx="16" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="8 7"/>
-<text class="t" x="984" y="806">Someone who builds with APIs and runs a dozen keys at once:</text>
-<text class="t" x="984" y="840">their own tools, other people's tools, and an agent that calls both.</text>
-<text class="t" x="984" y="874">Today those keys sit in .env files, in chat history and in CI secrets,</text>
-<text class="t" x="984" y="908">each one good for everything, forever. One table replaces all of it,</text>
-<text class="t" x="984" y="942">and the only thing that interrupts the work is the heavy crossing.</text>
+<text class="t" x="984" y="806">You build with Claude Code on this laptop. Shipping anything means</text>
+<text class="t" x="984" y="840">collecting keys first — the model API itself, Stripe, mail — and the</text>
+<text class="t" x="984" y="874">pile grows as you go. Hand a tool to someone and you are carrying</text>
+<text class="t" x="984" y="908">their usage on your key. TOMOSHIBI is where those keys live: every</text>
+<text class="t" x="984" y="942">tool is given a label, each label keeps a history, and only the heavy</text>
+<text class="t" x="984" y="976">calls reach your hand.</text>
 </svg>

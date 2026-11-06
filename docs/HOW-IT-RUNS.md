@@ -10,9 +10,10 @@ Sources: `broker/src/server.js`, `broker/src/store.js`, `broker/src/scope.js`,
 
 ## 0. What the thing is
 
-Network address translation, for API keys. A tool holds a **label**; the Broker holds a table
-of `label → what it may do → the real key`; the substitution happens in `execute.js` at the
-moment of sending and nowhere else. The table lives on one laptop, beside the tools that use
+A switchboard between the tools on one laptop and the services they call. A tool holds a
+**label**; the Broker holds a table of `label → what it may do → the real key`; the
+substitution happens in `execute.js` at the moment of sending and nowhere else. In network
+terms it is NAT: The table lives on one laptop, beside the tools that use
 it. A row can only be added by signing it on a Ledger, and the same device is the only thing
 that can approve a crossing the weighing called heavy.
 

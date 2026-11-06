@@ -91,7 +91,7 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 <header class="doc-header">
   <p class="eyebrow">TOMOSHIBI ／ 設計 ／ minta さんへ</p>
   <h1>誰が、いつ、どの画面に出会い、何を変えるのか</h1>
-  <p class="lead">画面の枚数ではなく、<b>人の1日のどこに割り込むか</b>で設計する。あわせて「決めてほしいこと3つ」を、そのまま○×で返せる粒度まで割った。スタックチャンを入れるなら<b>どの1シーンか</b>も最後に書いた。</p>
+  <p class="lead">画面の枚数ではなく、<b>人の1日のどこに割り込むか</b>で設計する。あわせて「決めてほしいこと3つ」を、そのまま○×で返せる粒度まで割った。スタックチャンを入れるなら<b>どの1シーンか</b>、そして<b>どの場面をどの機器でやるか</b>（スマホかPCか実機か）も書いた。</p>
   <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>前提: 画面5枚・遷移表は screen-flow.html</span></div>
 </header>
 
@@ -100,6 +100,7 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
   <ol class="summary">
     <li><b>この製品の価値は、ほとんどの時間「何も出ないこと」。</b>持ち主が画面を見るのは1日1回あるかないか。<b>割り込む回数を増やす提案は、それ自体が失敗。</b></li>
     <li><b>割り込んでよい場面は3つだけ。</b>重い要求が来たとき（押す）／灯が消えたとき（名乗り直す）／止められたことに後から気づくとき（系譜）。</li>
+    <li><b>鍵に触る場面だけが機器に縛られる。</b>実機に触れるのは<b>機器が挿さっている PC の中のプロセスだけ</b>（<span class="mono">bridge</span> は 127.0.0.1）。ほかは全部 Web で、スマホで開く。<b>新しいネイティブアプリは作らない。</b></li>
     <li><b>スタックチャンを入れるなら「重い要求が来た」の合図だけ。</b>判断も承認も持たせない。<b>合図は実機から出さないと意味がない</b>が、<b>押す場所は鍵を持つ機器のまま</b>。</li>
   </ol>
 </section>
@@ -187,7 +188,62 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 </section>
 
 <section>
-  <h2><span class="no">03</span>スタックチャンを入れるなら、どのシーンか</h2>
+  <h2><span class="no">03</span>どの場面を、どの機器でやるか（仮説）</h2>
+  <p class="msg"><b>鍵に触る場面だけが機器に縛られる。それ以外は全部 Web で、スマホで開く。新しいネイティブアプリは1つも作らない。</b></p>
+
+  <p><b>縛りの出どころは1か所。</b>実機とやり取りしているのは <span class="mono">bridge/bridge.py</span> で、USB HID を話し <b>127.0.0.1 でしか待ち受けていない</b>。つまり<b>実機に触れるのは、その機器が挿さっている機械の中のプロセスだけ</b>。スマホのブラウザから押す経路は、いまの実装には存在しない。ここが全部の前提になる。</p>
+
+  <div class="tbl"><table>
+    <caption>表3　場面ごとの機器（◯=その機器が要る／—=画面を持たない）</caption>
+    <thead><tr><th>場面</th><th style="width:74px">UI</th><th style="width:150px">使う機器</th><th style="width:150px">形態</th><th>なぜそこに縛られるか</th></tr></thead>
+    <tbody>
+      <tr><td>① 初めて許す</td><td>あり</td><td><b>Ledger ＋ PC</b></td><td>デスクトップの Web ＋ ローカルの bridge</td><td>USB で挿す行為そのものがある。<b>年に数回の設定作業</b>で、4行を腰を据えて読む場面。スマホに置く理由がない</td></tr>
+      <tr><td>② ふだん</td><td><b>なし</b></td><td>なし（サーバ常駐）</td><td>—</td><td><b>画面を持たないことが仕様。</b>ここに機器を足す提案は全部ノー</td></tr>
+      <tr><td>③ 重い要求が来た</td><td>あり</td><td><b>Ledger 単体</b>（押す）<br>＋ 気づく機器（別でよい）</td><td>機器内の自作アプリ</td><td>4行の表示も押下も<b>機器の中</b>。ホストの画面は補助にすぎない。<b>気づく手段だけは別の機器に出してよい</b>（下）</td></tr>
+      <tr><td>④ 止められていた</td><td>あり（読むだけ）</td><td>スマホ or PC</td><td>Web・URL 1本</td><td>後から証拠を読む場面。<b>インストールを挟んだら読まれない</b></td></tr>
+      <tr><td>⑤ 決められなかった</td><td>あり（読むだけ）</td><td>スマホ or PC</td><td>Web・URL 1本</td><td>同上。不便の理由が読めればいい</td></tr>
+      <tr><td>⑥ 名乗る</td><td>あり（2台に割れる）</td><td><b>PC（待つ）＋ スマホ（World App）</b></td><td>既存のネイティブを<b>借りる</b></td><td>World ID の証明は World App の中にしかない。<b>device flow を選んだ理由そのもの</b>。こちらは待つだけ</td></tr>
+      <tr><td>⑦ 版が上がった</td><td>あり（読むだけ）</td><td><b>スマホ優先</b></td><td>Web</td><td>移動中に気づく・人に見せる場面。灯が消える絵は小さい画面でも伝わる</td></tr>
+      <tr><td>⑧ 採用を決める</td><td>あり（10秒）</td><td>スマホ or PC</td><td>Web・URL 1本</td><td>審査員もここに座る。<b>10秒でインストールはしない</b></td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">出所: ①③は <span class="mono">bridge/bridge.py</span> と <span class="mono">ledger-app/</span> の実装（実測）。④〜⑧は <span class="mono">web/</span> の静的ページ（ビルドなし・外部読み込みなし）。機器の割り当ては設計上の仮説で、利用者で検証していない。</p>
+
+  <h3>ネイティブアプリを作る理由になるのは、2つだけ</h3>
+  <div class="fig-scroll"><div class="matrix" style="--mx-cols:3;--mx-label:132px">
+    <div class="mx-h"></div>
+    <div class="mx-h">何が解ける</div>
+    <div class="mx-h">Web でできない理由</div>
+    <div class="mx-h">判断</div>
+
+    <div class="mx-label"><small>A</small>押下をスマホへ</div>
+    <div class="mx-cell">③ が <b>PC から解放される</b>。Flex は Bluetooth を持つので、理屈ではスマホ単体で「4行を読んで押す」まで閉じる。<b>本命はこちら</b></div>
+    <div class="mx-cell">モバイルのブラウザに <span class="mono">WebHID</span> が無く、<span class="mono">WebBluetooth</span> も iOS に無い（<b>未確認・今回は測っていない</b>）。<b>Web では成立しない分岐</b></div>
+    <div class="mx-cell"><b>今回やらない。</b>BLE で自作アプリと話せるか自体が未確認</div>
+
+    <div class="mx-label alt"><small>B</small>気づきの通知</div>
+    <div class="mx-cell">③ の「見ていないと届かない」が解ける</div>
+    <div class="mx-cell"><b>Web でもできる</b>（通知は既存の経路でよい）</div>
+    <div class="mx-cell"><b>これだけのためにネイティブは作らない。</b>割に合わない</div>
+  </div></div>
+
+  <h3>③だけは「気づく機器」と「決める機器」を分けてよい</h3>
+  <p>重い要求は<b>持ち主が画面を見ていないときに来る</b>。だから気づきは<b>携帯するもの・目に入るところにあるもの</b>（スマホ、または机の上のスタックチャン）に出し、<b>決めるのは鍵のある機器</b>のままにする。分けたほうが安全で、しかも安い — <b>気づく側は通せてはいけない＝読むだけでよい</b>からだ。鍵も署名も持たせる必要がない。</p>
+  <p class="note"><b>決めるとしたら1つだけ。</b>③の気づきをどこから出すか（A 出さない／B スマホの通知／C 実機の合図）。<b>既定は A（今回は出さない）。</b>誤爆する合図は、信頼の話をしている製品が自分で信頼を落とす。</p>
+
+  <h3>当日、机の上に何を置くか</h3>
+  <div class="tbl"><table>
+    <thead><tr><th style="width:120px">場面</th><th>機器</th><th>渡すもの</th></tr></thead>
+    <tbody>
+      <tr><td>撮影</td><td><b>Ledger Flex（実機）＋ PC（門の画面）＋ iPhone（World App）</b></td><td>—（映像）</td></tr>
+      <tr><td>ブース</td><td>実機は机の上。<b>審査員の手に渡るのは本人のスマホ</b></td><td><b>URL 1本だけ。</b>QR も LAN も出さない</td></tr>
+      <tr><td>提出</td><td>—</td><td>GitHub Pages の URL と動画</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">04</span>スタックチャンを入れるなら、どのシーンか</h2>
   <p class="msg"><b>③「重い要求が来た」の合図、1点だけ。</b>判断も承認も鍵も持たせない。</p>
 
   <div class="fig-scroll"><div class="chevrons">
@@ -216,7 +272,7 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 </section>
 
 <section>
-  <h2><span class="no">04</span>次のアクション</h2>
+  <h2><span class="no">05</span>次のアクション</h2>
   <div class="tbl"><table>
     <thead><tr><th>やること</th><th>誰</th><th>いつまで</th></tr></thead>
     <tbody>

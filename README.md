@@ -2,6 +2,9 @@
 
 ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/7 09:00 IST。
 
+> **作業を再開するときは [START-HERE.md](START-HERE.md) を先に読む。**
+> いまの状態・動かし方・次の一手がそこに全部ある。
+
 **TOMOSHIBI**（灯火 / a small flame that can go out）
 
 **AIが見られない場所を手元に持ち、AIには「誰が信頼したか」を持たせる。** — 星の数ではなく、誰の星か。

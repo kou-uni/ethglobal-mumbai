@@ -8,6 +8,28 @@ Sources: `broker/src/server.js`, `broker/src/store.js`, `broker/src/scope.js`,
 `broker/src/weigh.js`, `broker/src/tier.js`, `broker/src/world.js`, `broker/demo-agent.mjs`,
 `tools/demo-up.sh`.
 
+## 0. What the thing is
+
+A switchboard between the tools on one laptop and the services they call. A tool holds a
+**label**; the Broker holds a table of `label → what it may do → the real key`; the
+substitution happens in `execute.js` at the moment of sending and nowhere else. In network
+terms it is NAT: The table lives on one laptop, beside the tools that use
+it. A row can only be added by signing it on a Ledger, and the same device is the only thing
+that can approve a crossing the weighing called heavy.
+
+| NAT | TOMOSHIBI |
+|---|---|
+| private address | the label a tool holds |
+| public address | the real API key |
+| translation table | permit → key, in `SECRETS` |
+| the router | the Broker |
+| firewall rule | the signed range (target, scope, count, expiry) |
+| the administrator | the Ledger in your hand |
+| connection log | `data/ledger.jsonl`, append-only |
+
+The figures `assets/nat.svg` and `assets/sequence.svg` are generated from
+`assets/build-figures.py`, which holds both languages in one dictionary.
+
 ## 1. Processes
 
 `tools/demo-up.sh` starts five of them on one machine. None of it is a service in the cloud.

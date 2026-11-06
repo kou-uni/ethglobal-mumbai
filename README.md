@@ -41,21 +41,39 @@ node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
 
 > **Who this is for, what it stops, and what it assumes — stated plainly:** [`POSITION.md`](POSITION.md)
 
+## What it is: the switchboard between your agents and your keys
+
+![TOMOSHIBI, the switchboard: labels in, the real key only at the edge](assets/nat.png)
+
+Your tools do not hold keys. They hold **labels** — `model-main`, `stripe-live`. TOMOSHIBI
+keeps one table on the laptop: `label → what it may do → the real key`. A tool calls by label,
+TOMOSHIBI puts the call through to the real service, and the swap happens at the moment of
+sending, nowhere else. The Ledger plugged into the same laptop is the only thing that can add
+a row to that table, and the only thing that can approve a call the weighing called heavy.
+Every label keeps a history, so you can say afterwards what each tool used your key for.
+
+It is for the person building with Claude Code on one laptop: shipping anything means
+collecting keys first — the model API itself, Stripe, mail — and the pile grows as you go.
+Hand one of those tools to someone else and you are carrying their usage on your key. Today
+those keys sit in `.env` files, chat history and CI secrets, each good for everything, forever.
+
+*If you know NAT, it is that: the label is the private address, the key is the public one, the
+permit is the firewall rule, and the Ledger is the administrator.*
+
 ## One request, end to end
 
-![The whole system, with the order of the data numbered](assets/architecture.png)
+![Thirteen steps across five lifelines: the tool, TOMOSHIBI, 0G, the Ledger and the real service](assets/sequence.png)
 
-Two timelines, kept apart. Putting a key into the Broker and signing the range it may
-be used in happens **once per key** — the top band. Everything numbered below it is a
-**single request**: it starts where the agent reaches for that key, and her device
-appears only at step 4, when the weighing came back heavy — and even then the Broker
-answers the agent, which reaches her device over 127.0.0.1. The Broker cannot. Beside each step is what
-that step refuses, so the picture shows where a request dies as well as where it goes.
-Lighting a flame is not part of a request either, so it sits in its own band.
+Putting a key into the table and signing the range it may be used in happens **once per key**.
+Everything numbered here is a **single request**: it starts where the tool asks with a label,
+and the Ledger appears only when the weighing came back heavy — and even then TOMOSHIBI
+answers the tool, which reaches the device over 127.0.0.1. TOMOSHIBI cannot. Beside each step
+is what that step refuses, so the picture shows where a request dies as well as where it goes.
 
-The figure, this page and the deck are all written from one place:
-**[`docs/HOW-IT-RUNS.md`](docs/HOW-IT-RUNS.md)** — the processes, the state and the sequence,
-read off the code. If anything here disagrees with that page, that page is right.
+Both figures are generated from one bilingual source, [`assets/build-figures.py`](assets/build-figures.py),
+so the two languages cannot drift apart. The figures, this page and the deck are all written
+from one place: **[`docs/HOW-IT-RUNS.md`](docs/HOW-IT-RUNS.md)** — the processes, the state and
+the sequence, read off the code. If anything here disagrees with that page, that page is right.
 
 ## What it does, in four parts
 

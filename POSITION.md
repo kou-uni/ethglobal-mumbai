@@ -37,7 +37,17 @@ That is also why it goes out when the version changes.
 
 **In one line.**
 
-> **We give an AI agent one use of your key, instead of your key.**
+> **AI agents are being handed API keys that never expire, carry no limit and leave no receipt.
+> TOMOSHIBI is the approval layer that keeps the key and gives the agent one approved action at a
+> time — each one signed on hardware the agent cannot press.**
+
+**Why that matters, if you only care about the business.**
+
+> Every company putting agents to work is walking into the question an auditor asks about a
+> corporate card: *who approved this, and what was the limit?* Today there is no answer — the
+> credential was handed over once and nothing was recorded after that. **We make the answer exist
+> at the moment of the action instead of being reconstructed afterwards**, which is the same shift
+> card networks went through when a signature on paper became a tap and a token.
 
 **In thirty seconds.**
 

@@ -95,7 +95,7 @@ sequenceDiagram
 |---|---|---|
 | 1 | The chat tab | A builder talking to the AI that helps her build. After she sends the link, the AI reads it, finds Stripe on the list and decides to go through TOMOSHIBI. |
 | 2 | A page an AI can read | `web/llms.txt`: the supported APIs and how to connect. The link in the chat is real. |
-| 3 | Adding a row | One screen: pick an API from the list (only Stripe works), the key, where it goes (fixed by the list), until when. No "can" row. Only the Ledger can add the row. |
+| 3 | Adding a row | One screen: pick an API from a pull-down (Stripe works; Anthropic, OpenAI, Resend, GitHub and Slack say "not supported yet"), the key, where it goes (fixed by the list), until when. No "can" row. Only the Ledger can add the row. A Stripe **test-mode** key is really parked: it goes to the Broker on the same computer (`POST /keys`), is checked with Stripe, and is kept in memory only. A live key is refused. |
 | 4 | After the approval | A screen that gives the tool its label, with the call the tool makes. |
 | 5 | Home | The table (label, where it goes, until when, the key hidden) and a call being put through: the tool, TOMOSHIBI, Stripe, and the answer coming back. |
 | 6 | Lights | "Light the tool you built", the lights you have, and the sample where someone chooses by them. |
@@ -103,11 +103,19 @@ sequenceDiagram
 | 8 | 0G Storage | The tool seals each finished thread (`POST /seal`) and the trail shows it. |
 | 9 | 0G usage | The page shows how many times 0G was asked and the tokens used, read off the Broker's answers. The balance itself is not shown: `GET /zg/balance` returns `null` with our key. |
 
+## What is a mock, and says so on the page
+
+The chat (scripted), Stripe when no test key is parked, the Ledger when none is connected (a button stands in), 0G and
+World when the Broker runs without their keys, and the two screens of what someone else sees under *Lights*.
+Each of these carries a `MOCK` tag where it is shown.
+
 ## Not tonight
 
 - A drop-in proxy (change the base URL and the key, nothing else). Today the tool calls `POST /use`. This needs the Broker to
   keep the permit behind the label.
-- A real call to Stripe. It is still the stub (`EXECUTE=0`).
+- A call to Stripe with a live key. With a parked **test-mode** key the call is now real (the Broker makes a little test
+  data in that test account: one paid order to refund, two unpaid invoices to read). With no key parked it is the stub,
+  and the page says MOCK.
 - Lights counted per builder. Today they are counted per tool version; the page shows a sample.
 
 ## Still to rewrite for this direction

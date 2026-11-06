@@ -19,7 +19,9 @@ stop
 if [ -f broker/.env.local ]; then set -a; . broker/.env.local; set +a; fi
 [ -n "${ZG_API_KEY:-}" ] || export ZG_OFFLINE=1
 [ -n "${WORLD_CLIENT_ID:-}" ] || export WORLD_OFFLINE=1
-unset SECRETS; export EXECUTE=0      # never a real API key, never a real call (decision 15)
+# No key comes from the environment (decision 15). The one way a call to Stripe becomes real is a Stripe **test-mode**
+# key parked from the "add a row" screen: it is kept in the Broker's memory only, and a live key is refused (keys.js).
+unset SECRETS; export EXECUTE=0
 # Ask for a press whenever money moves, not only when the model is certain it cannot be undone.
 # (A refund came back `significant` one time in three on the real 0G; with the default it would pass.)
 export ZG_ESCALATE=${ZG_ESCALATE:-significant}

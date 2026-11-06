@@ -210,16 +210,51 @@ async function ask(uses, why, rid, days) {
 }
 
 /** The tool asks the Broker to use the key. */
-async function use(signed, id, rid, pressed) {
-  const { what, hijacked, ...req } = REQUESTS[id]
+async function use(signed, id, rid, pressed, q = REQUESTS[id]) {
+  const { what, hijacked, ...req } = q
   const request = { keyRef: signed.permit.key, ...req }
   const skillSignature = await skill.signMessage({ message: skillMessage(requestHash(signed.permit, request)) })
   const t0 = Date.now()
   const broker = id === 'stopped' && DEAF ? DEAF : BROKER
   const r = await post(broker, '/use', { permit: signed.permit, signature: signed.signature, request, skillSignature }, 60000)
-  emit({ type: 'verdict', rid, pressed: Boolean(pressed), ms: Date.now() - t0, response: r.body, device: signed.device })
+  // The page gets the Broker's answer without the service's own data: only a one-line summary of what came back.
+  const { result, ...answer } = r.body ?? {}
+  emit({ type: 'verdict', rid, pressed: Boolean(pressed), ms: Date.now() - t0, response: answer, service: summary(r.body), device: signed.device })
+  if (r.body?.decision === 'ALLOWED' && r.body.live && /\/v1\/refunds$/.test(req.url) && result?.status === 200) refunded = parkedRow?.seed?.payment_intent ?? null
   sealLater(broker, rid, r.body?.thread)
   return r.body
+}
+
+// ── Stripe, when a test-mode key is parked in the Broker (the tool never sees that key) ──
+// The Broker says which labels have a key and what test data exists for them: every column except the key.
+let parkedRow = null, parkedAt = 0, refunded = null
+async function parkedNow(maxAge = 3000) {
+  if (Date.now() - parkedAt < maxAge) return parkedRow
+  parkedAt = Date.now()
+  try { parkedRow = (await (await fetch(BROKER + '/keys', { signal: AbortSignal.timeout(3000) })).json()).keys?.find((k) => k.label === KEY_LABEL) ?? null } catch { parkedRow = null }
+  return parkedRow
+}
+const moneyText = (amount, currency) => (currency === 'inr' ? '₹' : currency === 'usd' ? '$' : '') + (amount / 100).toLocaleString('en-IN', { maximumFractionDigits: 2 }) + (['inr', 'usd'].includes(currency) ? '' : ' ' + String(currency).toUpperCase())
+/** What the tool is about to ask for. With a parked key the refund names a real test payment; without one it is the stand-in request. */
+async function requestFor(id) {
+  const q = REQUESTS[id]
+  if (!['heavy', 'stopped'].includes(id)) return q
+  let row = await parkedNow(0)
+  if (!row) return q
+  // After a refund went through there is nothing left to refund: ask the Broker for a fresh test payment.
+  if (row.seed?.payment_intent && row.seed.payment_intent === refunded) { await post(BROKER, '/keys/reseed', { label: KEY_LABEL }, 60000).catch(() => {}); row = await parkedNow(0) }
+  const pi = row?.seed?.payment_intent
+  if (!pi) return q
+  return { ...q, what: q.what.replace('₹4,800', moneyText(row.seed.amount, row.seed.currency)), headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ payment_intent: pi, reason: 'requested_by_customer' }).toString() }
+}
+/** One line about what the service answered. The answer itself stays out of the events. */
+function summary(body) {
+  if (!body || body.decision !== 'ALLOWED' || !body.result) return null
+  if (!body.live) return { live: false, status: body.result.status, text: 'stand-in answer' }
+  let j = null; try { j = JSON.parse(body.result.body) } catch {}
+  const text = j?.error ? String(j.error.message ?? j.error.type) : j?.object === 'list' ? `${j.data.length}${j.has_more ? '+' : ''} unpaid invoice${j.data.length === 1 ? '' : 's'}` : j?.object === 'refund' ? `refund ${j.id} · ${j.status}` : j?.object ?? 'answered'
+  return { live: body.live, status: body.result.status, text: String(text).slice(0, 140) }
 }
 
 // Every answer is final, so the thread can go into 0G Storage as soon as it exists. The Broker does the storing
@@ -249,9 +284,9 @@ async function run(id) {
   busy = true
   try {
     const rid = `${epoch}-${events.length}`
-    const q = REQUESTS[id]
+    const q = await requestFor(id)
     emit({ type: 'request', rid, id, tool: TOOL.name, hijacked: Boolean(q.hijacked), what: q.what, method: q.method, url: q.url, body: q.body })
-    const b = await use(standing, id, rid)
+    const b = await use(standing, id, rid, false, q)
     if (b.decision === 'DENIED' && standing.via === 'page') {
       // The page is the one connected to the Ledger: hand it the notice to pass on.
       const text = Buffer.from(`A tool tried to use ${KEY_LABEL} at ${new URL(q.url).hostname}`)
@@ -264,23 +299,26 @@ async function run(id) {
     if (b.decision === 'NEEDS_PRESS') {
       // The Broker would not let it through on the standing Permit. Wake the Ledger: one Permit, one use.
       const p = await ask(1, 'press', rid)
-      if (!p.error) await use(p, id, rid, true)
+      if (!p.error) await use(p, id, rid, true, q)
     }
     return { ok: true }
   } catch (e) { emit({ type: 'error', error: String(e.message ?? e) }); return { ok: false } } finally { busy = false }
 }
 
-function reset() { standing = null; events.length = 0; epoch = Date.now(); if (softWait) softWait(false); if (pageWait) pageWait.resolve({ error: 'reset' }); return { ok: true } }
+function reset() { post(BROKER, '/keys/forget', {}, 5000).catch(() => {}); parkedRow = null; parkedAt = 0; refunded = null; standing = null; events.length = 0; epoch = Date.now(); if (softWait) softWait(false); if (pageWait) pageWait.resolve({ error: 'reset' }); return { ok: true } }
 
 const routes = {
   'GET /health': async () => {
     let broker = null
     try { broker = await (await fetch(BROKER + '/health', { signal: AbortSignal.timeout(1500) })).json() } catch {}
     if (broker) canSeal = Boolean(broker.zg?.storageKey) && !HOSTED
+    const row = broker ? await parkedNow() : null
     return { ok: true, broker: BROKER, brokerUp: Boolean(broker), simulated: Boolean(broker?.zg?.simulated), execute: Boolean(broker?.execute), worldSimulated: Boolean(broker?.world?.simulated),
       model: broker?.zg?.model, device: pageReady() || Date.now() - deviceSeen < (busy ? 600000 : 20000), via: pageReady() ? 'page' : null, lent: Boolean(standing), deaf: Boolean(DEAF),
       tool: TOOL, range: { key: KEY_LABEL, ...RANGE, uses: STANDING_USES, days: STANDING_DAYS }, skill: skillIdFrom(skill.address), version: TOOL.version,
-      apis: APIS, storage: Boolean(canSeal) }
+      apis: APIS, storage: Boolean(canSeal),
+      // Is the call to Stripe real? 'test' = a test-mode key is parked in the Broker; null = the stand-in answers.
+      stripe: row?.mode ?? (broker?.execute ? 'real' : null), seed: row?.seed ? { payment: Boolean(row.seed.payment_intent), invoices: row.seed.invoices, notes: row.seed.notes } : null, canPark: !HOSTED }
   },
   'GET /events': async (_, url) => { const since = Number(url.searchParams.get('since') ?? 0); return { epoch, events: events.slice(since), busy } },
   'POST /lend': async (body) => { lend(body); return { ok: true } },          // answers at once; the outcome arrives as events

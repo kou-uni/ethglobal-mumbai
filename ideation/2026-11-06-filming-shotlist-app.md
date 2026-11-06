@@ -24,7 +24,7 @@ Every TOMOSHIBI screen shows its value in the bar under the name. If the voice s
 | 1 | AI chat | Nothing. Let the `.env` message sit for two seconds | "My AI wants my Stripe key in a .env file. Another key, another file." |
 | 2 | AI chat | **Send**. Wait while it reads the link (four ticks). Then **Add the row in TOMOSHIBI** | "I send it the TOMOSHIBI link. It reads it, sees Stripe is supported, and decides to go through TOMOSHIBI." |
 | 3 | Welcome | **Start** | "TOMOSHIBI is the switchboard between my tools and my keys." |
-| 4 | Add a row | **Use a test key**, look at the three lines (label, goes to, until), **Approve on my Ledger** | "Stripe is on the list, so it already knows where the key goes. I park the key once." |
+| 4 | Add a row | Open the **API** list once (the others say *not supported yet*), keep Stripe. Paste your Stripe **test** key (`sk_test_…`; without one, **Use a mock key** and the page says MOCK). Look at label, goes to, until. **Approve on my Ledger** | "Stripe is on the list, so it already knows where the key goes. I park the key once." |
 | 5 | **Approve** | Camera on the device: **See it**, read, **hold three seconds** | "Only my Ledger can add a row. The AI cannot press this." |
 | 6 | The label | Read the code box. **Back to the AI** | "My tool gets a label, never the key. I can delete the .env file." |
 | 7 | AI chat, then Home | Press `1`. Click the **tomoshibi** tab | "A routine call is put through: the label goes in, the key is swapped in, Stripe's answer comes back. Nobody asks me." |

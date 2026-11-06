@@ -14,6 +14,7 @@ import { deviceStart, waitForHuman, verifyIdToken, ISSUER } from './world.js'
 import { offlineWorld } from './world-offline.js'
 import { ownerOf, OWNER_REASONS } from './owner.js'
 import { APIS } from './apis.js'
+import { parkKey, parkedFor, parkedList, forgetKeys, reseed } from './keys.js'
 
 const ledger = createStore()
 const EXECUTE = process.env.EXECUTE === '1'
@@ -104,10 +105,14 @@ export async function use({ permit, signature, request, skillSignature }, deps =
   const slot = store.reserve(p.holder, p.nonce, p.maxCalls)
   if (!slot) return denied('EXHAUSTED', false, { zg, detail: `${p.maxCalls}/${p.maxCalls}` })
 
-  const exec = deps.execute ?? (EXECUTE ? fetchExecutor : stubExecutor)
-  const out = await exec(request, secrets[p.key])
+  // The label is swapped for the key here, and only here. A key parked from the "add a row" screen (a Stripe
+  // test-mode key, kept in memory) makes the call real; without one the stand-in answers, and the record says which.
+  const parked = parkedFor(p.key)
+  const real = EXECUTE || Boolean(parked)
+  const exec = deps.execute ?? (real ? fetchExecutor : stubExecutor)
+  const out = await exec(request, secrets[p.key] ?? parked?.secret)
   return {
-    ...store.append({ ...base, decision: 'ALLOWED', zg, remaining: slot.remaining, attestation: attest(out) }),
+    ...store.append({ ...base, decision: 'ALLOWED', zg, remaining: slot.remaining, attestation: attest(out), live: real ? (parked?.mode ?? 'real') : undefined }),
     lines: shown,
     result: out,
   }
@@ -183,6 +188,7 @@ const read = (req) => new Promise((ok, ng) => {
 })
 
 const CODE = { ALLOWED: 200, NEEDS_PRESS: 409, STOPPED: 503, DENIED: 403 }
+const LOOPBACK = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1'])
 
 export const app = createServer(async (req, res) => {
   const url = new URL(req.url, 'http://x')
@@ -248,6 +254,23 @@ export const app = createServer(async (req, res) => {
     }
     // The services a label can go to (not every API)
     if (url.pathname === '/apis') return json(res, 200, { apis: APIS })
+    // The table's right-hand column. A key is parked from this computer only, test-mode keys only, in memory only.
+    // GET shows every column except the key.
+    if (url.pathname === '/keys' && req.method === 'POST') {
+      if (!LOOPBACK.has(req.socket.remoteAddress)) return json(res, 403, { ok: false, error: 'A key can only be parked from this computer.' })
+      const out = await parkKey(await read(req))
+      return json(res, out.ok ? 200 : 400, out)
+    }
+    if (url.pathname === '/keys/reseed' && req.method === 'POST') {
+      if (!LOOPBACK.has(req.socket.remoteAddress)) return json(res, 403, { ok: false })
+      const out = await reseed((await read(req)).label)
+      return json(res, out.ok ? 200 : 400, out)
+    }
+    if (url.pathname === '/keys/forget' && req.method === 'POST') {
+      if (!LOOPBACK.has(req.socket.remoteAddress)) return json(res, 403, { ok: false })
+      return json(res, 200, { ok: true, forgotten: forgetKeys() })
+    }
+    if (url.pathname === '/keys') return json(res, 200, { keys: parkedList() })
     // For showing the credits going down on screen (the 0G PC iAI bonus)
     if (url.pathname === '/zg/balance') return json(res, 200, { balance: await balance() })
     // The Broker renders the device's four lines with the same function (so screen and hash never take different paths)

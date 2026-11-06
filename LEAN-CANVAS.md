@@ -70,7 +70,7 @@ money.
 
 | Problem | What we built | Status |
 |---|---|---|
-| No way to hand over less | A permit signed on a device: **key / destination / operation / call budget / expiry**. The EIP-712 digest is computed **inside** the device from the same four values it shows, so the host never sends a digest and blind signing is structurally impossible | [verified] — frozen cross-side test vector, 58/58 tests |
+| No way to hand over less | A permit signed on a device: **key / destination / operation / call budget / expiry**. The EIP-712 digest is computed **inside** the device from the same four values it shows, so the host never sends a digest and blind signing is structurally impossible | [verified] — frozen cross-side test vector, 60/60 tests |
 | The agent still ends up holding the secret | The Broker executes by proxy. The skill receives the result, never the key | [verified] |
 | Deciding weight means reading the request | A **sealed model** (0G Private Computer, TEE-attested) reads the body and returns the weight. **We cannot read it** | [verified] — 467 calls, 2.0 s, $0.000036 each |
 | "Failed" tells you nothing | **Four refusals, never collapsed:** `DENIED` / `NEEDS_PRESS` / `STOPPED` / `human_denied` | [verified] — all five paths come out of `demo.mjs` |

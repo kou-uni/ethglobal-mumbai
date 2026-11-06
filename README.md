@@ -34,7 +34,7 @@ key.* **When the version changes, every star goes out at once.**
 
 ```bash
 git clone https://github.com/kou-uni/ethglobal-mumbai && cd ethglobal-mumbai/broker
-npm i && npm test                 # 58 / 58
+npm i && npm test                 # 60 / 60
 PORT=8797 EXECUTE=0 node src/server.js   # needs ZG_API_KEY, ZG_PRIVATE_KEY
 node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
 ```
@@ -70,7 +70,7 @@ is **not** in a TEE this time, and the anonymous read path for stars is designed
 |---|---|
 | **30 seconds** | The two tables above, then the demo: **https://mintannn.github.io/tomoshibi/start.html** |
 | **5 minutes** | `ideation/2026-11-06-decisions.md` (numbered decisions, each with what we rejected) · `LEAN-CANVAS.md` · [the figures, drawn](https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-business-model.html) |
-| **30 minutes** | `spec/permit-signature.md` (the frozen domain, with a cross-side test vector) · `broker/src/weigh.js`, `world.js`, `execute.js` · `broker/test` — **58 tests**, including 100 concurrent requests against a budget of 3 |
+| **30 minutes** | `spec/permit-signature.md` (the frozen domain, with a cross-side test vector) · `broker/src/weigh.js`, `world.js`, `execute.js` · `broker/test` — **60 tests**, including 100 concurrent requests against a budget of 3 |
 | **You are looking for one thing** | Every directory has a `README.md` saying what is in it. `ideation/README.md` indexes all 47 working documents by purpose |
 
 ## Verifiable facts
@@ -79,7 +79,7 @@ is **not** in a TEE this time, and the anonymous read path for stars is designed
 |---|---|
 | A trail sealed on **0G mainnet-testnet (Galileo, chainId 16602)** | tx [`0x74c7cdf9…aef1`](https://chainscan-galileo.0g.ai/tx/0x74c7cdf9bca055c502918e62a7ac9fc7634d1326471433ab10161045aa97aef1) · block **64103318** · `status 0x1` |
 | 0G Storage root hash | `0xc0e0c7a911547490680d545ad9d4638a9bf23bd72d8a3004edf9b4ffaa5be080` |
-| Tests | **58 / 58**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
+| Tests | **60 / 60**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
 | Measured against the **real** 0G Private Computer (TeeML, TDX-attested) | **467 calls** · 2.0 s per verdict · **$0.000036** per verdict |
 | Hardware | A custom **Ledger** app in Rust. No blind signing: the host never sends a digest |
 
@@ -154,7 +154,7 @@ Not how many stars. Whose star.
 **Working today, end to end.** A request from an agent is checked against a permit signed on a
 Ledger, weighed by a sealed model on 0G, executed through a proxy that never hands the secret over,
 and written to an append-only trail sealed on 0G Storage. A flame can be lit only by a
-World-verified human who actually holds the key and has actually used it. 58 tests, including 100
+World-verified human who actually holds the key and has actually used it. 60 tests, including 100
 concurrent requests against a budget of 3, and a cross-side signature vector that both the device
 and the Broker must agree on.
 
@@ -176,7 +176,7 @@ chain to work.
 | `ideation/2026-11-06-plan.md` | **How we work and the timetable.** Who does what · the checkpoints · what we drop |
 | `ideation/2026-11-06-tech-value-review.md` | **Where World / Ledger / 0G each sit, and a re-check of whether they are really in the build** |
 | `research/11-prize-gap.md` | **Per prize: can we win it, what is missing, how to close the gap** (ceiling $11,250) |
-| **`broker/`** | **The working thing.** `use` → scope check → **0G decides the weight** → proxied execution → trail, plus **lighting a star with World**. `npm test` 58 tests / `node demo.mjs` |
+| **`broker/`** | **The working thing.** `use` → scope check → **0G decides the weight** → proxied execution → trail, plus **lighting a star with World**. `npm test` 60 tests / `node demo.mjs` |
 | `ideation/2026-11-06-world-integration-notes.md` | **Retrospective on the World integration** (required for both World prizes; §6 is the English text for the submission) |
 | `spec/permit-signature.md` | **The signing contract.** Derivation path · EIP-712 · how the Broker verifies. The boundary between Ledger and Broker |
 | `spec/world-agent-pass.md` | **What World Agent Pass actually is, and how to wire it in** (OIDC / device flow) |

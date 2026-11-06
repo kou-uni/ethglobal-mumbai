@@ -3,7 +3,7 @@
 #   The Broker stays inside (127.0.0.1:$BROKER_PORT). The AI tool listens on $PORT and passes /b/* on to it,
 #   so the page needs a single address (put it in web/live.json, or paste it into "Connect to a live TOMOSHIBI").
 # Keys come from the host's environment settings, never from a file in the image:
-#   ZG_API_KEY  ZG_PRIVATE_KEY  WORLD_CLIENT_ID  WORLD_CLIENT_SECRET
+#   ZG_API_KEY  WORLD_CLIENT_ID  WORLD_CLIENT_SECRET      (ZG_PRIVATE_KEY is dropped on purpose, see below)
 # A service with no key runs simulated, and GET /health says so. There is no USB here: a Ledger is reached
 # through the page that is connected to it, and without one a button on the page stands in (every record says so).
 set -u
@@ -12,6 +12,9 @@ PUBLIC_PORT=${PORT:-8080}; BROKER_PORT=${BROKER_PORT:-8797}
 [ -n "${ZG_API_KEY:-}" ] || export ZG_OFFLINE=1
 [ -n "${WORLD_CLIENT_ID:-}" ] || export WORLD_OFFLINE=1
 unset SECRETS; export EXECUTE=0          # never a real API key, never a real call (decision 15)
+# A public copy never holds the wallet key: anyone can reach it, and sealing spends from that wallet.
+# Without it the Broker still keeps its record; it just cannot write it to 0G Storage from here.
+unset ZG_PRIVATE_KEY
 export ZG_ESCALATE=${ZG_ESCALATE:-significant}
 mkdir -p data
 PORT=$BROKER_PORT LEDGER_PATH=${LEDGER_PATH:-data/ledger.jsonl} node src/server.js &

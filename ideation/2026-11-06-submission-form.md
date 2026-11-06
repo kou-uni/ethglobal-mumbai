@@ -15,7 +15,10 @@ tomoshibi
 🪔 (diya) is the Diwali light and the meaning is close, but **we have decided not to borrow Indian words or symbols**, so it is out.
 
 ## Cover image / logo
-`assets/tomoshibi-mark.svg` (teardrop flame + round candle) / `assets/tomoshibi-cover.svg` (1200×630)
+`assets/tomoshibi-icon-512.png` — **the icon is the candle emoji 🕯️ on ink `#1B1630`**, 512×512 PNG.
+Decided 2026-11-06: we ship no drawn mark. One glyph, the same one in the README title, the same one on
+the device. The old `tomoshibi-mark.svg` carried a third palette and has been removed.
+Cover image: `assets/tomoshibi-cover.svg` (1200×630) is **still on the old palette and must be redone** — see issue #31.
 Emoji do not let you choose the shape, so **the look is carried by our own mark.**
 
 ## Demo link

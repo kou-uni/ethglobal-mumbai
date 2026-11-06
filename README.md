@@ -41,21 +41,35 @@ node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
 
 > **Who this is for, what it stops, and what it assumes — stated plainly:** [`POSITION.md`](POSITION.md)
 
+## What it is: NAT, for API keys
+
+![TOMOSHIBI is NAT for API keys — a translation table inside one laptop](assets/nat.png)
+
+A home router does not give your laptop the public address. It gives it a private one, and
+swaps the two at the edge. TOMOSHIBI does that with credentials. A tool is given a **label**
+— `stripe-live`, `gh-readonly`. The real key stays in one table inside the laptop, with the
+range it may be used in beside it. The swap happens at the moment of sending, nowhere else,
+and the Ledger in your hand is the only thing that can add a row to that table or approve a
+heavy crossing.
+
+It is for the person running a dozen keys across their own tools and other people's — today
+scattered across `.env` files, chat history and CI secrets, with no way to say what used
+which.
+
 ## One request, end to end
 
-![The whole system, with the order of the data numbered](assets/architecture.png)
+![Thirteen steps across five lifelines: the tool, TOMOSHIBI, 0G, the Ledger and the real service](assets/sequence.png)
 
-Two timelines, kept apart. Putting a key into the Broker and signing the range it may
-be used in happens **once per key** — the top band. Everything numbered below it is a
-**single request**: it starts where the agent reaches for that key, and her device
-appears only at step 4, when the weighing came back heavy — and even then the Broker
-answers the agent, which reaches her device over 127.0.0.1. The Broker cannot. Beside each step is what
-that step refuses, so the picture shows where a request dies as well as where it goes.
-Lighting a flame is not part of a request either, so it sits in its own band.
+Putting a key into the table and signing the range it may be used in happens **once per key**.
+Everything numbered here is a **single request**: it starts where the tool asks with a label,
+and the Ledger appears only when the weighing came back heavy — and even then TOMOSHIBI
+answers the tool, which reaches the device over 127.0.0.1. TOMOSHIBI cannot. Beside each step
+is what that step refuses, so the picture shows where a request dies as well as where it goes.
 
-The figure, this page and the deck are all written from one place:
-**[`docs/HOW-IT-RUNS.md`](docs/HOW-IT-RUNS.md)** — the processes, the state and the sequence,
-read off the code. If anything here disagrees with that page, that page is right.
+Both figures are generated from one bilingual source, [`assets/build-figures.py`](assets/build-figures.py),
+so the two languages cannot drift apart. The figures, this page and the deck are all written
+from one place: **[`docs/HOW-IT-RUNS.md`](docs/HOW-IT-RUNS.md)** — the processes, the state and
+the sequence, read off the code. If anything here disagrees with that page, that page is right.
 
 ## What it does, in four parts
 

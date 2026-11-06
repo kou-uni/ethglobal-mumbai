@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 860" width="1680" height="860" font-family="Figtree, Helvetica, Arial, sans-serif">
+  <title>What lending a key actually is</title>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0 0 10 5 0 10z" fill="#1b1630"/></marker></defs>
+  <style>
+    .bx{fill:#fff;stroke:#1b1630;stroke-width:2.5}
+    .h{font-size:20px;font-weight:700;fill:#1b1630;letter-spacing:.04em}
+    .t{font-size:19px;fill:#4a4357}
+    .n{font-size:17px;font-weight:700;fill:#fff}
+    .ttl{font-size:30px;font-weight:700;fill:#1b1630}
+    .sub{font-size:19px;fill:#6b6478}
+    .cap{font-size:18px;fill:#8f1d14}
+  </style>
+  <rect width="1680" height="860" fill="#F3EEE6"/>
+  <text class="ttl" x="60" y="56">What “lending a key” actually is</text>
+  <text class="sub" x="60" y="88">She does not hand over a secret. She hands over a signed range — and the key stays where it was.</text>
+
+  <rect class="bx" x="60" y="150" width="330" height="300" rx="18"/>
+  <text class="h" x="84" y="192">1 · SHE CHOOSES</text>
+  <text class="t" x="84" y="234">which tool</text>
+  <text class="t" x="84" y="262">which key</text>
+  <text class="t" x="84" y="290">which service it may reach</text>
+  <text class="t" x="84" y="318">what it may do there</text>
+  <text class="t" x="84" y="346">how many times</text>
+  <text class="t" x="84" y="374">until when</text>
+  <text class="cap" x="84" y="418">on the Keys page</text>
+
+  <rect class="bx" x="470" y="150" width="330" height="300" rx="18"/>
+  <text class="h" x="494" y="192">2 · IT BECOMES</text>
+  <text class="h" x="494" y="218">FOUR LINES</text>
+  <text class="t" x="494" y="262">written by the same code</text>
+  <text class="t" x="494" y="290">the signature is made from,</text>
+  <text class="t" x="494" y="318">so the screen and the hash</text>
+  <text class="t" x="494" y="346">cannot say different things</text>
+  <text class="cap" x="494" y="418">permit.js · lines()</text>
+
+  <rect class="bx" x="880" y="150" width="330" height="300" rx="18" fill="#FFF4EA"/>
+  <text class="h" x="904" y="192">3 · SHE SIGNS</text>
+  <text class="t" x="904" y="234">her own device shows</text>
+  <text class="t" x="904" y="262">those four lines</text>
+  <text class="t" x="904" y="290">she holds the button</text>
+  <text class="t" x="904" y="318">it signs them (EIP-712)</text>
+  <text class="t" x="904" y="346">nothing leaves the device</text>
+  <text class="t" x="904" y="374">but the signature</text>
+  <text class="cap" x="904" y="418">the Ledger, in her hand</text>
+
+  <rect class="bx" x="1290" y="150" width="330" height="300" rx="18"/>
+  <text class="h" x="1314" y="192">4 · THE TOOL IS LENT</text>
+  <text class="t" x="1314" y="234">it receives the permit,</text>
+  <text class="t" x="1314" y="262">the signature,</text>
+  <text class="t" x="1314" y="290">and a label for the key</text>
+  <text class="t" x="1314" y="332" fill="#8f1d14">— never the key itself</text>
+  <text class="cap" x="1314" y="418">the agent, on her computer</text>
+
+  <path d="M396 300 L462 300" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <path d="M806 300 L872 300" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <path d="M1216 300 L1282 300" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+
+  <rect x="60" y="520" width="1560" height="210" rx="18" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="8 7"/>
+  <text class="h" x="90" y="562">WHO HAS WHAT, ONCE IT IS LENT</text>
+  <text class="h" x="90" y="614">THE TOOL</text>
+  <text class="t" x="90" y="648">a permit, a signature,</text>
+  <text class="t" x="90" y="676">and a label</text>
+  <text class="h" x="620" y="614">THE BROKER</text>
+  <text class="t" x="620" y="648">the key, and the count</text>
+  <text class="t" x="620" y="676">of what is left</text>
+  <text class="h" x="1150" y="614">HER DEVICE</text>
+  <text class="t" x="1150" y="648">nothing to keep —</text>
+  <text class="t" x="1150" y="676">signing was the whole act</text>
+
+  <text class="sub" x="60" y="790">Lending happens per tool and per period, again when the count or the time runs out.</text>
+  <text class="sub" x="60" y="820">It is not the setup: putting the key into the Broker, and pairing the device, happens once.</text>
+</svg>

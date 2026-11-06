@@ -108,3 +108,8 @@ button,.aibtn{background:var(--or);color:#fff;border:3px solid var(--ink);border
 @media(max-width:800px){.duo{grid-template-columns:1fr}.handoff i{transform:rotate(90deg)}.ledger{margin:0 auto}.cols2{grid-template-columns:1fr}.hero5 .headline h3{font-size:28px}}
 .lit .eyebrow,.dn .eyebrow{visibility:hidden}
 .duo .body{grid-template-columns:1fr;gap:16px;padding:22px 24px 24px}.duo .say{margin-bottom:64px}.duo .steps{grid-template-columns:repeat(5,1fr)}.duo .lt{grid-column:1/-1}
+
+.one{background:#fff;border:3px solid var(--ink);border-radius:22px;padding:16px 20px;margin:0 0 14px;box-shadow:5px 5px 0 var(--ink)}.one h3{margin:0 0 10px;font-size:19px}
+.two2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.two2>div{background:var(--cream);border-radius:16px;padding:12px 16px;font-size:14px;line-height:1.65}.two2 span{display:flex;align-items:flex-end;gap:6px;margin-bottom:4px}.two2 span i{font-style:normal;font-weight:800;font-size:20px;align-self:center}.two2 b{display:block;font-size:17px}.two2 small{display:block;color:#a8410a;font-size:13px}
+.glow svg{filter:drop-shadow(0 0 10px rgba(255,170,40,.95))}
+@media(max-width:800px){.two2{grid-template-columns:1fr}}

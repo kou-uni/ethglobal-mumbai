@@ -105,7 +105,7 @@ P.append(('Ledger に移って、長押しで光をともす','AI は勝手に�
   'TOMOSHIBI は「AI に戻ってください」と言う。AI はすぐ仕事を始める。Priya がやったのは「貼る・選ぶ・長押し」の3つ。<b>ファイルは1つも触っていない。</b>',
   win('steps',3,'Lit · Billing assistant is working','You pasted once, chose, and held. That is all.','#EAF7EF',
    hero('happy','A light is lit!','Done. Go back<br>to your AI.','Billing assistant holds a pass, not your key. I will only call you when money is about to move.'),
-   '<div class="card"><div class="did"><div><i>YOU DID</i><span class="y">Pasted a key, once</span><span class="y">Chose what it may do</span><span class="y">Held your Ledger</span></div><div><i>YOU DID NOT</i><span class="x">Create a file</span><span class="x">Look for a folder</span><span class="x">Give your key to an AI</span></div></div><button>Back to Billing assistant ↗</button></div>')
+   '<div class="card"><div class="did"><div><i>YOU DID</i><span class="y">Pasted a key, once</span><span class="y">Chose what it may do</span><span class="y">Held your Ledger</span></div><div><i>YOU DID NOT</i><span class="x">Create a file</span><span class="x">Look for a folder</span><span class="x">Give your key to an AI</span></div></div><button>Back to Billing assistant ↗</button><small>Your light is on. For now, only you can see it.</small></div>')
   +'<div class="mini">'+ai([('bot','Thank you. I am connected through TOMOSHIBI, no file needed. Found <b>7 unpaid orders</b> from last week. Drafting reminders now…')])+'</div>',
   'タブを閉じる。ここから TOMOSHIBI は見えなくなる'),
 ]))
@@ -140,12 +140,12 @@ P.append(('何かあっても、止まって、残る','何が起きたか、自
    '<div class="nums"><div><b class="n no">1</b>stopped</div><div><b class="n ok">12</b>went through<br>without asking</div><div><b class="n hand">1</b>you let through<br>by hand</div></div><div class="card">'+f'<div class="li">{tag("BLOCKED","no")} Tried to send data to a new place</div><div class="li">{tag("BY HAND","hand")} Refund ₹4,800</div><small>Kept on 0G Storage, so it cannot be quietly changed.</small></div>'),
   '金曜、1週間たった'),
 ]))
-P.append(('自分の光を、ほかの人に見せる','次の人は、数ではなく「誰の光か」で選べる。',False,[
- ('金曜','World App で確かめて、光を見せる',REAL,
-  '1週間、ちゃんと仕事をした。1度まちがえたときは、止まった。Priya は使いつづける。そして、となり町で雑貨店をやっている友だちにも見えるように、自分の光を見せる。<b>光を持てるのは、自分のキーで本当に使った人だけ。</b>',
+P.append(('月曜にともした光を、ほかの人にも見せる','次の人は、数ではなく「誰の光か」で選べる。',False,[
+ ('金曜','World App で確かめて、同じ光を見せる',REAL,
+  '1週間、ちゃんと仕事をした。1度まちがえたときは、止まった。Priya は使いつづける。ここでするのは「ともす」ではなく「見せる」。月曜に長押しでともした<b>同じ光</b>を、となり町で雑貨店をやっている友だちにも見えるようにする。<b>見せられるのは、自分のキーで本当に使った人だけ。</b>',
   win('links','Lights','Show your light','Others choose by whose light it is, not by how many.','#FFF3E4',
-   hero('happy','Your light is on!','Show your light<br>to others?','Only people who really used a tool with their own key have a light. That is why a light means something.'),
-   '<div class="card">'+kv('Tool','billing-assistant 1.0.0')+kv('You used it','13 times this week')+'<div class="qrrow"><div class="qr"></div><div><b>Confirm you are one real person</b><ol><li>Open World App on your phone</li><li>Scan this code</li><li>Tap Confirm</li></ol></div></div><small>Your wallet address is never written into the light.</small></div>'),
+   hero('happy','Your light is already on!','Let others see<br>your light?','You lit it on Monday and have really used it since. This lights nothing new. It lets people who know you see it.'),
+   '<div class="card">'+kv('Tool','billing-assistant 1.0.0')+kv('You used it','13 times this week')+'<div class="qrrow"><div class="qr"></div><div><b>To show it, confirm you are one real person</b><ol><li>Open World App on your phone</li><li>Scan this code</li><li>Tap Confirm</li></ol></div></div><small>Your wallet address is never written into the light.</small></div>'),
   ''),
 ]))
 
@@ -172,7 +172,7 @@ P.append(('友だちが、あなたの光を見て選ぶ','数ではなく「誰
    '<div class="tool pick"><b>billing-assistant 1.0.0</b><span>14 lights</span><em>'+ch('happy',30)+' Priya</em></div>'
    '<div class="tool"><b>pay-helper 0.9</b><span>3 lights</span><em>nobody you know</em></div>'
    '<button>Use it with TOMOSHIBI →</button></div>',who="Arjun's shop"),
-  'Arjun も、キーを預けて、選んで、自分の Ledger を長押しする'),
+  'Arjun も、自分の Ledger を長押しして光をともし、World で見せる'),
  ('その次の週、Priya の PC','Arjun の光も、ともっている',DEMO,
   'Priya が Lights を開くと、自分の光のとなりに、Arjun の光がともっている。キーを AI に貼らずに済む人が、1人ふえた。次にだれかが探すときは、2人の光が見える。<b>人への信頼が、光になる。</b>',
   win('links','Lights','Lights from people you know','Trust between people becomes the light.','#FFF3E4',
@@ -202,6 +202,10 @@ html=f'''<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewpo
 <h2 class="sec">流れの全体 — 今していること → だから、こういう価値</h2>
 <div class="map">{pmap}</div>
 <p class="note">灰色の枠は AI のチャット（モック）。黒い枠が TOMOSHIBI（本物で動かす）。TOMOSHIBI の画面には、いつも上に「NOW（今していること）」と「WHY IT MATTERS（その価値）」が出ます。案内役は、Ledger の中にいるのと同じ「器にのった光」です。<b>Ledger の画面は、Web の中には出しません。</b>Ledger を使う場面では、Web は「Ledger に移って」と言って待ちます。この資料では、となりに本物の機械を並べて見せます。</p>
+<div class="one"><h3>光は1つ。「ともす」と「見せる」は、別のこと。</h3><div class="two2">
+<div><span>{ch('unlit',44)}<i>→</i>{ch('awake',52)}</span><b>ともす（月曜）</b>Ledger を長押しする。AI が動いてよい、という許可。<small>この光は、まだあなたにしか見えない。</small></div>
+<div><span>{ch('awake',52)}<i>→</i><em class="glow">{ch('happy',52)}</em></span><b>見せる（金曜）</b>World で「実在する1人」と確かめる。<small>新しくともすのではない。月曜にともした<u>同じ光</u>が、ほかの人にも見えるようになる。</small></div>
+</div></div>
 <div class="faces">{faces}</div>
 {''.join(body)}
 <h2 class="sec">まとめ</h2>

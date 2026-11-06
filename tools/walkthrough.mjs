@@ -266,7 +266,15 @@ if (process.env.WORLD) {
     await until(`tomoshibi.ui.world && tomoshibi.ui.world.step !== 'starting'`, 40000)
     await say('LIGHT IT', 'She scans the code, and confirms in World App on her own phone.', 3400)
     cue('world-waiting'); pause(); console.log('  World: scan the code, confirm in World App, then go back to World’s page on the phone…')
-    const w = await js(`await wt.until(() => tomoshibi.ui.world && ['done', 'end', 'preview'].includes(tomoshibi.ui.world.step), 660000); return tomoshibi.ui.world ? tomoshibi.ui.world.step : null`)
+    // World's code lasts ten minutes. If it runs out (or the confirmation never arrived), ask again, off camera:
+    // a new code is shown, and the phone can scan that one. Three codes at most.
+    let w = null
+    for (let i = 0; i < 3; i++) {
+      w = await js(`await wt.until(() => tomoshibi.ui.world && ['done', 'end', 'preview'].includes(tomoshibi.ui.world.step), 660000); return tomoshibi.ui.world ? tomoshibi.ui.world.step : null`)
+      if (w !== 'end' || i === 2) break
+      console.log('  World: no confirmation arrived (' + await js(`return tomoshibi.ui.world.title`) + '). A new code is on the screen: scan it again.')
+      await js(`document.querySelector('[data-act="show-light"]')?.click()`); await until(`tomoshibi.ui.world && tomoshibi.ui.world.step === 'confirm'`, 40000)
+    }
     await sleep(700); resume(); cue(`world-${w}`); console.log('  World:', w)
     if (w === 'done') await say('THE VALUE', 'Her tool is lit. World says: one real person. The trail says: she really runs it.', 4600)
     else await wait(2500)

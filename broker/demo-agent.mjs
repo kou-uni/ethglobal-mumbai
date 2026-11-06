@@ -100,7 +100,9 @@ let deviceSeen = 0
 // from the browser, e.g. on a phone) and carries the bytes for us, or a bridge next to this process is.
 // Returns 'page', 'bridge' or false.
 let pageDevice = { at: 0, how: null }
-const pageReady = () => Date.now() - pageDevice.at < 9000
+// With a bridge on this computer the USB link is the bridge's alone: a page that also opened the device would talk
+// over it. The page carries the bytes only for a copy that has no USB of its own (BRIDGE === 'none').
+const pageReady = () => BRIDGE === 'none' && Date.now() - pageDevice.at < 9000
 const deviceReady = async (waitMs = 0) => {
   const until = Date.now() + waitMs
   for (;;) {

@@ -27,6 +27,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 LEDGER_VENDOR = 0x2C97
 APP_NAME = "Tomoshibi"
+BUSY = object()  # the app is open but showing a screen that has to finish first
 DOMAIN = {"name": "Tomoshibi", "version": "1", "chainId": 16602,
           "verifyingContract": "0x0000000000000000000000000000000000000000"}
 PATH = [44 | 0x80000000, 60 | 0x80000000, 0x80000000, 0, 0]  # m/44'/60'/0'/0/0
@@ -132,16 +133,27 @@ class Ledger:
         r = self.exchange(bytes.fromhex("b001000000"), 2000)
         if len(r) == 2 and int.from_bytes(r, "big") == 0x5515:
             raise DeviceError(423, "the Ledger is locked")
+        if len(r) == 2 and int.from_bytes(r, "big") == 0x6FAA:
+            return BUSY, None   # Tomoshibi is open, and a screen is waiting for the person
         if r and r[0] == 1:
             name = r[2:2 + r[1]].decode()
             ver = r[3 + r[1]:3 + r[1] + r[2 + r[1]]].decode()
             return name, ver
         return None, None
 
-    def need_app(self):
-        name, _ = self.app()
-        if name != APP_NAME:
-            raise DeviceError(409, f"open {APP_NAME} on the Ledger (it is showing {name or 'something else'})")
+    def need_app(self, wait_s=90):
+        """Make sure Tomoshibi is open and free. If it is showing a screen that
+        closes by itself or waits for a tap (lit, blocked), wait for that first."""
+        until = time.time() + wait_s
+        while True:
+            name, _ = self.app()
+            if name == APP_NAME:
+                return
+            if name is not BUSY:
+                raise DeviceError(409, f"open {APP_NAME} on the Ledger (it is showing {name or 'something else'})")
+            if time.time() > until:
+                raise DeviceError(409, "the device is still showing another screen; close it on the device")
+            time.sleep(0.5)
 
 
 def _status(resp: bytes):
@@ -241,6 +253,8 @@ def health() -> dict:
             name, ver = dev.app()
         finally:
             dev.close()
+    if name is BUSY:
+        return {"ok": True, "app": APP_NAME, "version": None, "ready": False, "busy": True}
     return {"ok": True, "app": name, "version": ver, "ready": name == APP_NAME}
 
 

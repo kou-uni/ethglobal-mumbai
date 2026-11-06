@@ -47,8 +47,8 @@ async function use(signed, request, label) {
 }
 
 const health = await (await fetch(BRIDGE + '/health')).json().catch((e) => ({ ok: false, error: String(e) }))
-if (!health.ready) { console.error(`The Ledger is not ready: ${health.error ?? `open Tomoshibi (showing ${health.app})`}`); process.exit(1) }
-say(`Ledger: ${health.app} ${health.version}   Broker: ${BROKER}`)
+if (!health.ready && !health.busy) { console.error(`The Ledger is not ready: ${health.error ?? `open Tomoshibi (showing ${health.app})`}`); process.exit(1) }
+say(`Ledger: ${health.app} ${health.version ?? ''}   Broker: ${BROKER}`)
 
 // 1. A standing permit. From here on, routine requests do not ask the person again.
 const standing = await press(3, 'a standing permit for the skill (3 uses, 1 hour)')

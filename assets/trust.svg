@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 860" width="1680" height="860" font-family="Figtree, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1b1630"/></marker>
+    <marker id="af" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#f2600c"/></marker>
+  </defs>
+  <style>
+    .card{fill:#fff;stroke:#1b1630;stroke-width:2.5}
+    .h{font-size:21px;font-weight:600;fill:#1b1630}
+    .k{font-size:14px;font-weight:600;letter-spacing:.08em;fill:#8b8498}
+    .t{font-size:17px;fill:#4a4357}
+    .m{font-size:16px;fill:#4a4357}
+    .key{font-size:16px;fill:#8f1d14;font-weight:600}
+    .ttl{font-size:30px;font-weight:600;fill:#1b1630}
+    .sub{font-size:19px;fill:#6b6478}
+    .num{font-size:16px;font-weight:600;fill:#fff}
+    .lab{font-size:16px;fill:#1b1630}
+    .note{font-size:15px;fill:#8f1d14}
+</style>
+  <rect width="1680" height="860" fill="#F3EEE6"/>
+
+<text class="ttl" x="60" y="54">What the switchboard leaves behind</text>
+<text class="sub" x="60" y="88">Every call is a row. The rows are a lineage. A lineage is the only thing a person can vouch for.</text>
+<rect class="card" x="60" y="150" width="350" height="186" rx="16" style="fill:#fffdf8"/>
+<circle cx="94" cy="190" r="17" fill="#1b1630"/>
+<text class="num" x="94" y="196" text-anchor="middle">1</text>
+<text class="h" x="84" y="256">the call happened</text>
+<text class="m" x="84" y="290">on a permit this person signed,</text>
+<text class="m" x="84" y="316">inside a range they set themselves</text>
+<path d="M410 243 L447 243" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+<rect class="card" x="453" y="150" width="350" height="186" rx="16" style="fill:#fffdf8"/>
+<circle cx="487" cy="190" r="17" fill="#1b1630"/>
+<text class="num" x="487" y="196" text-anchor="middle">2</text>
+<text class="h" x="477" y="256">the heavy ones were pressed</text>
+<text class="m" x="477" y="290">0G called it decisive, and the Ledger in</text>
+<text class="m" x="477" y="316">their hand said yes — or it never ran</text>
+<path d="M803 243 L840 243" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+<rect class="card" x="846" y="150" width="350" height="186" rx="16" style="fill:#fffdf8"/>
+<circle cx="880" cy="190" r="17" fill="#1b1630"/>
+<text class="num" x="880" y="196" text-anchor="middle">3</text>
+<text class="h" x="870" y="256">the thread is sealed</text>
+<text class="m" x="870" y="290">0G Storage. The lineage of this version,</text>
+<text class="m" x="870" y="316">and nobody can go back and tidy it</text>
+<path d="M1196 243 L1233 243" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+<rect class="card" x="1239" y="150" width="350" height="186" rx="16" style="fill:#ffd0ad"/>
+<circle cx="1273" cy="190" r="17" fill="#1b1630"/>
+<text class="num" x="1273" y="196" text-anchor="middle">4</text>
+<text class="h" x="1263" y="256">one person, once</text>
+<text class="m" x="1263" y="290">World ID. A star they can light only for</text>
+<text class="m" x="1263" y="316">a version they actually used</text>
+<text class="k" x="60" y="396">Why the number means something here</text>
+<rect class="card" x="60" y="416" width="960" height="264" rx="16" fill="#fffdf8"/>
+<text class="t" x="84" y="460">A star count means nothing when anyone can make a star.</text>
+<text class="t" x="84" y="496">Here one star costs a real key, a range signed on a device,</text>
+<text class="t" x="84" y="532">calls actually spent, and a human who can only do it once.</text>
+<text class="t" x="84" y="568">So it is not a review count. It is a lineage of real use with a</text>
+<text class="t" x="84" y="604">person at the end of it — the first thing in this market you</text>
+<text class="t" x="84" y="640">can check instead of believe.</text>
+<text class="k" x="1060" y="396">And what is never kept</text>
+<rect x="1060" y="416" width="560" height="264" rx="16" fill="#fffdf8" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="8 7"/>
+<text class="t" x="1084" y="456">The key is never given to a tool.</text>
+<text class="t" x="1084" y="486">The body of a request is weighed</text>
+<text class="t" x="1084" y="516">and kept nowhere.</text>
+<text class="t" x="1084" y="546">The holder's address is never</text>
+<text class="t" x="1084" y="576">written into a star.</text>
+<text class="t" x="1084" y="606">Nothing is asked of the person on</text>
+<text class="t" x="1084" y="636">an ordinary call. Only the heavy</text>
+<text class="t" x="1084" y="666">ones reach their hand.</text>
+<rect x="60" y="716" width="1560" height="88" rx="16" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5"/>
+<text class="t" x="84" y="768">When the version changes, the stars go out. Nobody inherits a reputation from code they did not run.</text>
+</svg>

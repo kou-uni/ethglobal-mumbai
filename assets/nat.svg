@@ -40,20 +40,21 @@
 <path d="M400 604 L476 604" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 <rect class="card" x="480" y="286" width="860" height="382" rx="18" fill="#fffdf8"/>
 <text class="h" x="504" y="324">TOMOSHIBI · the switchboard, on the laptop</text>
-<text class="k" x="504" y="368">LABEL</text>
-<text class="k" x="700" y="368">WHAT IT MAY DO</text>
-<text class="k" x="1150" y="368">THE REAL KEY</text>
-<path d="M504 382 L1316 382" stroke="#d8d2c6" stroke-width="2"/>
-<text class="lab" x="504" y="418">model-main</text>
-<text class="m" x="700" y="418">api.anthropic.com · POST /v1/messages · 2,000 calls</text>
-<text class="key" x="1150" y="418">sk-ant-••••</text>
-<text class="lab" x="504" y="470">stripe-live</text>
-<text class="m" x="700" y="470">api.stripe.com · * /v1 · 20 calls · 7 days</text>
-<text class="key" x="1150" y="470">sk_live_••••</text>
-<text class="lab" x="504" y="522">resend-tx</text>
-<text class="m" x="700" y="522">api.resend.com · POST /emails · 50 calls</text>
-<text class="key" x="1150" y="522">re_••••</text>
-<path d="M1120 392 L1120 594" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="7 6"/>
+<text class="m" x="504" y="350">two parts: the page you look at, and the broker that holds this table</text>
+<text class="k" x="504" y="392">LABEL</text>
+<text class="k" x="700" y="392">WHAT IT MAY DO</text>
+<text class="k" x="1150" y="392">THE REAL KEY</text>
+<path d="M504 406 L1316 406" stroke="#d8d2c6" stroke-width="2"/>
+<text class="lab" x="504" y="442">model-main</text>
+<text class="m" x="700" y="442">api.anthropic.com · POST /v1/messages · 2,000 calls</text>
+<text class="key" x="1150" y="442">sk-ant-••••</text>
+<text class="lab" x="504" y="494">stripe-live</text>
+<text class="m" x="700" y="494">api.stripe.com · * /v1 · 20 calls · 7 days</text>
+<text class="key" x="1150" y="494">sk_live_••••</text>
+<text class="lab" x="504" y="546">resend-tx</text>
+<text class="m" x="700" y="546">api.resend.com · POST /emails · 50 calls</text>
+<text class="key" x="1150" y="546">re_••••</text>
+<path d="M1120 416 L1120 608" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="7 6"/>
 <text class="note" x="504" y="624">The right column is never printed, never logged, never returned to a tool, and never shown on a screen.</text>
 <text class="k" x="1400" y="320">OUTSIDE · THE REAL SERVICES</text>
 <rect class="card" x="1400" y="340" width="220" height="88" rx="14"/>

@@ -16,18 +16,24 @@ T = {
   'font': 'Figtree, Helvetica, Arial, sans-serif',
   'nat_title': 'TOMOSHIBI — the switchboard between your agents and your keys',
   'nat_sub': 'Your tools call by label. TOMOSHIBI puts the call through to the real service — or puts it to you first, when it is heavy.',
-  'inside': 'INSIDE · ONE LAPTOP',
-  'outside': 'OUTSIDE · THE REAL SERVICES',
+  'inside': 'INSIDE THIS LAPTOP',
+  'outside': 'OUTSIDE · OVER THE NETWORK',
+  'cloud': [('0G PRIVATE COMPUTER', ['weighs every request before it runs:', 'routine · significant · decisive.', 'Its operator cannot read the body']),
+            ('0G STORAGE', ['where the trail is sealed — the lineage', 'of one version of one tool']),
+            ('WORLD ID', ['one person, once. The only way a star', 'is lit, and the holder\'s address is', 'never written into it']),
+            ('THE REAL SERVICES', ['api.anthropic.com · api.stripe.com', 'api.resend.com'])],
+  'ledger_where': 'hardware, in your hand — not in the laptop, and not in the cloud',
   'box': 'TOMOSHIBI · the switchboard, on the laptop',
   'box_sub': 'two parts: the page you look at, and the broker that holds this table',
-  'tools': [('Claude Code, on this laptop', 'calls: model-main'),
+  'box_foot': 'What leaves this laptop: the request itself, its weight, and the trail. Never the right column.',
+  'tools': [('Claude Code, on this PC', 'calls: model-main'),
             ('the tool you are building', 'calls: stripe-live'),
             ('a tool you handed out', 'calls: resend-tx')],
   'thead': ('LABEL', 'WHAT IT MAY DO', 'THE REAL KEY'),
   'rows': [('model-main', 'api.anthropic.com · POST /v1/messages · 2,000 calls', 'sk-ant-••••'),
            ('stripe-live', 'api.stripe.com · * /v1 · 20 calls · 7 days', 'sk_live_••••'),
            ('resend-tx', 'api.resend.com · POST /emails · 50 calls', 're_••••')],
-  'keynote': 'The right column is never printed, never logged, never returned to a tool, and never shown on a screen.',
+  'keynote': 'The right column is never printed, never logged, and never returned to a tool.',
   'ledger': 'THE LEDGER · plugged into the same laptop',
   'ledger_l1': 'The only thing that can add a row,',
   'ledger_l2': 'and the only thing that can approve a heavy crossing.',
@@ -92,18 +98,24 @@ T = {
   'font': 'Hiragino Sans, Hiragino Kaku Gothic ProN, Helvetica, sans-serif',
   'nat_title': '灯火 — エージェントとキーのあいだの交換台',
   'nat_sub': '道具はラベルで呼ぶ。灯火が本物のサービスにつなぐ。重いときは、先に人につなぐ。',
-  'inside': '内側 · ノートパソコン1台',
-  'outside': '外側 · 本物のサービス',
+  'inside': 'このノートパソコンの中',
+  'outside': '外側 · ネットワークの向こう',
+  'cloud': [('0G Private Computer', ['走る前に、要求の重さを測る。', 'routine・significant・decisive。', '運用者にも本文は読めない']),
+            ('0G Storage', ['台帳が封じられる場所。道具の', '1バージョンぶんの系譜']),
+            ('World ID', ['一人の人間が、一度だけ。星に灯が', 'ともる唯一の道。保有者の', 'アドレスは書かない']),
+            ('本物のサービス', ['api.anthropic.com · api.stripe.com', 'api.resend.com'])],
+  'ledger_where': '手元のハードウェア — パソコンの中でも、クラウドでもない',
   'box': '灯火 · 交換台（ノートパソコンの中）',
   'box_sub': '2つからなる：人が見る画面と、この表を持つ Broker',
-  'tools': [('このパソコンの Claude Code', '呼ぶのは model-main'),
+  'box_foot': 'このパソコンを出るのは、要求そのものと、その重さと、台帳。右の列は出ない。',
+  'tools': [('この PC の Claude Code', '呼ぶのは model-main'),
             ('いま作っている道具', '呼ぶのは stripe-live'),
             ('誰かに配った道具', '呼ぶのは resend-tx')],
   'thead': ('ラベル', '許す範囲', '本物のキー'),
   'rows': [('model-main', 'api.anthropic.com · POST /v1/messages · 2,000回', 'sk-ant-••••'),
            ('stripe-live', 'api.stripe.com · * /v1 · 20回 · 7日', 'sk_live_••••'),
            ('resend-tx', 'api.resend.com · POST /emails · 50回', 're_••••')],
-  'keynote': '右の列は、表示もログも道具への返却も画面表示も、一度もしない。',
+  'keynote': '右の列は、表示もログも道具への返却も、一度もしない。',
   'ledger': 'Ledger · 同じノートパソコンに挿さっている',
   'ledger_l1': '表に1行を足せる唯一のもので、',
   'ledger_l2': '重い越境を許可できる唯一のもの。',
@@ -191,69 +203,73 @@ def esc(s):
     return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 def nat(L):
+    """Everyone who touches a call, and which side of the laptop they are on."""
     w, h = 1680, 1180
     o = [HEAD.format(w=w, h=h, font=L['font'], css=CSS.format())]
     a = o.append
     a(f'<text class="ttl" x="60" y="54">{esc(L["nat_title"])}</text>')
     a(f'<text class="sub" x="60" y="88">{esc(L["nat_sub"])}</text>')
 
-    # the Ledger, above the table it governs
-    a('<rect x="560" y="130" width="700" height="112" rx="16" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5"/>')
-    a(f'<text class="k" x="584" y="164" fill="#c2410c">{esc(L["ledger"])}</text>')
-    a(f'<text class="t" x="584" y="196">{esc(L["ledger_l1"])}</text>')
-    a(f'<text class="t" x="584" y="222">{esc(L["ledger_l2"])}</text>')
-    a('<path d="M910 242 L910 286" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>')
+    # the Ledger: neither of the two zones. A thing in a hand.
+    a('<rect x="390" y="108" width="750" height="84" rx="16" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5"/>')
+    a(f'<text class="k" x="414" y="138" fill="#c2410c">{esc(L["ledger"])}</text>')
+    a(f'<text class="m" x="414" y="172">{esc(L["ledger_where"])}</text>')
+    a('<path d="M765 192 L765 246" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>')
 
-    # inside
-    a(f'<text class="k" x="60" y="320">{esc(L["inside"])}</text>')
+    # zone 1 — the laptop
+    a('<rect x="40" y="200" width="1120" height="545" rx="22" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="10 8"/>')
+    a(f'<text class="k" x="64" y="234">{esc(L["inside"])}</text>')
     for i, (t1, t2) in enumerate(L['tools']):
-        y = 340 + i * 110
-        a(f'<rect class="card" x="60" y="{y}" width="340" height="88" rx="14"/>')
-        a(f'<text class="h" x="84" y="{y+36}">{esc(t1)}</text>')
-        a(f'<text class="m" x="84" y="{y+66}">{esc(t2)}</text>')
-        a(f'<path d="M400 {y+44} L476 {y+44}" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>')
+        y = 290 + i * 104
+        a(f'<rect class="card" x="64" y="{y}" width="300" height="84" rx="14"/>')
+        a(f'<text class="h" x="86" y="{y+34}">{esc(t1)}</text>')
+        a(f'<text class="m" x="86" y="{y+64}">{esc(t2)}</text>')
+        a(f'<path d="M364 {y+42} L386 {y+42}" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>')
 
-    # the table
-    a('<rect class="card" x="480" y="286" width="860" height="382" rx="18" fill="#fffdf8"/>')
-    a(f'<text class="h" x="504" y="324">{esc(L["box"])}</text>')
-    a(f'<text class="m" x="504" y="350">{esc(L["box_sub"])}</text>')
+    a('<rect class="card" x="390" y="250" width="750" height="470" rx="18"/>')
+    a(f'<text class="h" x="414" y="288">{esc(L["box"])}</text>')
+    a(f'<text class="m" x="414" y="316">{esc(L["box_sub"])}</text>')
     th = L['thead']
-    a(f'<text class="k" x="504" y="392">{esc(th[0])}</text>')
-    a(f'<text class="k" x="700" y="392">{esc(th[1])}</text>')
-    a(f'<text class="k" x="1150" y="392">{esc(th[2])}</text>')
-    a('<path d="M504 406 L1316 406" stroke="#d8d2c6" stroke-width="2"/>')
+    a(f'<text class="k" x="414" y="360">{esc(th[0])}</text>')
+    a(f'<text class="k" x="560" y="360">{esc(th[1])}</text>')
+    a(f'<text class="k" x="1010" y="360">{esc(th[2])}</text>')
+    a('<path d="M414 374 L1116 374" stroke="#d8d2c6" stroke-width="2"/>')
     for i, (lab, rng, key) in enumerate(L['rows']):
-        y = 442 + i * 52
-        a(f'<text class="lab" x="504" y="{y}">{esc(lab)}</text>')
-        a(f'<text class="m" x="700" y="{y}">{esc(rng)}</text>')
-        a(f'<text class="key" x="1150" y="{y}">{esc(key)}</text>')
-    a('<path d="M1120 416 L1120 608" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="7 6"/>')
-    a(f'<text class="note" x="504" y="624">{esc(L["keynote"])}</text>')
+        y = 412 + i * 52
+        a(f'<text class="lab" x="414" y="{y}">{esc(lab)}</text>')
+        a(f'<text class="m" x="560" y="{y}">{esc(rng)}</text>')
+        a(f'<text class="key" x="1010" y="{y}">{esc(key)}</text>')
+    a('<path d="M980 386 L980 588" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="7 6"/>')
+    a(f'<text class="note" x="414" y="620">{esc(L["keynote"])}</text>')
+    a(f'<text class="m" x="414" y="672">{esc(L["box_foot"])}</text>')
 
-    # outside
-    a(f'<text class="k" x="1400" y="320">{esc(L["outside"])}</text>')
-    for i, host in enumerate([r[1].split(' ·')[0] for r in L['rows']]):
-        y = 340 + i * 110
-        a(f'<rect class="card" x="1400" y="{y}" width="220" height="88" rx="14"/>')
-        a(f'<text class="lab" x="1424" y="{y+52}">{esc(host)}</text>')
-        a(f'<path d="M1340 {y+44} L1396 {y+44}" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>')
+    # zone 2 — everything that is somewhere else
+    a(f'<text class="k" x="1200" y="234">{esc(L["outside"])}</text>')
+    for i, (title, lines) in enumerate(L['cloud']):
+        y = 250 + i * 122
+        a(f'<rect class="card" x="1200" y="{y}" width="440" height="112" rx="14" style="fill:#fffdf8"/>')
+        a(f'<text class="k" x="1222" y="{y+32}">{esc(title)}</text>')
+        for j, line in enumerate(lines):
+            a(f'<text class="m" x="1222" y="{y+62 + j * 24}">{esc(line)}</text>')
+        both = ' marker-start="url(#a)"' if i == 0 else ''
+        a(f'<path d="M1146 {y+56} L1196 {y+56}" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"{both}/>')
 
-    # the analogy
-    a(f'<text class="k" x="60" y="740">{esc(L["map_title"])}</text>')
-    a('<rect class="card" x="60" y="760" width="860" height="364" rx="16" fill="#fffdf8"/>')
-    a('<text class="k" x="84" y="794">NAT</text>')
-    a('<text class="k" x="470" y="794">TOMOSHIBI</text>')
-    a('<path d="M84 808 L896 808" stroke="#d8d2c6" stroke-width="2"/>')
+    # if you know NAT
+    a(f'<text class="k" x="60" y="790">{esc(L["map_title"])}</text>')
+    a('<rect class="card" x="60" y="810" width="860" height="314" rx="16"/>')
+    a('<text class="k" x="84" y="844">NAT</text>')
+    a('<text class="k" x="470" y="844">TOMOSHIBI</text>')
+    a('<path d="M84 858 L896 858" stroke="#d8d2c6" stroke-width="2"/>')
     for i, (l, r) in enumerate(L['map']):
-        y = 842 + i * 40
+        y = 890 + i * 33
         a(f'<text class="m" x="84" y="{y}">{esc(l)}</text>')
         a(f'<text class="m" x="470" y="{y}">{esc(r)}</text>')
 
-    # who
-    a(f'<text class="k" x="960" y="740">{esc(L["who_title"])}</text>')
-    a('<rect x="960" y="760" width="660" height="364" rx="16" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="8 7"/>')
+    # who it is for
+    a(f'<text class="k" x="960" y="790">{esc(L["who_title"])}</text>')
+    a('<rect x="960" y="810" width="680" height="314" rx="16" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="8 7"/>')
     for i, line in enumerate(L['who']):
-        a(f'<text class="t" x="984" y="{806 + i * 34}">{esc(line)}</text>')
+        a(f'<text class="t" x="984" y="{852 + i * 34}">{esc(line)}</text>')
     a('</svg>')
     return '\n'.join(o)
 

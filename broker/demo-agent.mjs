@@ -78,7 +78,7 @@ const routes = {
     try { broker = await (await fetch(BROKER + '/health', { signal: AbortSignal.timeout(4000) })).json() } catch {}
     return { ok: true, broker: BROKER, brokerUp: Boolean(broker), simulated: Boolean(broker?.zg?.simulated), model: broker?.zg?.model,
       device: await deviceReady(), lent: Boolean(standing), holder: standing?.permit.holder, deaf: Boolean(DEAF),
-      range: { key: KEY_LABEL, ...RANGE } }
+      range: { key: KEY_LABEL, ...RANGE }, skill: skillIdFrom(skill.address), version: '1.0.0' }
   },
   // The first hold: lend the key within a range. Everything after rides on this Permit.
   'POST /lend': async () => {

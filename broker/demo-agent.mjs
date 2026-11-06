@@ -66,7 +66,8 @@ function log(e) {
     : e.type === 'verdict' ? `  ${d}${e.response.reason ? ' ' + e.response.reason : ''}${e.response.zg?.tier ? '  0G: ' + e.response.zg.tier : ''}  ${e.ms}ms`
     : e.type === 'asking' ? `  … waiting for a hold on ${e.device ? 'the Ledger' : 'the page (no Ledger)'}  (${e.uses} use${e.uses === 1 ? '' : 's'})`
     : e.type === 'signed' ? `  signed by ${e.holder}${e.device ? '' : '  [software key]'}`
-    : e.type === 'declined' ? `  not signed: ${e.error}` : e.type === 'error' ? `  ! ${e.error}` : null
+    : e.type === 'declined' ? `  not signed: ${e.error}` : e.type === 'error' ? `  ! ${e.error}`
+    : e.type === 'light' ? `  light: ${e.decision}${e.reason ? ' ' + e.reason : ''}` : null
   if (line) console.log(line)
 }
 
@@ -128,6 +129,7 @@ function readSignature(answerHex) {
   return { signature: '0x' + h32(rr) + h32(ss) + (27 + parity).toString(16), holder: getAddress('0x' + hx(holder)) }
 }
 let pageWait = null   // { askId, resolve } while the page is carrying a request to the Ledger
+const vouches = new Map()   // World device code -> the outcome (a promise), so a second ask gets the same answer
 
 // Look for the device in the background, so /health never waits on a USB exchange.
 // Not while a request is in flight, and not in the seconds after a hold, when the device is drawing.
@@ -245,10 +247,22 @@ const routes = {
   // Lighting a light is for the person who lent the key. The page starts World itself, but the
   // last step goes through here so the Permit signed on the Ledger travels with it. The page
   // never sees the signature.
+  // World can take minutes, and the phone that asked is often asleep or in another app by the time it answers.
+  // So the outcome is kept: asking again with the same code gets the same answer, and it also goes out as an
+  // event, which the page reads the next time it looks.
   'POST /vouch/finish': async ({ deviceCode }) => {
     if (!standing) return { decision: 'VOUCH_DENIED', reason: 'NOT_LENT', message: 'No key has been lent from this computer.' }
-    const r = await post(BROKER, '/vouch/finish', { deviceCode, skill: skillIdFrom(skill.address), version: TOOL.version, permit: standing.permit, signature: standing.signature }, 660000)
-    return { ...r.body, ownerProof: { sent: true, device: standing.device, holder: standing.permit.holder } }
+    if (!vouches.has(deviceCode)) {
+      const s = standing
+      vouches.set(deviceCode, (async () => {
+        const r = await post(BROKER, '/vouch/finish', { deviceCode, skill: skillIdFrom(skill.address), version: TOOL.version, permit: s.permit, signature: s.signature }, 660000)
+          .catch((e) => ({ body: { decision: 'VOUCH_DENIED', reason: 'WORLD_ERROR', message: String(e.message ?? e) } }))
+        const out = { ...r.body, ownerProof: { sent: true, device: s.device, holder: s.permit.holder } }
+        emit({ type: 'light', decision: out.decision, reason: out.reason ?? null, message: out.message ?? null, nullifier: out.nullifier ?? null, ownerChecked: Boolean(out.ownerChecked), simulated: Boolean(out.world?.simulated) })
+        return out
+      })())
+    }
+    return vouches.get(deviceCode)
   },
   // The page says: I am connected to a Ledger with Tomoshibi open (sent every few seconds while true).
   'POST /device': async ({ ready, how }) => { pageDevice = ready ? { at: Date.now(), how: how || null } : { at: 0, how: null }; return { ok: true } },

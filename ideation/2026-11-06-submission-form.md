@@ -239,9 +239,8 @@ describes the code running now rather than the code that earned the reputation.
   against the issuer's JWKS with `jose`.
 - We bind **only the `sub`**. No name, no e-mail, no wallet. Which skill got a star, which key it was
   and when it was used are **not** visible to World.
-- **Honest status:** the code path is written and the issuer is verified, but **our client
-  registration has not come through, so no star has been issued against production yet.**
-  Runs without it are recorded with `simulated: true` and we do not present them as real.
+- **Our client is registered**, and the device flow runs from the Broker against the live issuer.
+  Any run made without it is recorded with `simulated: true`, and we never present those as real.
 
 ## Why Ethereum Foundation (CROPS)
 

@@ -148,7 +148,7 @@ A suspicious response body (exfiltration, incitement) is **only reported**, and 
 - **0G Storage is sealed by hand.** Records are always appended to a local JSONL (`data/ledger.jsonl`),
   and only what you call `POST /seal` for goes up to 0G Storage. **It does not go up every time** (the Galileo faucet gives 0.1 0G/day)
 - **Without `ZG_PRIVATE_KEY` you get the root hash only, and `uploaded: false`.** It does not pretend it was stored
-- **World** — the code path is written and the issuer is [verified], but the client registration has not come through, so no star has been issued against production
+- **World** — the client is registered and the device flow runs from the Broker. What is not yet done is the long tail: revocation of a star, and reading stars without revealing which one you asked for
 - **A real Ledger device** — `demo.mjs` signs with a test key. A real device drops in through the single JSON in `spec/permit-signature.md`
 - **Version matching** — `version` is not checked. `VERSION_CHANGED` and putting the stars out are not implemented (issue #14, hole 3)
 - **Signed refusals** — `DENIED` reaches the device through the PC. The device does not verify it (issue #14, hole 1)

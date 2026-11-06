@@ -1,17 +1,86 @@
-# TOMOSHIBI — ETHGlobal Mumbai 2026
+# TOMOSHIBI 🕯️
 
-ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/7 09:00 IST。
+**A review score never expires. A flame goes out. That is the whole idea.**
 
-> **作業を再開するときは [START-HERE.md](START-HERE.md) を先に読む。**
-> いまの状態・動かし方・次の一手がそこに全部ある。
+AI agents are starting to ask for our API keys the way apps once asked for passwords — a secret
+with no scope, no expiry and no receipt, handed to code we did not read. **TOMOSHIBI puts one
+button in front of the key that an AI cannot press.** You sign a scope on a Ledger device — which
+key, which destination, which operation, how many times, until when — and the four lines on the
+device screen are built from the same bytes that get signed. The skill never receives the secret.
+Anything outside the signed scope is refused *before* it happens, and recorded with the skill's own
+signature on the request.
 
-**TOMOSHIBI**（灯火 / a small flame that can go out）
+And a star is not a review. A star means *I, a verified human, am using this version with my own
+key.* **When the version changes, every star goes out at once.**
 
-**AIが見られない場所を手元に持ち、AIには「誰が信頼したか」を持たせる。** — 星の数ではなく、誰の星か。
+## Try it now
 
-レビューの点数は消えない。**灯は消える。だから意味がある。**
+| | |
+|---|---|
+| The gate — four different ways to stop | https://kou-uni.github.io/ethglobal-mumbai/ui/index.html |
+| The flame — stars go out when the version changes | https://kou-uni.github.io/ethglobal-mumbai/ui/stars.html |
+| The live screen wired to the device | https://kou-uni.github.io/ethglobal-mumbai/web/gate.html |
 
-| 場所 | 中身 |
+```bash
+git clone https://github.com/kou-uni/ethglobal-mumbai && cd ethglobal-mumbai/broker
+npm i && npm test                 # 50 / 50
+PORT=8797 EXECUTE=0 node src/server.js   # needs ZG_API_KEY, ZG_PRIVATE_KEY
+node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
+```
+
+## Verifiable facts (not adjectives)
+
+| | |
+|---|---|
+| A trail sealed on **0G mainnet-testnet (Galileo, chainId 16602)** | tx [`0x74c7cdf9…aef1`](https://chainscan-galileo.0g.ai/tx/0x74c7cdf9bca055c502918e62a7ac9fc7634d1326471433ab10161045aa97aef1) · block **64103318** · `status 0x1` |
+| 0G Storage root hash | `0xc0e0c7a911547490680d545ad9d4638a9bf23bd72d8a3004edf9b4ffaa5be080` |
+| Tests | **50 / 50**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
+| Measured against the **real** 0G Private Computer (TeeML, TDX-attested) | **467 calls** · 2.0 s per verdict · **$0.000036** per verdict |
+| Hardware | A custom **Ledger** app in Rust. No blind signing: the host never sends a digest |
+
+## What was hard
+
+1. **The screen and the signature cannot disagree.** The EIP-712 digest is computed *inside* the
+   device from the same four values it displays. The host never sends a digest, so blind signing is
+   structurally impossible — not merely discouraged.
+2. **The count holds under concurrency.** The call budget is reserved before execution with no
+   `await` between the check and the record. 100 simultaneous requests against `maxCalls=3` let
+   through 0 extra — covered by a test.
+3. **Refusing to invent a verdict.** If the sealed model is unreachable we return `STOPPED` and
+   change nothing — no default, no rule-based stand-in. **A fabricated verdict is worse than no
+   verdict.** Four stops are kept apart because a different stop means a different responsibility:
+   `DENIED` (you drew that line in advance) · `STOPPED` (nobody could decide) ·
+   `NEEDS_PRESS` (irreversible, and no human has pressed yet) · `human_denied` / `proof_expired`.
+
+## Why this is not the thing next to it
+
+Secrets managers decide *where a key lives*. Certificate systems decide *which machine it is*.
+Agent payment rails decide *that it can pay* — and have no reason to stop anything, since volume is
+their revenue. **None of them decide whether this one request, right now, was allowed by a human —
+and none of them keep the refusals.**
+
+## Why India picked this problem before we did
+
+From **April 2026** the RBI requires a *dynamic, per-transaction* authentication factor for
+card-not-present payments, and it applies whether a human or an agent initiates it. NPCI is building
+agent payments on UPI with spending limits, audit trails, identity checks and a liability framework.
+And CERT-In's Digital Threat Report 2025-26 asks to *"mandate human-in-the-loop controls for agentic
+AI actions above defined financial thresholds, with full audit trails."*
+
+**That last sentence is our product description.** We have not integrated with UPI and do not claim
+to — the match is structural, and that is the claim. Sources and the honest limits:
+[`ideation/2026-11-06-why-mumbai.md`](ideation/2026-11-06-why-mumbai.md).
+
+---
+
+> **Design records below are in Japanese — it is the team's working language.**
+> Start at [START-HERE.md](START-HERE.md) for the current state, how to run it, and what is next.
+> ETHGlobal Mumbai 2026 (kou-uni × mintannn). Hacking window: 11/5 21:00 → 11/7 09:00 IST.
+
+**TOMOSHIBI**（灯火 / a small flame that can go out）—
+**AIが見られない場所を手元に持ち、AIには「誰が信頼したか」を持たせる。** 星の数ではなく、誰の星か。
+
+| 場所 | 中身 || 場所 | 中身 |
 |---|---|
 | `ideation/2026-11-06-decisions.md` | **決定の記録。** 何を決めたか（最新） |
 | **`ideation/2026-11-07-finalist-4min.md`** | **Finalist 審査（7分）の台本。** デモ4分の進行表・押されたら捨てる順・質疑3分（定番3つ＋来るとわかっている突っ込み6つ） |

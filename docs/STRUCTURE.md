@@ -8,6 +8,8 @@ page disagrees with `HOW-IT-RUNS.md`, that page is right. Section 6 lists where 
 `minta/story` is different from it today.
 
 The figures are also kept as pictures in [`figures/`](figures/), for the deck.
+Pictures of the same system on main: `assets/architecture.svg` (one request), `assets/states.svg`
+(what one attempt can end as), `assets/journey.svg` (where she is at each step), `assets/lending.svg`.
 
 Sources: `broker/src/server.js`, `scope.js`, `tier.js`, `weigh.js`, `owner.js`, `world.js`,
 `broker/demo-agent.mjs`, `bridge/bridge.py`, `web/flow.js`, `tools/demo-up.sh`, `tools/hosted-start.sh`.
@@ -23,11 +25,11 @@ The app uses the left column.
 | **handle** | What the tool holds instead of the key: `keyRef`, plus the signed permit. | *label* (`HOW-IT-RUNS.md`, the figures) | |
 | **permit** | The EIP-712 message she signs: `holder, skill, version, key, target, scope, maxCalls, expiry, nonce`. Shown as four lines: `KEY / TO / SCOPE / UNTIL`. | | |
 | **scope** | Where the key may go and what it may do there, how many times, until when. | *range* | |
-| **sign the permit** | The hold on the Ledger that makes a standing permit (`maxCalls` > 1). | *lending the key* (journey heading, `assets/lending.svg`); `/lend` and `standing` in the tool's code | *lend*, *lent* |
+| **sign the permit** | The hold on the Ledger that makes a standing permit (`maxCalls` > 1). | *lending the key* (journey heading, `assets/lending.svg`), *she lends a range* (`assets/journey.svg`); `/lend` and `standing` in the tool's code | *lend*, *lent* |
 | **press** | The hold on the Ledger for one heavy request: a permit with `maxCalls = 1`, signed now. | | *your hand* |
 | **weight** | `routine` / `significant` / `decisive`, said by the sealed model on 0G. | | |
 | **trail** | The append-only record of every request, allowed or refused. | the record | *your week*, *activity* |
-| **star** | What the owner lights on one version after using it, through World ID. **Flame** is the name of that function. | *a flame on that version* (the figure) | *light* |
+| **star** | What the owner lights on one version after using it, through World ID. **Flame** is the name of that function. | *a flame on that version* (`assets/architecture.svg`), *a light* (`assets/journey.svg`) | *light* |
 | **the stops** | `DENIED`, `NEEDS_PRESS`, `STOPPED`, `human_denied` / `proof_expired` | | *blocked*, *no verdict* |
 
 ## 2. Parts
@@ -245,6 +247,10 @@ sequenceDiagram
   Note over T: The tool holds the permit, the signature and a handle. Never the key.
 ```
 
+Steps 1 to 5 are pages only: the chat is a scripted conversation, and the key field sends and stores nothing.
+`assets/journey.svg` marks the same two moments (its cards 2 and 3) as not built, and that is still true behind the
+screens. From step 6 on, everything is real.
+
 The route is still called `/lend` in the tool's code. Nothing a person reads says so.
 
 ### 5.2 One request (every time)
@@ -369,7 +375,9 @@ To settle between us. Each row is a fact about the branch, not a proposal.
 
 | Topic | `HOW-IT-RUNS.md` (main) | `minta/story` |
 |---|---|---|
-| Words | *label*, *range*, *a flame on that version* | *handle*, *scope*, *star*: the README "four parts" words. Same things. One set should win everywhere; the app follows whichever it is. |
+| Words | *label*, *range*, *count*, *she lends a range*, *a flame* / *a light* on a version | *handle*, *scope*, *sign the permit*, *star*: the README "four parts" words. Same things. One set should win everywhere; the app follows whichever it is. |
+| The agent asks for a key, and she answers with a URL (`journey.svg` card 2) | Not built | A page exists: the first tab is a chat where the tool asks for a `.env` file and she answers "use TOMOSHIBI". It is scripted. No agent reads a setup guide. |
+| She parks the key (`journey.svg` card 3) | Not built: an env var, not a screen | A screen exists (`CUSTODY`), with a key field. It sends and stores nothing, and the Broker still reads `SECRETS` from its environment. |
 | Bridge port | 8791 | 8791 by default. The filming laptop runs it on 8793 (`BRIDGE_PORT=8793 tools/demo-up.sh`). |
 | "None of it is a service in the cloud" | True | Still true for filming. The branch adds an optional hosted copy so the pages can be tried from any device: Broker and tool in one container (`tools/hosted-start.sh`), no bridge, no wallet key (`ZG_PRIVATE_KEY` is dropped), `EXECUTE=0`, rate-limited, and only `/vouch/start` and `/vouch/finish` are passed through to the Broker. |
 | The Ledger without a bridge | Not described | Only on the hosted copy, which has no USB: the page opens the device itself and carries the same bytes. Where a bridge runs, only the bridge talks to the device. |

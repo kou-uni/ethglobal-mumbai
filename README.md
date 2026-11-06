@@ -45,10 +45,12 @@ node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
 
 ![The whole system, with the order of the data numbered](assets/architecture.png)
 
-Three regions: her own device, the computer the agent runs on, and someone else's
-network. The numbers are the order a single request travels in. Beside each step is
-what that step refuses, so the picture shows where a request dies as well as where
-it goes. Lighting a flame is not part of a request, so it sits in its own band.
+Two timelines, kept apart. Putting a key into the Broker and signing the range it may
+be used in happens **once per key** — the top band. Everything numbered below it is a
+**single request**: it starts where the agent reaches for that key, and her device
+appears only at step 4, when the weighing came back heavy. Beside each step is what
+that step refuses, so the picture shows where a request dies as well as where it goes.
+Lighting a flame is not part of a request either, so it sits in its own band.
 
 ## What it does, in four parts
 

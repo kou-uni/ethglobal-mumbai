@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>提出までのTODO — TOMOSHIBI / ETHGlobal Mumbai</title><style>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Submission TODO — TOMOSHIBI / ETHGlobal Mumbai</title><style>
 :root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
 --hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff;--brick:#a33c2e}
 html{color-scheme:light}
@@ -59,7 +59,7 @@ background:var(--fill-gray);white-space:nowrap;overflow:hidden;text-overflow:ell
 .fig-scroll{overflow-x:auto}
 figure{margin:32px 0 8px}
 figcaption{font-size:12.5px;font-weight:600;margin-bottom:14px}
-/* チェックリスト */
+/* checklist */
 .todo{list-style:none;margin:16px 0 8px;padding:0;max-width:44em}
 .todo li{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--hairline)}
 .todo li::before{content:none}
@@ -88,156 +88,156 @@ a{text-decoration:none}}
 <div class="page">
 
 <header class="doc-header">
-  <p class="eyebrow">TOMOSHIBI &nbsp;/&nbsp; ETHGlobal Mumbai 2026 &nbsp;/&nbsp; 提出までのTODO</p>
-  <h1>締切 11-07 09:00 IST まで <span id="left" class="em">—</span></h1>
-  <p class="lead">上から順に見れば、いま何で止まっていて、次に誰が何をするかが分かる。
-  チェックはこの端末に残る（他の人の画面には出ない）。</p>
-  <div class="doc-meta"><span id="now">—</span><span>正本の手順書: submission-checklist.md</span></div>
+  <p class="eyebrow">TOMOSHIBI &nbsp;/&nbsp; ETHGlobal Mumbai 2026 &nbsp;/&nbsp; Submission TODO</p>
+  <h1>To the 11-07 09:00 IST deadline: <span id="left" class="em">—</span></h1>
+  <p class="lead">Read it top to bottom and you can see what is stuck right now and who does what next.
+  Checks are kept on this device (they do not appear on anyone else's screen).</p>
+  <div class="doc-meta"><span id="now">—</span><span>Authoritative checklist: submission-checklist.md</span></div>
 </header>
 
 <section>
-  <h2>いまの状態</h2>
+  <h2>Where we are</h2>
   <div class="kpis">
-    <div class="kpi"><div class="v" id="hrs">—</div><div class="l">締切まで（時間）</div></div>
-    <div class="kpi"><div class="v warn">3</div><div class="l">止まっているもの</div></div>
-    <div class="kpi"><div class="v" id="donecnt">0<small>/34</small></div><div class="l">チェック済み</div></div>
-    <div class="kpi"><div class="v" id="film">—</div><div class="l">撮影まで（時間）</div></div>
+    <div class="kpi"><div class="v" id="hrs">—</div><div class="l">Hours to deadline</div></div>
+    <div class="kpi"><div class="v warn">3</div><div class="l">Stuck items</div></div>
+    <div class="kpi"><div class="v" id="donecnt">0<small>/34</small></div><div class="l">Checked off</div></div>
+    <div class="kpi"><div class="v" id="film">—</div><div class="l">Hours to filming</div></div>
   </div>
-  <p class="src">撮影 11-06 22:00 IST ／ 技術の締め 11-06 20:00 IST ／ 仮提出 11-07 03:00 IST。</p>
+  <p class="src">Filming 11-06 22:00 IST / technical cutoff 11-06 20:00 IST / provisional submission 11-07 03:00 IST.</p>
 </section>
 
 <section>
-  <h2><span class="no">01</span>止まっているもの</h2>
-  <p class="msg">止まっているのは<b>コードではなく鍵と着金</b>。3つとも外部待ちで、自力では進まない。</p>
+  <h2><span class="no">01</span>What is stuck</h2>
+  <p class="msg">What is stuck is <b>not the code but the keys and the funds</b>. All three wait on someone outside the team; we cannot move them ourselves.</p>
   <div class="tbl"><table>
-    <caption>表1. ブロッカーと、外れなかったときの線引き</caption>
-    <thead><tr><th>待っているもの</th><th>これが無いと</th><th>外れなければこうする</th><th>状態</th></tr></thead>
+    <caption>Table 1. The blockers, and the line we hold if they do not clear</caption>
+    <thead><tr><th>Waiting on</th><th>Without it</th><th>If it does not clear</th><th>Status</th></tr></thead>
     <tbody>
-      <tr><td><b>faucet の gas</b><br><span class="mono">0xdfcb…42A4</span> / <span class="mono">0xc94A…F8AC</span></td>
-          <td>0G Storage に本番で書けない</td>
-          <td>系譜は<b>ローカル追記のみ</b>と提出文に書く。tx があるフリはしない</td>
-          <td class="st block">要求済・未着金</td></tr>
-      <tr><td><b>0G API キー</b><br><span class="mono">ZG_API_KEY</span></td>
-          <td>重さ判定が本番で動かない／模擬を外せない</td>
-          <td><b>模擬のまま撮らない。</b><span class="mono">STOPPED</span> の実演に振る（0Gの要件そのもの）</td>
+      <tr><td><b>faucet gas</b><br><span class="mono">0xdfcb…42A4</span> / <span class="mono">0xc94A…F8AC</span></td>
+          <td>Cannot write to 0G Storage in production</td>
+          <td>Write in the submission that the trail is <b>local append only</b>. Do not pretend a tx exists</td>
+          <td class="st block">REQUESTED, UNFUNDED</td></tr>
+      <tr><td><b>0G API key</b><br><span class="mono">ZG_API_KEY</span></td>
+          <td>Weight scoring does not run in production / the mock cannot be removed</td>
+          <td><b>Do not film with the mock in place.</b> Shift to a live <span class="mono">STOPPED</span> run (that is the 0G requirement itself)</td>
           <td class="st block">issue #15</td></tr>
-      <tr><td><b>World クライアント登録</b><br><span class="mono">CLIENT_ID / SECRET</span></td>
-          <td>星の人証明が本番で動かない</td>
-          <td>星は実演せず<b>設計の説明</b>に落とす</td>
-          <td class="st block">登録待ち</td></tr>
+      <tr><td><b>World client registration</b><br><span class="mono">CLIENT_ID / SECRET</span></td>
+          <td>Star proof of person does not run in production</td>
+          <td>Do not demo the star; drop it to <b>an explanation of the design</b></td>
+          <td class="st block">AWAITING REGISTRATION</td></tr>
     </tbody>
   </table></div>
-  <p class="note">3つが11-06 午後までに揃わない場合、上の「こうする」を<b>その場で選び直さない</b>。
-  いま決めてあるとおりに倒す。撮影直前の判断が一番外れる。</p>
+  <p class="note">If the three are not in hand by the afternoon of 11-06, <b>do not re-pick</b> the "if it does not clear" column on the spot.
+  Fall back exactly as decided now. The judgement made right before filming is the one that goes wrong.</p>
 </section>
 
 <section>
-  <h2><span class="no">02</span>逆算</h2>
-  <p class="msg">技術の締めは <b>11-06 20:00 IST</b>。そこから先は撮影と文章だけに使う。</p>
+  <h2><span class="no">02</span>Working backwards</h2>
+  <p class="msg">The technical cutoff is <b>11-06 20:00 IST</b>. Everything after that goes to filming and writing only.</p>
   <figure>
-  <figcaption>図1. 締切までの配置（濃い帯＝落とせないもの）</figcaption>
+  <figcaption>Figure 1. Layout to the deadline (dark bars = cannot be dropped)</figcaption>
   <div class="fig-scroll"><div class="roadmap">
     <div class="rm-row rm-head">
       <div class="rm-lane"></div>
-      <div class="rm-h">06 午前</div><div class="rm-h">06 午後</div><div class="rm-h">06 17:00</div>
+      <div class="rm-h">06 AM</div><div class="rm-h">06 PM</div><div class="rm-h">06 17:00</div>
       <div class="rm-h">06 20:00</div><div class="rm-h">06 22:00</div><div class="rm-h">07 03:00</div>
     </div>
-    <div class="rm-row"><div class="rm-lane">鍵・着金</div>
-      <div class="rm-bar on" style="grid-column:2/4">faucet → 本番 seal 1回 / キー投入</div></div>
-    <div class="rm-row"><div class="rm-lane">実装</div>
-      <div class="rm-bar" style="grid-column:2/4">星画面・記録画面（minta）</div></div>
-    <div class="rm-row"><div class="rm-lane">通し</div>
-      <div class="rm-bar on" style="grid-column:4/5">5本を2回</div></div>
-    <div class="rm-row"><div class="rm-lane">締め</div>
-      <div class="rm-ms" style="grid-column:5">◆ 技術の締め</div></div>
-    <div class="rm-row"><div class="rm-lane">撮影</div>
-      <div class="rm-bar on" style="grid-column:6/7">2:55 以内</div></div>
-    <div class="rm-row"><div class="rm-lane">提出</div>
-      <div class="rm-ms" style="grid-column:7">◆ 仮提出</div></div>
+    <div class="rm-row"><div class="rm-lane">Keys, funds</div>
+      <div class="rm-bar on" style="grid-column:2/4">faucet → 1 live seal / keys in</div></div>
+    <div class="rm-row"><div class="rm-lane">Build</div>
+      <div class="rm-bar" style="grid-column:2/4">star + record screens (minta)</div></div>
+    <div class="rm-row"><div class="rm-lane">Run-through</div>
+      <div class="rm-bar on" style="grid-column:4/5">5 runs, twice</div></div>
+    <div class="rm-row"><div class="rm-lane">Cutoff</div>
+      <div class="rm-ms" style="grid-column:5">◆ Tech cutoff</div></div>
+    <div class="rm-row"><div class="rm-lane">Filming</div>
+      <div class="rm-bar on" style="grid-column:6/7">under 2:55</div></div>
+    <div class="rm-row"><div class="rm-lane">Submission</div>
+      <div class="rm-ms" style="grid-column:7">◆ Provisional</div></div>
   </div></div>
-  <p class="src">図1. 仮提出は締切の6時間前。出したあとも編集できる前提で、空欄のまま一度出す。</p>
+  <p class="src">Figure 1. The provisional submission is 6 hours before the deadline. Assuming it stays editable afterwards, send it once with the blanks still blank.</p>
   </figure>
 </section>
 
 <section>
-  <h2><span class="no">03</span>通しで映す5本</h2>
-  <p class="msg">この5本が揃えば提出物は成立する。<b>揃わない本数が、そのまま削る項目になる。</b></p>
+  <h2><span class="no">03</span>The 5 runs we film end to end</h2>
+  <p class="msg">If these 5 are in hand, the submission stands. <b>However many are missing is exactly what gets cut.</b></p>
   <ul class="todo" id="t-run">
-    <li><input type="checkbox" id="r1"><label for="r1">範囲内で通る — <span class="mono">ALLOWED</span>、返答のハッシュが刻まれる<span class="who">両方</span></label></li>
-    <li><input type="checkbox" id="r2"><label for="r2">範囲外で止まる — <span class="mono">DENIED</span>、スキルの署名ごと記録<span class="who">両方</span></label></li>
-    <li><input type="checkbox" id="r3"><label for="r3">0Gに届かない — <span class="mono">STOPPED</span>、判断を作らない<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="r4"><label for="r4">重い要求 — <span class="mono">NEEDS_PRESS</span>、Ledgerを押すまで鍵は使われない<span class="who">両方</span></label></li>
-    <li><input type="checkbox" id="r5"><label for="r5">星 — 人を1回確かめ、版が変わって一斉に消える<span class="who">minta</span></label></li>
+    <li><input type="checkbox" id="r1"><label for="r1">In scope, goes through — <span class="mono">ALLOWED</span>, the hash of the reply is written in<span class="who">both</span></label></li>
+    <li><input type="checkbox" id="r2"><label for="r2">Out of scope, stops — <span class="mono">DENIED</span>, recorded together with the skill signature<span class="who">both</span></label></li>
+    <li><input type="checkbox" id="r3"><label for="r3">0G unreachable — <span class="mono">STOPPED</span>, no decision is produced<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="r4"><label for="r4">High-weight request — <span class="mono">NEEDS_PRESS</span>, the key is not used until the Ledger is pressed<span class="who">both</span></label></li>
+    <li><input type="checkbox" id="r5"><label for="r5">Star — the person is verified once, the version changes and they all drop at once<span class="who">minta</span></label></li>
   </ul>
 </section>
 
 <section>
-  <h2><span class="no">04</span>ETHGlobal の事務</h2>
-  <p class="msg">コードと関係なく落ちるのはここ。<b>チーム追加と受取アドレスは締切後に直せない。</b></p>
+  <h2><span class="no">04</span>ETHGlobal admin</h2>
+  <p class="msg">This is where you fail for reasons unrelated to code. <b>Adding a teammate and the payout address cannot be fixed after the deadline.</b></p>
   <ul class="todo" id="t-admin">
-    <li><input type="checkbox" id="a1"><label for="a1">会場チェックイン・リストバンド<span class="who">両方</span></label></li>
-    <li><input type="checkbox" id="a2"><label for="a2"><b>minta をチームに追加</b>（ETHGlobalアカウントが要る・締切後は不可）<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="a3"><label for="a3"><b>賞金の受取アドレス</b>を登録し、分配を口頭で決めておく<span class="who">両方</span></label></li>
-    <li><input type="checkbox" id="a4"><label for="a4">パートナー賞を3つ選択 — <b>0G / World / Ethereum Foundation</b>（上限3）<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="a5"><label for="a5">リポジトリを public に・MIT ライセンスを置く<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="a6"><label for="a6">Demo link を決める（既定: GitHub Pages ＋ 動画）<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="a7"><label for="a7">動画を <b>ログイン無しで見られる</b> URL に置く<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="a8"><label for="a8">判定の形式と時刻を会場で確認（スポンサー個別枠の有無も）<span class="who">両方</span></label></li>
-    <li><input type="checkbox" id="a9"><label for="a9"><b>仮提出を済ませる</b>（11-07 03:00 IST）<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="a1"><label for="a1">Venue check-in and wristband<span class="who">both</span></label></li>
+    <li><input type="checkbox" id="a2"><label for="a2"><b>Add minta to the team</b> (needs an ETHGlobal account; not possible after the deadline)<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="a3"><label for="a3">Register the <b>prize payout address</b> and agree the split out loud<span class="who">both</span></label></li>
+    <li><input type="checkbox" id="a4"><label for="a4">Pick 3 partner prizes — <b>0G / World / Ethereum Foundation</b> (max 3)<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="a5"><label for="a5">Make the repository public and add the MIT license<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="a6"><label for="a6">Decide the Demo link (default: GitHub Pages + video)<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="a7"><label for="a7">Put the video at a URL that is <b>viewable without a login</b><span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="a8"><label for="a8">Confirm the judging format and time at the venue (including whether sponsors have their own slots)<span class="who">both</span></label></li>
+    <li><input type="checkbox" id="a9"><label for="a9"><b>Get the provisional submission done</b> (11-07 03:00 IST)<span class="who">kou</span></label></li>
   </ul>
 </section>
 
 <section>
-  <h2><span class="no">05</span>提出フォームの中身</h2>
-  <p class="msg">初稿は全項目ある。<b>残りは絵文字とDemo linkだけ。</b></p>
+  <h2><span class="no">05</span>Contents of the submission form</h2>
+  <p class="msg">The first draft has every field. <b>What is left is the emoji and the Demo link.</b></p>
   <ul class="todo" id="t-form">
-    <li><input type="checkbox" id="f1" checked><label for="f1">Project name / Category（Security）<span class="who">済</span></label></li>
-    <li><input type="checkbox" id="f2"><label for="f2">絵文字を決める<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="f3"><label for="f3">Short description（97字の初稿あり）を貼る<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="f4"><label for="f4">Description を貼る<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="f5"><label for="f5">How it's made を貼る（審査はここを読む）<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="f6"><label for="f6">GitHub リポジトリを選択<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="f7"><label for="f7">下書きの <span class="mono">【要確認】</span> を全部つぶす<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="f1" checked><label for="f1">Project name / Category (Security)<span class="who">done</span></label></li>
+    <li><input type="checkbox" id="f2"><label for="f2">Decide the emoji<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="f3"><label for="f3">Paste the Short description (97-character draft ready)<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="f4"><label for="f4">Paste the Description<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="f5"><label for="f5">Paste How it's made (this is what the judges read)<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="f6"><label for="f6">Select the GitHub repository<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="f7"><label for="f7">Clear every <span class="mono">[to-confirm]</span> in the draft<span class="who">kou</span></label></li>
   </ul>
-  <p class="src">初稿: <span class="mono">ideation/2026-11-06-submission-form.md</span></p>
+  <p class="src">First draft: <span class="mono">ideation/2026-11-06-submission-form.md</span></p>
 </section>
 
 <section>
-  <h2><span class="no">06</span>賞ごとに落とせないもの</h2>
-  <p class="msg">各トラックに<b>一つずつ必須がある</b>。どれも「映っているか」で判定される。</p>
+  <h2><span class="no">06</span>What each prize cannot do without</h2>
+  <p class="msg">Each track has <b>exactly one requirement</b>. All of them are judged on whether it is on screen.</p>
   <ul class="todo" id="t-prize">
-    <li><input type="checkbox" id="p1"><label for="p1"><b>0G</b> — 重さが<b>結果を変える</b>経路を映す（ログ置き場ではない）<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="p2"><label for="p2"><b>0G</b> — <span class="bad">決定を偽装するフォールバックは失格。</span><span class="mono">ZG_OFFLINE</span> を外す<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="p3"><label for="p3"><b>0G</b> — request id を画面に出し、提出文に実物を1個貼る<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="p4"><label for="p4"><b>World</b> — <b>拒否パスの実演が要件。</b><span class="mono">human_denied</span> と <span class="mono">proof_expired</span> を別々に映す<span class="who">両方</span></label></li>
-    <li><input type="checkbox" id="p5"><label for="p5"><b>EF CROPS</b> — MIT・トラッカー0・「誰が何を知るか」の分離を示す<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="p1"><label for="p1"><b>0G</b> — film the path where weight <b>changes the outcome</b> (not a place to dump logs)<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="p2"><label for="p2"><b>0G</b> — <span class="bad">a fallback that fakes a decision is disqualifying.</span> Turn off <span class="mono">ZG_OFFLINE</span><span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="p3"><label for="p3"><b>0G</b> — show the request id on screen and paste one real one into the submission<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="p4"><label for="p4"><b>World</b> — <b>demonstrating the refusal path is required.</b> Film <span class="mono">human_denied</span> and <span class="mono">proof_expired</span> separately<span class="who">both</span></label></li>
+    <li><input type="checkbox" id="p5"><label for="p5"><b>EF CROPS</b> — MIT, zero trackers, show the separation of who knows what<span class="who">kou</span></label></li>
   </ul>
 </section>
 
 <section>
-  <h2><span class="no">07</span>撮影（11-06 22:00 IST）</h2>
-  <p class="msg">撮影は<b>実装の続きではない</b>。20:00で手を止め、ここからは撮るだけにする。</p>
+  <h2><span class="no">07</span>Filming (11-06 22:00 IST)</h2>
+  <p class="msg">Filming is <b>not a continuation of the build</b>. Stop work at 20:00; from there on, only film.</p>
   <ul class="todo" id="t-film">
-    <li><input type="checkbox" id="v1"><label for="v1"><b>2:55 以内</b>に収める<span class="who">両方</span></label></li>
-    <li><input type="checkbox" id="v2"><label for="v2">撮影直前に <span class="mono">/health</span> を目視。<span class="bad">simulated が1つも出ていないこと</span><span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="v3"><label for="v3">request id と root hash が1度は画面に映る<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="v4"><label for="v4">Ledger の充電・<b>ケーブル</b>（未解消）・静かな場所<span class="who">両方</span></label></li>
-    <li><input type="checkbox" id="v5"><label for="v5">英語ナレーション（現場録りか後当てかを先に決める）<span class="who">両方</span></label></li>
+    <li><input type="checkbox" id="v1"><label for="v1">Keep it <b>under 2:55</b><span class="who">both</span></label></li>
+    <li><input type="checkbox" id="v2"><label for="v2">Eyeball <span class="mono">/health</span> right before filming. <span class="bad">Not a single simulated showing</span><span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="v3"><label for="v3">request id and root hash appear on screen at least once<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="v4"><label for="v4">Ledger charged, <b>cable</b> (unresolved), quiet room<span class="who">both</span></label></li>
+    <li><input type="checkbox" id="v5"><label for="v5">English narration (decide first: recorded on the spot or dubbed later)<span class="who">both</span></label></li>
   </ul>
 </section>
 
 <section>
-  <h2><span class="no">08</span>出したあと</h2>
-  <p class="msg">提出で終わりではない。<b>スポンサーに届けるところまでが提出。</b></p>
+  <h2><span class="no">08</span>After submitting</h2>
+  <p class="msg">Submitting is not the end. <b>It is not submitted until it reaches the sponsors.</b></p>
   <ul class="todo" id="t-after">
-    <li><input type="checkbox" id="z1"><label for="z1">0G / World / EF の Discord・Telegram に提出リンクを投げる<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="z2"><label for="z2">showcase の URL を控える<span class="who">kou</span></label></li>
-    <li><input type="checkbox" id="z3"><label for="z3">日本の角度は<b>チーム紹介のときだけ</b>出す（プロダクト説明に混ぜない）<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="z1"><label for="z1">Post the submission link in the 0G / World / EF Discord and Telegram<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="z2"><label for="z2">Note down the showcase URL<span class="who">kou</span></label></li>
+    <li><input type="checkbox" id="z3"><label for="z3">Bring up the Japan angle <b>only in the team introduction</b> (do not mix it into the product explanation)<span class="who">kou</span></label></li>
   </ul>
 </section>
 
 <footer class="doc-footer">
-  <span>TOMOSHIBI — 提出までのTODO</span>
+  <span>TOMOSHIBI — Submission TODO</span>
   <span>github.com/kou-uni/ethglobal-mumbai</span>
 </footer>
 
@@ -250,7 +250,7 @@ a{text-decoration:none}}
   function tick(){
     var now = new Date();
     var ms = DEAD - now, h = Math.floor(ms/3600000), m = Math.floor(ms%3600000/60000);
-    document.getElementById('left').textContent = ms>0 ? (h+'時間'+pad(m)+'分') : '締切済み';
+    document.getElementById('left').textContent = ms>0 ? (h+'h '+pad(m)+'m') : 'deadline passed';
     document.getElementById('hrs').textContent = ms>0 ? h : 0;
     var fms = FILM - now, fh = Math.ceil(fms/3600000);
     document.getElementById('film').textContent = fms>0 ? fh : '—';

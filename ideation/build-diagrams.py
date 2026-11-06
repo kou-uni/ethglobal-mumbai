@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""シーケンス図とアーキテクチャ図を1枚の HTML にする。
+"""Render the sequence diagrams and the architecture diagram into one HTML file.
 
     python3 ideation/build-diagrams.py
 
-手で SVG を書くと、矢印が1本ずれても誰も気づかない。ここでは流れを表で書き、
-線は機械に引かせる。図を直すときは下の SEQUENCES を直すこと。
+Hand-written SVG hides a misplaced arrow from everyone. Here the flows are written
+as tables and the machine draws the lines. To change a diagram, change SEQUENCES below.
 """
 import html, re
 from pathlib import Path
@@ -15,7 +15,7 @@ INK, INK2, INK3, ACC, HAIR, FILL = '#1a1a1a', '#555555', '#8e8e8e', '#173f66', '
 def esc(s): return html.escape(s, quote=False)
 
 def seq_svg(actors, steps, width=740):
-    """actors: [(key, 上段, 下段)]  steps: [(from, to, 文, kind)] kind=call|ret|self|note"""
+    """actors: [(key, top, sub)]  steps: [(from, to, text, kind)] kind=call|ret|self|note"""
     n = len(actors)
     pad, head = 10, 56
     colw = (width - pad * 2) / n
@@ -25,7 +25,7 @@ def seq_svg(actors, steps, width=740):
     dy = 36
     h = y0 + dy * len(rows) + 14
     out = [f'<svg viewBox="0 0 {width} {h:.0f}" role="img" aria-label="sequence">']
-    # 柱
+    # lifelines
     for k, top, sub in actors:
         bx, bw = x[k] - colw / 2 + 6, colw - 12
         main = k == 'broker'
@@ -35,7 +35,7 @@ def seq_svg(actors, steps, width=740):
         out.append(f'<text x="{x[k]:.1f}" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="{tc}">{esc(top)}</text>')
         out.append(f'<text x="{x[k]:.1f}" y="45" text-anchor="middle" font-size="9.5" fill="{sc}" opacity="{0.8 if main else 1}">{esc(sub)}</text>')
         out.append(f'<line x1="{x[k]:.1f}" y1="{head}" x2="{x[k]:.1f}" y2="{h - 8}" stroke="{HAIR}" stroke-dasharray="3 4"/>')
-    # 矢印
+    # arrows
     out.append(f'<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="{INK}"/></marker>'
                f'<marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="{ACC}"/></marker></defs>')
     for i, (a, b, text, kind) in enumerate(rows):
@@ -62,219 +62,220 @@ def seq_svg(actors, steps, width=740):
     out.append('</svg>')
     return '\n'.join(out)
 
-AG = ('agent', 'エージェント', 'スキルの実体')
-BR = ('broker', '門（Broker）', '唯一の信頼点')
-ZG = ('zg', '0G', '封印された推論')
-LD = ('ledger', '手元の機器', 'Ledger Flex')
-AP = ('api', '相手の API', 'api.stripe.com')
-ST = ('store', '系譜', '0G Storage')
+AG = ('agent', 'Agent', 'The skill itself')
+BR = ('broker', 'Gate (Broker)', 'Only trusted point')
+ZG = ('zg', '0G', 'Sealed inference')
+LD = ('ledger', 'Device', 'Ledger Flex')
+AP = ('api', 'Their API', 'api.stripe.com')
+ST = ('store', 'Trail', '0G Storage')
 
 SEQUENCES = [
-  dict(no='01', title='ふだんの要求 — 黙って通る', verdict='ALLOWED 200',
-       msg='範囲の中で、0G が「ふだん」と読んだ要求。<b>人は何もしない。画面も出ない。</b>',
+  dict(no='01', title='A routine request — it passes in silence', verdict='ALLOWED 200',
+       msg='A request inside scope that 0G read as routine. <b>The person does nothing. No screen appears.</b>',
        actors=[AG, BR, ZG, AP, ST],
-       steps=[('agent','broker','① 要求 ＋ 許可 ＋ 2つの署名','call'),
-              ('broker','broker','② 署名を検証（持ち主・スキル）','self'),
-              ('broker','broker','③ 範囲と回数を照合','self'),
-              ('broker','zg','④ 本文を封印の中へ（鍵は渡さない）','call'),
-              ('zg','broker','⑤「ふだん」＋ request id','ret'),
-              ('broker','api','⑥ 代理で実行','call'),
-              ('api','broker','⑦ 結果','ret'),
-              ('broker','store','⑧ 系譜に追記（本文は入れない）','call'),
-              ('broker','agent','⑨ ALLOWED ＋ 残り回数','ret')]),
-  dict(no='02', title='重い要求 — 押されるまで通さない', verdict='409 NEEDS_PRESS → 200 ALLOWED',
-       msg='0G が「決定的」と読んだ要求は、<b>立っている許可では通らない</b>。要るのは<b>使い切りの許可</b>＝その場の一押し。',
+       steps=[('agent','broker','1 Request + permit + two signatures','call'),
+              ('broker','broker','2 Verify signatures (holder, skill)','self'),
+              ('broker','broker','3 Check scope and call budget','self'),
+              ('broker','zg','4 Body into the seal (no key handed over)','call'),
+              ('zg','broker','5 "routine" + request id','ret'),
+              ('broker','api','6 Call on its behalf','call'),
+              ('api','broker','7 Result','ret'),
+              ('broker','store','8 Append to the trail (body excluded)','call'),
+              ('broker','agent','9 ALLOWED + calls remaining','ret')]),
+  dict(no='02', title='A heavy request — nothing passes until it is pressed', verdict='409 NEEDS_PRESS -> 200 ALLOWED',
+       msg='A request 0G read as decisive <b>does not pass on a standing permit</b>. It needs a <b>single-use permit</b> — a press on the spot.',
        actors=[AG, BR, ZG, LD, AP, ST],
-       steps=[('agent','broker','① $4,800 の送金を要求','call'),
-              ('broker','zg','② 本文を封印の中へ','call'),
-              ('zg','broker','③「決定的」','ret'),
-              ('broker','agent','④ NEEDS_PRESS（通さない）','ret'),
-              ('broker','ledger','⑤ 4行を機器に出す','call'),
-              ('ledger','ledger','⑥ 人が長押し（5秒）','self'),
-              ('ledger','broker','⑦ 使い切りの許可に署名','ret'),
-              ('broker','api','⑧ この1回だけ実行','call'),
-              ('broker','store','⑨ 誰が押したかを追記','call'),
-              ('broker','agent','⑩ ALLOWED（残り 0）','ret')]),
-  dict(no='03', title='範囲の外 — 止めて、違反として刻む', verdict='DENIED 403',
-       msg='宣言した範囲を外れた要求は、<b>スキル自身の署名ごと</b>記録に残る。<b>0G には聞かない</b>（聞く前に外れている）。',
+       steps=[('agent','broker','1 Requests a $4,800 transfer','call'),
+              ('broker','zg','2 Body into the seal','call'),
+              ('zg','broker','3 "decisive"','ret'),
+              ('broker','agent','4 NEEDS_PRESS (not passed)','ret'),
+              ('broker','ledger','5 Four lines to the device','call'),
+              ('ledger','ledger','6 Person long-presses (5s)','self'),
+              ('ledger','broker','7 Signs a single-use permit','ret'),
+              ('broker','api','8 Runs this one call only','call'),
+              ('broker','store','9 Appends who pressed','call'),
+              ('broker','agent','10 ALLOWED (0 left)','ret')]),
+  dict(no='03', title='Outside scope — stopped, and recorded as a violation', verdict='DENIED 403',
+       msg='A request outside the declared scope is recorded <b>together with the skill\'s own signature</b>. <b>0G is not asked</b> (it is already out of scope).',
        actors=[AG, BR, ST],
-       steps=[('agent','broker','① 別の宛先（evil.com）へ','call'),
-              ('broker','broker','② 範囲の照合で落ちる','self'),
-              ('broker','store','③ 違反として追記（スキルの署名つき）','call'),
-              ('broker','agent','④ DENIED ＋ 理由','ret'),
-              ('broker','broker','⑤ 回数は減らさない','self')]),
-  dict(no='04', title='0G に届かない — 決めないで止める', verdict='STOPPED 503',
-       msg='<b>既定値を作らない。</b>「たぶん軽いから通す」も「とりあえず止める」も、どちらも偽の判断になる。',
+       steps=[('agent','broker','1 To a different target (evil.com)','call'),
+              ('broker','broker','2 Fails the scope check','self'),
+              ('broker','store','3 Append as a violation (with skill signature)','call'),
+              ('broker','agent','4 DENIED + reason','ret'),
+              ('broker','broker','5 Call budget not decremented','self')]),
+  dict(no='04', title='0G unreachable — stop instead of deciding', verdict='STOPPED 503',
+       msg='<b>No default is created.</b> "Probably light, let it through" and "stop just in case" are both false verdicts.',
        actors=[AG, BR, ZG],
-       steps=[('agent','broker','① ふだんの要求','call'),
-              ('broker','zg','② 問い合わせ','call'),
-              ('zg','broker','③ 応答なし（30秒）','ret'),
-              ('broker','agent','④ STOPPED「決められないので止めた」','ret'),
-              ('broker','broker','⑤ 回数は減らさない・系譜には残す','self')]),
-  dict(no='05', title='灯をともす — World で1回だけ名乗る', verdict='確かめられた ／ human_denied ／ proof_expired',
-       msg='<b>鍵を使うたびには聞かない。</b>World に出るのは、灯を1つ出すときだけ。',
-       actors=[('me','本人の画面','灯の空'), BR, ('world','World','Agent Pass'), ('phone','本人のスマホ','World App')],
-       steps=[('me','broker','① この版に灯をともしたい','call'),
-              ('broker','world','② device flow を開始','call'),
-              ('world','broker','③ コードと待ち受け','ret'),
-              ('broker','me','④ コードを出して待つ（残り10分）','ret'),
-              ('phone','world','⑤ 本人が端末で承認する','call'),
-              ('world','broker','⑥ 仮名（sub）つきの署名','ret'),
-              ('broker','broker','⑦ 署名を検証し、(スキル,版) に灯を1つ','self'),
-              ('broker','me','⑧ 灯がともる（誰のかは仮名のまま）','ret')]),
+       steps=[('agent','broker','1 A routine request','call'),
+              ('broker','zg','2 Query','call'),
+              ('zg','broker','3 No response (30s)','ret'),
+              ('broker','agent','4 STOPPED "could not decide, so stopped"','ret'),
+              ('broker','broker','5 Budget intact, kept in the trail','self')]),
+  dict(no='05', title='Lighting a flame — naming yourself once with World', verdict='verified / human_denied / proof_expired',
+       msg='<b>Not asked on every use of the key.</b> World appears only when a flame is lit.',
+       actors=[('me','Key holder','Flame sky'), BR, ('world','World','Agent Pass'), ('phone','Their phone','World App')],
+       steps=[('me','broker','1 I want to light a flame on this version','call'),
+              ('broker','world','2 Start the device flow','call'),
+              ('world','broker','3 Code and polling','ret'),
+              ('broker','me','4 Show the code and wait (10 min left)','ret'),
+              ('phone','world','5 Key holder approves on their device','call'),
+              ('world','broker','6 Signature with a pseudonym (sub)','ret'),
+              ('broker','broker','7 Verify it, add one flame to (skill, version)','self'),
+              ('broker','me','8 The flame lights (whose it is stays pseudonymous)','ret')]),
 ]
 
 ARCH = f'''
 <svg viewBox="0 0 760 468" role="img" aria-label="architecture">
-  <text x="8" y="14" font-size="10.5" letter-spacing="0.08em" fill="{INK3}">手元（人と鍵）</text>
-  <text x="268" y="14" font-size="10.5" letter-spacing="0.08em" fill="{INK3}">門</text>
-  <text x="520" y="14" font-size="10.5" letter-spacing="0.08em" fill="{INK3}">外（我々が信じなくてよい相手）</text>
+  <text x="8" y="14" font-size="10.5" letter-spacing="0.08em" fill="{INK3}">Near side (person and key)</text>
+  <text x="268" y="14" font-size="10.5" letter-spacing="0.08em" fill="{INK3}">The gate</text>
+  <text x="520" y="14" font-size="10.5" letter-spacing="0.08em" fill="{INK3}">Outside (parties we need not trust)</text>
   <line x1="0" y1="20" x2="760" y2="20" stroke="{HAIR}"/>
 
   <rect x="8" y="40" width="200" height="66" fill="{FILL}"/>
-  <text x="20" y="62" font-size="12" font-weight="700" fill="{INK}">エージェント</text>
-  <text x="20" y="80" font-size="10.5" fill="{INK2}">スキルの実体。鍵は持てない</text>
-  <text x="20" y="96" font-size="10.5" fill="{INK2}">要求に自分の署名を付ける</text>
+  <text x="20" y="62" font-size="12" font-weight="700" fill="{INK}">Agent</text>
+  <text x="20" y="80" font-size="10.5" fill="{INK2}">The skill itself. Holds no key</text>
+  <text x="20" y="96" font-size="10.5" fill="{INK2}">Signs each request itself</text>
 
   <rect x="8" y="124" width="200" height="88" fill="{FILL}"/>
-  <text x="20" y="146" font-size="12" font-weight="700" fill="{INK}">手元の機器（Ledger）</text>
-  <text x="20" y="164" font-size="10.5" fill="{INK2}">4行を表示し、長押しで署名</text>
-  <text x="20" y="180" font-size="10.5" fill="{INK2}">鍵は外に出ない</text>
-  <text x="20" y="198" font-size="10.5" fill="{INK3}">bridge（127.0.0.1・USB HID）</text>
+  <text x="20" y="146" font-size="12" font-weight="700" fill="{INK}">Device (Ledger)</text>
+  <text x="20" y="164" font-size="10.5" fill="{INK2}">Shows 4 lines; long press signs</text>
+  <text x="20" y="180" font-size="10.5" fill="{INK2}">The key never leaves</text>
+  <text x="20" y="198" font-size="10.5" fill="{INK3}">bridge (127.0.0.1, USB HID)</text>
 
   <rect x="8" y="230" width="200" height="66" fill="{FILL}"/>
-  <text x="20" y="252" font-size="12" font-weight="700" fill="{INK}">本人の画面・スマホ</text>
-  <text x="20" y="270" font-size="10.5" fill="{INK2}">灯の空／系譜（読むだけ）</text>
-  <text x="20" y="286" font-size="10.5" fill="{INK2}">World App で1回だけ名乗る</text>
+  <text x="20" y="252" font-size="12" font-weight="700" fill="{INK}">Key holder's screen</text>
+  <text x="20" y="270" font-size="10.5" fill="{INK2}">Flame sky / trail (read only)</text>
+  <text x="20" y="286" font-size="10.5" fill="{INK2}">Names themselves once in World</text>
 
   <rect x="248" y="40" width="200" height="256" fill="{ACC}"/>
-  <text x="262" y="64" font-size="13" font-weight="700" fill="#ffffff">Broker（門）</text>
-  <text x="262" y="82" font-size="10" fill="#ffffff" opacity="0.75">鍵を預からない。判断を作らない</text>
-  <text x="262" y="112" font-size="11" fill="#ffffff">① 2つの署名を検証する</text>
-  <text x="262" y="136" font-size="11" fill="#ffffff">② 範囲と回数を照合する</text>
-  <text x="262" y="160" font-size="11" fill="#ffffff">③ 重さを 0G に聞く</text>
-  <text x="262" y="184" font-size="11" fill="#ffffff">④ 通す／押させる／止める</text>
-  <text x="262" y="208" font-size="11" fill="#ffffff">⑤ 系譜に追記する（消す口なし）</text>
-  <text x="262" y="232" font-size="11" fill="#ffffff">⑥ 灯を (スキル, 版) に積む</text>
-  <text x="262" y="262" font-size="10" fill="#ffffff" opacity="0.75">唯一の信頼点。TEE には載せていない</text>
-  <text x="262" y="280" font-size="10" fill="#ffffff" opacity="0.75">（黙って良く見せない）</text>
+  <text x="262" y="64" font-size="13" font-weight="700" fill="#ffffff">Broker (the gate)</text>
+  <text x="262" y="82" font-size="10" fill="#ffffff" opacity="0.75">Holds no key. Invents no verdict</text>
+  <text x="262" y="112" font-size="11" fill="#ffffff">1 Verify the two signatures</text>
+  <text x="262" y="136" font-size="11" fill="#ffffff">2 Check scope and call budget</text>
+  <text x="262" y="160" font-size="11" fill="#ffffff">3 Ask 0G for the weight</text>
+  <text x="262" y="184" font-size="11" fill="#ffffff">4 Pass / require a press / stop</text>
+  <text x="262" y="208" font-size="11" fill="#ffffff">5 Append-only trail (no delete)</text>
+  <text x="262" y="232" font-size="11" fill="#ffffff">6 Add flames to (skill, version)</text>
+  <text x="262" y="262" font-size="10" fill="#ffffff" opacity="0.75">Only trusted point. Not on a TEE</text>
+  <text x="262" y="280" font-size="10" fill="#ffffff" opacity="0.75">(we do not quietly oversell it)</text>
 
   <rect x="488" y="40" width="264" height="56" fill="{FILL}"/>
-  <text x="500" y="60" font-size="12" font-weight="700" fill="{INK}">0G Private Computer（TeeML）</text>
-  <text x="500" y="78" font-size="10.5" fill="{INK2}">重さを決める。本文は封印の中。我々も読めない</text>
+  <text x="500" y="60" font-size="12" font-weight="700" fill="{INK}">0G Private Computer (TeeML)</text>
+  <text x="500" y="78" font-size="10.5" fill="{INK2}">Decides weight. The body stays sealed from us</text>
 
   <rect x="488" y="110" width="264" height="56" fill="{FILL}"/>
-  <text x="500" y="130" font-size="12" font-weight="700" fill="{INK}">World（Agent Pass）</text>
-  <text x="500" y="148" font-size="10.5" fill="{INK2}">人であることだけ。仮名（sub）を返す</text>
+  <text x="500" y="130" font-size="12" font-weight="700" fill="{INK}">World (Agent Pass)</text>
+  <text x="500" y="148" font-size="10.5" fill="{INK2}">Humanness only. Returns a pseudonym (sub)</text>
 
   <rect x="488" y="180" width="264" height="56" fill="{FILL}"/>
-  <text x="500" y="200" font-size="12" font-weight="700" fill="{INK}">相手の API</text>
-  <text x="500" y="218" font-size="10.5" fill="{INK2}">代理で叩く先（api.stripe.com など）</text>
+  <text x="500" y="200" font-size="12" font-weight="700" fill="{INK}">The counterparty API</text>
+  <text x="500" y="218" font-size="10.5" fill="{INK2}">Called on its behalf (e.g. api.stripe.com)</text>
 
   <rect x="488" y="250" width="264" height="56" fill="{FILL}"/>
-  <text x="500" y="270" font-size="12" font-weight="700" fill="{INK}">0G Storage（系譜）</text>
-  <text x="500" y="288" font-size="10.5" fill="{INK2}">誰が許し、何を要求し、通ったか止まったか</text>
+  <text x="500" y="270" font-size="12" font-weight="700" fill="{INK}">0G Storage (the trail)</text>
+  <text x="500" y="288" font-size="10.5" fill="{INK2}">Who permitted what, and whether it passed</text>
 
   <defs><marker id="c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="{INK}"/></marker></defs>
   <line x1="208" y1="73" x2="240" y2="73" stroke="{INK}" marker-end="url(#c)"/>
-  <text x="224" y="64" text-anchor="middle" font-size="9.5" fill="{INK2}">要求</text>
+  <text x="224" y="64" text-anchor="middle" font-size="9" fill="{INK2}">request</text>
   <line x1="240" y1="168" x2="210" y2="168" stroke="{INK}" marker-end="url(#c)"/>
-  <text x="224" y="159" text-anchor="middle" font-size="9.5" fill="{INK2}">4行</text>
+  <text x="224" y="159" text-anchor="middle" font-size="9" fill="{INK2}">4 lines</text>
   <line x1="208" y1="186" x2="240" y2="186" stroke="{INK}" marker-end="url(#c)"/>
-  <text x="224" y="202" text-anchor="middle" font-size="9.5" fill="{INK2}">署名</text>
+  <text x="224" y="202" text-anchor="middle" font-size="9" fill="{INK2}">signed</text>
   <line x1="208" y1="262" x2="240" y2="262" stroke="{INK}" marker-end="url(#c)"/>
-  <text x="224" y="253" text-anchor="middle" font-size="9.5" fill="{INK2}">灯・系譜</text>
+  <text x="224" y="253" text-anchor="middle" font-size="9" fill="{INK2}">flames</text>
 
   <line x1="448" y1="68" x2="480" y2="68" stroke="{INK}" marker-end="url(#c)"/>
-  <text x="464" y="59" text-anchor="middle" font-size="9.5" fill="{INK2}">本文</text>
+  <text x="464" y="59" text-anchor="middle" font-size="9" fill="{INK2}">body</text>
   <line x1="448" y1="138" x2="480" y2="138" stroke="{INK}" marker-end="url(#c)"/>
-  <text x="464" y="129" text-anchor="middle" font-size="9.5" fill="{INK2}">名乗り</text>
+  <text x="464" y="129" text-anchor="middle" font-size="9" fill="{INK2}">sign-in</text>
   <line x1="448" y1="208" x2="480" y2="208" stroke="{INK}" marker-end="url(#c)"/>
-  <text x="464" y="199" text-anchor="middle" font-size="9.5" fill="{INK2}">代理実行</text>
+  <text x="464" y="199" text-anchor="middle" font-size="9" fill="{INK2}">proxy</text>
   <line x1="448" y1="278" x2="480" y2="278" stroke="{INK}" marker-end="url(#c)"/>
-  <text x="464" y="269" text-anchor="middle" font-size="9.5" fill="{INK2}">追記</text>
+  <text x="464" y="269" text-anchor="middle" font-size="9" fill="{INK2}">append</text>
 
   <line x1="0" y1="330" x2="760" y2="330" stroke="{HAIR}"/>
-  <text x="8" y="352" font-size="11" font-weight="700" fill="{INK}">この線を、絶対に越えないもの</text>
-  <text x="8" y="374" font-size="10.5" fill="{INK2}">鍵の平文 — 手元の機器から出ない。Broker も 0G も、エージェントも受け取らない</text>
-  <text x="8" y="392" font-size="10.5" fill="{INK2}">要求の本文 — 0G の封印の中だけ。系譜にも、我々のログにも入れない</text>
-  <text x="8" y="410" font-size="10.5" fill="{INK2}">本人の身元 — World は仮名（sub）しか返さない。氏名・メール・ウォレットは要らない</text>
-  <text x="8" y="428" font-size="10.5" fill="{INK2}">資金 — 預からない。TOMOSHIBI の中で金が動く経路は存在しない</text>
-  <text x="8" y="452" font-size="10.5" fill="{INK3}">※ 0G に届かないとき、Broker は判断を作らずに STOPPED を返す（既定値を置かない）</text>
+  <text x="8" y="352" font-size="11" font-weight="700" fill="{INK}">What never crosses this line</text>
+  <text x="8" y="374" font-size="10.5" fill="{INK2}">Key material — never leaves the device. Not the Broker, not 0G, not the agent ever receives it</text>
+  <text x="8" y="392" font-size="10.5" fill="{INK2}">The request body — inside the 0G seal only. Never in the trail, never in our logs</text>
+  <text x="8" y="410" font-size="10.5" fill="{INK2}">The key holder's identity — World returns only a pseudonym (sub). No name, email or wallet</text>
+  <text x="8" y="428" font-size="10.5" fill="{INK2}">Funds — never held. No path inside TOMOSHIBI moves money</text>
+  <text x="8" y="452" font-size="10.5" fill="{INK3}">Note: when 0G cannot be reached, the Broker invents no verdict and returns STOPPED (no default)</text>
 </svg>
 '''
 
 def build():
     head = (HERE / '2026-11-06-touchpoints.html').read_text().split('<body>')[0]
-    head = re.sub(r'<title>.*?</title>', '<title>TOMOSHIBI — アーキテクチャとシーケンス</title>', head, flags=re.S)
+    head = head.replace('<html lang="ja">', '<html lang="en">')
+    head = re.sub(r'<title>.*?</title>', '<title>TOMOSHIBI — Architecture and sequences</title>', head, flags=re.S)
     parts = [head, '<body>\n<div class="page">\n']
     parts.append('''
 <header class="doc-header">
-  <p class="eyebrow">TOMOSHIBI ／ 図 ／ 2026-11-06</p>
-  <h1>アーキテクチャと、5つの流れ</h1>
-  <p class="lead">文章で書いた設計（入出力・画面遷移・市場）を、<b>線と順番</b>にした。<b>通る・押させる・止める・決めない・灯をともす</b>の5本。図は手で描かず <span class="mono">ideation/build-diagrams.py</span> から生成している（流れを直したらスクリプトを直す）。</p>
-  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>実装: broker/src/server.js ・ bridge/bridge.py</span></div>
+  <p class="eyebrow">TOMOSHIBI / diagrams / 2026-11-06</p>
+  <h1>The architecture, and the five flows</h1>
+  <p class="lead">The design written out in prose (inputs and outputs, screen flow, market) turned into <b>lines and order</b>. Five flows: <b>passes, requires a press, stops, declines to decide, lights a flame</b>. The diagrams are not drawn by hand; they are generated from <span class="mono">ideation/build-diagrams.py</span> (change a flow by changing the script).</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>Implementation: broker/src/server.js, bridge/bridge.py</span></div>
 </header>
 
 <section>
-  <h2>エグゼクティブサマリー</h2>
+  <h2>Executive summary</h2>
   <ol class="summary">
-    <li><b>門はひとつ、答えは4つ。</b>通した／押されるまで通さない／止めた／決められないので止めた。<b>5つ目の答えを作らない</b>ことが設計の芯。</li>
-    <li><b>鍵と本文は、門を越えない。</b>鍵は手元の機器から出ず、要求の本文は 0G の封印の中だけ。<b>Broker は中身を読まずに重さを受け取る</b>。</li>
-    <li><b>人が出てくるのは2か所だけ。</b>重い要求の長押しと、灯をともす1回の名乗り。<b>ふだんの流れに人は登場しない</b>（図01に人がいないことが答え）。</li>
+    <li><b>One gate, four answers.</b> Let through / not until it is pressed / stopped / could not decide, so stopped. <b>Never inventing a fifth answer</b> is the core of the design.</li>
+    <li><b>Keys and bodies do not cross the gate.</b> The key never leaves the device, and the request body stays inside the 0G seal. <b>The Broker receives a weight without reading the content.</b></li>
+    <li><b>A person appears in two places only.</b> The long press on a heavy request, and the single sign-in that lights a flame. <b>No person appears in the routine flow</b> — that there is no person in diagram 01 is the answer.</li>
   </ol>
 </section>
 
 <section>
-  <h2><span class="no">01</span>アーキテクチャ</h2>
-  <p class="msg"><b>左が手元、真ん中が門、右が「信じなくてよい相手」。</b>信頼が要るのは真ん中の1点だけで、そこに何も預けない。</p>
+  <h2><span class="no">01</span>Architecture</h2>
+  <p class="msg"><b>Left is the near side, the middle is the gate, the right is the parties we need not trust.</b> Trust is required at one point only, and nothing is deposited there.</p>
   <figure>
-    <figcaption>図表1　構成と、境界を越えるもの／越えないもの</figcaption>
+    <figcaption>Figure 1 — The parts, and what does and does not cross the boundary</figcaption>
 ''' + ARCH + '''
-    <p class="src">出所: <span class="mono">broker/src/server.js</span>（口の一覧）・<span class="mono">bridge/bridge.py</span>（USB HID・127.0.0.1）・<span class="mono">spec/permit-signature.md</span>（署名の契約）。</p>
+    <p class="src">Sources: <span class="mono">broker/src/server.js</span> (the list of endpoints), <span class="mono">bridge/bridge.py</span> (USB HID, 127.0.0.1), <span class="mono">spec/permit-signature.md</span> (the signature contract).</p>
   </figure>
 </section>
 ''')
     for i, s in enumerate(SEQUENCES, start=2):
         parts.append(f'''
 <section>
-  <h2><span class="no">{i:02d}</span>流れ{s["no"]} — {esc(s["title"])}</h2>
+  <h2><span class="no">{i:02d}</span>Flow {s["no"]} — {esc(s["title"])}</h2>
   <p class="msg">{s["msg"]}</p>
   <figure>
-    <figcaption>図表{i}　{esc(s["title"])}（返り: <span class="mono">{esc(s["verdict"])}</span>）</figcaption>
+    <figcaption>Figure {i} — {esc(s["title"])} (returns: <span class="mono">{esc(s["verdict"])}</span>)</figcaption>
     <div class="fig-scroll">{seq_svg(s["actors"], s["steps"])}</div>
   </figure>
 </section>
 ''')
     parts.append('''
 <section>
-  <h2><span class="no">07</span>版が上がると、灯は消える</h2>
-  <p class="msg"><b>これは障害ではなく仕様。</b>消えるから、<b>いま使われているか</b>が分かる。</p>
+  <h2><span class="no">07</span>When the version rises, the flames go out</h2>
+  <p class="msg"><b>This is the specification, not a fault.</b> Because they go out, you can see <b>whether a skill is in use now</b>.</p>
   <div class="fig-scroll"><div class="chevrons">
-    <div class="chev">v1.0.0 に灯が42<small>積み上がる</small></div>
-    <div class="chev on">作り手が v1.1.0 を出す<small>(スキル, 版) が変わる</small></div>
-    <div class="chev on">42の灯が一斉に消える<small>前の版に42あった事実は残る</small></div>
-    <div class="chev">使い続けている人が出し直す<small>World で1回</small></div>
-    <div class="chev">新しい灯が積み上がる<small>いまの版の事実</small></div>
+    <div class="chev">42 flames on v1.0.0<small>they accumulate</small></div>
+    <div class="chev on">The maker ships v1.1.0<small>(skill, version) changes</small></div>
+    <div class="chev on">All 42 flames go out at once<small>the fact of 42 on the old version remains</small></div>
+    <div class="chev">People still using it light one again<small>once, with World</small></div>
+    <div class="chev">New flames accumulate<small>a fact about the current version</small></div>
   </div></div>
-  <p class="note"><b>買う側（P3）にとっての意味。</b>灯が0なら「新しい版で、まだ誰も使っていない」。<b>古い評価を新しいと勘違いしない</b>ための仕掛けで、作り手への罰ではない。</p>
+  <p class="note"><b>What this means for the buyer (P3).</b> Zero flames means "a new version that nobody is using yet". It is a device for <b>not mistaking an old rating for a current one</b>, not a punishment for the maker.</p>
 </section>
 
 <section>
-  <h2><span class="no">08</span>次のアクション</h2>
+  <h2><span class="no">08</span>Next actions</h2>
   <div class="tbl"><table>
-    <thead><tr><th>やること</th><th style="width:96px">誰</th><th style="width:120px">いつまで</th></tr></thead>
+    <thead><tr><th>Action</th><th style="width:96px">Who</th><th style="width:120px">By when</th></tr></thead>
     <tbody>
-      <tr><td>図02（重い要求）の⑤〜⑦を<b>実機で通して、同じ順番か確かめる</b></td><td>kou・minta</td><td>撮影前</td></tr>
-      <tr><td>図05（World）を本物のクライアント登録で1回通す</td><td>kou</td><td>11/6 中</td></tr>
-      <tr><td>動画は図01 →図02 →図03 の順で見せる（止まり方が主役）</td><td>minta</td><td>11/6 22:00 IST</td></tr>
+      <tr><td>Run steps 5-7 of diagram 02 (the heavy request) <b>on real hardware and confirm the order matches</b></td><td>kou, minta</td><td>Before filming</td></tr>
+      <tr><td>Run diagram 05 (World) once with a real client registration</td><td>kou</td><td>During 11/6</td></tr>
+      <tr><td>Show the video in the order 01 -> 02 -> 03 (the way it stops is the lead)</td><td>minta</td><td>11/6 22:00 IST</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <footer class="doc-footer">
-  <span>TOMOSHIBI — アーキテクチャとシーケンス（2026-11-06）</span>
-  <span>生成: ideation/build-diagrams.py ／ 関連: actors-io.html ・ screen-flow.html</span>
+  <span>TOMOSHIBI — Architecture and sequences (2026-11-06)</span>
+  <span>Generated by ideation/build-diagrams.py / related: actors-io.html, screen-flow.html</span>
 </footer>
 
 </div>

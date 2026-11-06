@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOMOSHIBI — 門（デモ画面・試作）</title>
+<title>TOMOSHIBI — The gate (demo screen, prototype)</title>
 <style>
 :root{
   --ink:#1a1a1a; --ink-2:#555; --ink-3:#8e8e8e;
-  --accent:#173f66;         /* 通したとき・構造 */
-  --flame:#c67c16;          /* 灯。押されるのを待っている */
-  --brick:#a33c2e;          /* 止めたとき */
+  --accent:#173f66;         /* let through / structure */
+  --flame:#c67c16;          /* flame. waiting to be pressed */
+  --brick:#a33c2e;          /* stopped */
   --hairline:#d9d9d9; --fill:#e7e9ec; --paper:#fff;
 }
 *{box-sizing:border-box}
@@ -45,7 +45,7 @@ button.press[disabled]{background:var(--fill);border-color:var(--hairline);color
 .col:last-child{padding-right:0}
 h2{font-size:11px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;margin:0 0 16px;font-weight:600}
 
-/* 左：台本 */
+/* left: the script */
 ol.script{list-style:none;margin:0 0 20px;padding:0;counter-reset:s}
 ol.script li{counter-increment:s;padding:7px 0 7px 2.2em;position:relative;border-bottom:1px solid var(--hairline);
   color:var(--ink-3);cursor:pointer;font-size:12.5px;line-height:1.6}
@@ -58,7 +58,7 @@ ol.script li .who{display:block;font-size:11px;font-weight:400;color:var(--ink-3
 .req dd{margin:2px 0 12px;word-break:break-all}
 .say{margin:16px 0 0;padding-left:12px;border-left:2px solid var(--hairline);font-size:12.5px;color:var(--ink-2)}
 
-/* 中：門 */
+/* middle: the gate */
 .steps{margin:0 0 26px}
 .step{display:grid;grid-template-columns:22px 1fr auto;gap:12px;align-items:start;padding:11px 0;border-bottom:1px solid var(--hairline)}
 .step .n{font-size:11px;font-weight:700;color:var(--ink-3);padding-top:3px}
@@ -87,7 +87,7 @@ table.facts td{padding:6px 0;border-bottom:1px solid var(--hairline);word-break:
 .zg b{color:var(--ink)}
 .pulse{color:var(--flame);font-weight:700}
 
-/* 右：手元と系譜 */
+/* right: device and trail */
 .device{border:1px solid var(--ink);padding:16px;margin-bottom:8px}
 .device .cap{font-size:10.5px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase;margin-bottom:10px}
 .device pre{margin:0 0 14px;white-space:pre-wrap;line-height:1.9}
@@ -113,47 +113,48 @@ footer b{color:var(--ink-2)}
 <div class="wrap">
 
 <header>
-  <p class="eyebrow">TOMOSHIBI — prototype / minta さんが仕上げる前の試作</p>
-  <h1>門<small>AI が鍵を持たずに鍵を使う。止まるときは、誰が止めたかが残る</small></h1>
-  <p class="lead">左でエージェントが要求を出す。中で Broker が範囲と重さを見る。右の機器が押されるまで、鍵は使われない。</p>
+  <p class="eyebrow">TOMOSHIBI — prototype / draft before minta finishes the design</p>
+  <h1>The gate<small>AI uses a key without holding it. When it stops, who stopped it is recorded</small></h1>
+  <p class="lead">On the left the agent issues a request. In the middle the Broker checks scope and weight. Until the device on the right is pressed, the key is not used.</p>
   <div class="bar">
     <span id="mode"></span>
     <span>0G <b id="model">—</b></span>
     <span id="endpoint"></span>
-    <button id="toggle" style="padding:4px 12px;font-size:11.5px">生で投げる</button>
-    <button id="reset" style="padding:4px 12px;font-size:11.5px">はじめから</button>
+    <button id="toggle" style="padding:4px 12px;font-size:11.5px">Call live</button>
+    <button id="reset" style="padding:4px 12px;font-size:11.5px">Start over</button>
   </div>
 </header>
 
 <div class="cols">
 
   <div class="col">
-    <h2>エージェント側</h2>
+    <h2>Agent side</h2>
     <ol class="script" id="script"></ol>
     <dl class="req" id="req"></dl>
     <p class="say" id="say"></p>
-    <p style="margin-top:18px"><button class="main" id="go">この要求を投げる</button></p>
+    <p style="margin-top:18px"><button class="main" id="go">Send this request</button></p>
   </div>
 
   <div class="col">
-    <h2>門（Broker）</h2>
+    <h2>The gate (Broker)</h2>
     <div class="steps" id="steps"></div>
     <div class="verdict" id="verdict">
-      <p class="word" style="color:var(--ink-3)">待機</p>
-      <p class="one">左の「この要求を投げる」から始める。</p>
-      <p class="why">この門は、4通りの止まり方を区別する。通らなかった理由が「とりあえず失敗」に丸められない。</p>
+      <p class="word" style="color:var(--ink-3)">Idle</p>
+      <p class="one">Start from "Send this request" on the left.</p>
+      <p class="why">This gate tells four kinds of stop apart. The reason a call did not go through is never rounded off to "it failed".</p>
     </div>
+    <p class="small" style="margin:14px 0 0">The Japanese in the verdict (for example 決定的) is the verbatim response recorded from the production 0G model. The English in parentheses is a gloss added here; the recording itself is never rewritten.</p>
   </div>
 
   <div class="col">
-    <h2>手元の機器と、系譜</h2>
+    <h2>Device and trail</h2>
     <div class="device" id="device">
-      <div class="cap">Ledger に出る4行</div>
+      <div class="cap">The four lines on the Ledger</div>
       <pre class="mono" id="lines">—</pre>
-      <button class="press" id="press" disabled>押す</button>
-      <p class="small" style="margin:10px 0 0">押すと、この1回だけの許可に署名される（使い切り）。押さなければ鍵は使われない。</p>
+      <button class="press" id="press" disabled>Press</button>
+      <p class="small" style="margin:10px 0 0">Pressing signs a permit for this one call only (single use). Without the press, the key is not used.</p>
     </div>
-    <h2 style="margin-top:28px">系譜（追記のみ）</h2>
+    <h2 style="margin-top:28px">Trail (append only)</h2>
     <ul class="trail" id="trail"></ul>
     <p class="small" id="root" style="margin-top:12px"></p>
   </div>
@@ -161,9 +162,9 @@ footer b{color:var(--ink-2)}
 </div>
 
 <footer>
-  <p><b>この画面は試作。</b>デザインは minta さんが仕上げる。ここで決めているのは「何が、どの順で、どれだけ大きく見えるか」だけ。</p>
-  <p><b>0G Private Computer は飾りではない。</b>重さを決めるには要求の本文を読む必要があるが、その本文を我々に見せたくない。だから封印（TEE）の中で読ませている。判定ごとに <b>request id</b> が出て、上の表に載る。</p>
-  <p><b>届かないときは判断を作らない。</b>既定値も、その場の推測も出さない（STOPPED）。偽の判断は、通してしまうのと同じくらい悪い。</p>
+  <p><b>This screen is a prototype.</b> minta will finish the design. All that is settled here is what appears, in what order, and at what size.</p>
+  <p><b>The 0G Private Computer is not decoration.</b> Deciding weight means reading the body of the request, and we do not want that body shown to us. So it is read inside the seal (TEE). Every verdict returns a <b>request id</b>, and it appears in the table above.</p>
+  <p><b>When it cannot be reached, no verdict is invented.</b> No default, no guess on the spot (STOPPED). A false verdict is as bad as letting the call through.</p>
   <p id="recnote"></p>
 </footer>
 
@@ -175,34 +176,76 @@ var DATA = /*__SCENES__*/ null;
 var $ = function (id) { return document.getElementById(id) }
 var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c] }) }
 
-// 画面に出す4つの止まり方。**ここが作品の中身なので、言葉を省かない**
+// The four ways this screen can stop. **This is the substance of the piece, so nothing is abbreviated**
 var FACE = {
-  ALLOWED:     { cls: 'allowed', word: '通した',   one: '範囲の中で、重さも「ふだん」。鍵は Broker の中で使われ、エージェントには渡っていない。' },
-  NEEDS_PRESS: { cls: 'needs',   word: '押されるまで通さない', one: '範囲の中だが、0G が「決定的」と読んだ。立っている許可では通さない。' },
-  DENIED:      { cls: 'denied',  word: '止めた',   one: '宣言した範囲の外。実行していない。誰が要求したかを、スキルの署名ごと刻んだ。' },
-  STOPPED:     { cls: 'stopped', word: '決められないので止めた', one: '0G に届かない。既定値も、その場の判断も作らない。回数も減らない。' },
+  ALLOWED:     { cls: 'allowed', word: 'Let through', one: 'In scope, and the weight is routine. The key was used inside the Broker and never reached the agent.' },
+  NEEDS_PRESS: { cls: 'needs',   word: 'Not until it is pressed', one: 'In scope, but 0G read it as decisive. A standing permit does not get it through.' },
+  DENIED:      { cls: 'denied',  word: 'Refused',  one: 'Outside the declared scope. Not executed. Who asked was recorded, skill signature and all.' },
+  STOPPED:     { cls: 'stopped', word: 'Stopped without deciding', one: '0G cannot be reached. No default, no verdict invented on the spot. The call budget is not decremented.' },
 }
+
+// scenes.json holds responses recorded verbatim from the production 0G Private
+// Computer. That file is evidence and is never rewritten, so the recorded Japanese
+// is rendered as recorded and an English gloss is added beside it here.
+var GLOSS = {
+  'ふだん': 'routine',
+  '大事': 'significant',
+  '決定的': 'decisive',
+  '読み取り専用で取り消し可能': 'read-only, reversible',
+  '資金移転不可逆操作': 'irreversible funds transfer',
+  '資金移転不可逆、取り消し不可能': 'funds transfer, irreversible, cannot be undone',
+  '決定的：その場の一押しが要る': 'decisive: a press on the spot is required',
+  '許可されていない宛先': 'target not in the permit',
+  '重さを決められないので止めた': 'stopped, because the weight could not be decided',
+  '0G に届かない: fetch failed': 'cannot reach 0G: fetch failed',
+}
+function gloss(v) { var t = String(v == null ? '' : v); return GLOSS[t] ? t + ' (' + GLOSS[t] + ')' : t }
+
+// English for the narration the maker wrote into scenes.json (titles, lines, captions).
+// Keyed by scene id so the recorded file itself stays untouched.
+var EN = {
+  'usual': { title: 'In scope, a routine request', agent: 'Research helper',
+    say: 'A routine read goes straight through. The key never reached this agent.',
+    caption: '0G read it as routine, so the standing permit carries it' },
+  'heavy': { title: 'In scope, but the content is heavy', agent: 'Bookkeeping automation',
+    say: 'Same scope. But the body is a $4,800 transfer to an account nobody knows.',
+    caption: '0G read it as decisive. A standing permit does not get it through' },
+  'pressed': { title: 'Pressed on the spot', agent: 'Bookkeeping automation',
+    say: 'Four lines appear on the device. Only after the press does this one call go through.',
+    caption: 'A single-use permit (maxCalls=1). Without the press, the key is not used' },
+  'denied-host': { title: 'A request outside the declared scope', agent: 'A hijacked skill',
+    say: 'Wrong target. It stops here. And who asked is recorded, signature and all.',
+    caption: '0G never saw it. Out-of-scope requests stop before the body leaves' },
+  'denied-sneak': { title: 'A request hiding the target in the path', agent: 'A hijacked skill',
+    say: 'Slipping the allowed target into the middle of the URL does not get through.',
+    caption: 'Matched on the host, not on the string' },
+  'stopped': { title: 'When 0G cannot be reached', agent: 'Bookkeeping automation',
+    say: 'The party that decides weight is unreachable. No default is invented here. It stops.',
+    caption: 'Better to stop than to invent a verdict. The call budget is not decremented' },
+}
+var NOTE_EN = 'These are responses from the production 0G Private Computer (TeeML), saved exactly as they came back. Nothing is invented.'
+function tx(s) { return EN[s.id] || s }
 var ORDER = ['usual', 'heavy', 'pressed', 'denied-host', 'denied-sneak', 'stopped']
 var scenes = {}, live = null, idx = 0, busy = false, pressLeft = 0, LIVE = false
-// ?s=<場面の id> で、その場面を開いた直後に1回だけ投げる（撮影・確認用の深いリンク）
+// ?s=<scene id> opens that scene and sends it once (deep link for filming and checks)
 var AUTO = new URLSearchParams(location.search).get('s')
 
 function setMode() {
   $('mode').innerHTML = LIVE
-    ? '<b style="color:var(--flame)">生</b> いま 0G に投げている'
-    : '<b>録画</b> 本番の 0G に ' + esc((DATA.recordedAt || '').slice(0, 16).replace('T', ' ')) + 'Z に投げた応答'
-  $('toggle').textContent = LIVE ? '録画に戻す' : '生で投げる'
+    ? '<b style="color:var(--flame)">LIVE</b> calling 0G right now'
+    : '<b>Recorded</b> verbatim response from the production 0G, called ' + esc((DATA.recordedAt || '').slice(0, 16).replace('T', ' ')) + 'Z'
+  $('toggle').textContent = LIVE ? 'Back to recorded' : 'Call live'
   $('endpoint').textContent = DATA.endpoint
   $('model').textContent = DATA.model
-  $('recnote').innerHTML = '<b>録画の中身も作り話ではない。</b>' + esc(DATA.note) +
-    ' 録画 ' + esc(DATA.recordedAt) + ' / 模擬モード: ' + (DATA.simulated ? '有（撮影では外す）' : '無')
+  $('recnote').innerHTML = '<b>The recording is not invented either.</b> ' + esc(NOTE_EN) +
+    ' Recorded ' + esc(DATA.recordedAt) + ' / simulated mode: ' + (DATA.simulated ? 'on (off for filming)' : 'off')
 }
 
 function drawScript() {
   $('script').innerHTML = ORDER.map(function (id, i) {
     var s = scenes[id]
     return '<li data-i="' + i + '" class="' + (i === idx ? 'on' : i < idx ? 'done' : '') + '">' +
-      esc(s.title) + '<span class="who">' + esc(s.agent) + '</span></li>'
+      esc(tx(s).title) + '<span class="who">' + esc(tx(s).agent) + '</span></li>'
   }).join('')
   Array.prototype.forEach.call($('script').children, function (li) {
     li.onclick = function () { if (!busy) { idx = Number(li.dataset.i); drawScene() } }
@@ -214,22 +257,22 @@ function drawScene() {
   drawScript()
   var r = s.request
   $('req').innerHTML =
-    '<dt>要求</dt><dd class="mono">' + esc(r.method) + ' ' + esc(r.url) + '</dd>' +
-    (r.body ? '<dt>本文（0G だけが封印の中で読む）</dt><dd class="mono">' + esc(r.body) + '</dd>' : '') +
-    '<dt>鍵</dt><dd class="mono">' + esc(String(r.keyRef).slice(0, 14)) + '…　※エージェントには渡らない</dd>'
-  $('say').textContent = s.say
+    '<dt>Request</dt><dd class="mono">' + esc(r.method) + ' ' + esc(r.url) + '</dd>' +
+    (r.body ? '<dt>Body (only 0G reads it, inside the seal)</dt><dd class="mono">' + esc(r.body) + '</dd>' : '') +
+    '<dt>Key</dt><dd class="mono">' + esc(String(r.keyRef).slice(0, 14)) + '…&nbsp;&nbsp;never handed to the agent</dd>'
+  $('say').textContent = tx(s).say
   $('lines').textContent = s.permitLines.join('\n')
-  $('go').textContent = ORDER[idx] === 'pressed' ? '押されたものとして投げる' : 'この要求を投げる'
+  $('go').textContent = ORDER[idx] === 'pressed' ? 'Send it as already pressed' : 'Send this request'
   resetSteps()
   $('verdict').className = 'verdict'
-  $('verdict').innerHTML = '<p class="word" style="color:var(--ink-3)">待機</p><p class="one">' + esc(s.caption) + '</p>'
+  $('verdict').innerHTML = '<p class="word" style="color:var(--ink-3)">Idle</p><p class="one">' + esc(tx(s).caption) + '</p>'
 }
 
 var STEPS = [
-  { t: '範囲の照合', d: '手元で署名された4行と突き合わせる（宛先・操作・鍵・期限・回数）' },
-  { t: '0G が本文を読む', d: '封印（TEE）の中だけで読む。我々も読めない' },
-  { t: '重さで分ける', d: 'ふだん / 大事 / 決定的。決定的なら、その場の一押しが要る' },
-  { t: '代理で実行', d: '鍵は Broker の中で使う。返答のハッシュを刻む' },
+  { t: 'Scope check', d: 'Matched against the four lines signed on the device (target, operation, key, expiry, call budget)' },
+  { t: '0G reads the body', d: 'Read only inside the seal (TEE). We cannot read it either' },
+  { t: 'Sort by weight', d: 'routine / significant / decisive. Decisive needs a press on the spot' },
+  { t: 'Call on its behalf', d: 'The key is used inside the Broker. The hash of the response is recorded' },
 ]
 function resetSteps(states) {
   $('steps').innerHTML = STEPS.map(function (s, i) {
@@ -244,49 +287,49 @@ function statesFor(b) {
   var zg = b.zg || {}
   var id = zg.requestId ? String(zg.requestId).split(',')[0] : null
   if (b.decision === 'DENIED') return [
-    { k: 'stop', s: '止めた', note: (b.message || b.reason) + '（' + (b.violation ? '違反として刻んだ' : '刻まない') + '）' },
-    { k: 'skip', s: '見せていない', note: '範囲外の本文は、そもそも外に出さない。0G のクレジットも使わない' },
+    { k: 'stop', s: 'refused', note: gloss(b.message || b.reason) + ' (' + (b.violation ? 'recorded as a violation' : 'not recorded') + ')' },
+    { k: 'skip', s: 'not shown', note: 'An out-of-scope body never leaves at all. No 0G credit is spent' },
     { k: '', s: '—' }, { k: '', s: '—' }]
   if (b.decision === 'STOPPED') return [
-    { k: 'pass', s: '通過' },
-    { k: 'stop', s: '届かない', note: (zg.error || '') + '（' + (zg.ms || 0) + 'ms で諦めた）' },
-    { k: 'skip', s: '決めない', note: '重さが決まらない以上、既定値を作らない' },
-    { k: 'skip', s: '実行しない', note: '回数も減らない' }]
-  var two = { k: 'pass', s: zg.tier || '読んだ', note: '封印の中で読んだ。request id ' + (id || '—') + ' / ' + (zg.ms || '—') + 'ms' }
+    { k: 'pass', s: 'passed' },
+    { k: 'stop', s: 'unreachable', note: gloss(zg.error || '') + ' (gave up after ' + (zg.ms || 0) + 'ms)' },
+    { k: 'skip', s: 'no decision', note: 'With no weight decided, no default is invented' },
+    { k: 'skip', s: 'not executed', note: 'The call budget is not decremented' }]
+  var two = { k: 'pass', s: zg.tier ? gloss(zg.tier) : 'read', note: 'Read inside the seal. request id ' + (id || '—') + ' / ' + (zg.ms || '—') + 'ms' }
   if (b.decision === 'NEEDS_PRESS') return [
-    { k: 'pass', s: '通過' }, two,
-    { k: 'stop', s: '押されるまで', note: '立っている許可（複数回使える許可）では通さない。使い切りの許可が要る' },
-    { k: 'skip', s: '実行しない', note: '鍵は使われていない' }]
-  return [{ k: 'pass', s: '通過' }, two,
-    { k: 'pass', s: zg.tier === '決定的' ? '一押し済み' : '通過', note: zg.tier === '決定的' ? '使い切りの許可で署名されている' : null },
-    { k: 'pass', s: '実行', note: '残り ' + (b.remaining != null ? b.remaining : '—') + ' 回' }]
+    { k: 'pass', s: 'passed' }, two,
+    { k: 'stop', s: 'until pressed', note: 'A standing permit (good for several calls) does not carry it. A single-use permit is required' },
+    { k: 'skip', s: 'not executed', note: 'The key was not used' }]
+  return [{ k: 'pass', s: 'passed' }, two,
+    { k: 'pass', s: GLOSS[zg.tier] === 'decisive' ? 'pressed' : 'passed', note: GLOSS[zg.tier] === 'decisive' ? 'Signed with a single-use permit' : null },
+    { k: 'pass', s: 'executed', note: (b.remaining != null ? b.remaining : '—') + ' call(s) left' }]
 }
 
 function drawVerdict(b, ms) {
   var f = FACE[b.decision] || { cls: '', word: b.decision, one: '' }
   var zg = b.zg || {}
   var rows = []
-  rows.push(['判定', '<b>' + esc(b.decision) + '</b>　' + esc(b.reason || '') + (b.message ? '　' + esc(b.message) : '')])
-  if (zg.tier) rows.push(['0G の読み', esc(zg.tier) + (zg.reason ? '　<span class="small">' + esc(zg.reason) + '</span>' : '')])
+  rows.push(['Verdict', '<b>' + esc(b.decision) + '</b>&nbsp;&nbsp;' + esc(b.reason || '') + (b.message ? '&nbsp;&nbsp;' + esc(gloss(b.message)) : '')])
+  if (zg.tier) rows.push(['0G read it as', esc(gloss(zg.tier)) + (zg.reason ? '&nbsp;&nbsp;<span class="small">' + esc(gloss(zg.reason)) + '</span>' : '')])
   if (zg.requestId) rows.push(['request id', '<span class="mono">' + esc(zg.requestId) + '</span>'])
-  if (zg.model) rows.push(['model', '<span class="mono">' + esc(zg.model) + '</span>' + (zg.sealed ? '　封印の中で実行' : '')])
-  if (b.violation) rows.push(['違反の記録', 'スキルの署名ごと刻んだ　<span class="mono">' + esc(b.skillSigner || '') + '</span>'])
-  if (b.attestation) rows.push(['返答のハッシュ', '<span class="mono">' + esc(b.attestation.hash || b.attestation) + '</span>'])
-  rows.push(['糸（系譜）', '<span class="mono">' + esc(String(b.thread || '').slice(0, 26)) + '…</span>'])
-  rows.push(['往復', esc(ms) + ' ms' + (LIVE ? '（いま計った）' : '（録画時の実測）')])
+  if (zg.model) rows.push(['model', '<span class="mono">' + esc(zg.model) + '</span>' + (zg.sealed ? '&nbsp;&nbsp;ran inside the seal' : '')])
+  if (b.violation) rows.push(['Violation record', 'recorded with the skill signature&nbsp;&nbsp;<span class="mono">' + esc(b.skillSigner || '') + '</span>'])
+  if (b.attestation) rows.push(['Response hash', '<span class="mono">' + esc(b.attestation.bodyHash || b.attestation.hash || b.attestation) + '</span>'])
+  rows.push(['Thread (trail)', '<span class="mono">' + esc(String(b.thread || '').slice(0, 26)) + '…</span>'])
+  rows.push(['Round trip', esc(ms) + ' ms' + (LIVE ? ' (measured now)' : ' (measured when recorded)')])
   $('verdict').className = 'verdict ' + f.cls
   $('verdict').innerHTML = '<p class="word">' + esc(f.word) + '</p><p class="one">' + esc(f.one) + '</p>' +
     '<table class="facts"><tbody>' + rows.map(function (r) {
       return '<tr><th>' + r[0] + '</th><td>' + r[1] + '</td></tr>'
     }).join('') + '</tbody></table>' +
-    (zg.simulated ? '<p class="zg" style="color:var(--brick)"><b>模擬モード。</b>撮影では外す</p>' : '')
+    (zg.simulated ? '<p class="zg" style="color:var(--brick)"><b>Simulated mode.</b> Turned off for filming</p>' : '')
 }
 
 function addTrail(b) {
   var li = document.createElement('li')
   var zg = b.zg || {}
   li.innerHTML = '<span class="v ' + esc(b.decision) + '">' + esc(b.decision) + '</span>' +
-    '<span>' + esc(scenes[ORDER[idx]].title) +
+    '<span>' + esc(tx(scenes[ORDER[idx]]).title) +
     '<span class="m mono">' + (zg.requestId ? esc(String(zg.requestId).split(',')[0]) : esc(b.reason || '')) + '</span></span>'
   $('trail').appendChild(li)
 }
@@ -297,21 +340,21 @@ async function run() {
   if (busy) return
   busy = true; $('go').disabled = true; $('press').disabled = true
   var id = ORDER[idx], s = scenes[id]
-  resetSteps([{ k: 'live', s: '照合中' }])
+  resetSteps([{ k: 'live', s: 'checking' }])
   await sleep(320)
   var t0 = Date.now(), b, ms
   if (id !== 'denied-host' && id !== 'denied-sneak') {
-    resetSteps([{ k: 'pass', s: '通過' }, { k: 'live', s: '読んでいる…', note: '封印の中。ここだけが本文を見る' }])
+    resetSteps([{ k: 'pass', s: 'passed' }, { k: 'live', s: 'reading…', note: 'Inside the seal. This is the only place that sees the body' }])
   }
   if (LIVE) {
     var bundle = id === 'pressed' ? (live.presses[pressLeft++] || null) : live[id]
-    if (!bundle) { b = { decision: 'STOPPED', reason: 'NO_BUNDLE', message: '一押し用の許可を使い切った（はじめからで戻る）', zg: {} } }
+    if (!bundle) { b = { decision: 'STOPPED', reason: 'NO_BUNDLE', message: 'The single-use permits are spent (Start over to reset)', zg: {} } }
     else {
       try {
         var res = await fetch(bundle.base + '/use', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(bundle.body) })
         b = await res.json()
       } catch (e) {
-        b = { decision: 'STOPPED', reason: 'BROKER_UNREACHABLE', message: 'Broker に届かない（' + bundle.base + '）', zg: { error: String(e) } }
+        b = { decision: 'STOPPED', reason: 'BROKER_UNREACHABLE', message: 'Cannot reach the Broker (' + bundle.base + ')', zg: { error: String(e) } }
       }
     }
     ms = Date.now() - t0
@@ -343,7 +386,7 @@ $('reset').onclick = function () { idx = 0; pressLeft = 0; $('trail').innerHTML 
   if (AUTO) setTimeout(run, 120)
   var seal = DATA.seal || {}
   $('root').innerHTML = 'root hash <span class="mono">' + esc(String(seal.rootHash || '—').slice(0, 22)) + '…</span><br>' +
-    (seal.uploaded ? '0G Storage に置いた' : '0G Storage には未投下（gas 待ち。置いていないものを置いたと書かない）')
+    (seal.uploaded ? 'Stored on 0G Storage' : 'Not yet on 0G Storage (waiting on gas; we do not claim to have stored what we have not)')
 })()
 </script>
 </body>

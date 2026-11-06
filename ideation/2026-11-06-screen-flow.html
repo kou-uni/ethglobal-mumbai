@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOMOSHIBI — 画面遷移とプロセス（設計）</title>
+<title>TOMOSHIBI — Screen Transitions and Processes (design)</title>
 <style>
 :root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
 --hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
@@ -89,56 +89,56 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 <div class="page">
 
 <header class="doc-header">
-  <p class="eyebrow">TOMOSHIBI ／ 設計 ／ minta さんへ</p>
-  <h1>画面遷移とプロセス — 人に聞く場面は2つしかない</h1>
-  <p class="lead">鍵を使うたびに聞く「押す」（手元の機器）と、1回だけ聞く「名乗る」（World）。この2つは意味が違うので、同じ画面に並べない。この資料は、画面の枚数・遷移・残るものを固定するためのもの。</p>
-  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>実装に合わせて書いている（動いているものだけ「動く」と書く）</span></div>
+  <p class="eyebrow">TOMOSHIBI / Design / For minta</p>
+  <h1>Screen transitions and processes &mdash; there are only two moments we ask a person</h1>
+  <p class="lead">&ldquo;Press&rdquo; (the device in your hand), asked every time a key is used, and &ldquo;vouch&rdquo; (World), asked once. These two mean different things, so they never sit on the same screen. This document exists to fix the number of screens, the transitions, and what remains.</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>Written against the implementation (only what runs is written as &ldquo;runs&rdquo;)</span></div>
 </header>
 
 <section>
-  <h2>エグゼクティブサマリー</h2>
+  <h2>Executive summary</h2>
   <ol class="summary">
-    <li><b>人に聞くのは2場面だけ。</b>「押す」＝毎回・手元の機器・いま許すか。「名乗る」＝1回・World・誰であるか。<b>同じ1回の行為で2回聞かない。</b>聞くと、なぜ2回なのかを説明できなくなる。</li>
-    <li><b>画面は5枚。増やさない。</b>止まったときの画面を新設しない（同じ画面の<b>状態</b>にして、系譜に残す）。審査員の90秒で迷わせないため。</li>
-    <li><b>決めてほしいのは3つ</b>（§06）。灯を出す導線の起点／World の待ち画面の主役／実機が繋がらない日の代役。</li>
+    <li><b>We ask a person in two situations only.</b> &ldquo;Press&rdquo; = every time, on the device in your hand, whether to permit it now. &ldquo;Vouch&rdquo; = once, through World, who you are. <b>We never ask twice for one and the same act.</b> Ask twice, and we can no longer explain why it is twice.</li>
+    <li><b>Five screens. We do not add more.</b> No new screen is created for being stopped (it becomes a <b>state</b> of the same screen, and is kept in the trail). So that a judge's 90 seconds are not spent getting lost.</li>
+    <li><b>Three things we need decided</b> (&sect;06). Where the path to lighting a flame starts / what leads the World waiting screen / the stand-in for days the physical device will not connect.</li>
   </ol>
 </section>
 
 <section>
-  <h2><span class="no">01</span>画面の地図</h2>
-  <p class="msg">左から右に「頼む → 分ける → 残る」。World は本線から外れた1本の枝で、灯を出すときにだけ通る。</p>
+  <h2><span class="no">01</span>The map of screens</h2>
+  <p class="msg">Left to right: &ldquo;ask → sort → remain&rdquo;. World is one branch off the main line, taken only when lighting a flame.</p>
 
   <figure>
-    <figcaption>図表1　画面と遷移（太線＝毎回通る本線、細線＝灯を出すときだけ）</figcaption>
-    <svg viewBox="0 0 760 330" role="img" aria-label="画面遷移図">
+    <figcaption>Figure 1&emsp;Screens and transitions (thick line = the main line taken every time; thin line = only when lighting a flame)</figcaption>
+    <svg viewBox="0 0 760 330" role="img" aria-label="Screen transition diagram">
       <g font-size="12">
-        <!-- 本線 -->
+        <!-- main line -->
         <rect x="0" y="60" width="150" height="62" fill="var(--fill-gray)"/>
-        <text x="12" y="84" font-weight="700">S1 範囲をつくる</text>
-        <text x="12" y="104" fill="var(--ink-2)" font-size="11">4行に手元で署名（自作アプリ）</text>
+        <text x="12" y="84" font-weight="700">S1 Create the scope</text>
+        <text x="12" y="104" fill="var(--ink-2)" font-size="11">Sign 4 lines in hand (own app)</text>
 
         <rect x="186" y="60" width="180" height="62" fill="var(--accent)"/>
-        <text x="198" y="84" font-weight="700" fill="#fff">S2 門</text>
-        <text x="198" y="104" fill="#fff" font-size="11" opacity=".85">要求 → 範囲 → 0G → 判定</text>
+        <text x="198" y="84" font-weight="700" fill="#fff">S2 Gate</text>
+        <text x="198" y="104" fill="#fff" font-size="11" opacity=".85">request → scope → 0G → judgement</text>
 
         <rect x="402" y="60" width="160" height="62" fill="var(--fill-gray)"/>
-        <text x="414" y="84" font-weight="700">S3 手元の機器</text>
-        <text x="414" y="104" fill="var(--ink-2)" font-size="11">4行を見て、押す</text>
+        <text x="414" y="84" font-weight="700">S3 Device in hand</text>
+        <text x="414" y="104" fill="var(--ink-2)" font-size="11">Read the 4 lines, press</text>
 
         <rect x="598" y="60" width="162" height="62" fill="var(--fill-gray)"/>
-        <text x="610" y="84" font-weight="700">S4 系譜</text>
-        <text x="610" y="104" fill="var(--ink-2)" font-size="11">追記のみ／root hash</text>
+        <text x="610" y="84" font-weight="700">S4 Trail</text>
+        <text x="610" y="104" fill="var(--ink-2)" font-size="11">append only / root hash</text>
 
-        <!-- 枝 -->
+        <!-- branch -->
         <rect x="186" y="228" width="180" height="62" fill="var(--accent)"/>
-        <text x="198" y="252" font-weight="700" fill="#fff">S5 灯</text>
-        <text x="198" y="272" fill="#fff" font-size="11" opacity=".85">版ごとの星。版が上がると消える</text>
+        <text x="198" y="252" font-weight="700" fill="#fff">S5 Flames</text>
+        <text x="198" y="272" fill="#fff" font-size="11" opacity=".85">Stars per version; a bump puts them out</text>
 
         <rect x="402" y="228" width="160" height="62" fill="var(--fill-gray)"/>
-        <text x="414" y="252" font-weight="700">S6 World で確かめる</text>
-        <text x="414" y="272" fill="var(--ink-2)" font-size="11">device flow・1回だけ</text>
+        <text x="414" y="252" font-weight="700">S6 Verify with World</text>
+        <text x="414" y="272" fill="var(--ink-2)" font-size="11">device flow, once only</text>
 
-        <!-- 矢印 -->
+        <!-- arrows -->
         <g stroke="var(--ink)" stroke-width="2" fill="none" marker-end="url(#a)">
           <path d="M150 91 H180"/>
           <path d="M366 91 H396"/>
@@ -156,164 +156,164 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
           <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
             <path d="M0 0 L10 5 L0 10 z" fill="var(--ink-3)"/></marker>
         </defs>
-        <text x="300" y="155" fill="var(--ink-2)" font-size="11">押した署名を持って戻る（この1回だけ通る）</text>
-        <text x="300" y="192" fill="var(--ink-3)" font-size="11">系譜から「この版を使っている」と名乗りに行く</text>
-        <text x="300" y="306" fill="var(--ink-3)" font-size="11">確かめられたら灯が1つ増える</text>
-        <text x="0" y="30" font-size="11" fill="var(--ink-3)" letter-spacing="1">毎回通る本線</text>
-        <text x="0" y="214" font-size="11" fill="var(--ink-3)" letter-spacing="1">灯を出すときだけの枝（World）</text>
+        <text x="300" y="155" fill="var(--ink-2)" font-size="11">returns with the signed press (this one call only)</text>
+        <text x="300" y="192" fill="var(--ink-3)" font-size="11">from the trail, go and vouch &ldquo;I use this version&rdquo;</text>
+        <text x="300" y="306" fill="var(--ink-3)" font-size="11">once verified, one more flame</text>
+        <text x="0" y="30" font-size="11" fill="var(--ink-3)" letter-spacing="1">MAIN LINE, EVERY TIME</text>
+        <text x="0" y="214" font-size="11" fill="var(--ink-3)" letter-spacing="1">BRANCH ONLY WHEN LIGHTING A FLAME (WORLD)</text>
       </g>
     </svg>
   </figure>
 
   <div class="tbl"><table>
-    <caption>表1　画面の役割と、いまの状態</caption>
-    <thead><tr><th>画面</th><th>その人が来た目的</th><th>出すもの</th><th>いま</th></tr></thead>
+    <caption>Table 1&emsp;What each screen is for, and where it stands now</caption>
+    <thead><tr><th>Screen</th><th>Why the person came</th><th>What it shows</th><th>Now</th></tr></thead>
     <tbody>
-      <tr><td><b>S1 範囲をつくる</b></td><td>このAIに何を許すか決める</td><td>4行（鍵・宛先・操作・期限・回数）／署名</td><td>minta・自作アプリ</td></tr>
-      <tr><td><b>S2 門</b></td><td>いま何が起きたのかを見る</td><td>要求・4段の進行・判定・request id</td><td><b>動く</b>（<span class="mono">ui/index.html</span>）</td></tr>
-      <tr><td><b>S3 手元の機器</b></td><td>重い要求を自分で通す</td><td>4行と「押す」。待っている間は灯色</td><td>実機＋画面の代役</td></tr>
-      <tr><td><b>S4 系譜</b></td><td>あとから確かめる／人に見せる</td><td>1本の糸の全件・root hash</td><td>JSON（<span class="mono">/trace/&lt;thread&gt;</span>）</td></tr>
-      <tr><td><b>S5 灯</b></td><td>このスキルが信じられるか見る</td><td>版ごとの灯・版の履歴</td><td><b>動く</b>（<span class="mono">ui/stars.html</span>）</td></tr>
-      <tr><td><b>S6 World で確かめる</b></td><td>名乗る（1回だけ）</td><td>4段・user_code・3つの結末</td><td>画面は動く／クライアント登録待ち</td></tr>
+      <tr><td><b>S1 Create the scope</b></td><td>Decide what this AI is permitted to do</td><td>The 4 lines (key, destination, operation, expiry, call budget) / signature</td><td>minta, custom app</td></tr>
+      <tr><td><b>S2 Gate</b></td><td>See what just happened</td><td>Request, the 4-stage progress, judgement, request id</td><td><b>Runs</b> (<span class="mono">ui/index.html</span>)</td></tr>
+      <tr><td><b>S3 Device in your hand</b></td><td>Let a heavy request through yourself</td><td>The 4 lines and &ldquo;press&rdquo;. Flame-coloured while it waits</td><td>Physical device + on-screen stand-in</td></tr>
+      <tr><td><b>S4 Trail</b></td><td>Check afterwards / show someone</td><td>Every entry on one thread, root hash</td><td>JSON (<span class="mono">/trace/&lt;thread&gt;</span>)</td></tr>
+      <tr><td><b>S5 Flames</b></td><td>See whether this skill can be trusted</td><td>Flames per version, version history</td><td><b>Runs</b> (<span class="mono">ui/stars.html</span>)</td></tr>
+      <tr><td><b>S6 Verify with World</b></td><td>Vouch (once only)</td><td>4 stages, user_code, 3 outcomes</td><td>Screen runs / awaiting client registration</td></tr>
     </tbody>
   </table></div>
-  <p class="src">出所: 実装（<span class="mono">broker/src/*.js</span>・<span class="mono">ui/</span>）。S1 は <span class="mono">spec/permit-signature.md</span>。</p>
+  <p class="src">Sources: the implementation (<span class="mono">broker/src/*.js</span>, <span class="mono">ui/</span>). S1 is <span class="mono">spec/permit-signature.md</span>.</p>
 </section>
 
 <section>
-  <h2><span class="no">02</span>プロセスA — 鍵を使う（毎回）</h2>
-  <p class="msg">6段のうち、人が出てくるのは4段目だけ。しかも<b>重いと判定されたときだけ</b>。ふだんは誰も邪魔をしない。</p>
+  <h2><span class="no">02</span>Process A &mdash; using a key (every time)</h2>
+  <p class="msg">Of the six stages, a person appears at the fourth only. And only <b>when it is judged heavy</b>. The rest of the time nobody gets in the way.</p>
 
   <div class="fig-scroll"><div class="chevrons">
-    <div class="chev">① 要求<small>スキルが投げる</small></div>
-    <div class="chev on">② 範囲<small>外れたら即 DENIED</small></div>
-    <div class="chev on">③ 0G が読む<small>封印の中・request id</small></div>
-    <div class="chev on">④ 重さ<small>決定的なら押させる</small></div>
-    <div class="chev">⑤ 代理実行<small>鍵は門の中</small></div>
-    <div class="chev">⑥ 系譜<small>追記のみ</small></div>
+    <div class="chev">① Request<small>the skill sends it</small></div>
+    <div class="chev on">② Scope<small>outside it, DENIED at once</small></div>
+    <div class="chev on">③ 0G reads it<small>inside the seal, request id</small></div>
+    <div class="chev on">④ Weight<small>if decisive, make them press</small></div>
+    <div class="chev">⑤ Proxied call<small>the key stays inside the gate</small></div>
+    <div class="chev">⑥ Trail<small>append only</small></div>
   </div></div>
 
   <div class="tbl"><table>
-    <caption>表2　各段で、誰が何を見て、何が残るか</caption>
-    <thead><tr><th>段</th><th>その人に見えるもの</th><th>止まるとどうなるか</th><th>残るもの</th></tr></thead>
+    <caption>Table 2&emsp;At each stage: what the person sees, and what remains</caption>
+    <thead><tr><th>Stage</th><th>What the person sees</th><th>What happens if it stops</th><th>What remains</th></tr></thead>
     <tbody>
-      <tr><td>① 要求</td><td>要求の中身と「鍵は渡っていない」</td><td>—</td><td>スキルの署名</td></tr>
-      <tr><td>② 範囲</td><td>4行との突き合わせ</td><td><b>DENIED</b>。0G にも見せない</td><td>違反として刻む（署名ごと）</td></tr>
-      <tr><td>③ 0G が読む</td><td>「封印の中で読んだ」＋ request id ＋ ms</td><td><b>STOPPED</b>。既定値を作らない</td><td>止めた事実／回数は減らない</td></tr>
-      <tr><td>④ 重さ</td><td>ふだん／大事／決定的 と、その理由</td><td><b>NEEDS_PRESS</b>。押されるまで待つ</td><td>押すまで何も起きない</td></tr>
-      <tr><td>⑤ 代理実行</td><td>残り回数と、返答のハッシュ</td><td>—</td><td>ALLOWED と attestation</td></tr>
-      <tr><td>⑥ 系譜</td><td>1本の糸と root hash</td><td>—</td><td>0G Storage（<b>gas 待ち</b>）</td></tr>
+      <tr><td>① Request</td><td>The contents of the request, and &ldquo;the key has not been handed over&rdquo;</td><td>&mdash;</td><td>The skill's signature</td></tr>
+      <tr><td>② Scope</td><td>The match against the 4 lines</td><td><b>DENIED</b>. Not even shown to 0G</td><td>Carved in as a violation (signature and all)</td></tr>
+      <tr><td>③ 0G reads it</td><td>&ldquo;Read inside the seal&rdquo; + request id + ms</td><td><b>STOPPED</b>. No default value is invented</td><td>The fact of stopping / the call budget is not decremented</td></tr>
+      <tr><td>④ Weight</td><td>routine / important / decisive, and the reason</td><td><b>NEEDS_PRESS</b>. Waits until it is pressed</td><td>Nothing happens until it is pressed</td></tr>
+      <tr><td>⑤ Proxied call</td><td>The remaining call budget, and the hash of the response</td><td>&mdash;</td><td>ALLOWED and the attestation</td></tr>
+      <tr><td>⑥ Trail</td><td>One thread and the root hash</td><td>&mdash;</td><td>0G Storage (<b>awaiting gas</b>)</td></tr>
     </tbody>
   </table></div>
-  <p class="note"><b>④で人を待つのは失敗ではない。</b>ここがこの製品の一番おいしい瞬間なので、待ち状態に専用の見た目（灯色・枠が太る）を与えている。くるくる回る待機表示にしない。</p>
+  <p class="note"><b>Waiting for a person at ④ is not a failure.</b> It is the best moment this product has, so the waiting state is given a look of its own (flame colour, a thickening border). It does not get a spinner.</p>
 </section>
 
 <section>
-  <h2><span class="no">03</span>プロセスB — 灯を出す（1回だけ・World）</h2>
-  <p class="msg">守られている動作は「鍵を使うこと」ではなく「名乗ること」。自分の評判を賭ける行為なので、ここに人の証明を置く。</p>
+  <h2><span class="no">03</span>Process B &mdash; lighting a flame (once only, World)</h2>
+  <p class="msg">The action being protected is not &ldquo;using a key&rdquo; but &ldquo;vouching&rdquo;. It stakes your own reputation, so the proof of being human sits here.</p>
 
   <div class="fig-scroll"><div class="chevrons">
-    <div class="chev on">① 合図を頼む<small>device_authorization</small></div>
-    <div class="chev on">② 本人の端末<small>user_code／QR</small></div>
-    <div class="chev on">③ 署名を検証<small>JWKS。読んで済ませない</small></div>
-    <div class="chev">④ 灯が増える<small>版ごとに1人1つ</small></div>
+    <div class="chev on">① Ask for the signal<small>device_authorization</small></div>
+    <div class="chev on">② The owner's device<small>user_code / QR</small></div>
+    <div class="chev on">③ Verify the signature<small>JWKS. Not merely read</small></div>
+    <div class="chev">④ A flame is added<small>one per person, per version</small></div>
   </div></div>
 
   <div class="fig-scroll"><div class="matrix" style="--mx-cols:2;--mx-label:132px">
     <div class="mx-h"></div>
-    <div class="mx-h">画面に出すこと</div>
-    <div class="mx-h">残るもの</div>
+    <div class="mx-h">What the screen shows</div>
+    <div class="mx-h">What remains</div>
 
-    <div class="mx-label"><small>結末 1</small>確かめられた</div>
-    <div class="mx-cell">灯が1つ増える。刻んだのは<b>sector 単位の仮名だけ</b>（<span class="mono">sub</span>）</div>
-    <div class="mx-cell"><span class="mono">STAR</span>。同じ人は同じ版に二度出せない（使用済みの識別子を atomic に弾く）</div>
+    <div class="mx-label"><small>OUTCOME 1</small>Verified</div>
+    <div class="mx-cell">One flame is added. What is carved in is <b>only the per-sector pseudonym</b> (<span class="mono">sub</span>)</div>
+    <div class="mx-cell"><span class="mono">STAR</span>. The same person cannot light the same version twice (used identifiers are rejected atomically)</div>
 
-    <div class="mx-label alt"><small>結末 2</small>本人が断った</div>
-    <div class="mx-cell">「断った」とはっきり出す。失敗の赤い帯にしない</div>
-    <div class="mx-cell"><span class="mono">human_denied</span>。断ったことも系譜に残す</div>
+    <div class="mx-label alt"><small>OUTCOME 2</small>The owner refused</div>
+    <div class="mx-cell">Say &ldquo;refused&rdquo; plainly. Not a red failure banner</div>
+    <div class="mx-cell"><span class="mono">human_denied</span>. The refusal is kept in the trail too</div>
 
-    <div class="mx-label alt"><small>結末 3</small>人が居なかった</div>
-    <div class="mx-cell">期限が切れた、と出す。<b>「断った」と混ぜない</b></div>
+    <div class="mx-label alt"><small>OUTCOME 3</small>Nobody was there</div>
+    <div class="mx-cell">Say the expiry ran out. <b>Do not mix this with &ldquo;refused&rdquo;</b></div>
     <div class="mx-cell"><span class="mono">proof_expired</span></div>
   </div></div>
 
-  <p><b>World に渡らないもの：</b>何のスキルに灯を出したか、何の鍵か、いつ使ったか。World が確かめるのは「人であること・同じ人であること」だけ。<b>鍵を使うたびに World を呼ばない。</b>それは手元の機器の仕事。</p>
-  <p class="src">出所: <span class="mono">spec/world-agent-pass.md</span> §2、<span class="mono">broker/src/world.js</span>（issuer・grant・拒否コードは実装のまま）。</p>
+  <p><b>What never reaches World:</b> which skill the flame was lit for, which key, when it was used. All World confirms is &ldquo;that this is a human, and the same human&rdquo;. <b>We do not call World every time a key is used.</b> That is the job of the device in your hand.</p>
+  <p class="src">Sources: <span class="mono">spec/world-agent-pass.md</span> &sect;2, <span class="mono">broker/src/world.js</span> (issuer, grant and refusal codes exactly as implemented).</p>
 </section>
 
 <section>
-  <h2><span class="no">04</span>プロセスC — 版が上がる</h2>
-  <p class="msg">灯が消えるのは障害ではなく仕様。消える過程が見えないと、この製品の名前の意味が伝わらない。</p>
+  <h2><span class="no">04</span>Process C &mdash; the version goes up</h2>
+  <p class="msg">Flames going out is the spec, not a fault. If the going-out is not visible, the meaning of this product's name does not come across.</p>
   <div class="tbl"><table>
-    <thead><tr><th>起きること</th><th>画面</th><th>その人の手数</th></tr></thead>
+    <thead><tr><th>What happens</th><th>Screen</th><th>Steps for the person</th></tr></thead>
     <tbody>
-      <tr><td>スキルの版が 1.0.0 → 1.0.1 になる</td><td>灯が1本ずつ消える（数秒）</td><td>0。勝手に消える</td></tr>
-      <tr><td>前の版の数は履歴に残る</td><td>「消えた」行が増える</td><td>0</td></tr>
-      <tr><td>使い続けている人だけが出し直す</td><td>S6 をもう一度</td><td>1回（World）</td></tr>
+      <tr><td>The skill's version goes 1.0.0 → 1.0.1</td><td>Flames go out one by one (a few seconds)</td><td>0. They go out on their own</td></tr>
+      <tr><td>The previous version's count stays in the history</td><td>A &ldquo;went out&rdquo; row is added</td><td>0</td></tr>
+      <tr><td>Only those still using it light it again</td><td>S6, once more</td><td>1 (World)</td></tr>
     </tbody>
   </table></div>
-  <p class="note"><b>だから灯の数は「昔よかった」ではなく「いま使われている」を指す。</b>レビューの星と違うのはここだけ。ここを削ると、ただの評価システムになる。</p>
+  <p class="note"><b>That is why the flame count points at &ldquo;in use now&rdquo;, not &ldquo;was good once&rdquo;.</b> It is the only place this differs from review stars. Cut it, and this becomes just another rating system.</p>
 </section>
 
 <section>
-  <h2><span class="no">05</span>遷移表（これ以外の遷移を作らない）</h2>
-  <p class="msg">画面を増やさず、止まり方は4つとも<b>同じ画面の状態</b>として出す。</p>
+  <h2><span class="no">05</span>Transition table (no transition outside this is built)</h2>
+  <p class="msg">No extra screens; all four ways of stopping are shown as <b>states of the same screen</b>.</p>
   <div class="tbl"><table>
-    <thead><tr><th>いまの画面</th><th>きっかけ</th><th>次</th><th>残るもの</th></tr></thead>
+    <thead><tr><th>Current screen</th><th>Trigger</th><th>Next</th><th>What remains</th></tr></thead>
     <tbody>
-      <tr><td>S1 範囲</td><td>4行に署名した</td><td>S2 門（待機）</td><td>署名された許可</td></tr>
-      <tr><td>S2 門</td><td>ALLOWED</td><td>S2 のまま（系譜に1行増える）</td><td>判定・request id・返答のハッシュ</td></tr>
-      <tr><td>S2 門</td><td>NEEDS_PRESS</td><td><b>S3 手元の機器が灯る</b></td><td>押すまで何も起きない</td></tr>
-      <tr><td>S3 機器</td><td>押した</td><td>S2 門（ALLOWED・使い切り）</td><td>1回限りの許可の署名</td></tr>
-      <tr><td>S3 機器</td><td>押さなかった</td><td>S2 のまま（待ちのまま）</td><td>何も起きない</td></tr>
-      <tr><td>S2 門</td><td>DENIED</td><td>S2 のまま（赤の状態）</td><td>違反・スキルの署名</td></tr>
-      <tr><td>S2 門</td><td>STOPPED</td><td>S2 のまま（赤の状態）</td><td>止めた事実。回数は減らない</td></tr>
-      <tr><td>S2 門</td><td>系譜を見る／QR</td><td>S4 系譜</td><td>—</td></tr>
-      <tr><td>S4 系譜 ／ S5 灯</td><td>「灯を出す」</td><td>S6 World</td><td>—</td></tr>
-      <tr><td>S6 World</td><td>確かめられた</td><td>S5 灯（1つ増える）</td><td>仮名のみ</td></tr>
-      <tr><td>S6 World</td><td>断られた／期限切れ</td><td>S6 のまま（結末を表示）</td><td>断られたことも残る</td></tr>
-      <tr><td>S5 灯</td><td>版が上がった</td><td>S5 のまま（消える演出）</td><td>前の版の数は履歴に残る</td></tr>
+      <tr><td>S1 Scope</td><td>Signed the 4 lines</td><td>S2 Gate (idle)</td><td>A signed permit</td></tr>
+      <tr><td>S2 Gate</td><td>ALLOWED</td><td>Stays on S2 (one row added to the trail)</td><td>Judgement, request id, hash of the response</td></tr>
+      <tr><td>S2 Gate</td><td>NEEDS_PRESS</td><td><b>S3 The device in your hand lights up</b></td><td>Nothing happens until it is pressed</td></tr>
+      <tr><td>S3 Device</td><td>Pressed</td><td>S2 Gate (ALLOWED, single-use)</td><td>The signature on the one-time permit</td></tr>
+      <tr><td>S3 Device</td><td>Did not press</td><td>Stays on S2 (still waiting)</td><td>Nothing happens</td></tr>
+      <tr><td>S2 Gate</td><td>DENIED</td><td>Stays on S2 (red state)</td><td>The violation, the skill's signature</td></tr>
+      <tr><td>S2 Gate</td><td>STOPPED</td><td>Stays on S2 (red state)</td><td>The fact of stopping. The call budget is not decremented</td></tr>
+      <tr><td>S2 Gate</td><td>View the trail / QR</td><td>S4 Trail</td><td>&mdash;</td></tr>
+      <tr><td>S4 Trail / S5 Flames</td><td>&ldquo;Light a flame&rdquo;</td><td>S6 World</td><td>&mdash;</td></tr>
+      <tr><td>S6 World</td><td>Verified</td><td>S5 Flames (one added)</td><td>The pseudonym only</td></tr>
+      <tr><td>S6 World</td><td>Refused / expired</td><td>Stays on S6 (shows the outcome)</td><td>The refusal is kept too</td></tr>
+      <tr><td>S5 Flames</td><td>The version went up</td><td>Stays on S5 (the going-out animation)</td><td>The previous version's count stays in the history</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <section>
-  <h2><span class="no">06</span>決めてほしいこと（3つ）</h2>
-  <p class="msg">どれも1行で返せる。わたしの推しを先に書いた。</p>
+  <h2><span class="no">06</span>What we need decided (three things)</h2>
+  <p class="msg">Each can be answered in one line. My recommendation is written first.</p>
 
-  <h3>Q1　灯を出す導線は、どこから始めるか</h3>
+  <h3>Q1&emsp;Where does the path to lighting a flame start</h3>
   <ul>
-    <li><b>推し：灯の画面と、系譜の両方から。</b>名乗る動機は「使い終わった直後」が一番高い。ただし<b>デモでは灯の画面だけ見せる</b>（90秒で導線を2本説明できない）</li>
-    <li>対案A：灯の画面だけ。実装が軽い。ただし「使ったあと」の熱を拾えない</li>
-    <li>対案B：使用が通るたびに誘う。<b>採らない。</b>毎回聞くと、押す（機器）と意味が混ざる</li>
+    <li><b>Recommended: from both the flame screen and the trail.</b> The motive to vouch is highest &ldquo;right after finishing&rdquo;. But <b>in the demo we show only the flame screen</b> (two paths cannot be explained in 90 seconds)</li>
+    <li>Alternative A: the flame screen only. Lighter to implement. But it misses the heat of &ldquo;just after using it&rdquo;</li>
+    <li>Alternative B: prompt every time a use goes through. <b>Not taken.</b> Asking every time mixes its meaning with pressing (on the device)</li>
   </ul>
 
-  <h3>Q2　World の待ち画面の主役は、コードか QR か</h3>
+  <h3>Q2&emsp;Does the World waiting screen lead with the code or the QR</h3>
   <ul>
-    <li><b>推し：コードを主、QR を従。</b><span class="mono">verification_uri_complete</span> が返るかまだ<b>確かめていない</b>。返らなければ QR 1枚では完結しないので、返らなくても壊れない形にしておく</li>
-    <li>対案：QR を主。返ることが確認できたら差し替える（判定は会場で5分）</li>
+    <li><b>Recommended: code first, QR secondary.</b> Whether <span class="mono">verification_uri_complete</span> comes back is still <b>[unverified]</b>. If it does not, a single QR cannot complete the flow, so we keep a form that does not break either way</li>
+    <li>Alternative: QR first. Swap to it once we confirm it comes back (5 minutes to settle at the venue)</li>
   </ul>
 
-  <h3>Q3　実機（手元の機器）が繋がらない日の代役を、画面に持つか</h3>
+  <h3>Q3&emsp;Do we keep an on-screen stand-in for days the physical device will not connect</h3>
   <ul>
-    <li><b>推し：持つ。</b>ただし<b>「実機の代わり」と画面に書く</b>。黙って代役を本物のように見せない</li>
-    <li>対案：持たない。実機が落ちたらデモが止まる。<b>採らない</b>（撮影の当日に判断を増やさない）</li>
+    <li><b>Recommended: keep it.</b> But <b>write &ldquo;stand-in for the physical device&rdquo; on the screen</b>. Never quietly pass the stand-in off as the real thing</li>
+    <li>Alternative: do not keep it. If the physical device dies, the demo stops. <b>Not taken</b> (do not add decisions on the day of filming)</li>
   </ul>
 </section>
 
 <section>
-  <h2><span class="no">07</span>まだ確かめていないこと</h2>
+  <h2><span class="no">07</span>What we have not verified yet</h2>
   <ul>
-    <li>World のクライアント登録（<span class="mono">WORLD_CLIENT_ID</span> / <span class="mono">SECRET</span>）が未了。device flow を端から端まで通していない</li>
-    <li><span class="mono">verification_uri_complete</span> が返るか（Q2 がこれ次第）／sector 識別子の claim 名（いまは <span class="mono">sub</span> を仮名として扱っている）</li>
-    <li>0G Storage への投下は gas 待ち。root hash は出るが tx はまだ無い</li>
-    <li>実機の自作アプリと門が、まだ同じ画面で繋がっていない（4行の値は同じ関数から出ている）</li>
+    <li>World client registration (<span class="mono">WORLD_CLIENT_ID</span> / <span class="mono">SECRET</span>) is not done. Device flow has not been run end to end</li>
+    <li>Whether <span class="mono">verification_uri_complete</span> comes back (Q2 hangs on it) / the claim name of the sector identifier (we currently treat <span class="mono">sub</span> as the pseudonym)</li>
+    <li>Submission to 0G Storage is awaiting gas. The root hash comes out, but there is no tx yet</li>
+    <li>The custom app on the physical device and the gate are not yet joined on one screen (the 4-line values come from the same function)</li>
   </ul>
 </section>
 
 <footer class="doc-footer">
-  <span>TOMOSHIBI — 画面遷移とプロセス（2026-11-06）</span>
-  <span>門 ui/index.html ／ 灯 ui/stars.html ／ 筋書き ideation/2026-11-06-demo-scenario.md</span>
+  <span>TOMOSHIBI &mdash; Screen transitions and processes (2026-11-06)</span>
+  <span>Gate ui/index.html / Flames ui/stars.html / Scenario ideation/2026-11-06-demo-scenario.md</span>
 </footer>
 
 </div>

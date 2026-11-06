@@ -53,6 +53,10 @@ answers the agent, which reaches her device over 127.0.0.1. The Broker cannot. B
 that step refuses, so the picture shows where a request dies as well as where it goes.
 Lighting a flame is not part of a request either, so it sits in its own band.
 
+The figure, this page and the deck are all written from one place:
+**[`docs/HOW-IT-RUNS.md`](docs/HOW-IT-RUNS.md)** — the processes, the state and the sequence,
+read off the code. If anything here disagrees with that page, that page is right.
+
 ## What it does, in four parts
 
 Everything in this repository is one of four things. The rest is support.

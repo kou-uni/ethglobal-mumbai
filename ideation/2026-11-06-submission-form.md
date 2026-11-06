@@ -192,3 +192,166 @@ Every diagram in the repo is produced by `ideation/build-diagrams.py`,
 
 The spec-driven artifacts are all in the repository, so **what we asked for and what we rejected is
 visible, not just what was generated**.
+
+---
+
+# Prize selection (paste into the form)
+
+**Submission type: Top 10 Finalist & Partner Prizes.**
+*Condition: live judging is 09:30 IST on 7 November and someone has to be in the room.*
+The four-minute script is in `ideation/2026-11-07-finalist-4min.md`.
+
+**Partners (3 of 3 used): 0G · World · Ethereum Foundation.**
+Reasoning and what we gave up is in `research/11-prize-gap.md` — ENS ($7,000) was dropped on purpose,
+because it would have cost the EF slot, it is mainnet/Sepolia while our registry is on 0G Galileo,
+and a name is not core to this work.
+
+**Other partners' technologies used but not applying for:** none.
+*(The Ledger device is central to the project, but Ledger is not a partner at this event.)*
+
+## Why 0G
+
+**The sealed model is in the decision loop, not next to it.** Before anything runs, the Broker sends
+the request body to a **TEE-attested 0G Private Computer** (`0gm-1.0-35b-a3b`, TeeML / Intel TDX)
+and gets back the weight: `routine`, `significant` or `decisive`. The weight decides whether a human
+has to press. **We cannot read the body — not being able to is the feature**, because the thing that
+makes the judgement good is the thing we are not allowed to see.
+
+- **467 measured calls.** 283.9 input / 28.0 output tokens, ~2.0 s, **$0.000036 per judgement**
+  (unit prices read from `GET router-api.0g.ai/v1/models → pricing_usd`).
+- **The trail is sealed on 0G Galileo.** tx `0x74c7cdf9…aef1`, block **64103318**, `status 0x1`,
+  Flow contract `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296`.
+- **When 0G is unreachable we return `STOPPED`, change nothing, and do not bill.** No default verdict,
+  no rule-based stand-in. **A fabricated verdict is worse than no verdict** — and it would be against
+  the spirit of the track to pretend the model answered.
+- We also measured a prompt change rather than assuming it: switching the weight prompt from Japanese
+  to English was only adopted after **120 paired calls** showed it was not less safe (decision 25).
+
+## Why World
+
+**Proof of personhood is what makes a trust signal unbuyable.** Stars sell for **$0.0027** each today.
+A star in TOMOSHIBI can only be issued to a World-verified human, **one sector-scoped pseudonym, one
+star, per version** — and **every star goes out when the maker ships a new version**, so the signal
+describes the code running now rather than the code that earned the reputation.
+
+- **Agent Pass via OIDC `device_code`**, called directly from a **screenless Broker** — the device
+  flow is what makes personhood reachable from a daemon. Issuer verified; the token is checked
+  against the issuer's JWKS with `jose`.
+- We bind **only the `sub`**. No name, no e-mail, no wallet. Which skill got a star, which key it was
+  and when it was used are **not** visible to World.
+- **Our client is registered**, and the device flow runs from the Broker against the live issuer.
+  Any run made without it is recorded with `simulated: true`, and we never present those as real.
+
+## Why Ethereum Foundation (CROPS)
+
+**The privacy property here is structural, not a policy.** The only component that ever sees a
+request body is the sealed model, inside the TEE. The operator cannot read it, and the trail — which
+is written to be public — carries **no request body and no key**.
+
+| | Knows | Does not know |
+|---|---|---|
+| The device | The four lines, and whether a human pressed | The request body. The key never leaves |
+| World | That this is a human, and the same human | Which skill, which key, when |
+| 0G Private Computer | The body, **inside the seal** | The key. **And we cannot read it either** |
+| The trail | Who permitted what, and whether it stopped | **No body, no key** |
+
+- No trackers: no analytics script, no pixel, no third-party cookie. MIT licensed.
+- **The known gap, stated rather than hidden:** the Broker is the one point of trust and **we did not
+  put it in a TEE this time**; and the anonymous read path for stars (query without revealing which
+  star you are reading) is **designed but not implemented**. Both are written down in the README.
+
+---
+
+# Per-prize fields (paste these)
+
+Permalinks are pinned to commit `99e91a1`.
+
+## 0G — $15,000
+
+**Why we are applicable**
+
+> The 0G Private Computer is inside our decision loop, not beside it. Before an agent's request runs,
+> the Broker sends the request body to a TEE-attested model (`0gm-1.0-35b-a3b`, TeeML) and gets back
+> how heavy the action is — routine, significant or decisive — and that verdict decides whether a
+> human has to press a button on a Ledger. The point is that **we cannot read the body ourselves**:
+> the judgement needs the content, and the operator must not have it. We measured 467 calls at
+> ~2.0 s and **$0.000036 per judgement**, and the append-only trail is sealed on 0G Galileo
+> (tx `0x74c7cdf9…aef1`, block 64103318). When 0G is unreachable we return `STOPPED` and change
+> nothing — we never fabricate a verdict.
+
+**Link to the line of code**
+`https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/weigh.js#L68`
+
+**Ease of use: 8**
+
+**Feedback for the sponsor**
+
+> The OpenAI-compatible surface meant the first working call took minutes, which is the best thing
+> about it. Three things cost us real time. (1) **Per-token prices are not in the docs** — we found
+> them in the `pricing_usd` field of `GET /v1/models`, after a day of planning around a 10x cost
+> uncertainty. Putting that table in the docs would have saved the whole exercise. (2) **Thinking is
+> on by default and is not mentioned in the quickstart.** Our first integration took 17.2 s per call
+> and we nearly dropped the feature; `chat_template_kwargs.enable_thinking=false` brought it to
+> 2.0 s. (3) **Verifying the TEE attestation end-to-end is hard to find a path for** — we can say the
+> endpoint is attested, but a short "how to check the dstack quote yourself" page would let us claim
+> it rather than cite it. Minor: in the storage SDK, `indexer.upload()` returning a `[tx, err]` tuple
+> is unusual for JavaScript and cost us one debugging round.
+
+## World — $12,500
+
+**Why we are applicable**
+
+> A trust signal is worthless if it can be bought, and stars sell for $0.0027 each today. In
+> TOMOSHIBI a "flame" can only be lit by a World-verified human: one sector-scoped pseudonym, one
+> star, per version of a skill — and **every star goes out when the maker ships a new version**, so
+> the signal always describes the code that is running now. We use Agent Pass through the OIDC
+> `device_code` grant, called straight from a Broker that has no screen, and verify the token against
+> the issuer's JWKS. We bind only the `sub` — no name, no e-mail, no wallet — so World never learns
+> which skill was endorsed, which key it was, or when it was used.
+
+**Link to the line of code**
+`https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/world.js#L39`
+
+**Ease of use: 8**
+
+**Feedback for the sponsor**
+
+> Agent Pass being plain OIDC underneath is the right decision and should be said louder in the docs
+> — we spent our first hour looking for a bespoke SDK before realising we could use any OIDC client.
+> The `device_code` grant is what made this work at all, because our Broker is a daemon with no
+> screen; a short "verifying a human from a headless process" guide would land well with the agent
+> crowd this hackathon was aimed at. One concrete sharp edge: **`/api/v1/device_authorization`
+> returns 400 unless the request carries `client_secret`** — a public client is rejected, and the
+> error body does not say that. Documenting that a confidential client is required for the device
+> flow would have saved us an hour. Finally, the relationship between the sector-scoped `sub` and the
+> nullifier vocabulary used elsewhere in the World docs took a while to pin down.
+
+## Ethereum Foundation — $15,000
+
+**Why we are applicable**
+
+> Our privacy property is structural rather than a promise. The only component that ever sees the
+> body of a request is the sealed model inside the TEE; the Broker proxies the call and keeps **only
+> a hash of what came back**, so the trail — which is written to be public — contains no request
+> body and no key. The key itself never leaves the Ledger: the device computes the EIP-712 digest
+> internally from the same four lines it displays, so the host cannot ask it to sign something other
+> than what the human read. Stars bind only to a sector-scoped pseudonym. There are no analytics
+> scripts, no pixels and no third-party cookies, and the whole thing is MIT.
+
+**Link to the line of code**
+`https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/execute.js#L21`
+
+**Ease of use: 7**
+
+**Feedback for the sponsor**
+
+> This is less an API than a set of properties to build toward, so the rating above is about the
+> track rather than a library. The most useful thing for a team like ours would be **a short
+> worked example of what counts as "minimum disclosure" when a third party must read a payload to
+> make a decision.** Our whole design turns on that case — something has to read the request to
+> judge it, and we solved it by putting the reader inside a TEE so the operator cannot see it. We
+> could not find prior art in the track materials saying whether that is considered acceptable or a
+> cop-out, and we would have built differently if it were the latter. A second useful addition would
+> be guidance on **privacy-preserving reads**: publishing a public trail is easy, but letting someone
+> query it without revealing which entry they care about is the part we designed and ran out of time
+> to implement.

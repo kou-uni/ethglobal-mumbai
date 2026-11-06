@@ -12,7 +12,7 @@ see §7.
 ## 1. Where we are, in one line
 
 **The broker runs against production 0G, all five paths come out, two trails are sealed on chain,
-and the tests pass 50/50. The only thing still blocked is the World client registration.**
+and the tests pass 50/50. Nothing is blocked.**
 
 ## 2. The commands that reproduce it
 
@@ -50,9 +50,8 @@ environment, so **use a free port**. `.env.local` is gitignored; without it, set
 
 ## 4. Still blocked
 
-| Waiting on | Effect | If it never arrives |
-|---|---|---|
-| **World client registration** | the human proof behind a star does not run against production | do not demonstrate the star; explain it as design. The refusal paths are already real |
+**Nothing.** Gas has arrived, both seals are on chain, and the World client is registered.
+What is left is filming, images and the form — all of it work, none of it waiting on anyone.
 
 ## 5. Next, in order
 
@@ -61,7 +60,7 @@ environment, so **use a free port**. `.env.local` is gitignored; without it, set
    first-pass reader never sees the video. `ideation/2026-11-06-ai-judging.md` §2.
 2. Paste `ideation/2026-11-06-submission-form.md` into the Hacker Dashboard form. It already carries
    the verifiable facts, what was hard, and the differentiation paragraph.
-3. If the World registration lands, run the device flow.
+3. Run the device flow on camera, now that the World client is registered.
 4. **Filming 11-06 22:00 IST.** Before rolling, check `/health` shows no `simulated`.
 5. **Submit 11-07 06:00 IST** (hard deadline 09:00 IST). Choose **"Finalist and Partner Prizes"**.
 

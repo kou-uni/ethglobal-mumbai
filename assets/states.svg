@@ -50,10 +50,11 @@
   <path d="M1420 199 L1466 199" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 
   <path d="M395 238 L395 300" stroke="#8f1d14" stroke-width="2.5" marker-end="url(#a)"/>
-  <rect class="end" x="300" y="300" width="190" height="104" rx="12"/>
+  <rect class="end" x="300" y="300" width="190" height="124" rx="12"/>
   <text class="e" x="320" y="336">DENIED</text>
   <text class="t" x="320" y="362">bad signature · expired</text>
   <text class="t" x="320" y="384">wrong key · not https</text>
+  <text class="t" x="320" y="406">replay of a nonce</text>
 
   <path d="M635 238 L635 300" stroke="#8f1d14" stroke-width="2.5" marker-end="url(#a)"/>
   <rect class="end" x="540" y="300" width="190" height="104" rx="12"/>
@@ -73,8 +74,8 @@
   <text class="t" x="1040" y="362">EXHAUSTED —</text>
   <text class="t" x="1040" y="384">the count is used up</text>
 
-  <path d="M875 404 L875 432 L155 432 L155 242" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
-  <text class="lb" x="200" y="424" fill="#8f1d14">a press makes a NEW attempt: the same request on a permit with maxCalls = 1 — every gate runs again, 0G included</text>
+  <path d="M875 404 L875 446 L155 446 L155 242" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
+  <text class="lb" x="200" y="438" fill="#8f1d14">a press makes a NEW attempt: the same request on a permit with maxCalls = 1 — every gate runs again, 0G included</text>
 
   <text class="band" x="60" y="470">WHAT SURVIVES AN ATTEMPT · data/ledger.jsonl, append only</text>
   <rect class="bx" x="60" y="490" width="760" height="190" rx="14" fill="#fffdf8"/>

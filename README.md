@@ -29,6 +29,8 @@ key.* **When the version changes, every star goes out at once.**
 | The gate — four different ways to stop | https://kou-uni.github.io/ethglobal-mumbai/ui/index.html |
 | The flame — stars go out when the version changes | https://kou-uni.github.io/ethglobal-mumbai/ui/stars.html |
 | The live screen wired to the device | https://kou-uni.github.io/ethglobal-mumbai/web/gate.html |
+| **The business model, the lean canvas and three years of cash** | https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-business-model.html |
+| The market, the model and what we will not do | https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-market-and-model.html |
 
 ```bash
 git clone https://github.com/kou-uni/ethglobal-mumbai && cd ethglobal-mumbai/broker

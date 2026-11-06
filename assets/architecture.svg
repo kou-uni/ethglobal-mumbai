@@ -99,6 +99,7 @@
   <circle cx="225" cy="440" r="17" fill="#1b1630"/><text class="num" x="225" y="446" text-anchor="middle">1</text>
   <text class="lb" x="250" y="474">the signed permit</text>
   <text class="lb" x="250" y="496">— four lines</text>
+  <text class="lb" x="250" y="518" fill="#8f1d14">once, when she lends it</text>
 
   <path d="M394 620 L430 620 L430 540 L504 540" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
   <circle cx="430" cy="588" r="17" fill="#1b1630"/><text class="num" x="430" y="594" text-anchor="middle">2</text>
@@ -109,7 +110,7 @@
 
   <path d="M506 760 L462 760 L462 308 L394 308" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
   <circle cx="462" cy="700" r="17" fill="#f2600c"/><text class="num" x="462" y="706" text-anchor="middle">4</text>
-  <text class="lb" x="438" y="745" text-anchor="end" fill="#8f1d14">wake her — then 1 again</text>
+  <text class="lb" x="438" y="745" text-anchor="end" fill="#8f1d14">wake her — she signs this one action</text>
 
   <path d="M394 855 L440 855 L440 980 L504 980" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
   <circle cx="440" cy="920" r="17" fill="#1b1630"/><text class="num" x="440" y="926" text-anchor="middle">5</text>

@@ -169,7 +169,7 @@ const routes = {
   'GET /health': async () => {
     let broker = null
     try { broker = await (await fetch(BROKER + '/health', { signal: AbortSignal.timeout(1500) })).json() } catch {}
-    return { ok: true, broker: BROKER, brokerUp: Boolean(broker), simulated: Boolean(broker?.zg?.simulated), worldSimulated: Boolean(broker?.world?.simulated),
+    return { ok: true, broker: BROKER, brokerUp: Boolean(broker), simulated: Boolean(broker?.zg?.simulated), execute: Boolean(broker?.execute), worldSimulated: Boolean(broker?.world?.simulated),
       model: broker?.zg?.model, device: Date.now() - deviceSeen < (busy ? 600000 : 20000), lent: Boolean(standing), deaf: Boolean(DEAF),
       tool: TOOL, range: { key: KEY_LABEL, ...RANGE, uses: STANDING_USES }, skill: skillIdFrom(skill.address), version: TOOL.version }
   },

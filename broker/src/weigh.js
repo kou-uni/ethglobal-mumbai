@@ -77,7 +77,9 @@ export async function weigh(lines, request, opts = {}) {
         model: base.model,
         temperature: 0,
         max_tokens: opts.maxTokens ?? 2048,
-        response_format: { type: 'json_object' },
+        // Some models on 0G refuse JSON mode ("does not support JSON mode"). The answer is read as JSON either way
+        // (pickJson), so the setting can be left out with ZG_JSON_MODE=0. Default: unchanged.
+        ...(process.env.ZG_JSON_MODE === '0' ? {} : { response_format: { type: 'json_object' } }),
         // Turn reasoning off. Without this it spends 1,700 tokens reasoning and takes 17 seconds, which
         // hits the 20 second wall and turns into "could not decide" = STOPPED. Measured: 17.2s with, 2.0s without (2026-11-06)
         ...(process.env.ZG_THINKING === '1' ? {} : { chat_template_kwargs: { enable_thinking: false } }),

@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 1380" width="1680" height="1380" font-family="Figtree, Helvetica, Arial, sans-serif">
+  <title>TOMOSHIBI — one request, end to end</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10z" fill="#1b1630"/></marker>
+    <marker id="af" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10z" fill="#f2600c"/></marker>
+  </defs>
+  <style>
+    .bx{fill:#fff;stroke:#1b1630;stroke-width:2.5}
+    .h{font-size:21px;font-weight:700;fill:#1b1630;letter-spacing:.04em}
+    .t{font-size:19px;fill:#4a4357}
+    .st{font-size:21px;font-weight:700;fill:#1b1630}
+    .num{font-size:17px;font-weight:700;fill:#fff}
+    .lb{font-size:17px;fill:#4a4357}
+    .leg{font-size:16px;fill:#4a4357}
+    .chip{font-size:16px;font-weight:700;fill:#8f1d14;letter-spacing:.04em}
+    .where{font-size:14px;font-weight:700;letter-spacing:.1em;fill:#8b8498}
+    .ttl{font-size:30px;font-weight:700;fill:#1b1630}
+    .sub{font-size:19px;fill:#6b6478}
+    .band{font-size:19px;font-weight:700;letter-spacing:.08em;fill:#6b6478}
+  </style>
+  <rect width="1680" height="1380" fill="#F3EEE6"/>
+  <text class="ttl" x="60" y="56">TOMOSHIBI — one request, end to end</text>
+  <text class="sub" x="60" y="88">Her device is not where this starts. It is where it stops, when something is worth stopping for.</text>
+
+  <!-- once per key -->
+  <rect x="40" y="120" width="1600" height="170" rx="20" fill="#fffdf8" stroke="#6b6478" stroke-width="2.5" stroke-dasharray="9 7"/>
+  <text class="band" x="64" y="158">ONCE PER KEY — NOT PART OF A REQUEST</text>
+  <text class="t" x="64" y="200">the agent asks her for an API key</text>
+  <text class="st" x="470" y="200">→</text>
+  <text class="t" x="510" y="200">she puts that key into the Broker, and signs the range it may be used in</text>
+  <text class="st" x="1290" y="200">→</text>
+  <text class="t" x="1330" y="200">the agent is given a label</text>
+  <text class="t" x="64" y="244">From here on the agent can work inside that range without asking her anything — and cannot leave it.</text>
+  <text class="t" x="1330" y="232" fill="#8f1d14">— never the key</text>
+
+  <!-- the broker -->
+  <rect class="bx" x="470" y="330" width="760" height="800" rx="18" fill="#fffdf8"/>
+  <text class="h" x="494" y="372">THE BROKER — holds the key</text>
+  <text class="where" x="1230" y="318" text-anchor="end">ON HER COMPUTER TODAY · A TEE IN PRODUCTION (A2)</text>
+
+  <rect class="bx" x="510" y="400" width="680" height="80" rx="10" fill="#F3EEE6"/>
+  <text class="st" x="534" y="432">2 · Scope check</text>
+  <text class="t" x="534" y="460">signature · expiry · count · target · scope</text>
+  <text class="chip" x="1166" y="446" text-anchor="end">REFUSED, AND RECORDED</text>
+
+  <rect class="bx" x="510" y="510" width="680" height="80" rx="10" fill="#F3EEE6"/>
+  <text class="st" x="534" y="542">3 · How heavy is this?</text>
+  <text class="t" x="534" y="570">the body goes out to be weighed, and is kept nowhere</text>
+  <text class="chip" x="1166" y="556" text-anchor="end">NO ANSWER → STOPPED</text>
+
+  <rect class="bx" x="510" y="620" width="680" height="80" rx="10" fill="#FFF4EA"/>
+  <text class="st" x="534" y="652">4 · Heavy? Then a person has to press</text>
+  <text class="t" x="534" y="680">nothing runs while it waits</text>
+  <text class="chip" x="1166" y="666" text-anchor="end">NEEDS A PRESS</text>
+
+  <rect class="bx" x="510" y="730" width="680" height="80" rx="10" fill="#F3EEE6"/>
+  <text class="st" x="534" y="762">5 · Reserve one call of the count</text>
+  <text class="t" x="534" y="790">nothing runs between the check and the write</text>
+
+  <rect class="bx" x="510" y="840" width="680" height="80" rx="10" fill="#ffd0ad"/>
+  <text class="st" x="534" y="872">6 · Put the key in, and send it</text>
+  <text class="t" x="534" y="900">the secret exists only in this moment</text>
+
+  <rect class="bx" x="510" y="950" width="680" height="96" rx="10" fill="#F3EEE6"/>
+  <text class="st" x="534" y="982">7 · The trail</text>
+  <text class="t" x="534" y="1010">append-only · allowed and refused in one place</text>
+  <text class="t" x="534" y="1035">carries the signature of whatever tried it</text>
+
+  <!-- her side -->
+  <rect class="bx" x="60" y="360" width="330" height="150" rx="18"/>
+  <text class="h" x="84" y="402">AGENT + SKILL</text>
+  <text class="where" x="84" y="426">ON HER COMPUTER</text>
+  <text class="t" x="84" y="460">holds a label, a range</text>
+  <text class="t" x="84" y="488">and a count — no key</text>
+
+  <rect class="bx" x="60" y="600" width="330" height="170" rx="18" fill="#FFF4EA" stroke="#f2600c"/>
+  <text class="h" x="84" y="642">THE LEDGER</text>
+  <text class="where" x="84" y="666" fill="#c2410c">IN HER HAND</text>
+  <text class="t" x="84" y="700">four lines, a button</text>
+  <text class="t" x="84" y="728">she presses, or she</text>
+  <text class="t" x="84" y="756">does not</text>
+
+  <rect class="bx" x="60" y="846" width="330" height="96" rx="18" fill="#ffd0ad"/>
+  <text class="h" x="84" y="884">THE KEYS</text>
+  <text class="t" x="84" y="914">kept only here · never the agent's</text>
+
+  <rect class="bx" x="60" y="1000" width="330" height="120" rx="18"/>
+  <text class="h" x="84" y="1042">THE MORNING PAGE</text>
+  <text class="t" x="84" y="1074">stopped · pressed · passed</text>
+
+  <!-- outside -->
+  <rect class="bx" x="1310" y="490" width="310" height="140" rx="18" fill="#fffdf8"/>
+  <text class="h" x="1334" y="532">0G PRIVATE COMPUTER</text>
+  <text class="where" x="1334" y="556">OUTSIDE</text>
+  <text class="t" x="1334" y="590">its operator cannot read it</text>
+  <text class="t" x="1334" y="616">routine / decisive / heavy</text>
+
+  <rect class="bx" x="1310" y="840" width="310" height="100" rx="18"/>
+  <text class="h" x="1334" y="882">THE REAL API</text>
+  <text class="where" x="1334" y="906">OUTSIDE</text>
+
+  <rect class="bx" x="1310" y="970" width="310" height="120" rx="18" fill="#fffdf8"/>
+  <text class="h" x="1334" y="1012">0G STORAGE</text>
+  <text class="where" x="1334" y="1036">OUTSIDE</text>
+  <text class="t" x="1334" y="1070">the thread, sealed</text>
+
+  <!-- the order -->
+  <path d="M394 437 L504 437" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <circle cx="449" cy="400" r="17" fill="#1b1630"/><text class="num" x="449" y="406" text-anchor="middle">1</text>
+  <text class="lb" x="60" y="318">one request — the agent reaches for the key it holds a label for</text>
+
+  <path d="M1194 545 L1306 545" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <path d="M1306 578 L1194 578" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+
+  <path d="M506 640 L440 640 L440 476 L394 476" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
+  <path d="M200 510 L200 600" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
+  <path d="M250 600 L250 510" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
+  <circle cx="440" cy="560" r="13" fill="#f2600c"/><text class="num" x="440" y="566" text-anchor="middle" font-size="15">a</text>
+  <circle cx="200" cy="556" r="13" fill="#f2600c"/><text class="num" x="200" y="562" text-anchor="middle" font-size="15">b</text>
+  <circle cx="250" cy="556" r="13" fill="#f2600c"/><text class="num" x="250" y="562" text-anchor="middle" font-size="15">c</text>
+  <rect x="1310" y="650" width="310" height="180" rx="14" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5" stroke-dasharray="7 6"/>
+  <text class="where" x="1332" y="678" fill="#c2410c">WHEN IT NEEDS A PRESS</text>
+  <text class="leg" x="1332" y="704">a · the Broker answers the agent</text>
+  <text class="leg" x="1332" y="726">b · the agent reaches her device over</text>
+  <text class="leg" x="1332" y="746">127.0.0.1 — the Broker cannot</text>
+  <text class="leg" x="1332" y="770">c · she presses, and it signs</text>
+  <text class="leg" x="1332" y="792">then arrow 1 again: same request,</text>
+  <text class="leg" x="1332" y="812">a permit good for one call</text>
+
+  <path d="M394 885 L504 885" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <path d="M1194 885 L1306 885" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <path d="M1194 1010 L1306 1010" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <path d="M506 1060 L394 1060" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+
+  <!-- afterwards -->
+  <rect x="40" y="1190" width="1600" height="140" rx="18" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="8 7"/>
+  <text class="h" x="64" y="1232">AFTERWARDS — how a flame is lit</text>
+  <text class="t" x="64" y="1270">she used it at least once</text>
+  <text class="st" x="400" y="1270">→</text>
+  <text class="t" x="440" y="1270">the same permit proves the key was hers</text>
+  <text class="st" x="900" y="1270">→</text>
+  <text class="t" x="940" y="1270">World ID — one person, once</text>
+  <text class="st" x="1270" y="1270">→</text>
+  <text class="t" x="1310" y="1270">a flame on that version</text>
+  <text class="t" x="64" y="1302">It goes out when the code changes, and the holder's address is never written into it.</text>
+</svg>

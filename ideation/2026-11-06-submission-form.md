@@ -15,15 +15,19 @@ tomoshibi
 🪔 (diya) is the Diwali light and the meaning is close, but **we have decided not to borrow Indian words or symbols**, so it is out.
 
 ## Cover image / logo
-`assets/tomoshibi-mark.svg` (teardrop flame + round candle) / `assets/tomoshibi-cover.svg` (1200×630)
+`assets/tomoshibi-icon-512.png` — **the icon is the candle emoji 🕯️ on ink `#1B1630`**, 512×512 PNG.
+Decided 2026-11-06: we ship no drawn mark. One glyph, the same one in the README title, the same one on
+the device. The old `tomoshibi-mark.svg` carried a third palette and has been removed.
+Cover image: `assets/tomoshibi-cover.svg` (1200×630) is **still on the old palette and must be redone** — see issue #31.
 Emoji do not let you choose the shape, so **the look is carried by our own mark.**
 
 ## Demo link
-**`https://kou-uni.github.io/ethglobal-mumbai/ui/index.html`** [verified] A screen you can touch (the gate).
-GitHub Pages was enabled on 2026-11-06 and a 200 was confirmed. The flame screen is `/ui/stars.html`.
+**`https://mintannn.github.io/tomoshibi/start.html`** [verified 200, 2026-11-06] The judged demo.
+It opens on the story and walks through it in order: the hand-over, the key, the record, the flame.
+Decision 14 makes `web/` the one we show; **`ui/` stays up only as a fallback**
+(`https://kou-uni.github.io/ethglobal-mumbai/ui/index.html`, also 200).
 The values on screen are real responses sent to production 0G (recorded; the timestamp and the source are shown on screen).
-At the venue, switch to "send it live" and show the request id from that moment
-(GitHub Pages. Swap it out if we can get the Broker onto a public tunnel)
+At the venue, switch to "send it live" and show the request id from that moment.
 
 ## Short description (100 characters max)
 AI agents use your API keys without ever holding them. The light goes out when the skill changes.
@@ -96,7 +100,7 @@ Everything below was produced against production systems during the hack, not mo
 | 0G Storage root hash for that episode | `0xc0e0c7a911547490680d545ad9d4638a9bf23bd72d8a3004edf9b4ffaa5be080` |
 | A second seal, after the tier vocabulary changed | tx `0x90ecc8a4e1ea97bb4ff4ff7784d2a18ce80729f6fe640d945077ad6266925455` |
 | Flow contract | `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296` |
-| Tests | **50 / 50**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
+| Tests | **60 / 60**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
 | Measured against the real TEE-attested model | **467 calls** · 283.9 input / 28.0 output tokens · ~2.0 s · **$0.000036 per verdict** (`pricing_usd` from `GET router-api.0g.ai/v1/models`) |
 | The weight prompt was measured before it was changed | 120 production calls across two languages, **58/60 agreement**; the change was kept only because it was **stricter**, not merely equal — `ideation/2026-11-06-decisions.md` Decision 25 |
 | Concurrency | 100 simultaneous requests against `maxCalls=3` let through **0** extra |
@@ -162,7 +166,7 @@ Every diagram in the repo is produced by `ideation/build-diagrams.py`,
 
 | | What it is | What it does for us |
 |---|---|---|
-| **0G Compute (TeeML)** | TEE-attested inference, Intel TDX / dstack, model `0gm-1.0-35b-a3b` | **Decides the weight of a request by reading its body — inside the seal, where we cannot read it.** This is in the decision loop, not a log sink |
+| **0G Compute (TeeML)** | TEE-attested inference, Intel TDX / dstack, model `0gm-1.0-35b-a3b` | **Decides the weight of a request by reading its body — inside the seal, where its operator cannot read it.** This is in the decision loop, not a log sink |
 | **`@0gfoundation/0g-storage-ts-sdk`** | 0G Storage client | Seals the append-only trail. Flow contract `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296` |
 | **World ID** | Proof of personhood, OIDC `device_code` grant | One sector-scoped pseudonym, one star, per version — so a flame cannot be bought |
 | **`ledger_device_sdk` (Rust)** | Ledger app framework | The four lines on the device screen, and the EIP-712 digest computed **inside** the device from those same bytes |
@@ -214,7 +218,7 @@ and a name is not core to this work.
 **The sealed model is in the decision loop, not next to it.** Before anything runs, the Broker sends
 the request body to a **TEE-attested 0G Private Computer** (`0gm-1.0-35b-a3b`, TeeML / Intel TDX)
 and gets back the weight: `routine`, `significant` or `decisive`. The weight decides whether a human
-has to press. **We cannot read the body — not being able to is the feature**, because the thing that
+has to press. **The Broker keeps none of the body — keeping none of it is the feature**, because the thing that
 makes the judgement good is the thing we are not allowed to see.
 
 - **467 measured calls.** 283.9 input / 28.0 output tokens, ~2.0 s, **$0.000036 per judgement**
@@ -244,15 +248,17 @@ describes the code running now rather than the code that earned the reputation.
 
 ## Why Ethereum Foundation (CROPS)
 
-**The privacy property here is structural, not a policy.** The only component that ever sees a
-request body is the sealed model, inside the TEE. The operator cannot read it, and the trail — which
-is written to be public — carries **no request body and no key**.
+**The privacy property here is structural, not a policy.** The body is read for the judgement inside
+the TEE, where **the model's operator cannot see it**; the Broker passes it through and **retains none
+of it**, and the trail — which is written to be public — carries **no request body and no key**.
+**The Broker is not yet inside a TEE**, so whoever runs it is in a position to read what passes
+through. We state that rather than claim otherwise.
 
 | | Knows | Does not know |
 |---|---|---|
 | The device | The four lines, and whether a human pressed | The request body. The key never leaves |
 | World | That this is a human, and the same human | Which skill, which key, when |
-| 0G Private Computer | The body, **inside the seal** | The key. **And we cannot read it either** |
+| 0G Private Computer | The body, **inside the seal** | Either key. **Its operator cannot read the body** |
 | The trail | Who permitted what, and whether it stopped | **No body, no key** |
 
 - No trackers: no analytics script, no pixel, no third-party cookie. MIT licensed.
@@ -273,7 +279,7 @@ Permalinks are pinned to commit `99e91a1`.
 > The 0G Private Computer is inside our decision loop, not beside it. Before an agent's request runs,
 > the Broker sends the request body to a TEE-attested model (`0gm-1.0-35b-a3b`, TeeML) and gets back
 > how heavy the action is — routine, significant or decisive — and that verdict decides whether a
-> human has to press a button on a Ledger. The point is that **we cannot read the body ourselves**:
+> human has to press a button on a Ledger. The Broker passes the body through and **keeps none of it**:
 > the judgement needs the content, and the operator must not have it. We measured 467 calls at
 > ~2.0 s and **$0.000036 per judgement**, and the append-only trail is sealed on 0G Galileo
 > (tx `0x74c7cdf9…aef1`, block 64103318). When 0G is unreachable we return `STOPPED` and change
@@ -330,10 +336,10 @@ Permalinks are pinned to commit `99e91a1`.
 
 **Why we are applicable**
 
-> Our privacy property is structural rather than a promise. The only component that ever sees the
+> Our privacy property is structural rather than a promise. The only component that reads the
 > body of a request is the sealed model inside the TEE; the Broker proxies the call and keeps **only
 > a hash of what came back**, so the trail — which is written to be public — contains no request
-> body and no key. The key itself never leaves the Ledger: the device computes the EIP-712 digest
+> body and no key. The signing key never leaves the Ledger: the device computes the EIP-712 digest
 > internally from the same four lines it displays, so the host cannot ask it to sign something other
 > than what the human read. Stars bind only to a sector-scoped pseudonym. There are no analytics
 > scripts, no pixels and no third-party cookies, and the whole thing is MIT.
@@ -355,3 +361,76 @@ Permalinks are pinned to commit `99e91a1`.
 > be guidance on **privacy-preserving reads**: publishing a public trail is easy, but letting someone
 > query it without revealing which entry they care about is the part we designed and ran out of time
 > to implement.
+
+---
+
+# PASTE-READY — the six boxes, exactly as typed
+
+Plain prose, no markdown. The first box asks for "a sentence or two"; these are two or three.
+Permalinks are pinned to commit `99e91a1` and will not move.
+
+## 0G — $15,000
+
+**Box 1 — How are you using this Protocol / API?**
+
+```
+We put the 0G Private Computer inside our decision loop, not beside it. Before an agent's request runs, the Broker sends the request body to a TEE-attested model (0gm-1.0-35b-a3b, TeeML) and gets back how heavy the action is — routine, significant or decisive — and that verdict decides whether a human has to press a button on a Ledger. The Broker passes the body through and keeps none of it — not in the trail, not in a log — and the operator of the model cannot read it, because the inference runs inside the TEE. The Broker itself is not yet inside a TEE, and we say so rather than claim more. We measured 467 calls at ~2.0 s and $0.000036 per judgement, and the append-only trail is sealed on 0G Galileo (tx 0x74c7cdf9…aef1, block 64103318); when 0G is unreachable we return STOPPED and change nothing rather than invent a verdict.
+```
+
+**Box 2 — Link to the line of code**
+
+```
+https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/weigh.js#L68
+```
+
+**Box 3 — Ease of use:** 8 stars
+
+**Box 4 — Additional feedback for the sponsor**
+
+```
+The OpenAI-compatible surface meant our first working call took minutes, which is the best thing about it. Three things cost us real time. (1) Per-token prices are not in the docs — we found them in the pricing_usd field of GET /v1/models, after a day of planning around a 10x cost uncertainty. Putting that table in the docs would have saved the whole exercise. (2) Thinking is on by default and is not mentioned in the quickstart. Our first integration took 17.2 s per call and we nearly dropped the feature; chat_template_kwargs.enable_thinking=false brought it to 2.0 s. (3) Verifying the TEE attestation end-to-end is hard to find a path for — we can say the endpoint is attested, but a short "how to check the dstack quote yourself" page would let us claim it rather than cite it. Minor: in the storage SDK, indexer.upload() returning a [tx, err] tuple is unusual for JavaScript and cost us one debugging round.
+```
+
+## World — $12,500
+
+**Box 1 — How are you using this Protocol / API?**
+
+```
+A trust signal is worthless if it can be bought, and stars sell for $0.0027 each today. In TOMOSHIBI a "flame" can only be lit by a World-verified human: one sector-scoped pseudonym, one star per version of a skill, and every star goes out when the maker ships a new version, so the signal always describes the code that is running now. We use Agent Pass through the OIDC device_code grant, called straight from a Broker that has no screen, and verify the token against the issuer's JWKS. We bind only the sub — no name, no e-mail, no wallet — so World never learns which skill was endorsed, which key it was, or when it was used.
+```
+
+**Box 2 — Link to the line of code**
+
+```
+https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/world.js#L39
+```
+
+**Box 3 — Ease of use:** 8 stars
+
+**Box 4 — Additional feedback for the sponsor**
+
+```
+Agent Pass being plain OIDC underneath is the right decision and should be said louder in the docs — we spent our first hour looking for a bespoke SDK before realising we could point any OIDC client at it. The device_code grant is what made this work at all, because our Broker is a daemon with no screen; a short "verifying a human from a headless process" guide would land well with the agent crowd this hackathon was aimed at. One concrete sharp edge: /api/v1/device_authorization returns 400 unless the request carries client_secret — a public client is rejected, and the error body does not say so. Documenting that the device flow needs a confidential client would have saved us an hour. Finally, the relationship between the sector-scoped sub and the nullifier vocabulary used elsewhere in the World docs took a while to pin down.
+```
+
+## Ethereum Foundation — $15,000
+
+**Box 1 — How are you using this Protocol / API?**
+
+```
+Our privacy property is structural rather than a promise. The body is read for the judgement inside the TEE, where the model's operator cannot see it; the Broker passes it through and retains none of it, so the trail — which is written to be public — contains no request body and no key, only a hash of what came back. Two different keys, and neither reaches the agent: the signing key never leaves the Ledger, which computes the EIP-712 digest internally from the same four lines it displays, and the API key never leaves the Broker. The Broker is not yet inside a TEE and we say so. Stars bind only to a sector-scoped pseudonym, there are no analytics scripts, pixels or third-party cookies, and the whole thing is MIT.
+```
+
+**Box 2 — Link to the line of code**
+
+```
+https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/execute.js#L21
+```
+
+**Box 3 — Ease of use:** 7 stars
+
+**Box 4 — Additional feedback for the sponsor**
+
+```
+This is less an API than a set of properties to build toward, so the rating is about the track rather than a library. The most useful addition for a team like ours would be a short worked example of what counts as "minimum disclosure" when a third party has to read a payload in order to make a decision. Our whole design turns on that case — something must read the request to judge it, and we solved it by putting the reader inside a TEE so the operator cannot see it. We could not find prior art in the track materials saying whether that counts as privacy-preserving or as a cop-out, and we would have built differently if it were the latter. A second useful addition would be guidance on privacy-preserving reads: publishing a public trail is easy, but letting someone query it without revealing which entry they care about is the part we designed and ran out of time to implement.
+```

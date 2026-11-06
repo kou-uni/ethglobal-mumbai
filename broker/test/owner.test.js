@@ -1,4 +1,4 @@
-// 灯（星）を出せるのは鍵の持ち主だけ（Q1-b = B）。**網には出ない。**
+// Only the key holder can light a flame (Q1-b = B). **It never reaches the network.**
 import { test, before, describe } from 'node:test'
 import assert from 'node:assert/strict'
 import { mkdtempSync } from 'node:fs'
@@ -26,12 +26,12 @@ const permitFor = (over = {}) => ({
 })
 const sign = (p, who = holder) => who.signTypedData({ domain: DOMAIN, types: TYPES, primaryType: 'Permit', message: normalize(p) })
 const weigh = async () => ({ ok: true, reachable: true, tier: 'routine', reason: 'test', requestId: 'req_test', model: 'fake', ms: 1, usage: null })
-/** World の替え玉。呼ばれた回数を数える（持ち主でない人のために本人を煩わせないことを確かめる）。 */
+/** A stand-in for World. Counts the calls, so we can check we never bother the person on behalf of someone who is not the holder. */
 const human = (nullifier) => {
   const w = { asked: 0, waitForHuman: async () => { w.asked++; return { ok: true, idToken: 't' } }, verifyIdToken: async () => ({ ok: true, nullifier }) }
   return w
 }
-/** その許可で1回、実際に使う。 */
+/** Actually use that permit once. */
 async function useOnce(store, permit, signature) {
   const request = { method: 'GET', url: 'https://api.stripe.com/v1/balance', keyRef: KEY }
   const skillSignature = await skill.signMessage({ message: skillMessage(requestHash(permit, request)) })
@@ -39,8 +39,8 @@ async function useOnce(store, permit, signature) {
   assert.equal(r.decision, 'ALLOWED')
 }
 
-describe('星を出せるのは、鍵の持ち主だけ', () => {
-  test('許可を添えなければ出ない。World も呼ばれない', async () => {
+describe('only the key holder can light a flame', () => {
+  test('no permit, no flame — and World is never called', async () => {
     const store = freshStore(), w = human('0xA')
     const r = await vouch({ deviceCode: 'dc', skill: SKILL, version: '1.0.0' }, { store, world: w })
     assert.equal(r.decision, 'VOUCH_DENIED'); assert.equal(r.reason, 'NOT_OWNER')
@@ -48,14 +48,14 @@ describe('星を出せるのは、鍵の持ち主だけ', () => {
     assert.equal(store.starCount(SKILL, '1.0.0'), 0)
   })
 
-  test('他人が署名した許可では出ない', async () => {
+  test('a permit signed by someone else does not light it', async () => {
     const store = freshStore(), w = human('0xA'), permit = permitFor()
     const signature = await sign(permit, other)
     const r = await vouch({ deviceCode: 'dc', skill: SKILL, version: '1.0.0', permit, signature }, { store, world: w })
     assert.equal(r.reason, 'NOT_OWNER'); assert.equal(w.asked, 0)
   })
 
-  test('別の版への許可では出ない（版が上がったら、署名し直した人だけ）', async () => {
+  test('a permit for another version does not light it — after a version bump, only whoever signed again', async () => {
     const store = freshStore(), w = human('0xA'), permit = permitFor({ version: '1.0.0' })
     const signature = await sign(permit)
     await useOnce(store, permit, signature)
@@ -63,20 +63,20 @@ describe('星を出せるのは、鍵の持ち主だけ', () => {
     assert.equal(r.reason, 'NOT_OWNER'); assert.equal(w.asked, 0)
   })
 
-  test('署名しただけで、一度も使っていなければ出ない', async () => {
+  test('signing alone is not enough — it must have actually been used', async () => {
     const store = freshStore(), w = human('0xA'), permit = permitFor()
     const signature = await sign(permit)
     const r = await vouch({ deviceCode: 'dc', skill: SKILL, version: '1.0.0', permit, signature }, { store, world: w })
     assert.equal(r.decision, 'VOUCH_DENIED'); assert.equal(r.reason, 'NOT_USED'); assert.equal(w.asked, 0)
   })
 
-  test('期限の切れた許可では出ない', async () => {
+  test('an expired permit does not light it', async () => {
     const store = freshStore(), w = human('0xA'), permit = permitFor({ expiry: Math.floor(Date.now() / 1000) - 10 })
     const r = await vouch({ deviceCode: 'dc', skill: SKILL, version: '1.0.0', permit, signature: await sign(permit) }, { store, world: w })
     assert.equal(r.reason, 'NOT_OWNER'); assert.equal(w.asked, 0)
   })
 
-  test('持ち主が署名し、実際に使っていれば出る。持ち主のアドレスは星に刻まない', async () => {
+  test('signed by the holder and actually used: it lights — and the holder address is not written into the flame', async () => {
     const store = freshStore(), w = human('0xA'), permit = permitFor()
     const signature = await sign(permit)
     await useOnce(store, permit, signature)
@@ -86,7 +86,7 @@ describe('星を出せるのは、鍵の持ち主だけ', () => {
     assert.equal(JSON.stringify(r).toLowerCase().includes(holder.address.toLowerCase()), false)
   })
 
-  test('断られたことも、同じ系譜に残る', async () => {
+  test('a refusal is kept in the same lineage', async () => {
     const store = freshStore()
     const r = await vouch({ deviceCode: 'dc', skill: SKILL, version: '1.0.0' }, { store, world: human('0xA') })
     assert.ok(r.at); assert.match(r.message, /no star is issued/)

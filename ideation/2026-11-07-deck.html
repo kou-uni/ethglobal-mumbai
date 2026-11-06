@@ -1,0 +1,162 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>TOMOSHIBI — finalist deck (3 min)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  /* Team Yohaku's slide tone: lime ground, very heavy black type, one marked word, numbers in coral.
+     Three blocks to a slide at most. The wording is cut to fit that, not the other way round. */
+  :root{--lime:#E3F19C;--ink:#1B1C20;--mute:#71765C;--marker:#FFE75E;--blue:#2A10D8;--coral:#F2615F;--violet:#8257F5;--flame:#f0a73b}
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%}
+  body{background:#141710;font-family:Figtree,Poppins,"Hiragino Maru Gothic ProN","Helvetica Neue",system-ui,sans-serif;color:var(--ink);display:grid;place-items:center;font-weight:700}
+  .deck{width:min(96vw,1680px);aspect-ratio:16/9;position:relative;box-shadow:0 24px 70px #0009;overflow:hidden}
+  .s{position:absolute;inset:0;background:var(--lime);padding:7% 6%;display:none;flex-direction:column;justify-content:center;gap:3vh}
+  .s.on{display:flex}
+  .s::before{content:"";position:absolute;left:0;top:0;bottom:0;width:.7vh;background:var(--violet)}
+  .mark{position:absolute;top:3vh;right:3.4vh;display:flex;align-items:center;gap:1.1vh;font-size:2.4vh;font-weight:900;letter-spacing:-.02em}
+  .mark svg{height:3.4vh}
+  .eyebrow{position:absolute;top:4.6vh;left:5.4vh;font-size:2vh;font-weight:900;color:var(--mute);letter-spacing:.02em}
+  h1{font-size:7.4vh;font-weight:900;line-height:1.14;letter-spacing:-.035em}
+  h2{font-size:4.4vh;font-weight:900;line-height:1.2;letter-spacing:-.03em}
+  mark{background:var(--marker);color:var(--blue);padding:0 1.4vh .4vh;border-radius:1.2vh;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .lede{font-size:3.4vh;font-weight:900;letter-spacing:-.02em}
+  .gray{font-size:2.6vh;font-weight:900;color:var(--mute);letter-spacing:-.01em}
+  .stats{display:grid;gap:1.6vh;margin-top:1vh}
+  .stats div{display:grid;grid-template-columns:22vh 1fr;gap:2.4vh;align-items:baseline}
+  .stats b{color:var(--coral);font-size:4.4vh;font-weight:900;letter-spacing:-.03em}
+  .stats span{font-size:2.9vh;font-weight:900;letter-spacing:-.015em}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:2.6vh}
+  .two>div{background:#fff8;border-radius:2vh;padding:3vh 3.2vh;display:flex;flex-direction:column;gap:1.4vh}
+  .two>div.on{background:#fff;box-shadow:0 1.6vh 4vh #0001}
+  .two h3{font-size:2.2vh;font-weight:900;color:var(--mute);letter-spacing:.02em}
+  .two p{font-size:3vh;font-weight:900;line-height:1.3;letter-spacing:-.02em}
+  .two .sub{font-size:2.2vh;color:var(--mute)}
+  .live{display:grid;grid-template-columns:46% 1fr;gap:3.4vh;align-items:center}
+  table{border-collapse:collapse;width:100%}
+  td,th{text-align:left;padding:1.3vh 0;font-size:2.5vh;font-weight:900;letter-spacing:-.015em;vertical-align:top}
+  th{font-size:1.9vh;color:var(--mute)}
+  td+td,th+th{padding-left:2.4vh}
+  tr.dim td{color:var(--mute);font-weight:700}
+  .screen{border:.5vh solid var(--blue);border-radius:2vh;background:#1B1C20;color:#E3F19C;min-height:46vh;display:grid;place-items:center;text-align:center;font-size:2.6vh;line-height:1.7;padding:3vh}
+  .screen small{display:block;color:#9aa;font-size:1.9vh;margin-top:1.4vh}
+  img{width:100%;border-radius:1.6vh}
+  .team{display:flex;gap:3vh;align-items:center;font-size:2.2vh;color:var(--mute);flex-wrap:wrap}
+  .team b{color:var(--ink)}
+  .pill{background:var(--violet);color:#fff;border-radius:99px;padding:.8vh 2.2vh;font-size:2.1vh;font-weight:900}
+  .foot{position:absolute;left:5.4vh;bottom:3vh;font-size:1.7vh;font-weight:700;color:var(--mute)}
+  .n{position:absolute;right:3.4vh;bottom:3vh;font-size:1.7vh;color:var(--mute)}
+  @media print{body{background:#fff}.deck{box-shadow:none;page-break-after:always}}
+</style>
+<div class="deck" id="d">
+  <template id="logo">
+    <span class="mark"><svg viewBox="0 0 120 152" aria-hidden="true">
+      <rect x="31" y="96" width="58" height="48" rx="19" fill="#1B1C20"/>
+      <path d="M60 10c2.2 0 3.8 2.2 4.8 4.8C70.5 28 90 49 90 68a30 30 0 1 1-60 0c0-19 19.5-40 25.2-53.2C56.2 12.2 57.8 10 60 10Z" fill="#f0a73b"/>
+      <path d="M60 46c1.3 0 2.2 1.2 2.8 2.6C65.6 55 75 65.5 75 75a15 15 0 1 1-30 0c0-9.5 9.4-20 12.2-26.4.6-1.4 1.5-2.6 2.8-2.6Z" fill="#ffd98a"/>
+    </svg>tomoshibi</span>
+  </template>
+
+  <!-- 0:00 – 0:25 -->
+  <section class="s on">
+    <span class="eyebrow">THE PROBLEM</span>
+    <h1>You gave it the key.<br>It will never <mark>ask</mark> again.</h1>
+    <p class="lede">No limit. No expiry. No receipt.</p>
+    <span class="n">1</span>
+  </section>
+
+  <!-- 0:25 – 0:40 -->
+  <section class="s">
+    <span class="eyebrow">AND IT IS NOT A FEW PEOPLE</span>
+    <h1>It's not just you.<br>It's <mark>everyone</mark>.</h1>
+    <div class="stats">
+      <div><b>1 in 3</b><span>workers has put a login or an API key into an AI chat</span></div>
+      <div><b>28.65M</b><span>secrets pushed to public GitHub in 2025</span></div>
+      <div><b>64%</b><span>of keys leaked in 2022 still work today</span></div>
+    </div>
+    <p class="gray">A key you handed over once is still working, four years later.</p>
+    <span class="foot">Zapier, 1,005 US workers, May 2026 · GitGuardian, State of Secrets Sprawl 2026</span>
+    <span class="n">2</span>
+  </section>
+
+  <!-- 0:40 – 0:50 -->
+  <section class="s">
+    <span class="eyebrow">TOMOSHIBI 灯火</span>
+    <h1>You still hand over the work.<br>But now it <mark>asks</mark>.</h1>
+    <div class="two">
+      <div><h3>WITHOUT</h3><p>The agent holds <b>the key</b>.</p><p class="sub">Every request goes through.</p></div>
+      <div class="on"><h3>WITH TOMOSHIBI</h3><p>The agent holds <b>a label</b>.</p><p class="sub">Allowed · Needs a press · Refused</p></div>
+    </div>
+    <p class="gray">One approved action at a time.</p>
+    <span class="n">3</span>
+  </section>
+
+  <!-- 0:50 – 2:10 -->
+  <section class="s">
+    <span class="eyebrow">LIVE · 80 SECONDS</span>
+    <h1>Watch it <mark>ask</mark>.</h1>
+    <div class="live">
+      <table>
+        <tr><th>SCENE</th><th>WHAT SHE GETS</th></tr>
+        <tr class="dim"><td>The day's orders</td><td>Nothing is asked</td></tr>
+        <tr><td>Refund a customer</td><td>It pays only after she presses</td></tr>
+        <tr><td>A tool goes elsewhere</td><td>Refused, and on the record</td></tr>
+        <tr><td>The tool is updated</td><td>Old stars go out</td></tr>
+        <tr><td>The week</td><td>One record</td></tr>
+      </table>
+      <div class="screen">the product, running<br>— with the Ledger in frame —
+        <small>35 s refund · 20 s refused · 15 s the flame · 10 s the trail</small></div>
+    </div>
+    <span class="n">4</span>
+  </section>
+
+  <!-- 2:10 – 2:28 -->
+  <section class="s">
+    <span class="eyebrow">WHY IT HOLDS</span>
+    <h2>What she gets — and what <mark>makes it true</mark></h2>
+    <table>
+      <tr><th>WHAT SHE GETS</th><th>WHAT MAKES IT TRUE</th></tr>
+      <tr><td>The key sits outside the agent</td><td class="dim">The secret goes in at the moment of sending</td></tr>
+      <tr><td>It pays only after she presses</td><td class="dim"><b>0G</b> weighs every request first</td></tr>
+      <tr><td>Every use is visible afterwards</td><td class="dim">An append-only trail, signed by whatever tried it</td></tr>
+      <tr><td>She sees what real users think</td><td class="dim"><b>World ID</b> + real use, per version</td></tr>
+    </table>
+    <p class="gray">Every row is running. None of it is promised.</p>
+    <span class="n">5</span>
+  </section>
+
+  <!-- 2:28 – 2:40 -->
+  <section class="s">
+    <span class="eyebrow">WHO IT IS FOR</span>
+    <h2>Three people, <mark>one loop</mark></h2>
+    <img src="../assets/trust-loop.png" alt="the maker, the marketplace and the shopkeeper">
+    <p class="gray">We charge for judgement and display — never a cut of the money that moved.</p>
+    <span class="n">6</span>
+  </section>
+
+  <!-- 2:40 – 2:55 -->
+  <section class="s">
+    <span class="eyebrow">TOMOSHIBI 灯火</span>
+    <h1>Hand over the work.<br>Not <mark>the key</mark>.</h1>
+    <p class="lede">Nothing to memorise. It cannot go past what you signed. And you can see it afterwards.</p>
+    <div class="team">
+      <span class="pill">Team Yohaku 余白</span>
+      <span><b>minta</b> — the device, and everything a person looks at</span>
+      <span><b>kou</b> — the broker, and the three technologies underneath</span>
+    </div>
+    <span class="foot">Two people · thirty-six hours · one working system</span>
+    <span class="n">7</span>
+  </section>
+</div>
+<script>
+  const s=[...document.querySelectorAll('.s')],lg=document.getElementById('logo')
+  s.forEach(e=>e.appendChild(lg.content.cloneNode(true)))
+  let i=0
+  // ?#4 opens straight on slide 4 (for rendering single slides and for printing)
+  const go=n=>{i=Math.max(0,Math.min(s.length-1,n));s.forEach((e,k)=>e.classList.toggle('on',k===i))}
+  addEventListener('keydown',e=>{if(['ArrowRight',' ','PageDown'].includes(e.key))go(i+1);if(['ArrowLeft','PageUp'].includes(e.key))go(i-1)})
+  document.getElementById('d').onclick=e=>go(e.clientX<innerWidth/2?i-1:i+1)
+  go((Number(location.hash.slice(1))||1)-1)
+</script>

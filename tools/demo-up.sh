@@ -20,6 +20,9 @@ if [ -f broker/.env.local ]; then set -a; . broker/.env.local; set +a; fi
 [ -n "${ZG_API_KEY:-}" ] || export ZG_OFFLINE=1
 [ -n "${WORLD_CLIENT_ID:-}" ] || export WORLD_OFFLINE=1
 unset SECRETS; export EXECUTE=0      # never a real API key, never a real call (decision 15)
+# Ask for a press whenever money moves, not only when the model is certain it cannot be undone.
+# (A refund came back `significant` one time in three on the real 0G; with the default it would pass.)
+export ZG_ESCALATE=${ZG_ESCALATE:-significant}
 
 ( cd broker && [ -d node_modules ] || npm ci --silent )
 start broker   sh -c "cd broker && PORT=8797 LEDGER_PATH=data/ledger.jsonl exec node src/server.js"

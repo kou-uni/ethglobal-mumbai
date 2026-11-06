@@ -188,3 +188,21 @@ If we can't count it, it stays the number from the paper. **Don't show what you 
 - Whether the e-paper is **self-illuminating** (it changes how we decide the lighting)
 - Whether a **custom app** can draw arbitrary figures (constellation, ★ stamp) / whether we can build a **long press** / whether it can keep the screen on while idle
 - Whether the 4 scope lines are readable in the standard Ethereum app (the floor for level 3)
+
+---
+
+## ETHGlobal eligibility — read before filming
+
+ETHGlobal removes a project from Main Judging if any of these is missing or invalid.
+
+| Requirement | What we upload | Status |
+|---|---|---|
+| **2–4 minutes** | The §5 cut, 2:55 | Inside the window. **Do not upload the 68-second hero** — it is the repo-top loop and would fail on length |
+| **≥ 720p** | Record at 1080p; screen capture at 1× scale, no phone-held-up-to-monitor shots | Set before the first take |
+| **Audio without music** | Voice only. **No bed, no sting, no logo sound.** Room tone is fine | Already how §5 is written — keep it that way |
+| **Live deployment** | https://kou-uni.github.io/ethglobal-mumbai/ui/index.html — a deployed page anyone can open, not the repo or the slides | Verified 200 on 2026-11-06 |
+| **Public GitHub repo** | https://github.com/kou-uni/ethglobal-mumbai | Public |
+
+The hero and the demo are two different videos with two different jobs. The hero sells in four
+seconds and lives at the top of the README; the demo is what a judge watches end to end. Mixing
+them up costs us the queue.

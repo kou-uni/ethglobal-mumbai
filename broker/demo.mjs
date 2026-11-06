@@ -5,6 +5,9 @@ import { DOMAIN, TYPES, normalize, lines, requestHash } from './src/permit.js'
 import { skillMessage, skillIdFrom } from './src/skill.js'
 
 const BASE = process.argv[2] ?? 'http://127.0.0.1:8787'
+// 0G に届かない Broker（任意）。ここを渡すと「止まる」も実演できる。
+//   ZG_ENDPOINT=https://router-api.invalid/v1 PORT=8798 node src/server.js
+const DEAF = process.argv[3] ?? null
 const me = privateKeyToAccount('0x' + '11'.repeat(32))
 const skill = privateKeyToAccount('0x' + '33'.repeat(32))
 const KEY = '0x' + 'ab'.repeat(32)
@@ -52,9 +55,21 @@ const call = async (label, request, { signSkill = true, p = permit, sig = signat
 
 const sign = (p) => me.signTypedData({ domain: DOMAIN, types: TYPES, primaryType: 'Permit', message: normalize(p) })
 
-console.log('\n── 範囲の中 ──')
-const ok = await call('POST api.stripe.com/v1/charges', { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY })
-await call('POST api.stripe.com/v1/charges', { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY })
+// ふだんの要求用。重い要求と同じ鍵・同じ本人で、宛先と操作だけが違う
+const light = {
+  holder: me.address, skill: skillIdFrom(skill.address), version: '1.0.0', key: KEY,
+  target: 'api.github.com', scope: 'GET /user/repos', maxCalls: 2,
+  expiry: Math.floor(Date.now() / 1000) + 3600, nonce: Date.now() + 2,
+}
+const lightSig = await me.signTypedData({ domain: DOMAIN, types: TYPES, primaryType: 'Permit', message: normalize(light) })
+
+console.log('\n── 範囲の中（ふだんの要求は、そのまま通る）──')
+const ok = await call('GET  api.github.com/user/repos ', { method: 'GET', url: 'https://api.github.com/user/repos', keyRef: KEY }, { p: light, sig: lightSig })
+await call('GET  api.github.com/user/repos ', { method: 'GET', url: 'https://api.github.com/user/repos', keyRef: KEY }, { p: light, sig: lightSig })
+
+console.log('\n── 範囲の中だが、中身が重い ──')
+await call('POST api.stripe.com/v1/charges ', { method: 'POST', url: 'https://api.stripe.com/v1/charges', keyRef: KEY,
+  body: JSON.stringify({ amount: 99000, currency: 'usd' }) })
 
 console.log('\n── 宣言した範囲を外れた要求（スキルの署名ごと刻まれる） ──')
 await call('別の宛先へ        ', { method: 'POST', url: 'https://evil.com/v1/charges', keyRef: KEY })
@@ -86,12 +101,25 @@ const press = { ...permit, nonce: Date.now() + 8, maxCalls: 1 }
 await call('重い要求を、立っている許可で', heavy, { p: standing, sig: await sign(standing) })
 await call('同じ要求を、その場の一押しで', heavy, { p: press, sig: await sign(press) })
 
+if (DEAF) {
+  console.log('\n── 0G に届かないとき（判断を作らない）──')
+  const deafBody = { permit: light, signature: lightSig, request: { method: 'GET', url: 'https://api.github.com/user/repos', keyRef: KEY } }
+  deafBody.skillSignature = await skill.signMessage({ message: skillMessage(requestHash(light, deafBody.request)) })
+  const d = await (await fetch(`${DEAF}/use`, {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(deafBody),
+  })).json()
+  console.log(`  ${TAG[d.decision] ?? d.decision} ${(d.message ?? d.reason ?? '').padEnd(18)} ${zgOf(d)}`)
+  console.log('  \x1b[35m既定値も、その場の判断も、作らない。回数も減らない\x1b[0m')
+}
+
 const seal = await (await fetch(`${BASE}/seal`, {
   method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ thread: ok.thread }),
 })).json()
 console.log('\n── 0G Storage（エピソードログ）──')
 console.log(`  root  ${seal.rootHash ?? '—'}`)
-console.log(seal.uploaded ? `  tx    ${seal.tx}\n  ${seal.url}` : `  \x1b[33m置いていない: ${seal.reason}\x1b[0m`)
+// 画面に出すのは1行だけ。長い RPC のダンプは記録に残るが、人には要らない
+const why = (seal.reason ?? '').replace(/\s+/g, ' ').match(/insufficient funds[^(]*|[^(]{0,90}/)?.[0]?.trim()
+console.log(seal.uploaded ? `  tx    ${seal.tx}\n  ${seal.url}` : `  \x1b[33m置いていない: ${why}\x1b[0m`)
 
 const trace = await (await fetch(`${BASE}/trace/${ok.thread}`)).json()
 console.log(`\n── 系譜（QR はここを指す） ──\n  ${BASE}/trace/${ok.thread}`)

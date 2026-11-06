@@ -33,14 +33,23 @@ That is also why it goes out when the version changes.
 
 ---
 
-## 1. The claim
+## 1. The pitch
 
-An API key is a credit card that never expires, has no spending limit and issues no receipt.
-We hand them to AI agents the way we once handed out passwords.
+**In one line.**
 
-**TOMOSHIBI turns a key into a single use.** The scope is signed on a hardware device a software
-agent cannot reach; the secret itself never goes to the agent; and every refusal is kept, named and
-signed.
+> **We give an AI agent one use of your key, instead of your key.**
+
+**In thirty seconds.**
+
+> You hand your agent an API key the way you would tape a credit card to its hand — no limit, no
+> expiry, no receipt. **TOMOSHIBI gives it one use instead.** You sign the scope on a hardware
+> device the agent cannot press — which key, where, what, how many times, until when — and the
+> agent only ever receives a handle, never the secret. Before anything runs, a sealed model reads
+> the request and decides whether it is ordinary or worth your finger, so a normal day is silent
+> and **money never moves without you.** And every refusal is kept, named and signed, so after an
+> incident you can say what was stopped and whose code tried it.
+
+**In a phrase, if there is only time for one.**
 
 > **Apple Pay for API keys — except it only asks when it should.**
 
@@ -91,13 +100,17 @@ computer against its own operator, and we will not claim it does.
 
 ## 4. What it gives her
 
-Not features — **the end of a tension she could not do anything about.**
+Not features. **The end of a tension she could not do anything about.**
 
-**Nothing to memorise. Nothing to store. Nothing to manage.** No password, no scope language, no
-config file. She keeps the Ledger and its recovery phrase, and that is the whole of her duty.
+| | |
+|---|---|
+| **Nothing to memorise, store or manage** | No password, no scope language, no config file. She keeps the Ledger and its phrase; that is the whole of her duty |
+| **It cannot leak what it never received** | The agent is given a handle. With the Broker hosted, the secret is never in its reach at all |
+| **It cannot go past what she signed** | Destination, operation, count, expiry — checked before anything runs |
+| **It is silent on an ordinary day** | She is asked only when something is heavy enough to deserve it |
+| **She can explain an incident herself** | Named refusals, each carrying the signature of whatever tried it |
 
-**It cannot be used past what she signed**, and **there is always a record** of what was tried.
-With the Broker hosted, **the agent never sees the secret at all.**
+> **She stops holding something she had no way to manage.** That is the product.
 
 ---
 

@@ -26,22 +26,22 @@ key.* **When the version changes, every star goes out at once.**
 
 | | |
 |---|---|
-| The gate — four different ways to stop | https://kou-uni.github.io/ethglobal-mumbai/ui/index.html |
+| **Start here — lend a key, get woken, read the morning after** | **https://mintannn.github.io/tomoshibi/start.html** |
+| The gate — four different ways to stop | https://kou-uni.github.io/ethglobal-mumbai/web/gate.html |
 | The flame — stars go out when the version changes | https://kou-uni.github.io/ethglobal-mumbai/ui/stars.html |
-| The live screen wired to the device | https://kou-uni.github.io/ethglobal-mumbai/web/gate.html |
 | **The business model, the lean canvas and three years of cash** | https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-business-model.html |
 | The market, the model and what we will not do | https://kou-uni.github.io/ethglobal-mumbai/ideation/2026-11-06-market-and-model.html |
 
 ```bash
 git clone https://github.com/kou-uni/ethglobal-mumbai && cd ethglobal-mumbai/broker
-npm i && npm test                 # 50 / 50
+npm i && npm test                 # 58 / 58
 PORT=8797 EXECUTE=0 node src/server.js   # needs ZG_API_KEY, ZG_PRIVATE_KEY
 node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
 ```
 
-## If you read nothing else
+## The four ways it stops
 
-**Four ways to stop, and they are never collapsed into one "error".**
+They are never collapsed into one "error".
 
 | | What it means | Whose decision |
 |---|---|---|
@@ -73,7 +73,7 @@ is **not** in a TEE this time, and the anonymous read path for stars is designed
 | **30 minutes** | `spec/permit-signature.md` (the frozen domain, with a cross-side test vector) · `broker/src/weigh.js`, `world.js`, `execute.js` · `broker/test` — **58 tests**, including 100 concurrent requests against a budget of 3 |
 | **You are looking for one thing** | Every directory has a `README.md` saying what is in it. `ideation/README.md` indexes all 47 working documents by purpose |
 
-## Verifiable facts (not adjectives)
+## Verifiable facts
 
 | | |
 |---|---|

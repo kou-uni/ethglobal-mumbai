@@ -13,6 +13,7 @@
     .st{font-size:21px;font-weight:700;fill:#1b1630}
     .num{font-size:17px;font-weight:700;fill:#fff}
     .lb{font-size:17px;fill:#4a4357}
+    .leg{font-size:16px;fill:#4a4357}
     .chip{font-size:16px;font-weight:700;fill:#8f1d14;letter-spacing:.04em}
     .where{font-size:14px;font-weight:700;letter-spacing:.1em;fill:#8b8498}
     .ttl{font-size:30px;font-weight:700;fill:#1b1630}
@@ -46,7 +47,7 @@
 
   <rect class="bx" x="510" y="510" width="680" height="80" rx="10" fill="#F3EEE6"/>
   <text class="st" x="534" y="542">3 · How heavy is this?</text>
-  <text class="t" x="534" y="570">the only step that reads the body</text>
+  <text class="t" x="534" y="570">the body goes out to be weighed, and is kept nowhere</text>
   <text class="chip" x="1166" y="556" text-anchor="end">NO ANSWER → STOPPED</text>
 
   <rect class="bx" x="510" y="620" width="680" height="80" rx="10" fill="#FFF4EA"/>
@@ -81,9 +82,9 @@
   <text class="t" x="84" y="728">she presses, or she</text>
   <text class="t" x="84" y="756">does not</text>
 
-  <rect class="bx" x="60" y="830" width="330" height="110" rx="18" fill="#ffd0ad"/>
-  <text class="h" x="84" y="872">THE KEYS</text>
-  <text class="t" x="84" y="904">kept only here</text>
+  <rect class="bx" x="60" y="846" width="330" height="96" rx="18" fill="#ffd0ad"/>
+  <text class="h" x="84" y="884">THE KEYS</text>
+  <text class="t" x="84" y="914">kept only here · never the agent's</text>
 
   <rect class="bx" x="60" y="1000" width="330" height="120" rx="18"/>
   <text class="h" x="84" y="1042">THE MORNING PAGE</text>
@@ -93,7 +94,7 @@
   <rect class="bx" x="1310" y="490" width="310" height="140" rx="18" fill="#fffdf8"/>
   <text class="h" x="1334" y="532">0G PRIVATE COMPUTER</text>
   <text class="where" x="1334" y="556">OUTSIDE</text>
-  <text class="t" x="1334" y="590">reads it once, answers</text>
+  <text class="t" x="1334" y="590">its operator cannot read it</text>
   <text class="t" x="1334" y="616">routine / decisive / heavy</text>
 
   <rect class="bx" x="1310" y="840" width="310" height="100" rx="18"/>
@@ -113,10 +114,20 @@
   <path d="M1194 545 L1306 545" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
   <path d="M1306 578 L1194 578" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
 
-  <path d="M506 645 L394 645" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
-  <path d="M394 690 L506 690" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
-  <text class="lb" x="84" y="552" fill="#8f1d14">only heavy ones reach her hand —</text>
-  <text class="lb" x="84" y="576" fill="#8f1d14">and nothing runs until she answers</text>
+  <path d="M506 640 L440 640 L440 476 L394 476" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
+  <path d="M200 510 L200 600" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
+  <path d="M250 600 L250 510" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
+  <circle cx="440" cy="560" r="13" fill="#f2600c"/><text class="num" x="440" y="566" text-anchor="middle" font-size="15">a</text>
+  <circle cx="200" cy="556" r="13" fill="#f2600c"/><text class="num" x="200" y="562" text-anchor="middle" font-size="15">b</text>
+  <circle cx="250" cy="556" r="13" fill="#f2600c"/><text class="num" x="250" y="562" text-anchor="middle" font-size="15">c</text>
+  <rect x="1310" y="650" width="310" height="180" rx="14" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5" stroke-dasharray="7 6"/>
+  <text class="where" x="1332" y="678" fill="#c2410c">WHEN IT NEEDS A PRESS</text>
+  <text class="leg" x="1332" y="704">a · the Broker answers the agent</text>
+  <text class="leg" x="1332" y="726">b · the agent reaches her device over</text>
+  <text class="leg" x="1332" y="746">127.0.0.1 — the Broker cannot</text>
+  <text class="leg" x="1332" y="770">c · she presses, and it signs</text>
+  <text class="leg" x="1332" y="792">then arrow 1 again: same request,</text>
+  <text class="leg" x="1332" y="812">a permit good for one call</text>
 
   <path d="M394 885 L504 885" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
   <path d="M1194 885 L1306 885" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>

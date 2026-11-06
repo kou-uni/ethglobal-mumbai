@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOMOSHIBI — 誰が、いつ、どの画面に出会うか（と、決めてほしいことの内訳）</title>
+<style>
+:root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
+--hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
+html{color-scheme:light}
+body{margin:0;background:var(--paper);color:var(--ink);
+font-family:"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic",Meiryo,sans-serif;
+font-size:15px;line-height:1.9;border-top:6px solid var(--accent);-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:56px clamp(24px,6vw,48px) 96px}
+.doc-header{padding-bottom:28px;border-bottom:1px solid var(--ink)}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin:0 0 20px}
+h1{font-size:27px;line-height:1.5;letter-spacing:.02em;margin:0 0 12px;font-feature-settings:"palt" 1}
+.lead{font-size:14px;color:var(--ink-2);margin:0 0 24px;max-width:38em}
+.doc-meta{font-size:12px;color:var(--ink-3);display:flex;gap:24px;flex-wrap:wrap}
+.page>section{border-top:1px solid var(--hairline);padding-top:44px;margin-top:64px}
+.page>section:first-of-type{border-top:0;padding-top:0;margin-top:56px}
+h2{font-size:19px;letter-spacing:.03em;margin:0;font-feature-settings:"palt" 1}
+h2 .no{color:var(--accent);margin-right:14px;font-variant-numeric:tabular-nums}
+.msg{font-size:16px;font-weight:600;line-height:1.8;margin:18px 0 24px;max-width:36em}
+h3{font-size:15px;margin:36px 0 8px}
+p{margin:0 0 16px;max-width:42em}
+ul,ol{margin:0 0 16px;padding-left:1.4em;max-width:41em}
+li{margin-bottom:6px}
+ul{list-style:none;padding-left:1.2em}
+ul li::before{content:"–";float:left;margin-left:-1.2em;color:var(--ink-3)}
+.summary{list-style:none;margin:24px 0 0;padding:0;counter-reset:s;max-width:44em}
+.summary li{counter-increment:s;position:relative;padding-left:2.4em;margin-bottom:14px}
+.summary li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:.4em;
+font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.kpis{display:flex;flex-wrap:wrap;row-gap:24px;margin:32px 0 8px}
+.kpi{padding:2px 32px}
+.kpi:first-child{padding-left:0}
+.kpi+.kpi{border-left:1px solid var(--hairline)}
+.kpi .v{font-size:30px;font-weight:700;color:var(--accent);line-height:1.3;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:14px;font-weight:600;margin-left:2px}
+.kpi .l{font-size:11.5px;color:var(--ink-3);letter-spacing:.06em;margin-top:6px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:28px 0 8px;font-size:13px;line-height:1.6}
+caption{text-align:left;font-size:12.5px;font-weight:600;margin-bottom:10px}
+th{font-size:12px;font-weight:600;text-align:left;padding:10px 12px;
+border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom}
+td{padding:10px 12px;border-bottom:1px solid var(--hairline);vertical-align:top}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-top:1px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:600;background:var(--accent-tint)}
+figure{margin:32px 0 8px}
+figcaption{font-size:12.5px;font-weight:600;margin-bottom:14px}
+figure svg{width:100%;height:auto;display:block}
+svg text{font-family:inherit}
+.fig-scroll{overflow-x:auto}
+.src{font-size:11.5px;color:var(--ink-3);margin:6px 0 0}
+.note{font-size:12.5px;color:var(--ink-2);border-left:2px solid var(--hairline);padding:2px 0 2px 14px;margin:24px 0 16px;max-width:40em}
+.chevrons{display:flex;margin:28px 0 8px;min-width:520px}
+.chev{flex:1;padding:9px 10px 9px 22px;font-size:12px;font-weight:600;line-height:1.5;text-align:center;
+background:var(--fill-gray);margin-left:4px;
+clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%)}
+.chev:first-child{margin-left:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%)}
+.chev.on{background:var(--accent);color:#fff}
+.chev small{display:block;font-size:10.5px;font-weight:500;opacity:.75}
+.matrix{display:grid;grid-template-columns:var(--mx-label,140px) repeat(var(--mx-cols,2),1fr);
+gap:18px 20px;margin:28px 0 8px;min-width:560px}
+.mx-h{font-size:11.5px;font-weight:600;color:var(--ink-2);text-align:center;align-self:end;
+padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.mx-label{background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;
+justify-content:center;text-align:center;gap:2px;font-size:12px;font-weight:700;line-height:1.5;padding:12px 10px}
+.mx-label small{font-size:10px;font-weight:600;opacity:.7;letter-spacing:.08em}
+.mx-label.alt{background:var(--fill-gray);color:var(--ink)}
+.mx-cell{font-size:12px;line-height:1.75}
+.mx-cell ul{margin:0}
+.mx-cell li{margin-bottom:5px}
+b,strong{font-weight:700}
+.em{color:var(--accent);font-weight:700}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--hairline);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--accent)}
+.doc-footer{margin-top:88px;padding-top:20px;border-top:1px solid var(--hairline);
+font-size:11.5px;color:var(--ink-3);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media print{@page{size:A4;margin:16mm}
+body{border-top-width:4px}.page{max-width:none;padding:0}
+.page>section{margin-top:48px;padding-top:32px}
+table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="doc-header">
+  <p class="eyebrow">TOMOSHIBI ／ 設計 ／ minta さんへ</p>
+  <h1>誰が、いつ、どの画面に出会い、何を変えるのか</h1>
+  <p class="lead">画面の枚数ではなく、<b>人の1日のどこに割り込むか</b>で設計する。あわせて「決めてほしいこと3つ」を、そのまま○×で返せる粒度まで割った。スタックチャンを入れるなら<b>どの1シーンか</b>も最後に書いた。</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>前提: 画面5枚・遷移表は screen-flow.html</span></div>
+</header>
+
+<section>
+  <h2>エグゼクティブサマリー</h2>
+  <ol class="summary">
+    <li><b>この製品の価値は、ほとんどの時間「何も出ないこと」。</b>持ち主が画面を見るのは1日1回あるかないか。<b>割り込む回数を増やす提案は、それ自体が失敗。</b></li>
+    <li><b>割り込んでよい場面は3つだけ。</b>重い要求が来たとき（押す）／灯が消えたとき（名乗り直す）／止められたことに後から気づくとき（系譜）。</li>
+    <li><b>スタックチャンを入れるなら「重い要求が来た」の合図だけ。</b>判断も承認も持たせない。<b>合図は実機から出さないと意味がない</b>が、<b>押す場所は鍵を持つ機器のまま</b>。</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">01</span>決めてほしいこと — 内訳（○×で返せる粒度）</h2>
+  <p class="msg">9個に割った。<b>太字が推し。</b>返事が無ければ「既定」で進める（既定は全部、いま動いている形）。</p>
+
+  <h3>Q1　灯（星）を出す導線</h3>
+  <div class="tbl"><table>
+    <thead><tr><th style="width:116px">決めること</th><th style="width:186px">選択肢</th><th>決めると何が変わるか</th><th style="width:86px">手間</th><th style="width:92px">既定</th></tr></thead>
+    <tbody>
+      <tr><td><b>Q1-a</b> ボタンを置く場所</td><td><b>A 灯の画面＋系譜の両方</b>／B 灯の画面だけ／C 使うたびに誘う</td><td>名乗る動機は「使い終わった直後」が最高。Cは押す（機器）と意味が混ざるので<b>採らない</b></td><td>A は画面1か所追加（30分）</td><td>B</td></tr>
+      <tr><td><b>Q1-b</b> 誰が灯を出せるか</td><td>A 誰でも（World で人だと確かめるだけ）／<b>B 鍵の持ち主だけ</b></td><td><b>いまの実装は A。</b>B にするには <span class="mono">/vouch/finish</span> に持ち主の署名を足す（＝「使っている」が本当になる）</td><td>B は Broker 30分・画面なし</td><td>A（ただし<b>「今回は制限していない」と口で言う</b>）</td></tr>
+      <tr><td><b>Q1-c</b> 灯の単位</td><td><b>A (スキル, 版) ごと</b>／B スキルごと</td><td>A だから版が上がると消える。<b>名前の意味そのもの</b>（決定9で合意済み・確認だけ）</td><td>—</td><td>A</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Q2　World の待ち画面</h3>
+  <div class="tbl"><table>
+    <thead><tr><th style="width:116px">決めること</th><th style="width:186px">選択肢</th><th>決めると何が変わるか</th><th style="width:86px">手間</th><th style="width:92px">既定</th></tr></thead>
+    <tbody>
+      <tr><td><b>Q2-a</b> 主役</td><td><b>A コードを主・QRを従</b>／B QR 1枚だけ</td><td><span class="mono">verification_uri_complete</span> が返るか<b>未確認</b>。返らないと B は完結しない。A なら<b>どちらでも壊れない</b></td><td>QR ライブラリ1つ（15分）</td><td>A</td></tr>
+      <tr><td><b>Q2-b</b> 待ち方</td><td><b>A 画面の一部で待つ</b>／B 全画面モーダル</td><td>A なら灯の数が見えたまま待てる（何のために待っているかが消えない）</td><td>—</td><td>A</td></tr>
+      <tr><td><b>Q2-c</b> 残り時間</td><td><b>A 分で出す（残り10分）</b>／B 秒刻み／C 出さない</td><td>B は急かすだけ。C は「死んでいるのか待っているのか」が分からない</td><td>10分</td><td>A</td></tr>
+      <tr><td><b>Q2-d</b> 断られた後</td><td><b>A もう一度の口を出す</b>／B 出さない</td><td>A でも<b>断った記録は消さない</b>（系譜に残したまま、新しい試行として並ぶ）</td><td>—</td><td>A</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Q3　実機（手元の機器）の代役</h3>
+  <div class="tbl"><table>
+    <thead><tr><th style="width:116px">決めること</th><th style="width:186px">選択肢</th><th>決めると何が変わるか</th><th style="width:86px">手間</th><th style="width:92px">既定</th></tr></thead>
+    <tbody>
+      <tr><td><b>Q3-a</b> 代役を出す条件</td><td>A 常に画面にも出す／<b>B 実機が繋がらないときだけ</b></td><td>A だと実機の意味が薄れて見える（「結局ブラウザで押せるのか」と思われる）</td><td>判定1行</td><td>A（いまは常時出ている）</td></tr>
+      <tr><td><b>Q3-b</b> 表示の文言</td><td><b>A「実機の代わり（この画面で署名している）」</b>／B 無印</td><td>B は黙って代役を本物に見せること。<b>今回の原則に反する</b></td><td>文言だけ</td><td>A</td></tr>
+      <tr><td><b>Q3-c</b> 撮影でどちらを映すか</td><td><b>A 実機を主・画面は保険</b>／B 画面だけ</td><td>A なら「手元の機器」の主張が映像で立つ。繋がらない日は B に落ちる（筋書き §4）</td><td>撮影の段取り</td><td>A</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>Q3-d は決定済み（報告）。</b>ブラウザには鍵を置かない。デモの「押す」は、<b>事前に署名した使い切りの許可を20本</b>用意して1本ずつ使う形にしてある（実物と同じ構造）。画面が鍵を持つ実装は入れていない。</p>
+</section>
+
+<section>
+  <h2><span class="no">02</span>誰が、どんなときに、何に出会うか</h2>
+  <p class="msg">登場するのは3人。<b>持ち主はほとんど何も見ない</b>。それが成功の形。</p>
+
+  <div class="fig-scroll"><div class="matrix" style="--mx-cols:3;--mx-label:124px">
+    <div class="mx-h"></div>
+    <div class="mx-h">どんな人・どこに居る</div>
+    <div class="mx-h">この製品に来る目的</div>
+    <div class="mx-h">いちばん怖いこと</div>
+
+    <div class="mx-label"><small>P1</small>鍵の持ち主</div>
+    <div class="mx-cell">個人開発者・フリーランス。AI に仕事をさせたいが、API キーを渡すのが怖い。平日の昼、他の作業中</div>
+    <div class="mx-cell"><b>渡さずに働かせたい。</b>そして<b>普段は忘れていたい</b></div>
+    <div class="mx-cell">気づかないうちに課金・送金されること。そして<b>うるさくて結局切ること</b></div>
+
+    <div class="mx-label alt"><small>P2</small>スキルの作り手</div>
+    <div class="mx-cell">AI スキルを公開している側。版を上げるたび、使われ方が変わる</div>
+    <div class="mx-cell">信用を<b>積む</b>。灯が付いていることが看板になる</div>
+    <div class="mx-cell">版を上げたら灯が全部消えること（＝<b>仕様。だから消える意味が伝わっていないと恨まれる</b>）</div>
+
+    <div class="mx-label alt"><small>P3</small>これから使う人</div>
+    <div class="mx-cell">そのスキルを入れるか決める人。審査員もここに座る。10秒で判断する</div>
+    <div class="mx-cell">このスキルは<b>いま</b>信じられるか</div>
+    <div class="mx-cell">古い評価を新しいと勘違いすること</div>
+  </div></div>
+
+  <div class="tbl"><table>
+    <caption>表2　ジャーニー（左から時間。◆が「人が何かを決める」点）</caption>
+    <thead><tr><th>いつ</th><th>誰</th><th>その人が直面する画面</th><th>何秒</th><th>その人が変えるもの</th></tr></thead>
+    <tbody>
+      <tr><td>① 初めて許す</td><td>P1</td><td><b>S1 範囲をつくる</b>（4行に署名）</td><td>60秒</td><td>◆ <b>何を・どこまで許すか</b>を自分で決める。ここだけは代行させない</td></tr>
+      <tr><td>② ふだん</td><td>P1</td><td><b>何も出ない</b></td><td>0秒</td><td>何も変えない。<b>これが価値。</b>通知を足したくなるが足さない</td></tr>
+      <tr><td>③ 重い要求が来た</td><td>P1</td><td><b>S3 手元の機器が灯る</b>（4行＋押す）</td><td>5秒</td><td>◆ <b>この1回を通すか</b>。押さなければ何も起きない</td></tr>
+      <tr><td>④ 止められていた</td><td>P1</td><td><b>S2 門 / S4 系譜</b>（DENIED と、誰が要求したか）</td><td>20秒</td><td>◆ <b>そのスキルを外すか</b>。証拠つきで決められる</td></tr>
+      <tr><td>⑤ 決められなかった</td><td>P1</td><td><b>S2 門</b>（STOPPED）</td><td>10秒</td><td>◆ <b>待つか、自分でやるか。</b>「勝手に通った」より不便だが、<b>不便の理由が分かる</b></td></tr>
+      <tr><td>⑥ 名乗る</td><td>P1</td><td><b>S6 World</b>（1回だけ）</td><td>30秒</td><td>◆ <b>自分の評判を賭ける</b>。断ってもよい（断った記録も残る）</td></tr>
+      <tr><td>⑦ 版が上がった</td><td>P2 / P1</td><td><b>S5 灯</b>（一斉に消える）</td><td>5秒</td><td>P2 は何もできない。P1 だけが<b>出し直せる</b>。使い続けている人しか灯は戻らない</td></tr>
+      <tr><td>⑧ 採用を決める</td><td>P3</td><td><b>S5 灯</b>（いまの版の数と、消えた履歴）</td><td>10秒</td><td>◆ <b>入れるかどうか。</b>見ているのは「いま使われているか」</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">出所: 画面は <span class="mono">ui/</span> の実装、判定は Broker の返り値。秒数は設計上の狙いで、実測ではない。</p>
+
+  <p class="note"><b>割り込みの総量を増やさない。</b>①③⑥⑦以外で人を呼ばない。「通知で安心を届ける」系の機能は、P1 のいちばん怖いこと（うるさくて切る）に直撃するので足さない。</p>
+</section>
+
+<section>
+  <h2><span class="no">03</span>スタックチャンを入れるなら、どのシーンか</h2>
+  <p class="msg"><b>③「重い要求が来た」の合図、1点だけ。</b>判断も承認も鍵も持たせない。</p>
+
+  <div class="fig-scroll"><div class="chevrons">
+    <div class="chev">① 初めて許す<small>画面の仕事</small></div>
+    <div class="chev">② ふだん<small>黙っている</small></div>
+    <div class="chev on">③ 重い要求<small>こちらを向いて知らせる</small></div>
+    <div class="chev">④⑤ 止まった<small>あとで系譜</small></div>
+    <div class="chev on">⑦ 灯が消えた<small>一度だけ知らせる</small></div>
+  </div></div>
+
+  <p><b>なぜ③なのか。</b>重い要求は、<b>持ち主が画面を見ていないときに来る</b>。端末に出すカウントダウンや通知は、見ていない人には届かない。<b>合図は実機から出さなければ意味がない</b>（2026-09-12 に同じ失敗をしている。会場で誰も端末を見なかった）。スタックチャンは机の上にいて、こちらを向ける・光る・短く言える。<b>その1点だけが、画面にできないこと。</b></p>
+
+  <div class="tbl"><table>
+    <thead><tr><th>場面</th><th>スタックチャンがすること</th><th>してはいけないこと</th></tr></thead>
+    <tbody>
+      <tr><td>③ 重い要求</td><td>こちらを向く／灯色に光る／<b>「4,800ドルの送金を頼まれてる」と一言</b></td><td><b>承認しない。</b>うなずきや音声で通せるようにしない（鍵を持つ機器から押す、を崩さない）</td></tr>
+      <tr><td>③ のあと</td><td>押されたら光を消す。押されなければ<b>黙って待つ</b></td><td>催促を繰り返さない。急かすと、人は中身を読まずに押す</td></tr>
+      <tr><td>⑦ 灯が消えた</td><td>一度だけ知らせる（「版が変わって灯が消えた」）</td><td>出し直しをその場で求めない。World は本人の端末の仕事</td></tr>
+      <tr><td>④⑤ 止まった</td><td><b>何もしない</b></td><td>止めたことを喋らない。止まるのは正常で、毎回喋るとただの騒音になる</td></tr>
+      <tr><td>② ふだん</td><td><b>何もしない</b></td><td>「見守っています」演出をしない</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><b>入れるとしても、今回は作らない。</b>提出まで時間が無く、<b>合図が誤爆すると信頼の話をしている製品が自分で信頼を落とす</b>。今回は「③の合図を実機から出す」という設計上の位置づけだけ残し、動画でも触れない。聞かれたら<b>口で</b>答える（ブースで1番聞かれそうな質問なので、この表のまま答える）。</p>
+  <p class="src">前提: スタックチャンは 11/6 の決定で今回の制作物から外している（<span class="mono">ideation/2026-11-06-decisions.md</span> 1）。ここはその判断を覆していない。</p>
+</section>
+
+<section>
+  <h2><span class="no">04</span>次のアクション</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>やること</th><th>誰</th><th>いつまで</th></tr></thead>
+    <tbody>
+      <tr><td>Q1-a / Q1-b / Q2-a / Q3-a に○×（他は既定で進める）</td><td>minta・kou</td><td>11/6 18:00 IST</td></tr>
+      <tr><td>決まった形で画面を仕上げる（芯は issue #19 の10項目）</td><td>minta</td><td>11/6 22:00 IST（撮影前）</td></tr>
+      <tr><td>World のクライアント登録 → device flow を端から端まで1回通す</td><td>kou</td><td>11/6 20:00 IST</td></tr>
+      <tr><td>③の合図（スタックチャン）は<b>作らない</b>。ブースの口頭回答としてだけ持つ</td><td>kou</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer class="doc-footer">
+  <span>TOMOSHIBI — タッチポイント設計（2026-11-06）</span>
+  <span>画面と遷移: ideation/2026-11-06-screen-flow.html ／ 芯: issue #19</span>
+</footer>
+
+</div>
+</body>
+</html>

@@ -132,8 +132,20 @@ async function hold(what) {
     if (REAL) throw new Error(`the Ledger was not there for "${what}": the page offered its stand-in`)
     await js('await wt.hold()'); console.log(`  ${what}: the page's stand-in was held (no Ledger)`)
   } else { console.log(`  ${what}: waiting for the hold on the Ledger…`); await wait(2600); cue(`${what}-waiting`); pause() }
-  const ok = await until(what === 'lend' ? 'wt.st().lent' : `String(wt.st().last).includes('pressed')`, 240000)
-  resume(); if (!ok) throw new Error(`no hold arrived for "${what}"`)
+  // A slip on the device (a tap on "reject") is not the end of the take: the same thing is asked for again, off camera.
+  const done = what === 'lend' ? 'wt.st().lent' : `String(wt.st().last).includes('pressed')`
+  const declines = () => js(`return tomoshibi.events.filter((e) => e.type === 'declined').length`)
+  for (let tries = 0, n0 = await declines(); ; tries++) {
+    const got = await js(`const ok = await wt.until(() => (${done}) || tomoshibi.events.filter((e) => e.type === 'declined').length > ${n0}, 240000); return ok ? ((${done}) ? 'done' : 'declined') : 'timeout'`)
+    if (got === 'done') break
+    if (got === 'timeout' || tries >= 4) { resume(); throw new Error(`no hold arrived for "${what}"`) }
+    console.log(`  ${what}: declined on the device. Asking again…`); pause(); n0 = await declines(); await sleep(2500)
+    if (what === 'lend') { await js(`document.querySelector('[data-act="key-test"]')?.click(); await wt.W(400); document.querySelector('[data-act="park"]')?.click()`) }
+    else { await js(`document.querySelector('[data-act="seen"]')?.click(); await wt.W(600); document.querySelector('[data-act="run:heavy"]')?.click()`) }
+    if (!(await until(`wt.st().asking === '${what}'`, 150000))) { resume(); throw new Error(`"${what}" could not be asked for again`) }
+    console.log(`  ${what}: on the Ledger again`)
+  }
+  resume()
   cue(`${what}-done`)
 }
 

@@ -64,6 +64,9 @@ permit is the firewall rule, and the Ledger is the administrator.*
 
 ![Thirteen steps across five lifelines: the tool, TOMOSHIBI, 0G, the Ledger and the real service](assets/sequence.png)
 
+> **Watch one call move through the figure:** https://kou-uni.github.io/ethglobal-mumbai/web/flow.html
+> — the same eight steps, animated. Most calls never reach step 4, the one with a person in it.
+
 Putting a key into the table and signing the range it may be used in happens **once per key**.
 Everything numbered here is a **single request**: it starts where the tool asks with a label,
 and the Ledger appears only when the weighing came back heavy — and even then TOMOSHIBI

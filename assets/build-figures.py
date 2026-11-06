@@ -23,6 +23,7 @@ T = {
             ('WORLD ID', ['one person, once. The only way a star', 'is lit, and the holder\'s address is', 'never written into it']),
             ('THE REAL SERVICES', ['api.anthropic.com · api.stripe.com', 'api.resend.com'])],
   'ledger_where': 'hardware, in your hand — not in the laptop, and not in the cloud',
+  'flow_hint': 'One call, moving through the same figure. It loops. Step 4, in orange, is the only one a person is in — and most calls never reach it.',
   'box': 'TOMOSHIBI · the switchboard, on the laptop',
   'box_sub': 'two parts: the page you look at, and the broker that holds this table',
   'box_foot': 'What leaves this laptop: the request itself, its weight, and the trail. Never the right column.',
@@ -93,6 +94,15 @@ T = {
               'an ordinary call. Only the heavy',
               'ones reach their hand.'],
   'tr_foot': 'When the version changes, the stars go out. Nobody inherits a reputation from code they did not run.',
+  'order_title': 'The order of one call',
+  'order': ['a tool calls, with a label — never a key',
+            'the row is found and the range checked · outside it → DENIED, recorded',
+            '0G weighs it: routine · significant · decisive · no answer → STOPPED',
+            'heavy? the tool fetches a signature from the Ledger over 127.0.0.1 — good for one call',
+            'one call of the count is reserved, the label is swapped for the key, and it is sent',
+            'the result comes back to the tool, with a hash of it. Never the key',
+            'the row is appended, and the thread sealed into 0G Storage',
+            'afterwards: World ID, one person once — a star on this version'],
  },
  'ja': {
   'font': 'Hiragino Sans, Hiragino Kaku Gothic ProN, Helvetica, sans-serif',
@@ -105,6 +115,7 @@ T = {
             ('World ID', ['一人の人間が、一度だけ。星に灯が', 'ともる唯一の道。保有者の', 'アドレスは書かない']),
             ('本物のサービス', ['api.anthropic.com · api.stripe.com', 'api.resend.com'])],
   'ledger_where': '手元のハードウェア — パソコンの中でも、クラウドでもない',
+  'flow_hint': '同じ図の上を、1回の呼び出しが通っていく。橙の段だけが、人のいる段。クリックで停まる。',
   'box': '灯火 · 交換台（ノートパソコンの中）',
   'box_sub': '2つからなる：人が見る画面と、この表を持つ Broker',
   'box_foot': 'このパソコンを出るのは、要求そのものと、その重さと、台帳。右の列は出ない。',
@@ -173,6 +184,15 @@ T = {
               '聞かない。重いものだけが',
               '手元に来る。'],
   'tr_foot': 'バージョンが変われば、灯は消える。走らせていないコードの評判を、誰も引き継げない。',
+  'order_title': '1回の呼び出しの順番',
+  'order': ['道具がラベルで呼ぶ。キーは持たない',
+            '行を引き、範囲を確かめる。外なら DENIED・記録',
+            '0G が重さを測る：routine・significant・decisive。答えが無ければ STOPPED',
+            '重い？ 道具が 127.0.0.1 で Ledger の署名を取ってくる（1回ぶん）',
+            '回数を１つ確保し、ラベルをキーに入れ替えて送る',
+            '結果とそのハッシュが道具に返る。キーは返らない',
+            '台帳に1行追記し、0G Storage に封じる',
+            'あとで：World ID で一人一度 — このバージョンに灯'],
  },
 }
 
@@ -202,6 +222,16 @@ HEAD = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{
 def esc(s):
     return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
+BADGE_XY = {}
+
+
+def badge(n, cx, cy, fill='#1b1630', bid=''):
+    BADGE_XY[n] = (cx, cy)
+    i = f' id="{bid}"' if bid else ''
+    return (f'<g{i}><circle cx="{cx}" cy="{cy}" r="14" fill="{fill}"/>'
+            f'<text class="num" x="{cx}" y="{cy+5}" text-anchor="middle">{n}</text></g>')
+
+
 def nat(L):
     """Everyone who touches a call, and which side of the laptop they are on."""
     w, h = 1680, 1180
@@ -214,30 +244,35 @@ def nat(L):
     a('<rect x="390" y="108" width="750" height="84" rx="16" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5"/>')
     a(f'<text class="k" x="414" y="138" fill="#c2410c">{esc(L["ledger"])}</text>')
     a(f'<text class="m" x="414" y="172">{esc(L["ledger_where"])}</text>')
-    a('<path d="M765 192 L765 246" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>')
 
     # zone 1 — the laptop
     a('<rect x="40" y="200" width="1120" height="545" rx="22" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="10 8"/>')
     a(f'<text class="k" x="64" y="234">{esc(L["inside"])}</text>')
+    # drawn after the zone, or the zone's fill paints over it
+    a('<path d="M765 192 L765 246" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>')
+    a(badge(4, 765, 219, '#f2600c', 'b4'))
     for i, (t1, t2) in enumerate(L['tools']):
         y = 290 + i * 104
-        a(f'<rect class="card" x="64" y="{y}" width="300" height="84" rx="14"/>')
-        a(f'<text class="h" x="86" y="{y+34}">{esc(t1)}</text>')
+        a(f'<rect class="card" x="64" y="{y}" width="280" height="84" rx="14"/>')
+        a(f'<text class="h" x="86" y="{y+34}" font-size="19">{esc(t1)}</text>')
         a(f'<text class="m" x="86" y="{y+64}">{esc(t2)}</text>')
-        a(f'<path d="M364 {y+42} L386 {y+42}" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>')
+        a(f'<path d="M344 {y+42} L386 {y+42}" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>')
+        if i == 1:
+            a(badge(1, 365, y + 42, bid='b1'))
 
     a('<rect class="card" x="390" y="250" width="750" height="470" rx="18"/>')
     a(f'<text class="h" x="414" y="288">{esc(L["box"])}</text>')
     a(f'<text class="m" x="414" y="316">{esc(L["box_sub"])}</text>')
     th = L['thead']
-    a(f'<text class="k" x="414" y="360">{esc(th[0])}</text>')
-    a(f'<text class="k" x="560" y="360">{esc(th[1])}</text>')
+    a(f'<text class="k" x="450" y="360">{esc(th[0])}</text>')
+    a(f'<text class="k" x="590" y="360">{esc(th[1])}</text>')
     a(f'<text class="k" x="1010" y="360">{esc(th[2])}</text>')
     a('<path d="M414 374 L1116 374" stroke="#d8d2c6" stroke-width="2"/>')
+    a(badge(2, 424, 358, bid='b2'))
     for i, (lab, rng, key) in enumerate(L['rows']):
         y = 412 + i * 52
-        a(f'<text class="lab" x="414" y="{y}">{esc(lab)}</text>')
-        a(f'<text class="m" x="560" y="{y}">{esc(rng)}</text>')
+        a(f'<text class="lab" x="450" y="{y}">{esc(lab)}</text>')
+        a(f'<text class="m" x="590" y="{y}">{esc(rng)}</text>')
         a(f'<text class="key" x="1010" y="{y}">{esc(key)}</text>')
     a('<path d="M980 386 L980 588" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="7 6"/>')
     a(f'<text class="note" x="414" y="620">{esc(L["keynote"])}</text>')
@@ -247,23 +282,26 @@ def nat(L):
     a(f'<text class="k" x="1200" y="234">{esc(L["outside"])}</text>')
     for i, (title, lines) in enumerate(L['cloud']):
         y = 250 + i * 122
-        a(f'<rect class="card" x="1200" y="{y}" width="440" height="112" rx="14" style="fill:#fffdf8"/>')
-        a(f'<text class="k" x="1222" y="{y+32}">{esc(title)}</text>')
+        a(f'<rect class="card" x="1200" y="{y}" width="440" height="116" rx="14" style="fill:#fffdf8"/>')
+        a(f'<text class="k" x="1222" y="{y+30}">{esc(title)}</text>')
         for j, line in enumerate(lines):
-            a(f'<text class="m" x="1222" y="{y+62 + j * 24}">{esc(line)}</text>')
-        both = ' marker-start="url(#a)"' if i == 0 else ''
-        a(f'<path d="M1146 {y+56} L1196 {y+56}" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"{both}/>')
+            a(f'<text class="m" x="1222" y="{y+56 + j * 22}">{esc(line)}</text>')
+        n, both = ((3, True), (7, False), (8, False), (5, True))[i]
+        start = ' marker-start="url(#a)"' if both else ''
+        a(f'<path d="M1146 {y+56} L1196 {y+56}" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"{start}/>')
+        a(badge(n, 1171, y + 32, bid=f'b{n}'))
+        if i == 3:  # the answer comes back the same way
+            a(badge(6, 1171, y + 80, bid='b6'))
 
-    # if you know NAT
-    a(f'<text class="k" x="60" y="790">{esc(L["map_title"])}</text>')
+    # the order, as numbered on the figure
+    a(f'<text class="k" x="60" y="790">{esc(L["order_title"])}</text>')
     a('<rect class="card" x="60" y="810" width="860" height="314" rx="16"/>')
-    a('<text class="k" x="84" y="844">NAT</text>')
-    a('<text class="k" x="470" y="844">TOMOSHIBI</text>')
-    a('<path d="M84 858 L896 858" stroke="#d8d2c6" stroke-width="2"/>')
-    for i, (l, r) in enumerate(L['map']):
-        y = 890 + i * 33
-        a(f'<text class="m" x="84" y="{y}">{esc(l)}</text>')
-        a(f'<text class="m" x="470" y="{y}">{esc(r)}</text>')
+    for i, line in enumerate(L['order']):
+        y = 856 + i * 34
+        a(f'<g id="o{i + 1}">')
+        a(badge(i + 1, 96, y - 6, '#f2600c' if i == 3 else '#1b1630'))
+        a(f'<text class="m" x="124" y="{y}">{esc(line)}</text>')
+        a('</g>')
 
     # who it is for
     a(f'<text class="k" x="960" y="790">{esc(L["who_title"])}</text>')
@@ -341,10 +379,81 @@ def trust(L):
     return '\n'.join(o)
 
 
+# One call, moving. Straight segments between the coordinates the figure is
+# already drawn with, so the dot cannot drift off it. Plain SMIL, no script:
+# it animates in a browser, in an <img>, and in a screenshot of either.
+LEGS = [
+    (1, [(344, 436), (470, 436)], 900),
+    (2, [(470, 436), (424, 358)], 700),
+    (3, [(424, 358), (1146, 306), (1420, 306)], 1500),
+    (0, [(1420, 306), (1146, 306), (800, 470)], 1100),
+    (4, [(800, 470), (765, 246), (765, 204)], 1200),
+    (0, [(765, 204), (765, 246), (800, 470)], 1000),
+    (5, [(800, 470), (1146, 672), (1420, 672)], 1500),
+    (6, [(1420, 672), (1146, 672), (800, 470)], 1300),
+    (7, [(800, 470), (1146, 428), (1420, 428)], 1300),
+    (8, [(800, 470), (1146, 550), (1420, 550)], 1300),
+    (0, [(800, 470), (800, 470)], 900),
+]
+
+
+def flow(L, svg):
+    """The same figure, with one call walking through it."""
+    total = sum(d for _, _, d in LEGS) / 1000
+    t, o = 0.0, []
+    for n, pts, ms in LEGS:
+        a, b = t / total, (t + ms / 1000) / total
+        t += ms / 1000
+        path = 'M' + ' L'.join(f'{x} {y}' for x, y in pts)
+        o.append(
+            f'<g opacity="0"><circle r="13" fill="#f2600c" stroke="#fff" stroke-width="3"/>'
+            f'<animate attributeName="opacity" dur="{total}s" repeatCount="indefinite"'
+            f' values="0;0;1;1;0;0" keyTimes="0;{a:.4f};{a:.4f};{b:.4f};{b:.4f};1"/>'
+            f'<animateMotion dur="{total}s" repeatCount="indefinite" path="{path}"'
+            f' calcMode="linear" keyPoints="0;0;1;1" keyTimes="0;{a:.4f};{b:.4f};1"/></g>')
+        if n:  # a ring on the number this leg belongs to, and its line lit in the list
+            cx, cy = BADGE_XY[n]
+            o.append(
+                f'<circle cx="{cx}" cy="{cy}" r="20" fill="none" stroke="#f2600c" stroke-width="3" opacity="0">'
+                f'<animate attributeName="opacity" dur="{total}s" repeatCount="indefinite"'
+                f' values="0;0;1;1;0;0" keyTimes="0;{a:.4f};{a:.4f};{b:.4f};{b:.4f};1"/></circle>')
+            svg = svg.replace(
+                f'<g id="o{n}">',
+                f'<g id="o{n}" opacity="0.32"><animate attributeName="opacity" dur="{total}s"'
+                f' repeatCount="indefinite" values=".32;.32;1;1;.32;.32"'
+                f' keyTimes="0;{a:.4f};{a:.4f};{b:.4f};{b:.4f};1"/>')
+    return svg.replace('</svg>', ''.join(o) + '</svg>')
+
+
+PAGE = """<!doctype html>
+<meta charset="utf-8">
+<title>{title}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{{margin:0;background:#F3EEE6;font-family:{font};display:grid;place-items:center;min-height:100vh}}
+  main{{width:min(100vw,1680px)}}
+  svg{{width:100%;height:auto;display:block}}
+  p{{font-size:clamp(13px,1.1vw,17px);color:#6b6478;padding:10px 4vw 24px;text-align:center;margin:0}}
+</style>
+<main>
+{svg}
+<p>{hint}</p>
+</main>
+"""
+
+
 for lang, L in T.items():
     out = OUT if lang == 'en' else OUT.parent.parent
     suffix = '' if lang == 'en' else '-ja'
+    svgs = {}
     for name, build in (('nat', nat), ('sequence', sequence), ('trust', trust)):
         path = out / f'{name}{suffix}.svg'
-        path.write_text(build(L), encoding='utf-8')
+        svgs[name] = build(L)
+        path.write_text(svgs[name], encoding='utf-8')
         print('wrote', path)
+    moving = flow(L, svgs['nat'])
+    (out / f'flow{suffix}.svg').write_text(moving, encoding='utf-8')
+    page = (OUT.parent / 'web' / 'flow.html') if lang == 'en' else (out / 'flow-ja.html')
+    page.write_text(PAGE.format(title=esc(L['nat_title']), hint=esc(L['flow_hint']),
+                                svg=moving, font=L['font']), encoding='utf-8')
+    print('wrote', out / f'flow{suffix}.svg', 'and', page)

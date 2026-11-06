@@ -41,6 +41,15 @@ node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
 
 > **Who this is for, what it stops, and what it assumes — stated plainly:** [`POSITION.md`](POSITION.md)
 
+## One request, end to end
+
+![The whole system, with the order of the data numbered](assets/architecture.png)
+
+Three regions: her own device, the computer the agent runs on, and someone else's
+network. The numbers are the order a single request travels in. Beside each step is
+what that step refuses, so the picture shows where a request dies as well as where
+it goes. Lighting a flame is not part of a request, so it sits in its own band.
+
 ## What it does, in four parts
 
 Everything in this repository is one of four things. The rest is support.

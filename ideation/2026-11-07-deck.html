@@ -39,6 +39,10 @@
   .team b{color:var(--ink)}
   .foot{position:absolute;left:4vh;bottom:2.4vh;font-size:1.6vh;color:var(--mute)}
   .n{position:absolute;right:3vh;bottom:2.4vh;font-size:1.6vh;color:var(--mute)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:3vh;margin:1vh 0}
+  .stats div{border-top:3px solid var(--mint);padding-top:1.4vh}
+  .stats b{display:block;font-size:5.4vh;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+  .stats span{font-size:1.95vh;color:var(--mute);line-height:1.45}
   mark{background:var(--mint-soft);color:var(--ink);padding:0 .4vh;border-radius:.4vh}
   @media print{body{background:#fff}.deck{box-shadow:none;page-break-after:always}}
 </style>
@@ -48,9 +52,13 @@
     <span class="tag">0:00 – 0:25</span>
     <h1 class="big">No limit. <mark>No expiry.</mark><br>No receipt.</h1>
     <p class="lede">Someone in this room pasted an API key into an AI agent this week.<br>Maybe this morning.</p>
-    <p class="lede"><b>And it is never just one.</b> One per agent, one per skill, one per service.<br>
-      <b>What the AI era quietly handed us to manage is not prompts, and not models. It is keys.</b></p>
-    <span class="foot">more of them, in more places, held by more software than anyone is keeping track of</span>
+    <div class="stats">
+      <div><b>77%</b><span>of employees paste data into AI prompts — 82% of it through personal accounts</span></div>
+      <div><b>28.65M</b><span>new hardcoded secrets pushed to public GitHub in 2025, up 34% in a year</span></div>
+      <div><b>64%</b><span>of credentials leaked in 2022 were <i>still valid</i> in January 2026</span></div>
+    </div>
+    <p class="lede"><b>What the AI era quietly handed us to manage is not prompts, and not models. It is keys.</b></p>
+    <span class="foot">LayerX, Enterprise AI &amp; SaaS Data Security 2025 · GitGuardian, State of Secrets Sprawl 2026</span>
     <span class="n">1</span>
   </section>
 

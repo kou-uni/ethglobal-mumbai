@@ -40,6 +40,18 @@ receipt. We would never hand a credit card over like that.*
 > AI era has quietly handed us to manage is not prompts, and not models. It is keys** — more of
 > them, in more places, held by more software than any of us is actually keeping track of."*
 
+
+**Three numbers on the slide, under the headline. They are the empathy and the market in one move:**
+
+| | |
+|---|---|
+| **77%** | of employees paste data into AI prompts — **82% of it through unmanaged personal accounts** (LayerX, *Enterprise AI and SaaS Data Security*, 2025) |
+| **28.65M** | new hardcoded secrets pushed to public GitHub in 2025, **up 34% in a year**; AI-service secrets alone up **81%** (GitGuardian, *State of Secrets Sprawl 2026*) |
+| **64%** | of credentials leaked in 2022 were **still valid in January 2026** — this is the slide's own words, "no expiry", as a measurement (GitGuardian, 2026) |
+
+**Say the 64% last and slowly.** It is the one number that turns a design opinion into a fact:
+a key handed over once does not stop working, and four years later most of them still do not.
+
 **Do not put the product name on this slide.** The first twenty-five seconds belong to the problem.
 
 ---

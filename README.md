@@ -35,6 +35,12 @@ afterwards.
 
 **A review score never expires. A flame goes out. That is the whole idea.**
 
+**In one line: a human-centred way to hold API keys.** A hardware wallet decides, a sealed model on 0G weighs
+each call without us reading it, and World ID puts one real person behind every light. And it is built the way
+the Ethereum Foundation's CROPS track asks — **the key stays on the owner's own machine, nothing we operate sits
+in the path of a call, and all of it runs from this repository** — so it keeps working if we go away. The four
+questions that track asks are answered, short, under [CROPS](#crops).
+
 ## In 30 seconds
 
 | | |
@@ -119,7 +125,19 @@ it goes out**, so only the people still running it notice, and light it again. T
 
 ## CROPS
 
-The Ethereum Foundation track asks for four properties. Each is answered here with where to check it.
+The Ethereum Foundation track asks for four properties — censorship resistance, open source, privacy,
+security — and for a README that says what the authors control, whether it builds from the repository alone,
+and how keys are protected. TOMOSHIBI is built to those properties rather than fitted to them afterwards. The
+lead property is **security that holds without us**: the key never leaves the owner's machine, a hardware
+wallet decides, and nothing we operate can be told to sign, to leak, or to cut someone off. The short answers
+first; where to check each, below.
+
+| The track asks | Short answer |
+|---|---|
+| **C** · What do you control that the user depends on, and what happens if it goes away or refuses them? | **Nothing in the path of a call.** The Broker is the user's own process, the screens are static files, the Ledger app is on their device. If we vanish, all of it keeps running from this repository; only the public try-out page (ours, and it takes no keys) goes dark. We cannot refuse anyone: we hold no key and no account. One registration is needed for lights — a World app id, ours in the demo and your own in `.env.local` if you run it |
+| **O** · Can a user build and run it from the repository alone? | **Yes.** The Broker is Node with four dependencies (`npm test`, then `tools/demo-up.sh`), the screens are a static folder, and the Ledger app builds from LedgerHQ's boilerplate. [Run it](#run-it) |
+| **P** · What does the client send to third parties? | **Nothing.** No analytics, no fonts, no embeds, no cookies. The API key never leaves the Broker; the signing key never leaves the Ledger; the public trail holds no body and no key |
+| **S** · How are keys and user data protected, and what are the trust assumptions? | A hardware wallet signs every permit from the four lines on its own screen; the Broker enforces destination, count and expiry on every call; a heavy call waits for a press; a call to anywhere else is refused and recorded. **Trusted:** the Broker on the owner's machine (not in a TEE yet), TeeML's attestation for the weighing, World for personhood |
 
 **Censorship resistance.** The switchboard runs on your own laptop: the Broker is a local process and the
 screens are static files, so no server we operate sits in the path of your calls. Your keys are your own —

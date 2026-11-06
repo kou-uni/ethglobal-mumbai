@@ -38,6 +38,22 @@ SVG はすべてパスのみで、フォントがなくても同じ形で表示�
 - [index.html](index.html)：ブランドボード
 - [preview.png](preview.png)：ボードのプレビュー
 
+## 透過ファイル
+
+他の人に渡すときは `transparent/` を使う。背景なしで、ファイル名だけで用途が分かる。
+
+- `for-light`：白やレモンなど明るい地用。黒1色
+- `for-dark`：黒など暗い地用。形と文字は白、炎はレモン（文字だけの版は白）
+
+| 種類 | PNG（幅 px） | SVG |
+|---|---|---|
+| マーク | `tomoshibi-mark-{for-light,for-dark}-{1024,512,256,128}.png` | `tomoshibi-mark-{for-light,for-dark}.svg` |
+| マーク（24px 以下用） | `tomoshibi-mark-small-{for-light,for-dark}-{32,16}.png` | `tomoshibi-mark-small-{for-light,for-dark}.svg` |
+| マークと文字の横組み | `tomoshibi-lockup-{for-light,for-dark}-{2000,1000,500}.png` | `tomoshibi-lockup-{for-light,for-dark}.svg` |
+| 文字だけ | `tomoshibi-wordmark-{for-light,for-dark}-{2000,1000,500}.png` | `tomoshibi-wordmark-{for-light,for-dark}.svg` |
+
+PNG は `transparent/png/`、SVG は `transparent/svg/` にある。`icon.svg`、`icon-dark.svg`、`favicon.svg` は背景つきなので、透過が必要なときは使わない。
+
 ## カバー
 
 `cover/` にある。文字は Issue #31 の一文だけで、罫線と影は使っていない。

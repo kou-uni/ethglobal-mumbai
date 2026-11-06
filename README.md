@@ -57,9 +57,9 @@ leave alone.
 
 | | In one sentence | The exact line |
 |---|---|---|
-| **0G** Private Computer | Before a request runs, a TEE-attested model reads the body and says how heavy the action is — and **we cannot read that body ourselves**, which is the point: the judgement needs the content, the operator must not have it. 467 calls, 2.0 s, $0.000036 each; the trail is sealed on Galileo. | [`broker/src/weigh.js#L68`](https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/weigh.js#L68) |
+| **0G** Private Computer | Before a request runs, a TEE-attested model reads the body and says how heavy the action is. The Broker passes the body through and **keeps none of it** — not in the trail, not in a log — and **the operator of the model cannot read it**. The Broker itself is not yet inside a TEE; we say so below rather than claim more. 467 calls, 2.0 s, $0.000036 each; the trail is sealed on Galileo. | [`broker/src/weigh.js#L68`](https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/weigh.js#L68) |
 | **World** Agent Pass | A star can only be lit by a verified human — one pseudonym, one star, per version — so a signal that sells for $0.0027 today cannot be bought here. OIDC `device_code`, called from a Broker with **no screen**; we bind only the `sub`. | [`broker/src/world.js#L39`](https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/world.js#L39) |
-| **Ethereum Foundation** CROPS | The public trail carries **no request body and no key** — only a hash of what came back. The key never leaves the Ledger, which builds the EIP-712 digest from the same four lines it shows you. | [`broker/src/execute.js#L21`](https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/execute.js#L21) |
+| **Ethereum Foundation** CROPS | The public trail carries **no request body and no key** — only a hash of what came back. **The signing key never leaves the Ledger**, which builds the EIP-712 digest from the same four lines it shows you; **the API key never leaves the Broker and is never handed to the agent.** | [`broker/src/execute.js#L21`](https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/execute.js#L21) |
 
 **What we did not finish, said here rather than buried:** the Broker is the single point of trust and
 is **not** in a TEE this time, and the anonymous read path for stars is designed but not built.
@@ -164,7 +164,7 @@ The boundary is one JSON in `spec/permit-signature.md` and the Broker's HTTP.
 |---|---|---|
 | **Ledger (the device)** | The four lines of scope (key label, destination, operation, expiry), and whether it was pressed | The body of the request. The key never leaves in the clear either |
 | **World** | **That this is a human, and the same human** (a per-sector pseudonym) | Which skill got a star · which key · when it was used |
-| **0G Private Computer (TeeML)** | The body of the request (**inside the seal**, to decide the weight) | The key in the clear. **We cannot read it either** — it stays inside the TEE |
+| **0G Private Computer (TeeML)** | The body of the request (**inside the seal**, to decide the weight) | Either key. **Its operator cannot read the body** — the inference runs inside the TEE |
 | **Broker** | Scope · verdicts · the trail | — **This is the one point of trust, and we did not put it in a TEE this time**. We say so rather than let it pass unnoticed |
 | **The trail (0G Storage)** | Who permitted it, what was requested, and whether it went through or stopped | **No body, no key.** It is written to be public |
 

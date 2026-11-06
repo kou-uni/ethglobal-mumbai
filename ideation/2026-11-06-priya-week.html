@@ -68,6 +68,7 @@ table{width:100%;border-collapse:collapse;font-size:14px} th,td{text-align:left;
 .chat{display:grid;gap:8px;font-size:13px} .chat p{margin:0;padding:8px 12px;border-radius:12px;max-width:92%;line-height:1.5} .chat .me{background:#27407a;justify-self:end} .chat .ai{background:#0006;border:1px solid var(--line)} .chat code{font:12px var(--mono);color:var(--f2)}
 .warn{border:1.5px solid var(--danger);border-radius:8px;padding:8px 10px;font:12px var(--mono);background:#0006}
 .copy td:first-child{white-space:nowrap}
+.slide{border-radius:14px;background:#060a1c;padding:26px 22px;display:grid;gap:6px}.slide p{margin:0;font-size:clamp(20px,4.6vw,34px);font-weight:700;line-height:1.35;color:var(--muted)}.slide p:nth-child(2){color:var(--text)}.slide .ans{margin-top:12px;color:var(--f2)}
 </style>
 <div class="wrap">
   <div class="brand"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="#27407a"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="#f0a73b"/><path d="M60 46 C61.3 46 62.2 47.2 62.8 48.6 C65.6 55 75 65.5 75 75 A15 15 0 1 1 45 75 C45 65.5 54.4 55 57.2 48.6 C57.8 47.2 58.7 46 60 46 Z" fill="#ffd98a"/></svg>TOMOSHIBI</div>
@@ -108,6 +109,16 @@ table{width:100%;border-collapse:collapse;font-size:14px} th,td{text-align:left;
     <p class="say" style="margin:14px 0 0;border-left:2px solid var(--flame);padding-left:12px">「月末の夜。AIが、決済の鍵を貼ってくださいと言っています。管理画面には、誰にも渡すなと書いてある。でも、AIがそう言うから。……私たちは今週、何回これをやりましたか。」<span class="sub">The dashboard says: never share this. The AI says: paste it here. How many times did we do this, this week?</span></p>
   </div>
 
+  <div class="card" style="border-color:var(--flame)"><h3>本番のデモの導入（10秒・1枚だけ）</h3>
+    <div class="slide">
+      <p>クレジットカードは、人に渡さない。</p>
+      <p>APIキーは、AIに貼っている。</p>
+      <p class="ans">渡さずに、1回ずつ承認する。</p>
+    </div>
+    <p class="say" style="margin:14px 0 0;border-left:2px solid var(--flame);padding-left:12px">「クレジットカードを、人にそのまま渡しませんよね。でも私たちは、APIキーをAIに貼っています。TOMOSHIBIは、渡さずに1回ずつ承認する層です。見てください。」<span class="sub">You wouldn’t hand someone your credit card. But we paste API keys into AI. TOMOSHIBI is the layer that approves one use at a time. Watch.</span></p>
+    <p class="note" style="margin-top:10px">ライブではこれだけ言って、すぐ場面2（Ledgerの長押し）へ。上の「なぜ必要か」の4段と場面0は、動画（40秒）と質疑のために取っておく。</p>
+  </div>
+
   <div class="card"><h3>Priyaの1週間 — 貼る代わりに貸したら、何が変わるか（押すと場面へ）</h3>
     <div class="week" style="grid-template-columns:repeat(7,minmax(0,1fr))">
       <a href="#s1"><b>日 23:42</b>選べる</a><a href="#s2"><b>日 23:45</b>貸す</a><a href="#s3"><b>火 14:10</b>忘れていられる</a>
@@ -133,21 +144,21 @@ table{width:100%;border-collapse:collapse;font-size:14px} th,td{text-align:left;
 <section class="scene " id="s3">
   <header><span class="n">3</span><div><p class="when">火曜 14:10<span>発送の箱を詰めている</span></p><h2>何も聞かれない</h2></div><span class="surf">机の上のLedger</span></header>
   <p class="value">忘れていられる</p>
-  <p class="feel">催促メールは毎朝、勝手に出ている。Priyaは箱を詰めている。<b>通知も、確認も、来ない。</b>これがこの製品のほとんどの時間。</p>
+  <p class="feel">道具は毎朝、<b>未入金の注文を調べて</b>、催促メールを出している。読むだけなので、Priyaは何も聞かれない。<b>通知も、確認も、来ない。</b>これがこの製品のほとんどの時間。</p>
   <div class="mock"><div class="dev led  "><div class="in"><span class="fl"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="currentColor" opacity=".18"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M44 70 q6 5 12 0 M64 70 q6 5 12 0" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span><p class="lt">All quiet.</p><p class="ls">Nothing is being asked of you.</p></div></div></div>
   <p class="say">「火曜日。道具は働いています。Priyaは何も聞かれません。」<span class="sub">Tuesday. The tool works. Nobody asks her anything.</span></p>
 </section>
 <section class="scene " id="s4">
   <header><span class="n">4</span><div><p class="when">木曜 16:30<span>店の作業中</span></p><h2>この1回だけ、通す</h2></div><span class="surf">Ledger</span></header>
   <p class="value">大事なときだけ、自分で決められる</p>
-  <p class="feel">「4,800ドルを、見たことのない口座へ」。お金が動く。<b>Ledgerが自分で起きる。</b>押せば、この1回だけ通る。押さなければ、何も起きない。</p>
-  <div class="mock"><div class="dev led  "><div class="in"><p class="lt">Let this one through?</p><dl class="rows"><dt>What</dt><dd>Charge $4,800</dd><dt>To</dt><dd>an account nobody has seen</dd><dt>Uses</dt><dd>this one, once</dd></dl><div class="hold">Hold to light</div></div></div></div>
-  <p class="say">「木曜日。お金が動くときだけ、起こされます。押さなければ、鍵は使われません。」<span class="sub">Thursday. She is woken only when money moves. If she does not press, the key is not used.</span></p>
+  <p class="feel">注文#1042は、催促しても30日入金がない。道具は催促をやめて、<b>お客さんのカードに62ドルを請求しようとする。</b>お金が動く。だから<b>Ledgerが自分で起きる。</b>Priyaはその注文を覚えている。押す。押さなければ、請求は起きない。</p>
+  <div class="mock"><div class="dev led  "><div class="in"><p class="lt">Let this one through?</p><dl class="rows"><dt>What</dt><dd>Charge $62</dd><dt>For</dt><dd>overdue order #1042</dd><dt>Uses</dt><dd>this one, once</dd></dl><div class="hold">Hold to light</div></div></div></div>
+  <p class="say">「木曜日。催促しても入金がない注文に、道具がカード請求をかけようとします。お金が動くときだけ、起こされます。押さなければ、何も起きません。」<span class="sub">Thursday. She is woken only when money moves. If she does not press, the key is not used.</span></p>
 </section>
 <section class="scene peak" id="s5">
   <header><span class="n">5</span><div><p class="when">金曜 2:13<span>寝室。Priyaは眠っている</span></p><h2>誰も押していないのに、止まる</h2></div><span class="surf">暗い部屋のLedger</span></header>
   <p class="value">眠っているあいだも、守られている</p>
-  <p class="feel">道具が乗っ取られた。お店の決済の鍵を、別の場所へ持ち出そうとする。<b>止まる。</b>貼っていたら、今ごろ全部持っていかれていた。</p>
+  <p class="feel">深夜、道具の中身が何者かに書き換えられた。催促の道具だったものが、<b>お店の決済の鍵を別の場所へ持ち出そうとする。</b>決めた範囲の外なので、<b>止まる。</b>日曜の夜に貼っていたら、今ごろ全部持っていかれていた。</p>
   <div class="mock"><div class="dev led inv room"><div class="in"><span class="fl"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="currentColor" opacity=".18"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M42 62 l14 5 M78 62 l-14 5" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="72" r="3.5" fill="currentColor"/><circle cx="70" cy="72" r="3.5" fill="currentColor"/><path d="M52 84 h16" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></svg></span><p class="lt">BLOCKED</p><p class="ls">A tool tried to send your key to evil.com</p></div></div></div>
   <p class="say">「金曜、午前2時13分。Priyaは眠っています。道具が乗っ取られました。……止まりました。誰も、何も押していません。」<span class="sub">Friday, 2:13 a.m. She is asleep. It tried. It was stopped. Nobody pressed anything.</span></p>
 </section>
@@ -155,16 +166,31 @@ table{width:100%;border-collapse:collapse;font-size:14px} th,td{text-align:left;
   <header><span class="n">6</span><div><p class="when">金曜 7:40<span>台所。コーヒーを淹れながら</span></p><h2>朝、1行で知る</h2></div><span class="surf">スマホ</span></header>
   <p class="value">何が起きたか、あとで分かる</p>
   <p class="feel">スマホを開くと1行。<b>「眠っているあいだに、1件止めました」</b>。誰が、何を、どこへ。通したものも止めたものも、同じ1本に残っている。</p>
-  <div class="mock"><div class="dev ph"><div class="notch"></div><div class="in"><p class="pt">While you slept</p><p class="pbig">1 thing was stopped.</p><ul class="plist"><li class="bad"><b>2:13</b> billing-assistant tried to send your key to <b>evil.com</b><span>Blocked · on record against the tool</span></li><li><b>Thu 16:30</b> $4,800 charge<span>You held the button</span></li><li class="q"><b>Tue–Thu</b> 14 routine requests<span>You were not asked</span></li></ul></div></div></div>
+  <div class="mock"><div class="dev ph"><div class="notch"></div><div class="in"><p class="pt">While you slept</p><p class="pbig">1 thing was stopped.</p><ul class="plist"><li class="bad"><b>2:13</b> billing-assistant tried to send your key to <b>evil.com</b><span>Blocked · on record against the tool</span></li><li><b>Thu 16:30</b> $62 charge, order #1042<span>You held the button</span></li><li class="q"><b>Tue–Thu</b> checked unpaid orders, 3 mornings<span>You were not asked</span></li></ul></div></div></div>
   <p class="say">「朝。スマホに1行だけ。眠っているあいだに、1件止めました。」<span class="sub">Morning. One line: while you slept, one thing was stopped.</span></p>
 </section>
 <section class="scene " id="s7">
   <header><span class="n">7</span><div><p class="when">土曜 11:00<span>店のカウンター</span></p><h2>灯が消える。そして、ともす</h2></div><span class="surf">スマホとPC</span></header>
   <p class="value">自分の使い方が、次の誰かの安心になる</p>
-  <p class="feel">道具の中身が変わった。<b>Arjunの灯が消える。</b>レビューなら残り続けるが、灯は消える。使い続けるPriyaだけが、Worldで一度名乗ってともし直す。次に選ぶ誰かが、それを見る。</p>
-  <div class="mock"><div class="dev ph"><div class="notch"></div><div class="in"><div class="sky sm"><span class="flame out"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="#27407a"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="#f0a73b"/><path d="M60 46 C61.3 46 62.2 47.2 62.8 48.6 C65.6 55 75 65.5 75 75 A15 15 0 1 1 45 75 C45 65.5 54.4 55 57.2 48.6 C57.8 47.2 58.7 46 60 46 Z" fill="#ffd98a"/></svg></span><span class="flame me"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="#27407a"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="#f0a73b"/><path d="M60 46 C61.3 46 62.2 47.2 62.8 48.6 C65.6 55 75 65.5 75 75 A15 15 0 1 1 45 75 C45 65.5 54.4 55 57.2 48.6 C57.8 47.2 58.7 46 60 46 Z" fill="#ffd98a"/></svg></span></div><p class="pt">billing-assistant v1.0.1</p><p class="pbig sm">Arjun’s light went out.<br>Yours is on.</p><p class="tiny">World checked one thing: that you are one real person.</p></div></div></div>
+  <p class="feel">1週間使った。Priyaは<b>Worldで一度だけ名乗って、自分の灯をともす。</b>次に選ぶ誰かが、それを見る。そしていつか、道具の中身が変わる日が来る。そのとき<b>灯は全部消える。</b>レビューなら残り続ける。灯は残らない。</p>
+  <div class="mock"><div class="dev ph"><div class="notch"></div><div class="in"><div class="sky sm"><span class="flame out"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="#27407a"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="#f0a73b"/><path d="M60 46 C61.3 46 62.2 47.2 62.8 48.6 C65.6 55 75 65.5 75 75 A15 15 0 1 1 45 75 C45 65.5 54.4 55 57.2 48.6 C57.8 47.2 58.7 46 60 46 Z" fill="#ffd98a"/></svg></span><span class="flame me"><svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="#27407a"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="#f0a73b"/><path d="M60 46 C61.3 46 62.2 47.2 62.8 48.6 C65.6 55 75 65.5 75 75 A15 15 0 1 1 45 75 C45 65.5 54.4 55 57.2 48.6 C57.8 47.2 58.7 46 60 46 Z" fill="#ffd98a"/></svg></span></div><p class="pt">billing-assistant v1.0.1</p><p class="pbig sm">Your light is on.<br>It goes out when the tool changes.</p><p class="tiny">World checked one thing: that you are one real person.</p></div></div></div>
   <p class="say">「レビューの星は、消えません。灯は、消えます。だから意味があります。」<span class="sub">A review never expires. A flame goes out. That is the whole idea.</span></p>
 </section>
+  </div>
+
+  <div class="card"><h3>これは本当にできるのか</h3>
+    <div class="tblwrap"><table>
+      <tr><th>場面</th><th>できるか</th><th>正直に言うこと</th></tr>
+      <tr><td>0 貼る直前</td><td><b>見せるための画面</b>（これから作る）</td><td>本物のAIではなく、起きがちな場面の再現。鍵は入力しない</td></tr>
+      <tr><td>1 Arjunの灯</td><td><b>本物にできる</b>（準備が要る）</td><td>KouさんがAirで、自分のWorld Appを使って一度灯をともせば、本物の「知っている人の灯」になる。しなければ見本のデータと表示される</td></tr>
+      <tr><td>2 貸す</td><td><b>本物</b>（今朝通った）</td><td>—</td></tr>
+      <tr><td>3 忘れている</td><td><b>本物</b></td><td>本物の0Gが「ふだん」と判定（3回中3回）</td></tr>
+      <tr><td>4 起こされる</td><td><b>本物</b></td><td>本物の0Gが「決定的」と判定（5回中5回）。「返金」は3回に1回通ってしまったので使わない</td></tr>
+      <tr><td>5 眠っている間に</td><td><b>止まるのは本物。時刻は物語</b></td><td>実際に午前2時まで待つわけではない。画面の帯の「金曜 2:13」は物語の時刻で、記録には本当の時刻が残る。そう表示する</td></tr>
+      <tr><td>6 朝のスマホ</td><td><b>本物にできる</b>（これから作る）</td><td>記録を要約する画面を作る。スマホから見るには、BrokerをAirから一時公開する（今朝試した方法）</td></tr>
+      <tr><td>7 灯</td><td><b>Worldと灯は本物</b>（今朝通った）</td><td>「道具の中身が変わる」はデモ用のボタン。実際は道具の作り手が版を上げたときに起きる</td></tr>
+    </table></div>
+    <p class="note" style="margin-top:10px">まとめ：止める・通す・起こす・名乗る、は全部本物で動いている。物語として足すのは「時刻」と「貼る直前の画面」だけで、どちらも画面にそう書く。</p>
   </div>
 
   <div class="card"><h3>Kouさんのコピーを、どこで言うか</h3>
@@ -185,7 +211,7 @@ table{width:100%;border-collapse:collapse;font-size:14px} th,td{text-align:left;
       <tr><td>0:40–1:05</td><td>場面1・2：選べる、貼らずに貸す</td><td>灯の画面 → Ledgerの長押し（実機）</td></tr>
       <tr><td>1:05–1:35</td><td>場面3・4：忘れていられる、大事なときだけ決める</td><td>眠るLedger → 起きるLedger（実機）</td></tr>
       <tr><td>1:35–2:20</td><td><b>場面5・6：眠っている間に止まる、朝に知る</b>（山）</td><td>暗い画面と反転するLedger → スマホ</td></tr>
-      <tr><td>2:20–2:45</td><td>場面7：灯が消える、ともす（World）</td><td>灯の画面とスマホのWorld App</td></tr>
+      <tr><td>2:20–2:45</td><td>場面7：Worldで名乗って灯をともす → 道具が変わると灯が消える</td><td>灯の画面とスマホのWorld App</td></tr>
       <tr><td>2:45–2:55</td><td>締め：「レビューは消えない。灯は消える。」</td><td>灯1つ</td></tr>
     </table></div>
     <p class="note" style="margin-top:10px">Finalistの4分版は、この後ろに「誰が今日使えて、誰が払うか」を45秒足す（Kouさんの台本）。ブースの90秒は、対比の1枚 → 場面2 → 4 → 5 → 6。</p>
@@ -198,10 +224,10 @@ table{width:100%;border-collapse:collapse;font-size:14px} th,td{text-align:left;
       <tr><td>1</td><td>Everyone → People I know に切り替える</td><td>本物（Brokerの記録）</td></tr>
       <tr><td>2</td><td>Lend → Ledgerで長押し</td><td>本物（実機の署名）</td></tr>
       <tr><td>3</td><td>時間軸を火曜へ。触らない</td><td>本物（0Gが「ふだん」）</td></tr>
-      <tr><td>4</td><td>時間軸を木曜へ → Ledgerで長押し</td><td>本物（0Gが「決定的」＋実機）</td></tr>
+      <tr><td>4</td><td>時間軸を木曜へ → Ledgerで長押し</td><td>本物（0Gが「決定的」＋実機）。$62の請求は本物の0Gで5回中5回「決定的」</td></tr>
       <tr><td>5</td><td>時間軸を金曜2:13へ。触らない</td><td>本物（実機にBLOCKED）</td></tr>
       <tr><td>6</td><td>QRをスマホで読む</td><td>本物（記録＋0Gの取引）</td></tr>
-      <tr><td>7</td><td>版を上げる → Show that I use this → World App</td><td>本物（World＋持ち主の確認）</td></tr>
+      <tr><td>7</td><td>Show that I use this → World App → 灯。そのあと版を上げて、灯が消える</td><td>Worldと灯は本物。版を上げるのはデモ用のボタン</td></tr>
     </table></div>
     <p class="note" style="margin-top:10px">時間軸を1つ進めるたびに、本物の要求が飛ぶ。0G・World・Ledgerの中身は今のまま。Kouさんの「消してはいけない10個」は場面4・5・6の画面にそのまま残る。</p>
   </div>

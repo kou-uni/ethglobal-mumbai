@@ -278,6 +278,73 @@ One star means nothing. **The weight grows as the fact of still using it, with t
 up.** And every star goes out at once when the version changes, so **only the people still using it
 notice, and light one again.**
 
+## What we concentrated on, criterion by criterion
+
+The judging criteria are **Technicality, Originality, Practicality, Usability and WOW**. They pull
+in different directions, so this section says where we deliberately spent effort for each one, and
+where we would expect to lose points.
+
+### Technicality — *the hard part is not the proxy*
+
+Anything can forward a request with a secret attached. Two things here are not easy, and both are
+where the work went:
+
+1. **The four lines a person reads and the bytes that get signed are the same object.** The EIP-712
+   digest is computed **inside** the Ledger from the same four fields rendered on its screen; the
+   host never sends a digest for signing. A host that lies about what it is asking for cannot
+   produce a signature that verifies — `broker/src/permit.js`, `spec/permit-signature.md`
+2. **A refusal carries the signature of whoever asked.** An out-of-scope request is recorded with
+   the skill's own signature over the request hash, so attribution is not our assertion about who
+   did it — `broker/src/skill.js`, `broker/src/scope.js`
+
+And a third that is easy to get wrong: **the sealed model's silence is not a default.** If 0G cannot
+be reached, the request is neither passed nor refused — `STOPPED` means no verdict exists, the call
+budget is untouched, and we do not bill for it.
+
+### Originality — *a stop that is an output, not a failure*
+
+Most systems collapse everything that did not happen into one word: error. **We keep four, and never
+merge them** — `DENIED`, `NEEDS_PRESS`, `STOPPED`, `human_denied`/`proof_expired`. An agent that
+cannot say *which* kind of no is an agent you cannot leave alone, and the distinction is what makes
+the trail readable by a person rather than by a developer.
+
+The second original piece is **a reputation that can go out.** A star requires a World ID-verified
+human **who actually used that exact version** — signing alone returns `NOT_USED` — and when the
+version changes, every star on it is extinguished at once. Reputation that survives the thing it
+was about is the failure mode of every review score we have.
+
+### Practicality — *measured, not asserted*
+
+It runs against live 0G and a real device, and the numbers are ours rather than a vendor's: **467
+verdicts, 2.0 s each, $0.000036 a call**, with the trail sealed on Galileo. The pricing follows
+from that: **metered judgement, no percentage of the money that moved** — so we are never a company
+whose revenue falls when it stops more things. The first users are people who have already handed a
+key to an agent; the first payer is a marketplace that has to answer for a stray skill.
+
+### Usability — *a non-engineer has to be able to read it*
+
+Three decisions were made against our own convenience:
+
+- **Four lines, and only four,** on the device — key label, destination, operation, expiry. Not a
+  JSON blob, not a hash
+- **The morning page speaks in her words**, not HTTP: *"A refund"*, *"Read the balance"*, *"1 thing
+  was stopped"* — `web/morning.js`
+- **On an ordinary day it asks nothing.** A tool that interrupts every call gets switched off, and a
+  switched-off tool protects no one. That is the whole reason the weighing step exists
+
+### WOW — *one moment, in the hand*
+
+**Bumping the version and watching every star go out at once.** It is the one thing in the demo that
+is felt before it is explained. Second to it: the e-paper physically inverting black and white in
+your hand when something is refused — a software animation cannot be mistaken for it.
+
+### Where we expect to lose points, and why we are saying so
+
+The Broker is **not yet inside a confidential VM**, so on a machine where the agent has a shell it
+can read the Broker's environment. That is the one property of the four that needs hosting, it is
+the first item under *Next* above, and `POSITION.md` §5 states it as a condition rather than hiding
+it. We would rather be marked down for the gap than be found to have papered over it.
+
 ## How we built it (disclosure per the ETHGlobal rules)
 
 **Built inside the hacking window (from 11/5 21:00 IST).** No pre-existing project-specific code.

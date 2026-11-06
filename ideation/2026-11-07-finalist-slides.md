@@ -148,8 +148,9 @@ agent something an ordinary person can afford to do."*
 >
 > *Two people, thirty-six hours, one working system.*
 
-**Said:** *"We built this because we both handed an agent a real key this month and neither of us
-felt good about it. Hand over the work — not the key."*
+**Said:** *"We built this because managing API keys for agents got away from us — one per agent,
+one per skill, one per service, and no way to see what any of them had done. Hand over the work.
+Not the key."*
 
 **The line "a review score never expires, a flame goes out" is now the answer to "what inspired
 you" in Q&A** (`2026-11-07-finalist-4min.md` §3), not the closing slide. On its own it needs

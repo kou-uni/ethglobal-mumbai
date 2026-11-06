@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOMOSHIBI — 画面遷移とプロセス（設計）</title>
+<style>
+:root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
+--hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
+html{color-scheme:light}
+body{margin:0;background:var(--paper);color:var(--ink);
+font-family:"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic",Meiryo,sans-serif;
+font-size:15px;line-height:1.9;border-top:6px solid var(--accent);-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:56px clamp(24px,6vw,48px) 96px}
+.doc-header{padding-bottom:28px;border-bottom:1px solid var(--ink)}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin:0 0 20px}
+h1{font-size:27px;line-height:1.5;letter-spacing:.02em;margin:0 0 12px;font-feature-settings:"palt" 1}
+.lead{font-size:14px;color:var(--ink-2);margin:0 0 24px;max-width:38em}
+.doc-meta{font-size:12px;color:var(--ink-3);display:flex;gap:24px;flex-wrap:wrap}
+.page>section{border-top:1px solid var(--hairline);padding-top:44px;margin-top:64px}
+.page>section:first-of-type{border-top:0;padding-top:0;margin-top:56px}
+h2{font-size:19px;letter-spacing:.03em;margin:0;font-feature-settings:"palt" 1}
+h2 .no{color:var(--accent);margin-right:14px;font-variant-numeric:tabular-nums}
+.msg{font-size:16px;font-weight:600;line-height:1.8;margin:18px 0 24px;max-width:36em}
+h3{font-size:15px;margin:36px 0 8px}
+p{margin:0 0 16px;max-width:42em}
+ul,ol{margin:0 0 16px;padding-left:1.4em;max-width:41em}
+li{margin-bottom:6px}
+ul{list-style:none;padding-left:1.2em}
+ul li::before{content:"–";float:left;margin-left:-1.2em;color:var(--ink-3)}
+.summary{list-style:none;margin:24px 0 0;padding:0;counter-reset:s;max-width:44em}
+.summary li{counter-increment:s;position:relative;padding-left:2.4em;margin-bottom:14px}
+.summary li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:.4em;
+font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.kpis{display:flex;flex-wrap:wrap;row-gap:24px;margin:32px 0 8px}
+.kpi{padding:2px 32px}
+.kpi:first-child{padding-left:0}
+.kpi+.kpi{border-left:1px solid var(--hairline)}
+.kpi .v{font-size:30px;font-weight:700;color:var(--accent);line-height:1.3;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:14px;font-weight:600;margin-left:2px}
+.kpi .l{font-size:11.5px;color:var(--ink-3);letter-spacing:.06em;margin-top:6px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:28px 0 8px;font-size:13px;line-height:1.6}
+caption{text-align:left;font-size:12.5px;font-weight:600;margin-bottom:10px}
+th{font-size:12px;font-weight:600;text-align:left;padding:10px 12px;
+border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom}
+td{padding:10px 12px;border-bottom:1px solid var(--hairline);vertical-align:top}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-top:1px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:600;background:var(--accent-tint)}
+figure{margin:32px 0 8px}
+figcaption{font-size:12.5px;font-weight:600;margin-bottom:14px}
+figure svg{width:100%;height:auto;display:block}
+svg text{font-family:inherit}
+.fig-scroll{overflow-x:auto}
+.src{font-size:11.5px;color:var(--ink-3);margin:6px 0 0}
+.note{font-size:12.5px;color:var(--ink-2);border-left:2px solid var(--hairline);padding:2px 0 2px 14px;margin:24px 0 16px;max-width:40em}
+.chevrons{display:flex;margin:28px 0 8px;min-width:520px}
+.chev{flex:1;padding:9px 10px 9px 22px;font-size:12px;font-weight:600;line-height:1.5;text-align:center;
+background:var(--fill-gray);margin-left:4px;
+clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%)}
+.chev:first-child{margin-left:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%)}
+.chev.on{background:var(--accent);color:#fff}
+.chev small{display:block;font-size:10.5px;font-weight:500;opacity:.75}
+.matrix{display:grid;grid-template-columns:var(--mx-label,140px) repeat(var(--mx-cols,2),1fr);
+gap:18px 20px;margin:28px 0 8px;min-width:560px}
+.mx-h{font-size:11.5px;font-weight:600;color:var(--ink-2);text-align:center;align-self:end;
+padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.mx-label{background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;
+justify-content:center;text-align:center;gap:2px;font-size:12px;font-weight:700;line-height:1.5;padding:12px 10px}
+.mx-label small{font-size:10px;font-weight:600;opacity:.7;letter-spacing:.08em}
+.mx-label.alt{background:var(--fill-gray);color:var(--ink)}
+.mx-cell{font-size:12px;line-height:1.75}
+.mx-cell ul{margin:0}
+.mx-cell li{margin-bottom:5px}
+b,strong{font-weight:700}
+.em{color:var(--accent);font-weight:700}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--hairline);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--accent)}
+.doc-footer{margin-top:88px;padding-top:20px;border-top:1px solid var(--hairline);
+font-size:11.5px;color:var(--ink-3);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media print{@page{size:A4;margin:16mm}
+body{border-top-width:4px}.page{max-width:none;padding:0}
+.page>section{margin-top:48px;padding-top:32px}
+table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="doc-header">
+  <p class="eyebrow">TOMOSHIBI ／ 設計 ／ minta さんへ</p>
+  <h1>画面遷移とプロセス — 人に聞く場面は2つしかない</h1>
+  <p class="lead">鍵を使うたびに聞く「押す」（手元の機器）と、1回だけ聞く「名乗る」（World）。この2つは意味が違うので、同じ画面に並べない。この資料は、画面の枚数・遷移・残るものを固定するためのもの。</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>実装に合わせて書いている（動いているものだけ「動く」と書く）</span></div>
+</header>
+
+<section>
+  <h2>エグゼクティブサマリー</h2>
+  <ol class="summary">
+    <li><b>人に聞くのは2場面だけ。</b>「押す」＝毎回・手元の機器・いま許すか。「名乗る」＝1回・World・誰であるか。<b>同じ1回の行為で2回聞かない。</b>聞くと、なぜ2回なのかを説明できなくなる。</li>
+    <li><b>画面は5枚。増やさない。</b>止まったときの画面を新設しない（同じ画面の<b>状態</b>にして、系譜に残す）。審査員の90秒で迷わせないため。</li>
+    <li><b>決めてほしいのは3つ</b>（§06）。灯を出す導線の起点／World の待ち画面の主役／実機が繋がらない日の代役。</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">01</span>画面の地図</h2>
+  <p class="msg">左から右に「頼む → 分ける → 残る」。World は本線から外れた1本の枝で、灯を出すときにだけ通る。</p>
+
+  <figure>
+    <figcaption>図表1　画面と遷移（太線＝毎回通る本線、細線＝灯を出すときだけ）</figcaption>
+    <svg viewBox="0 0 760 330" role="img" aria-label="画面遷移図">
+      <g font-size="12">
+        <!-- 本線 -->
+        <rect x="0" y="60" width="150" height="62" fill="var(--fill-gray)"/>
+        <text x="12" y="84" font-weight="700">S1 範囲をつくる</text>
+        <text x="12" y="104" fill="var(--ink-2)" font-size="11">4行に手元で署名（自作アプリ）</text>
+
+        <rect x="186" y="60" width="180" height="62" fill="var(--accent)"/>
+        <text x="198" y="84" font-weight="700" fill="#fff">S2 門</text>
+        <text x="198" y="104" fill="#fff" font-size="11" opacity=".85">要求 → 範囲 → 0G → 判定</text>
+
+        <rect x="402" y="60" width="160" height="62" fill="var(--fill-gray)"/>
+        <text x="414" y="84" font-weight="700">S3 手元の機器</text>
+        <text x="414" y="104" fill="var(--ink-2)" font-size="11">4行を見て、押す</text>
+
+        <rect x="598" y="60" width="162" height="62" fill="var(--fill-gray)"/>
+        <text x="610" y="84" font-weight="700">S4 系譜</text>
+        <text x="610" y="104" fill="var(--ink-2)" font-size="11">追記のみ／root hash</text>
+
+        <!-- 枝 -->
+        <rect x="186" y="228" width="180" height="62" fill="var(--accent)"/>
+        <text x="198" y="252" font-weight="700" fill="#fff">S5 灯</text>
+        <text x="198" y="272" fill="#fff" font-size="11" opacity=".85">版ごとの星。版が上がると消える</text>
+
+        <rect x="402" y="228" width="160" height="62" fill="var(--fill-gray)"/>
+        <text x="414" y="252" font-weight="700">S6 World で確かめる</text>
+        <text x="414" y="272" fill="var(--ink-2)" font-size="11">device flow・1回だけ</text>
+
+        <!-- 矢印 -->
+        <g stroke="var(--ink)" stroke-width="2" fill="none" marker-end="url(#a)">
+          <path d="M150 91 H180"/>
+          <path d="M366 91 H396"/>
+          <path d="M562 91 H592"/>
+          <path d="M483 122 V160 H276 V124" stroke-dasharray="0"/>
+        </g>
+        <g stroke="var(--ink-3)" stroke-width="1.5" fill="none" marker-end="url(#b)">
+          <path d="M366 259 H396"/>
+          <path d="M483 290 V310 H276 V292"/>
+          <path d="M690 122 V196 H276 V226"/>
+        </g>
+        <defs>
+          <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--ink)"/></marker>
+          <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--ink-3)"/></marker>
+        </defs>
+        <text x="300" y="155" fill="var(--ink-2)" font-size="11">押した署名を持って戻る（この1回だけ通る）</text>
+        <text x="300" y="192" fill="var(--ink-3)" font-size="11">系譜から「この版を使っている」と名乗りに行く</text>
+        <text x="300" y="306" fill="var(--ink-3)" font-size="11">確かめられたら灯が1つ増える</text>
+        <text x="0" y="30" font-size="11" fill="var(--ink-3)" letter-spacing="1">毎回通る本線</text>
+        <text x="0" y="214" font-size="11" fill="var(--ink-3)" letter-spacing="1">灯を出すときだけの枝（World）</text>
+      </g>
+    </svg>
+  </figure>
+
+  <div class="tbl"><table>
+    <caption>表1　画面の役割と、いまの状態</caption>
+    <thead><tr><th>画面</th><th>その人が来た目的</th><th>出すもの</th><th>いま</th></tr></thead>
+    <tbody>
+      <tr><td><b>S1 範囲をつくる</b></td><td>このAIに何を許すか決める</td><td>4行（鍵・宛先・操作・期限・回数）／署名</td><td>minta・自作アプリ</td></tr>
+      <tr><td><b>S2 門</b></td><td>いま何が起きたのかを見る</td><td>要求・4段の進行・判定・request id</td><td><b>動く</b>（<span class="mono">ui/index.html</span>）</td></tr>
+      <tr><td><b>S3 手元の機器</b></td><td>重い要求を自分で通す</td><td>4行と「押す」。待っている間は灯色</td><td>実機＋画面の代役</td></tr>
+      <tr><td><b>S4 系譜</b></td><td>あとから確かめる／人に見せる</td><td>1本の糸の全件・root hash</td><td>JSON（<span class="mono">/trace/&lt;thread&gt;</span>）</td></tr>
+      <tr><td><b>S5 灯</b></td><td>このスキルが信じられるか見る</td><td>版ごとの灯・版の履歴</td><td><b>動く</b>（<span class="mono">ui/stars.html</span>）</td></tr>
+      <tr><td><b>S6 World で確かめる</b></td><td>名乗る（1回だけ）</td><td>4段・user_code・3つの結末</td><td>画面は動く／クライアント登録待ち</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">出所: 実装（<span class="mono">broker/src/*.js</span>・<span class="mono">ui/</span>）。S1 は <span class="mono">spec/permit-signature.md</span>。</p>
+</section>
+
+<section>
+  <h2><span class="no">02</span>プロセスA — 鍵を使う（毎回）</h2>
+  <p class="msg">6段のうち、人が出てくるのは4段目だけ。しかも<b>重いと判定されたときだけ</b>。ふだんは誰も邪魔をしない。</p>
+
+  <div class="fig-scroll"><div class="chevrons">
+    <div class="chev">① 要求<small>スキルが投げる</small></div>
+    <div class="chev on">② 範囲<small>外れたら即 DENIED</small></div>
+    <div class="chev on">③ 0G が読む<small>封印の中・request id</small></div>
+    <div class="chev on">④ 重さ<small>決定的なら押させる</small></div>
+    <div class="chev">⑤ 代理実行<small>鍵は門の中</small></div>
+    <div class="chev">⑥ 系譜<small>追記のみ</small></div>
+  </div></div>
+
+  <div class="tbl"><table>
+    <caption>表2　各段で、誰が何を見て、何が残るか</caption>
+    <thead><tr><th>段</th><th>その人に見えるもの</th><th>止まるとどうなるか</th><th>残るもの</th></tr></thead>
+    <tbody>
+      <tr><td>① 要求</td><td>要求の中身と「鍵は渡っていない」</td><td>—</td><td>スキルの署名</td></tr>
+      <tr><td>② 範囲</td><td>4行との突き合わせ</td><td><b>DENIED</b>。0G にも見せない</td><td>違反として刻む（署名ごと）</td></tr>
+      <tr><td>③ 0G が読む</td><td>「封印の中で読んだ」＋ request id ＋ ms</td><td><b>STOPPED</b>。既定値を作らない</td><td>止めた事実／回数は減らない</td></tr>
+      <tr><td>④ 重さ</td><td>ふだん／大事／決定的 と、その理由</td><td><b>NEEDS_PRESS</b>。押されるまで待つ</td><td>押すまで何も起きない</td></tr>
+      <tr><td>⑤ 代理実行</td><td>残り回数と、返答のハッシュ</td><td>—</td><td>ALLOWED と attestation</td></tr>
+      <tr><td>⑥ 系譜</td><td>1本の糸と root hash</td><td>—</td><td>0G Storage（<b>gas 待ち</b>）</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>④で人を待つのは失敗ではない。</b>ここがこの製品の一番おいしい瞬間なので、待ち状態に専用の見た目（灯色・枠が太る）を与えている。くるくる回る待機表示にしない。</p>
+</section>
+
+<section>
+  <h2><span class="no">03</span>プロセスB — 灯を出す（1回だけ・World）</h2>
+  <p class="msg">守られている動作は「鍵を使うこと」ではなく「名乗ること」。自分の評判を賭ける行為なので、ここに人の証明を置く。</p>
+
+  <div class="fig-scroll"><div class="chevrons">
+    <div class="chev on">① 合図を頼む<small>device_authorization</small></div>
+    <div class="chev on">② 本人の端末<small>user_code／QR</small></div>
+    <div class="chev on">③ 署名を検証<small>JWKS。読んで済ませない</small></div>
+    <div class="chev">④ 灯が増える<small>版ごとに1人1つ</small></div>
+  </div></div>
+
+  <div class="fig-scroll"><div class="matrix" style="--mx-cols:2;--mx-label:132px">
+    <div class="mx-h"></div>
+    <div class="mx-h">画面に出すこと</div>
+    <div class="mx-h">残るもの</div>
+
+    <div class="mx-label"><small>結末 1</small>確かめられた</div>
+    <div class="mx-cell">灯が1つ増える。刻んだのは<b>sector 単位の仮名だけ</b>（<span class="mono">sub</span>）</div>
+    <div class="mx-cell"><span class="mono">STAR</span>。同じ人は同じ版に二度出せない（使用済みの識別子を atomic に弾く）</div>
+
+    <div class="mx-label alt"><small>結末 2</small>本人が断った</div>
+    <div class="mx-cell">「断った」とはっきり出す。失敗の赤い帯にしない</div>
+    <div class="mx-cell"><span class="mono">human_denied</span>。断ったことも系譜に残す</div>
+
+    <div class="mx-label alt"><small>結末 3</small>人が居なかった</div>
+    <div class="mx-cell">期限が切れた、と出す。<b>「断った」と混ぜない</b></div>
+    <div class="mx-cell"><span class="mono">proof_expired</span></div>
+  </div></div>
+
+  <p><b>World に渡らないもの：</b>何のスキルに灯を出したか、何の鍵か、いつ使ったか。World が確かめるのは「人であること・同じ人であること」だけ。<b>鍵を使うたびに World を呼ばない。</b>それは手元の機器の仕事。</p>
+  <p class="src">出所: <span class="mono">spec/world-agent-pass.md</span> §2、<span class="mono">broker/src/world.js</span>（issuer・grant・拒否コードは実装のまま）。</p>
+</section>
+
+<section>
+  <h2><span class="no">04</span>プロセスC — 版が上がる</h2>
+  <p class="msg">灯が消えるのは障害ではなく仕様。消える過程が見えないと、この製品の名前の意味が伝わらない。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>起きること</th><th>画面</th><th>その人の手数</th></tr></thead>
+    <tbody>
+      <tr><td>スキルの版が 1.0.0 → 1.0.1 になる</td><td>灯が1本ずつ消える（数秒）</td><td>0。勝手に消える</td></tr>
+      <tr><td>前の版の数は履歴に残る</td><td>「消えた」行が増える</td><td>0</td></tr>
+      <tr><td>使い続けている人だけが出し直す</td><td>S6 をもう一度</td><td>1回（World）</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>だから灯の数は「昔よかった」ではなく「いま使われている」を指す。</b>レビューの星と違うのはここだけ。ここを削ると、ただの評価システムになる。</p>
+</section>
+
+<section>
+  <h2><span class="no">05</span>遷移表（これ以外の遷移を作らない）</h2>
+  <p class="msg">画面を増やさず、止まり方は4つとも<b>同じ画面の状態</b>として出す。</p>
+  <div class="tbl"><table>
+    <thead><tr><th>いまの画面</th><th>きっかけ</th><th>次</th><th>残るもの</th></tr></thead>
+    <tbody>
+      <tr><td>S1 範囲</td><td>4行に署名した</td><td>S2 門（待機）</td><td>署名された許可</td></tr>
+      <tr><td>S2 門</td><td>ALLOWED</td><td>S2 のまま（系譜に1行増える）</td><td>判定・request id・返答のハッシュ</td></tr>
+      <tr><td>S2 門</td><td>NEEDS_PRESS</td><td><b>S3 手元の機器が灯る</b></td><td>押すまで何も起きない</td></tr>
+      <tr><td>S3 機器</td><td>押した</td><td>S2 門（ALLOWED・使い切り）</td><td>1回限りの許可の署名</td></tr>
+      <tr><td>S3 機器</td><td>押さなかった</td><td>S2 のまま（待ちのまま）</td><td>何も起きない</td></tr>
+      <tr><td>S2 門</td><td>DENIED</td><td>S2 のまま（赤の状態）</td><td>違反・スキルの署名</td></tr>
+      <tr><td>S2 門</td><td>STOPPED</td><td>S2 のまま（赤の状態）</td><td>止めた事実。回数は減らない</td></tr>
+      <tr><td>S2 門</td><td>系譜を見る／QR</td><td>S4 系譜</td><td>—</td></tr>
+      <tr><td>S4 系譜 ／ S5 灯</td><td>「灯を出す」</td><td>S6 World</td><td>—</td></tr>
+      <tr><td>S6 World</td><td>確かめられた</td><td>S5 灯（1つ増える）</td><td>仮名のみ</td></tr>
+      <tr><td>S6 World</td><td>断られた／期限切れ</td><td>S6 のまま（結末を表示）</td><td>断られたことも残る</td></tr>
+      <tr><td>S5 灯</td><td>版が上がった</td><td>S5 のまま（消える演出）</td><td>前の版の数は履歴に残る</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">06</span>決めてほしいこと（3つ）</h2>
+  <p class="msg">どれも1行で返せる。わたしの推しを先に書いた。</p>
+
+  <h3>Q1　灯を出す導線は、どこから始めるか</h3>
+  <ul>
+    <li><b>推し：灯の画面と、系譜の両方から。</b>名乗る動機は「使い終わった直後」が一番高い。ただし<b>デモでは灯の画面だけ見せる</b>（90秒で導線を2本説明できない）</li>
+    <li>対案A：灯の画面だけ。実装が軽い。ただし「使ったあと」の熱を拾えない</li>
+    <li>対案B：使用が通るたびに誘う。<b>採らない。</b>毎回聞くと、押す（機器）と意味が混ざる</li>
+  </ul>
+
+  <h3>Q2　World の待ち画面の主役は、コードか QR か</h3>
+  <ul>
+    <li><b>推し：コードを主、QR を従。</b><span class="mono">verification_uri_complete</span> が返るかまだ<b>確かめていない</b>。返らなければ QR 1枚では完結しないので、返らなくても壊れない形にしておく</li>
+    <li>対案：QR を主。返ることが確認できたら差し替える（判定は会場で5分）</li>
+  </ul>
+
+  <h3>Q3　実機（手元の機器）が繋がらない日の代役を、画面に持つか</h3>
+  <ul>
+    <li><b>推し：持つ。</b>ただし<b>「実機の代わり」と画面に書く</b>。黙って代役を本物のように見せない</li>
+    <li>対案：持たない。実機が落ちたらデモが止まる。<b>採らない</b>（撮影の当日に判断を増やさない）</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="no">07</span>まだ確かめていないこと</h2>
+  <ul>
+    <li>World のクライアント登録（<span class="mono">WORLD_CLIENT_ID</span> / <span class="mono">SECRET</span>）が未了。device flow を端から端まで通していない</li>
+    <li><span class="mono">verification_uri_complete</span> が返るか（Q2 がこれ次第）／sector 識別子の claim 名（いまは <span class="mono">sub</span> を仮名として扱っている）</li>
+    <li>0G Storage への投下は gas 待ち。root hash は出るが tx はまだ無い</li>
+    <li>実機の自作アプリと門が、まだ同じ画面で繋がっていない（4行の値は同じ関数から出ている）</li>
+  </ul>
+</section>
+
+<footer class="doc-footer">
+  <span>TOMOSHIBI — 画面遷移とプロセス（2026-11-06）</span>
+  <span>門 ui/index.html ／ 灯 ui/stars.html ／ 筋書き ideation/2026-11-06-demo-scenario.md</span>
+</footer>
+
+</div>
+</body>
+</html>

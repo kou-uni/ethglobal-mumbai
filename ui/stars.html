@@ -54,6 +54,17 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .world.denied{border-color:var(--brick)}
 .world .st{font-size:15px;font-weight:700;margin:0 0 6px}
 .world .st.ng{color:var(--brick)}
+.wsteps{display:flex;gap:0;margin:0 0 16px;flex-wrap:wrap}
+.wstep{font-size:11px;font-weight:600;color:var(--ink-3);padding:4px 14px 4px 20px;background:var(--fill);
+  margin-left:3px;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,0 100%,10px 50%)}
+.wstep:first-child{margin-left:0;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 50%,calc(100% - 10px) 100%,0 100%)}
+.wstep.on{background:var(--flame);color:#fff}
+.wstep.done{background:var(--accent);color:#fff}
+.wstep.ng{background:var(--brick);color:#fff}
+.code{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin:14px 0 0}
+.code .uc{font-family:ui-monospace,Menlo,monospace;font-size:30px;font-weight:700;letter-spacing:.18em;color:var(--ink)}
+.code .qr{width:104px;height:104px;border:1px solid var(--hairline);display:flex;align-items:center;
+  justify-content:center;text-align:center;font-size:10px;color:var(--ink-3);line-height:1.5;padding:8px}
 .note{font-size:12.5px;color:var(--ink-2);border-left:2px solid var(--hairline);padding:2px 0 2px 14px;margin:22px 0 0;max-width:42em}
 footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--hairline);font-size:11.5px;color:var(--ink-3)}
 footer p{max-width:52em;margin:0 0 8px}
@@ -91,12 +102,17 @@ footer b{color:var(--ink-2)}
 </div>
 
 <div class="world" id="world">
+  <div class="wsteps" id="wsteps"></div>
   <p class="st" id="wst">World で確かめている</p>
-  <p class="small mono" id="wdetail">device code を出して、本人の端末で確かめるのを待っている…</p>
+  <p class="small mono" id="wdetail"></p>
+  <div class="code" id="wcode"></div>
   <div class="acts" id="wacts">
-    <button class="main" id="w-ok">本人が確かめた</button>
-    <button id="w-ng">本人が断った</button>
+    <button class="main" id="w-ok">（試作）本人が確かめた</button>
+    <button id="w-ng">（試作）本人が断った</button>
+    <button id="w-ex">（試作）期限が切れた</button>
+    <button id="w-cancel">やめる</button>
   </div>
+  <p class="small" style="margin:12px 0 0">World が確かめるのは「人であること・同じ人であること」だけ。<b>何に星を出したかは World に渡らない。</b></p>
 </div>
 
 <h2>版の履歴</h2>
@@ -119,7 +135,7 @@ footer b{color:var(--ink-2)}
 var $ = function (id) { return document.getElementById(id) }
 var BROKER = new URLSearchParams(location.search).get('broker') || 'http://127.0.0.1:8797'
 var SKILL = '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc'
-var state = { version: '1.0.0', now: 7, history: [{ v: '1.0.0', n: 7, live: true, why: '最初の版' }] }
+var state = { version: '1.0.0', now: 7, deviceCode: null, history: [{ v: '1.0.0', n: 7, live: true, why: '最初の版' }] }
 
 var FLAME = '<svg class="fl" viewBox="0 0 120 152">' +
   '<rect class="base" x="31" y="96" width="58" height="48" rx="19" fill="#173f66"/>' +
@@ -146,25 +162,81 @@ function blowOut(done) {
   setTimeout(done, els.length * 90 + 500)
 }
 
-$('vouch').onclick = function () {
-  $('world').className = 'world on'
-  $('wst').className = 'st'; $('wst').textContent = 'World で確かめている'
-  $('wdetail').textContent = 'issuer https://auth.world.org / device code を出して、本人の端末で確かめるのを待っている…'
-  $('wacts').style.display = 'flex'
+// ── World（Agent Pass）。**星を出すときだけ、1回。鍵を使うたびには呼ばない** ──
+// 段: ①合図を頼む ②本人の端末で確かめる ③署名を検証 ④灯が増える
+var WSTEPS = ['合図を頼む', '本人の端末で確かめる', '署名を検証', '灯が増える']
+function wsteps(i, bad) {
+  $('wsteps').innerHTML = WSTEPS.map(function (t, n) {
+    var k = bad && n === i ? 'ng' : n < i ? 'done' : n === i ? 'on' : ''
+    return '<span class="wstep ' + k + '">' + (n + 1) + '　' + t + '</span>'
+  }).join('')
 }
-$('w-ok').onclick = function () {
-  state.now += 1
-  state.history[state.history.length - 1].n = state.now
-  $('wst').className = 'st'; $('wst').textContent = '確かめられた。灯が1つ増えた'
-  $('wdetail').textContent = '刻んだのは sector 単位の仮名だけ（sub）。同じ人は、同じ版に二度は出せない'
-  $('wacts').style.display = 'none'
-  draw()
+function wshow(cls, title, detail, acts) {
+  $('world').className = 'world on' + (cls || '')
+  $('wst').className = 'st' + (cls === ' denied' ? ' ng' : '')
+  $('wst').textContent = title
+  $('wdetail').textContent = detail
+  $('wacts').style.display = acts ? 'flex' : 'none'
 }
-$('w-ng').onclick = function () {
-  $('wst').className = 'st ng'; $('wst').textContent = '本人が断った（human_denied）— 灯は出ない'
-  $('wdetail').textContent = '断られたことも系譜に残る。無かったことにはしない'
-  $('wacts').style.display = 'none'
+
+$('vouch').onclick = async function () {
+  wsteps(0); wshow('', 'World に合図を頼んでいる', 'POST /vouch/start → device_authorization（issuer https://auth.world.org）', false)
+  $('wcode').innerHTML = ''
+  var st = null
+  try {
+    var r = await fetch(BROKER + '/vouch/start', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })
+    st = await r.json()
+  } catch (e) { st = { ok: false, error: 'Broker に届かない（' + BROKER + '）' } }
+  if (!st.ok) {
+    // **繋がらないときは、繋がったふりをしない。**試作の段だけ見せる
+    st = { ok: true, stub: true, userCode: 'WLD-4K2P', verificationUri: 'https://auth.world.org/device', expiresIn: 600 }
+  }
+  wsteps(1)
+  wshow('', '本人の端末で確かめるのを待っている', st.stub
+    ? '【試作】Broker も World も繋がっていないので、画面の段だけ出している。下のボタンで3つの結末を見られる'
+    : 'device code を出した。期限 ' + (st.expiresIn || 600) + ' 秒。断られたか、押していないかを混ぜない', true)
+  $('wcode').innerHTML = '<span class="uc">' + (st.userCode || '—') + '</span>' +
+    '<div class="qr">QR<br>verification_uri_complete が返れば1枚で済む<br>（未確認）</div>' +
+    '<span class="small mono">' + (st.verificationUri || '') + '</span>'
+  state.deviceCode = st.deviceCode || null
 }
+
+function wdone(kind) {
+  if (kind === 'ok') {
+    wsteps(3)
+    state.now += 1
+    state.history[state.history.length - 1].n = state.now
+    wshow('', '確かめられた。灯が1つ増えた', '刻んだのは sector 単位の仮名（sub）だけ。同じ人は、同じ版に二度は出せない', false)
+    draw()
+  } else if (kind === 'human_denied') {
+    wsteps(1, true)
+    wshow(' denied', '本人が断った — 灯は出ない（human_denied）', '断ったことも系譜に残す。無かったことにはしない', false)
+  } else if (kind === 'proof_expired') {
+    wsteps(1, true)
+    wshow(' denied', '期限が切れた — 灯は出ない（proof_expired）', '「断った」と「人が居なかった」は別の結末として分けて残す', false)
+  } else if (kind === 'ALREADY_VOUCHED') {
+    wsteps(2, true)
+    wshow(' denied', 'この版にはもう灯を出している', '使用済みの識別子は atomic に弾く（二重には数えない）', false)
+  } else {
+    wsteps(2, true)
+    wshow(' denied', 'World の署名を確かめられない', String(kind), false)
+  }
+}
+
+$('w-ok').onclick = async function () {
+  if (!state.deviceCode) return wdone('ok')   // 試作の段
+  wsteps(2); wshow('', '署名を確かめている', 'JWKS で検証する。id_token を読んで済ませない', false)
+  try {
+    var r = await fetch(BROKER + '/vouch/finish', { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ deviceCode: state.deviceCode, skill: SKILL, version: state.version }) })
+    var b = await r.json()
+    wdone(b.decision === 'STAR' ? 'ok' : (b.reason || 'WORLD_ERROR'))
+  } catch (e) { wdone(String(e)) }
+}
+$('w-ng').onclick = function () { wdone('human_denied') }
+$('w-ex').onclick = function () { wdone('proof_expired') }
+$('w-cancel').onclick = function () { $('world').className = 'world' }
+
 $('bump').onclick = function () {
   var parts = state.version.split('.'); parts[2] = String(Number(parts[2]) + 1)
   var next = parts.join('.')
@@ -190,10 +262,12 @@ $('load').onclick = async function () {
   }
 }
 $('reset').onclick = function () {
-  state = { version: '1.0.0', now: 7, history: [{ v: '1.0.0', n: 7, live: true, why: '最初の版' }] }
+  state = { version: '1.0.0', now: 7, deviceCode: null, history: [{ v: '1.0.0', n: 7, live: true, why: '最初の版' }] }
   $('world').className = 'world'; draw()
 }
 draw()
+// ?w=1 で World の待ち画面を開いた状態にする（確認・撮影用）
+if (new URLSearchParams(location.search).get('w')) setTimeout(function () { $('vouch').onclick() }, 60)
 </script>
 </body>
 </html>

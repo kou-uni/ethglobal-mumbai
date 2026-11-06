@@ -16,6 +16,7 @@ ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/
 | `ideation/2026-11-06-decisions.md` | **決定の記録。** 何を決めたか（最新） |
 | `ideation/2026-11-06-minta-proposal.md` | minta の提案：星は約束ではなく事実にする（採用） |
 | **`ui/`** | **動くデモ画面（試作）。** `index.html`＝門（4通りの止まり方が見える）／`stars.html`＝灯（版が上がると消える）。値は本番の 0G に実際に投げた応答 |
+| `ideation/2026-11-06-screen-flow.html` | **画面遷移とプロセス。** 画面5枚・遷移表・使用のプロセス・World のプロセス・決めてほしいこと3つ |
 | `ideation/2026-11-06-demo-scenario.md` | **デモの筋書き。** 3分の進行表・90秒版・壊れたときの退避・撮影前の確認 |
 | `ideation/2026-11-06-storyboard.md` | **デモ台本。** 画面3つ・3分の絵コンテ・映え5つ・キャッチコピー（[スマホで見る](https://htmlpreview.github.io/?https://github.com/kou-uni/ethglobal-mumbai/blob/main/ideation/2026-11-06-storyboard.html)） |
 | `ideation/2026-11-06-final-image.md` | **仕上がり。** アーキテクチャ図・ビジネスモデル・ペルソナ・ジャーニー（動画の絵コンテ） |

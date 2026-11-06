@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 1120" width="1680" height="1120" font-family="Figtree, Helvetica, Arial, sans-serif">
+  <title>TOMOSHIBI — one request, end to end</title>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10z" fill="#1b1630"/></marker>
+    <marker id="af" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10z" fill="#f2600c"/></marker>
+    <marker id="ad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10z" fill="#8f1d14"/></marker>
+  </defs>
+  <style>
+    .bx{fill:#fff;stroke:#1b1630;stroke-width:2.5}
+    .h{font-size:21px;font-weight:700;fill:#1b1630;letter-spacing:.04em}
+    .t{font-size:19px;fill:#4a4357}
+    .st{font-size:21px;font-weight:700;fill:#1b1630}
+    .num{font-size:17px;font-weight:700;fill:#fff}
+    .lb{font-size:17px;fill:#4a4357}
+    .chip{font-size:16px;font-weight:700;fill:#8f1d14;letter-spacing:.04em}
+    .ttl{font-size:30px;font-weight:700;fill:#1b1630}
+    .sub{font-size:19px;fill:#6b6478}
+  </style>
+  <rect width="1680" height="1120" fill="#F3EEE6"/>
+  <text class="ttl" x="60" y="56">TOMOSHIBI — one request, end to end</text>
+  <text class="sub" x="60" y="88">The key is held in one place. The agent is given a label, a range, and a count.</text>
+
+  <!-- the broker -->
+  <rect class="bx" x="470" y="120" width="760" height="760" rx="18" fill="#fffdf8"/>
+  <text class="h" x="494" y="162">THE BROKER — the only thing that holds the key</text>
+  <rect class="bx" x="510" y="200" width="680" height="80" rx="10" fill="#F3EEE6"/>
+  <text class="st" x="534" y="232">1 · Scope check</text>
+  <text class="t" x="534" y="260">signature · expiry · count · target · scope</text>
+  <text class="chip" x="1166" y="246" text-anchor="end">REFUSED, AND RECORDED</text>
+  <rect class="bx" x="510" y="310" width="680" height="80" rx="10" fill="#F3EEE6"/>
+  <text class="st" x="534" y="342">2 · How heavy is this?</text>
+  <text class="t" x="534" y="370">the only step that reads the body</text>
+  <text class="chip" x="1166" y="356" text-anchor="end">NO ANSWER → STOPPED</text>
+  <rect class="bx" x="510" y="420" width="680" height="80" rx="10" fill="#F3EEE6"/>
+  <text class="st" x="534" y="452">3 · Does a person have to press?</text>
+  <text class="t" x="534" y="480">heavy, or money moving</text>
+  <text class="chip" x="1166" y="466" text-anchor="end">NEEDS A PRESS</text>
+  <rect class="bx" x="510" y="530" width="680" height="80" rx="10" fill="#F3EEE6"/>
+  <text class="st" x="534" y="562">4 · Reserve one call of the count</text>
+  <text class="t" x="534" y="590">nothing runs between the check and the write</text>
+  <rect class="bx" x="510" y="640" width="680" height="80" rx="10" fill="#ffd0ad"/>
+  <text class="st" x="534" y="672">5 · Put the key in, and send it</text>
+  <text class="t" x="534" y="700">the secret exists only in this moment</text>
+  <rect class="bx" x="510" y="760" width="680" height="96" rx="10" fill="#F3EEE6"/>
+  <text class="st" x="534" y="792">6 · The trail</text>
+  <text class="t" x="534" y="820">append-only · allowed and refused in one place</text>
+  <text class="t" x="534" y="845">carries the signature of whatever tried it</text>
+
+  <!-- the person -->
+  <rect class="bx" x="60" y="120" width="330" height="150" rx="18"/>
+  <text class="h" x="84" y="162">THE LEDGER</text>
+  <text class="t" x="84" y="194">the person's own device</text>
+  <text class="t" x="84" y="222">signs the permit</text>
+  <text class="t" x="84" y="250">holds the button</text>
+
+  <rect class="bx" x="60" y="340" width="330" height="150" rx="18"/>
+  <text class="h" x="84" y="382">AGENT + SKILL</text>
+  <text class="t" x="84" y="414">holds the permit, the</text>
+  <text class="t" x="84" y="442">signature and a label</text>
+  <text class="t" x="84" y="470">— never the key</text>
+
+  <rect class="bx" x="60" y="620" width="330" height="110" rx="18" fill="#ffd0ad"/>
+  <text class="h" x="84" y="662">THE KEYS</text>
+  <text class="t" x="84" y="694">kept only here</text>
+
+  <rect class="bx" x="60" y="770" width="330" height="110" rx="18"/>
+  <text class="h" x="84" y="812">THE MORNING PAGE</text>
+  <text class="t" x="84" y="844">stopped · pressed · passed</text>
+
+  <!-- outside -->
+  <rect class="bx" x="1300" y="300" width="320" height="130" rx="18" fill="#fffdf8"/>
+  <text class="h" x="1324" y="342">0G PRIVATE COMPUTER</text>
+  <text class="t" x="1324" y="374">reads it once, answers</text>
+  <text class="t" x="1324" y="402">routine / decisive / heavy</text>
+
+  <rect class="bx" x="1300" y="630" width="320" height="100" rx="18"/>
+  <text class="h" x="1324" y="672">THE REAL API</text>
+  <text class="t" x="1324" y="704">Stripe, and others</text>
+
+  <rect class="bx" x="1300" y="760" width="320" height="120" rx="18" fill="#fffdf8"/>
+  <text class="h" x="1324" y="802">0G STORAGE</text>
+  <text class="t" x="1324" y="834">the thread, sealed</text>
+  <text class="t" x="1324" y="860">root hash + tx</text>
+
+  <!-- arrows -->
+  <path d="M225 274 L225 336" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <circle cx="225" cy="305" r="17" fill="#1b1630"/><text class="num" x="225" y="311" text-anchor="middle">1</text>
+  <text class="lb" x="250" y="300">the signed permit</text>
+  <text class="lb" x="250" y="322">— four lines</text>
+
+  <path d="M394 400 L430 400 L430 240 L504 240" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <circle cx="430" cy="320" r="17" fill="#1b1630"/><text class="num" x="430" y="326" text-anchor="middle">2</text>
+
+  <path d="M1194 340 L1296 340" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <path d="M1296 382 L1194 382" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <circle cx="1245" cy="361" r="17" fill="#1b1630"/><text class="num" x="1245" y="367" text-anchor="middle">3</text>
+  <text class="lb" x="1198" y="288" text-anchor="start">the four lines + the request</text>
+
+  <path d="M506 460 L462 460 L462 258 L394 258" stroke="#f2600c" stroke-width="2.5" fill="none" marker-end="url(#af)"/>
+  <circle cx="462" cy="540" r="17" fill="#f2600c"/><text class="num" x="462" y="546" text-anchor="middle">4</text>
+  <text class="lb" x="438" y="546" text-anchor="end" fill="#8f1d14">wake her — then 1 again</text>
+
+  <path d="M394 675 L504 675" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <circle cx="449" cy="675" r="17" fill="#1b1630"/><text class="num" x="449" y="681" text-anchor="middle">5</text>
+
+  <path d="M1194 680 L1296 680" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <circle cx="1245" cy="680" r="17" fill="#1b1630"/><text class="num" x="1245" y="686" text-anchor="middle">6</text>
+
+  <path d="M1194 812 L1296 812" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <circle cx="1245" cy="812" r="17" fill="#1b1630"/><text class="num" x="1245" y="818" text-anchor="middle">7</text>
+
+  <path d="M506 824 L394 824" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+  <circle cx="450" cy="824" r="17" fill="#1b1630"/><text class="num" x="450" y="830" text-anchor="middle">8</text>
+
+  <!-- afterwards -->
+  <rect x="60" y="940" width="1560" height="140" rx="18" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="8 7"/>
+  <text class="h" x="84" y="982">AFTERWARDS — how a flame is lit</text>
+  <text class="t" x="84" y="1020">she used it at least once</text>
+  <text class="st" x="420" y="1020">→</text>
+  <text class="t" x="460" y="1020">the same permit proves the key was hers</text>
+  <text class="st" x="920" y="1020">→</text>
+  <text class="t" x="960" y="1020">World ID — one person, once</text>
+  <text class="st" x="1290" y="1020">→</text>
+  <text class="t" x="1330" y="1020">a flame on that version</text>
+  <text class="t" x="84" y="1052">It goes out when the code changes, and the holder's address is never written into it.</text>
+</svg>

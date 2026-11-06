@@ -39,6 +39,25 @@ PORT=8797 EXECUTE=0 node src/server.js   # needs ZG_API_KEY, ZG_PRIVATE_KEY
 node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
 ```
 
+## What it does, in four parts
+
+Everything in this repository is one of four things. The rest is support.
+
+| | What it does | What it means for the person whose key it is |
+|---|---|---|
+| **1. Custody** | The secret stays with the Broker. The agent is given a handle; the real credential is put in at the moment of sending, and only for a destination and an operation a human signed. | **You never hand the key over. You hand over one use of it.** |
+| **2. Weight and press** | Before anything runs, a sealed model reads the request and says how much it matters. Routine goes through. Anything heavier waits until a person holds the button on a hardware device. | **Nothing asks you on an ordinary day, and money cannot move while you are asleep.** |
+| **3. Trail and attribution** | Every request, allowed or refused, is appended with its reason, and a request made outside the signed scope is recorded carrying the skill's own signature. | **After an incident you can say what was stopped, and whose code tried it.** |
+| **4. Flame** | A star can be lit only by the person who owned the key and actually used that version, confirmed once through World ID. Every star goes out when the version changes. | **You choose by whose star it is, not by how many.** |
+
+**Supporting, not headline:** sealing the trail into 0G Storage, the USB bridge to the Ledger,
+skill-signature verification, the morning summary and the per-request trace.
+
+**What it assumes.** The Broker is meant to run somewhere the agent is not. On a laptop where the
+agent has a shell, that agent can read the Broker's environment — custody is the one of the four
+that needs the Broker hosted, and in time inside a confidential VM. The other three hold either
+way, because they rest on a signature made on a device the agent cannot reach.
+
 ## The four ways it stops
 
 They are never collapsed into one "error".

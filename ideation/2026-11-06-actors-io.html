@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOMOSHIBI — 誰が何を入れて、何が出るのか</title>
+<style>
+:root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
+--hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
+html{color-scheme:light}
+body{margin:0;background:var(--paper);color:var(--ink);
+font-family:"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic",Meiryo,sans-serif;
+font-size:15px;line-height:1.9;border-top:6px solid var(--accent);-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:56px clamp(24px,6vw,48px) 96px}
+.doc-header{padding-bottom:28px;border-bottom:1px solid var(--ink)}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin:0 0 20px}
+h1{font-size:27px;line-height:1.5;letter-spacing:.02em;margin:0 0 12px;font-feature-settings:"palt" 1}
+.lead{font-size:14px;color:var(--ink-2);margin:0 0 24px;max-width:38em}
+.doc-meta{font-size:12px;color:var(--ink-3);display:flex;gap:24px;flex-wrap:wrap}
+.page>section{border-top:1px solid var(--hairline);padding-top:44px;margin-top:64px}
+.page>section:first-of-type{border-top:0;padding-top:0;margin-top:56px}
+h2{font-size:19px;letter-spacing:.03em;margin:0;font-feature-settings:"palt" 1}
+h2 .no{color:var(--accent);margin-right:14px;font-variant-numeric:tabular-nums}
+.msg{font-size:16px;font-weight:600;line-height:1.8;margin:18px 0 24px;max-width:36em}
+h3{font-size:15px;margin:36px 0 8px}
+p{margin:0 0 16px;max-width:42em}
+ul,ol{margin:0 0 16px;padding-left:1.4em;max-width:41em}
+li{margin-bottom:6px}
+ul{list-style:none;padding-left:1.2em}
+ul li::before{content:"–";float:left;margin-left:-1.2em;color:var(--ink-3)}
+.summary{list-style:none;margin:24px 0 0;padding:0;counter-reset:s;max-width:44em}
+.summary li{counter-increment:s;position:relative;padding-left:2.4em;margin-bottom:14px}
+.summary li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:.4em;
+font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.kpis{display:flex;flex-wrap:wrap;row-gap:24px;margin:32px 0 8px}
+.kpi{padding:2px 32px}
+.kpi:first-child{padding-left:0}
+.kpi+.kpi{border-left:1px solid var(--hairline)}
+.kpi .v{font-size:30px;font-weight:700;color:var(--accent);line-height:1.3;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:14px;font-weight:600;margin-left:2px}
+.kpi .l{font-size:11.5px;color:var(--ink-3);letter-spacing:.06em;margin-top:6px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:28px 0 8px;font-size:13px;line-height:1.6}
+caption{text-align:left;font-size:12.5px;font-weight:600;margin-bottom:10px}
+th{font-size:12px;font-weight:600;text-align:left;padding:10px 12px;
+border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom}
+td{padding:10px 12px;border-bottom:1px solid var(--hairline);vertical-align:top}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-top:1px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:600;background:var(--accent-tint)}
+figure{margin:32px 0 8px}
+figcaption{font-size:12.5px;font-weight:600;margin-bottom:14px}
+figure svg{width:100%;height:auto;display:block}
+svg text{font-family:inherit}
+.fig-scroll{overflow-x:auto}
+.src{font-size:11.5px;color:var(--ink-3);margin:6px 0 0}
+.note{font-size:12.5px;color:var(--ink-2);border-left:2px solid var(--hairline);padding:2px 0 2px 14px;margin:24px 0 16px;max-width:40em}
+.chevrons{display:flex;margin:28px 0 8px;min-width:520px}
+.chev{flex:1;padding:9px 10px 9px 22px;font-size:12px;font-weight:600;line-height:1.5;text-align:center;
+background:var(--fill-gray);margin-left:4px;
+clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%)}
+.chev:first-child{margin-left:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%)}
+.chev.on{background:var(--accent);color:#fff}
+.chev small{display:block;font-size:10.5px;font-weight:500;opacity:.75}
+.matrix{display:grid;grid-template-columns:var(--mx-label,140px) repeat(var(--mx-cols,2),1fr);
+gap:18px 20px;margin:28px 0 8px;min-width:560px}
+.mx-h{font-size:11.5px;font-weight:600;color:var(--ink-2);text-align:center;align-self:end;
+padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.mx-label{background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;
+justify-content:center;text-align:center;gap:2px;font-size:12px;font-weight:700;line-height:1.5;padding:12px 10px}
+.mx-label small{font-size:10px;font-weight:600;opacity:.7;letter-spacing:.08em}
+.mx-label.alt{background:var(--fill-gray);color:var(--ink)}
+.mx-cell{font-size:12px;line-height:1.75}
+.mx-cell ul{margin:0}
+.mx-cell li{margin-bottom:5px}
+b,strong{font-weight:700}
+.em{color:var(--accent);font-weight:700}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--hairline);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--accent)}
+.doc-footer{margin-top:88px;padding-top:20px;border-top:1px solid var(--hairline);
+font-size:11.5px;color:var(--ink-3);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media print{@page{size:A4;margin:16mm}
+body{border-top-width:4px}.page{max-width:none;padding:0}
+.page>section{margin-top:48px;padding-top:32px}
+table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="doc-header">
+  <p class="eyebrow">TOMOSHIBI ／ 入力と出力 ／ 2026-11-06</p>
+  <h1>誰が何を入れて、何が出るのか</h1>
+  <p class="lead"><b>この製品の中で、お金は1円も動かない。</b>預け金（トークンを預ける）も保険（保険料を払う）も、11/6 未明に捨てた。<b>いま賭けているのは「自分の鍵そのもの」</b>。その前提で、登場する全員の入力・出力・賭けているもの・受け取るものを1枚にした。</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>前提: 決定1（預け金を捨てる）・決定9（灯は版ごと）</span></div>
+</header>
+
+<section>
+  <h2>エグゼクティブサマリー</h2>
+  <ol class="summary">
+    <li><b>人が入れるのは3つだけ。</b>範囲の4行に1回署名する／重い要求を1回押す／World で1回名乗る。<b>それ以外は何も入れない</b>（鍵も、金も、個人情報も渡さない）。</li>
+    <li><b>出るのは4つ。</b>通ったか止まったかの判定／使い切りの許可／灯1つ／消せない系譜。<b>出力はすべて「事実」で、約束は1つも含まない。</b></li>
+    <li><b>預け金と保険は捨てた（決定1）。</b>預け金は「金を持つ人ほど信用される」に反転し、保険料は<b>保険業の規制</b>に触れうる。代わりに賭けるのは<b>自分の鍵</b>——保証人は他人を保証する人ではなく、<b>同じ船に乗っている人</b>になった。</li>
+    <li><b>金が動く経路は1本だけ。</b>利用者 → TOMOSHIBI の月額と従量。<b>利用者どうしの送金も、決済額の%も無い。</b></li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">01</span>人の3人（入力と出力）</h2>
+  <p class="msg"><b>持ち主は「範囲」と「押す」を出し、作り手は「宣言」と「署名」を出す。買う人は何も出さない。</b></p>
+
+  <div class="fig-scroll"><div class="matrix" style="--mx-cols:4;--mx-label:130px">
+    <div class="mx-h"></div>
+    <div class="mx-h">入れるもの</div>
+    <div class="mx-h">出るもの</div>
+    <div class="mx-h">賭けているもの</div>
+    <div class="mx-h">受け取るもの</div>
+
+    <div class="mx-label"><small>P1</small>鍵の持ち主</div>
+    <div class="mx-cell">
+      <ul>
+        <li><b>範囲の4行＋署名</b>（鍵のラベル・宛先・操作・期限／回数）— 年に数回</li>
+        <li><b>長押し1回</b>（重い要求ごと）</li>
+        <li><b>World で1回名乗る</b>（灯を出すときだけ）</li>
+      </ul>
+    </div>
+    <div class="mx-cell">
+      <ul>
+        <li>使い切りの許可（Permit ＋ 署名）</li>
+        <li>押した／押さなかったという事実</li>
+        <li><b>灯1つ</b>（その版に、自分の鍵で使っている）</li>
+      </ul>
+    </div>
+    <div class="mx-cell"><b>自分の鍵そのもの。</b>範囲を広く切れば、損をするのは自分。<b>預け金は置かない</b></div>
+    <div class="mx-cell">働くエージェント。止められた記録。<b>何も起きない夜</b></div>
+
+    <div class="mx-label alt"><small>P2</small>スキルの作り手</div>
+    <div class="mx-cell">
+      <ul>
+        <li><b>宣言した範囲</b>（この道具が触る先）</li>
+        <li><b>要求ごとのスキル署名</b></li>
+        <li>版（上げるたびに灯は消える）</li>
+      </ul>
+    </div>
+    <div class="mx-cell">
+      <ul>
+        <li>範囲内なら通る</li>
+        <li>範囲外なら <b>自分の署名つきで違反として刻まれる</b></li>
+        <li>いまの版の灯の数と、<b>誰の灯か</b></li>
+      </ul>
+    </div>
+    <div class="mx-cell"><b>名前と、積んだ灯。</b>版を上げれば自分で消える。ここも<b>預け金は無い</b></div>
+    <div class="mx-cell">信用。<b>採用されること</b></div>
+
+    <div class="mx-label alt"><small>P3</small>これから使う人</div>
+    <div class="mx-cell"><b>何も入れない。</b>URL を開くだけ（インストールも登録も無し）</div>
+    <div class="mx-cell">自分の判断（入れる／入れない）</div>
+    <div class="mx-cell">—</div>
+    <div class="mx-cell"><b>「いま」信じられるかの答え。</b>古い評価を新しいと勘違いしない</div>
+  </div></div>
+
+  <p class="note"><b>保証人という役は無くなった。</b>以前は「他人のスキルを保証する第三者」を置き、預け金を賭けさせる設計だった。いまは<b>灯を出せるのは、その版を自分の鍵で使っている人だけ</b>。保証ではなく<b>同じ船に乗っている事実</b>を出している（決定1・minta 提案）。</p>
+</section>
+
+<section>
+  <h2><span class="no">02</span>機械の4つ（何を受け取り、何を返すか）</h2>
+  <p class="msg"><b>どれも鍵の平文を受け取らない。</b>Broker すら、要求の中身を読まずに判定を受け取る。</p>
+
+  <div class="tbl"><table>
+    <caption>表1　機械ごとの入出力（口は Broker の HTTP。<span class="mono">spec/permit-signature.md</span> が境界）</caption>
+    <thead><tr><th style="width:132px">機械</th><th>受け取るもの</th><th>返すもの</th><th style="width:150px">受け取らないもの</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>エージェント</b><br>（スキルの実体）</td>
+        <td><span class="mono">POST /use</span>: 要求（method・url・keyRef・body）＋ Permit ＋ <b>2つの署名</b>（持ち主・スキル）</td>
+        <td><b>ALLOWED</b>(200) ／ <b>NEEDS_PRESS</b>(409) ／ <b>DENIED</b>(403) ／ <b>STOPPED</b>(503)。残り回数と系譜の糸の id</td>
+        <td><b>鍵の平文。</b>持てない。参照（keyRef）だけ</td>
+      </tr>
+      <tr>
+        <td><b>Broker</b><br>（我々）</td>
+        <td>Permit・署名・要求。<b>範囲の照合と回数の管理だけ自分でやる</b></td>
+        <td>判定・系譜（追記のみ）・星の一覧（<span class="mono">/stars</span>）</td>
+        <td><b>鍵も資金も預からない。</b>重さの判断も自分では作らない</td>
+      </tr>
+      <tr>
+        <td><b>0G</b><br>（封印された推論）</td>
+        <td>要求の本文（<b>封印の中で</b>）。実測 <b>1判定 300トークン</b></td>
+        <td>重さ（<b>ふだん／大事／決定的</b>）と <span class="mono">x-request-id</span></td>
+        <td><b>我々も読めない。</b>届かなければ <b>STOPPED</b>——<b>既定値を作らない</b></td>
+      </tr>
+      <tr>
+        <td><b>World</b><br>（人であること）</td>
+        <td>本人の端末での承認（device flow）</td>
+        <td>sector 単位の<b>仮名</b>（<span class="mono">sub</span>）。断りは <span class="mono">human_denied</span>、時間切れは <span class="mono">proof_expired</span></td>
+        <td><b>何のスキルか・何の鍵か・いつ使ったか</b>は渡していない</td>
+      </tr>
+      <tr>
+        <td><b>0G Storage</b><br>（系譜）</td>
+        <td>記録（誰が許し、何を要求し、通ったか止まったか）</td>
+        <td>root hash と tx</td>
+        <td><b>本文も鍵も入れない。</b>公開前提で書いている</td>
+      </tr>
+    </tbody>
+  </table></div>
+  <p class="src">口の一覧: <span class="mono">/use</span>・<span class="mono">/seal</span>・<span class="mono">/trace/:thread</span>・<span class="mono">/vouch/start</span>・<span class="mono">/vouch/finish</span>・<span class="mono">/stars/:skill</span>・<span class="mono">/health</span>（<span class="mono">broker/src/server.js</span>）。</p>
+</section>
+
+<section>
+  <h2><span class="no">03</span>「トークンを預ける」「保険に入る」はどうなったか</h2>
+  <p class="msg"><b>両方とも捨てた（11/6 未明・決定1）。</b>捨てた理由は時間ではなく、<b>入れると製品の主張が反転するから</b>。</p>
+
+  <div class="tbl"><table>
+    <caption>表2　旧い設計 → いまの設計</caption>
+    <thead><tr><th style="width:150px">昔やろうとしたこと</th><th>どう壊れるか</th><th>いま代わりに置いているもの</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>預け金（トークンを預ける）</b><br>保証人が少額を預け、違反時に被害者へ回る</td>
+        <td><b>金を多く持つ人ほど信用される</b>に反転する。灯は「誰が使っているか」の事実のはずが、<b>買える順位</b>になる</td>
+        <td><b>賭けるものを鍵そのものに変えた。</b>灯を出せるのは<b>その版を自分の鍵で使っている人だけ</b>。外れたときは自分も被害を受ける</td>
+      </tr>
+      <tr>
+        <td><b>保険（利用者が保険料を払い、無事なら保証人に上乗せ）</b></td>
+        <td><b>保険業の規制に触れうる</b>【未確認のまま製品に入れられない】。さらに「金を払えば安全」という<b>誤った安心</b>を売ることになる</td>
+        <td><b>売っているのは安心ではなく記録。</b>止めた事実と、断られた事実が残る。損失の補填はしない（できるとも言わない）</td>
+      </tr>
+      <tr>
+        <td><b>ありがとう（投げ銭）と二次のマッチング</b></td>
+        <td>利用者どうしに金の流れができ、<b>灯が収入源になる</b>。買う動機が生まれた時点で灯の意味が消える</td>
+        <td>作らない。<b>灯は売り物にしない</b>（ビジネスモデルの「やらないこと」と同じ列）</td>
+      </tr>
+      <tr>
+        <td><b>保証の濃さ3段・ゼロ知識化</b></td>
+        <td>36時間で安全に作れない。半端な匿名化は<b>漏れていないという誤解</b>を生む</td>
+        <td>2段に落とし、仮名（World の <span class="mono">sub</span>）だけで結ぶ。<b>同じアプリの中では同じ人だと分かる</b>と正直に書く</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <p><b>将来やるとしたら。</b>預け金は<b>灯の重みに混ぜない別の軸</b>として（「この人はいくら賭けている」を灯と並べない）、保険は<b>第三者の保険会社に系譜を渡す形</b>で。どちらも<b>今回は作らないし、動画でも言わない</b>。聞かれたらこの表のまま答える。</p>
+  <p class="note"><b>古い図が1枚残っている。</b><span class="mono">ideation/2026-11-06-final-image.md</span> のアーキテクチャ図には <span class="mono">VouchRegistry（保証・預け金）</span> が描かれている。<b>これは決定1より前の版</b>。図は差し替えず、<b>「ここまでは預け金だった」と分かるように印を足してある</b>。</p>
+</section>
+
+<section>
+  <h2><span class="no">04</span>お金はどこを通るか</h2>
+  <p class="msg"><b>1本だけ。</b>利用者 → TOMOSHIBI。<b>利用者どうしの間には、金の経路が存在しない。</b></p>
+
+  <div class="fig-scroll"><div class="chevrons">
+    <div class="chev">P1 が範囲を署名<small>無料</small></div>
+    <div class="chev">エージェントが使う<small>ふだんは無料</small></div>
+    <div class="chev on">重い判定<small>従量（A）</small></div>
+    <div class="chev">灯がともる<small>無料</small></div>
+    <div class="chev on">作り手が灯を掲示<small>月額（B）</small></div>
+  </div></div>
+
+  <div class="tbl"><table>
+    <thead><tr><th style="width:170px">経路</th><th>あるか</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>利用者 → TOMOSHIBI</td><td><b>ある</b>（月額・従量・企業ライセンス）</td><td>判断に値札を付ける。<b>黙っている時間には課金しない</b></td></tr>
+      <tr><td>利用者 → 利用者</td><td><b>無い</b></td><td>投げ銭も補填も作らない。作った瞬間に灯が買い物になる</td></tr>
+      <tr><td>決済額の%</td><td><b>取らない</b></td><td>取れば<b>止めるほど損をする会社</b>になる</td></tr>
+      <tr><td>預かり（鍵・資金）</td><td><b>無い</b></td><td><b>預けなくていい</b>が商品。預かれば主張が消える</td></tr>
+      <tr><td>要求の中身の販売</td><td><b>無い</b></td><td>封印の中にあり、<b>我々も読めない</b></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">05</span>次のアクション</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>やること</th><th style="width:96px">誰</th><th style="width:120px">いつまで</th></tr></thead>
+    <tbody>
+      <tr><td><b>決定16・17 として記録する</b>（流量に%を取らない／預け金と保険は捨てたままにする）</td><td>kou</td><td>11/6 中<b>（済）</b></td></tr>
+      <tr><td><span class="mono">final-image.md</span> の預け金の図に「旧い版」の印を足す</td><td>kou</td><td>11/6 中<b>（済）</b></td></tr>
+      <tr><td>ピッチで聞かれたら表2のまま答える（預け金・保険は<b>作らない理由</b>を先に言う）</td><td>kou・minta</td><td>11/7</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer class="doc-footer">
+  <span>TOMOSHIBI — 入力と出力（2026-11-06）</span>
+  <span>関連: 2026-11-06-market-and-model.html ／ 2026-11-06-touchpoints.html ／ decisions 1・16・17</span>
+</footer>
+
+</div>
+</body>
+</html>

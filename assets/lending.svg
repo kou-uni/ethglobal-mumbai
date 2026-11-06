@@ -13,17 +13,16 @@
   </style>
   <rect width="1680" height="860" fill="#F3EEE6"/>
   <text class="ttl" x="60" y="56">What “lending a key” actually is</text>
-  <text class="sub" x="60" y="88">She does not hand over a secret. She hands over a signed range — and the key stays where it was.</text>
+  <text class="sub" x="60" y="88">The tool asks for a range before it works. She signs that range, or she does not. The key never moves.</text>
 
   <rect class="bx" x="60" y="150" width="330" height="300" rx="18"/>
-  <text class="h" x="84" y="192">1 · SHE CHOOSES</text>
-  <text class="t" x="84" y="234">which tool</text>
-  <text class="t" x="84" y="262">which key</text>
-  <text class="t" x="84" y="290">which service it may reach</text>
-  <text class="t" x="84" y="318">what it may do there</text>
-  <text class="t" x="84" y="346">how many times</text>
-  <text class="t" x="84" y="374">until when</text>
-  <text class="cap" x="84" y="418">on the Keys page</text>
+  <text class="h" x="84" y="192">1 · THE TOOL ASKS</text>
+  <text class="t" x="84" y="234">it names the key it needs,</text>
+  <text class="t" x="84" y="262">the service it will reach,</text>
+  <text class="t" x="84" y="290">what it will do there,</text>
+  <text class="t" x="84" y="318">how many times,</text>
+  <text class="t" x="84" y="346">and for how long</text>
+  <text class="cap" x="84" y="418">before it starts the work</text>
 
   <rect class="bx" x="470" y="150" width="330" height="300" rx="18"/>
   <text class="h" x="494" y="192">2 · IT BECOMES</text>
@@ -40,8 +39,8 @@
   <text class="t" x="904" y="262">those four lines</text>
   <text class="t" x="904" y="290">she holds the button</text>
   <text class="t" x="904" y="318">it signs them (EIP-712)</text>
-  <text class="t" x="904" y="346">nothing leaves the device</text>
-  <text class="t" x="904" y="374">but the signature</text>
+  <text class="t" x="904" y="346">she can simply not press</text>
+  <text class="t" x="904" y="374">and nothing is lent</text>
   <text class="cap" x="904" y="418">the Ledger, in her hand</text>
 
   <rect class="bx" x="1290" y="150" width="330" height="300" rx="18"/>

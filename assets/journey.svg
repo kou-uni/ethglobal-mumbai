@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 1180" width="1680" height="1180" font-family="Figtree, Helvetica, Arial, sans-serif">
+  <title>TOMOSHIBI — the journey of someone who pastes keys into a chat</title>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#1b1630"/></marker></defs>
+  <style>
+    .card{fill:#fff;stroke:#1b1630;stroke-width:2.5}
+    .gap{fill:#fff;stroke:#8f1d14;stroke-width:2.5;stroke-dasharray="9 7"}
+    .h{font-size:21px;font-weight:700;fill:#1b1630}
+    .k{font-size:14px;font-weight:700;letter-spacing:.1em;fill:#8b8498}
+    .t{font-size:17px;fill:#4a4357}
+    .chip{font-size:14px;font-weight:700;letter-spacing:.06em}
+    .ttl{font-size:30px;font-weight:700;fill:#1b1630}
+    .sub{font-size:19px;fill:#6b6478}
+    .num{font-size:17px;font-weight:700;fill:#fff}
+  </style>
+  <rect width="1680" height="1180" fill="#F3EEE6"/>
+  <text class="ttl" x="60" y="54">The person who pastes keys into a chat — where she is, and what she is holding</text>
+  <text class="sub" x="60" y="86">Each card: what state she is in · where she is when it happens · what the system does. Dashed = designed, not built.</text>
+
+  <!-- 1 -->
+  <rect class="card" x="60" y="130" width="370" height="250" rx="16" fill="#fffdf8"/>
+  <circle cx="92" cy="166" r="17" fill="#1b1630"/><text class="num" x="92" y="172" text-anchor="middle">1</text>
+  <text class="h" x="124" y="172">She pastes it</text>
+  <text class="k" x="84" y="208">WHERE · THE CHAT WINDOW</text>
+  <text class="t" x="84" y="240">The agent says it needs a Stripe key.</text>
+  <text class="t" x="84" y="264">She has one, so she pastes it in.</text>
+  <text class="k" x="84" y="300">SHE IS HOLDING</text>
+  <text class="t" x="84" y="330">nothing. The key is loose now —</text>
+  <text class="t" x="84" y="354">no limit, no expiry, no receipt</text>
+  <text class="chip" x="410" y="172" text-anchor="end" fill="#8f1d14">TODAY</text>
+
+  <!-- 2 -->
+  <rect x="470" y="130" width="370" height="250" rx="16" fill="#fff" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="9 7"/>
+  <circle cx="502" cy="166" r="17" fill="#8f1d14"/><text class="num" x="502" y="172" text-anchor="middle">2</text>
+  <text class="h" x="534" y="172">She is asked again</text>
+  <text class="k" x="494" y="208">WHERE · THE SAME CHAT WINDOW</text>
+  <text class="t" x="494" y="240">This is the only moment that decides</text>
+  <text class="t" x="494" y="264">everything after it. She answers the</text>
+  <text class="t" x="494" y="288">agent with a URL instead of a key.</text>
+  <text class="k" x="494" y="314">WHAT IS MISSING</text>
+  <text class="t" x="494" y="342">the one-paste setup. Nothing today</text>
+  <text class="chip" x="820" y="172" text-anchor="end" fill="#8f1d14">NOT BUILT</text>
+  <text class="t" x="494" y="366">reaches her here.</text>
+
+  <!-- 3 -->
+  <rect x="880" y="130" width="370" height="250" rx="16" fill="#fff" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="9 7"/>
+  <circle cx="912" cy="166" r="17" fill="#8f1d14"/><text class="num" x="912" y="172" text-anchor="middle">3</text>
+  <text class="h" x="944" y="172">She parks the key</text>
+  <text class="k" x="904" y="208">WHERE · BROWSER, ON HER COMPUTER</text>
+  <text class="t" x="904" y="240">She pastes it once — into the Broker,</text>
+  <text class="t" x="904" y="264">not into the agent. Once, ever.</text>
+  <text class="k" x="904" y="300">SHE IS HOLDING</text>
+  <text class="t" x="904" y="330">a Broker that holds the key.</text>
+  <text class="t" x="904" y="354">Today that is an env var, not a screen</text>
+  <text class="chip" x="1230" y="172" text-anchor="end" fill="#8f1d14">NOT BUILT</text>
+
+  <!-- 4 -->
+  <rect class="card" x="1290" y="130" width="330" height="250" rx="16"/>
+  <circle cx="1322" cy="166" r="17" fill="#1b1630"/><text class="num" x="1322" y="172" text-anchor="middle">4</text>
+  <text class="h" x="1354" y="172">She lends a range</text>
+  <text class="k" x="1314" y="208">WHERE · LEDGER, ON THE DESK</text>
+  <text class="t" x="1314" y="240">The tool asks first. Four lines</text>
+  <text class="t" x="1314" y="264">appear. She holds the button.</text>
+  <text class="k" x="1314" y="300">SHE IS HOLDING</text>
+  <text class="t" x="1314" y="330">the only button the agent</text>
+  <text class="t" x="1314" y="354">cannot press</text>
+  <text class="chip" x="1600" y="172" text-anchor="end" fill="#1b7a3a">BUILT</text>
+
+  <path d="M430 255 L466 255" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+  <path d="M840 255 L876 255" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+  <path d="M1250 255 L1286 255" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+
+  <!-- row 2 -->
+  <rect class="card" x="60" y="470" width="370" height="250" rx="16"/>
+  <circle cx="92" cy="506" r="17" fill="#1b1630"/><text class="num" x="92" y="512" text-anchor="middle">5</text>
+  <text class="h" x="124" y="512">Days of nothing</text>
+  <text class="k" x="84" y="548">WHERE · NOWHERE. NO SCREEN</text>
+  <text class="t" x="84" y="580">The agent works inside the range.</text>
+  <text class="t" x="84" y="604">She is not notified, on purpose.</text>
+  <text class="k" x="84" y="640">SHE IS HOLDING</text>
+  <text class="t" x="84" y="670">time she does not have to spend</text>
+  <text class="t" x="84" y="694">looking</text>
+  <text class="chip" x="410" y="512" text-anchor="end" fill="#1b7a3a">BUILT</text>
+
+  <rect class="card" x="470" y="470" width="370" height="250" rx="16" fill="#FFF4EA"/>
+  <circle cx="502" cy="506" r="17" fill="#f2600c"/><text class="num" x="502" y="512" text-anchor="middle">6</text>
+  <text class="h" x="534" y="512">Something heavy</text>
+  <text class="k" x="494" y="548">WHERE · LEDGER (PHONE FOR THE WHY)</text>
+  <text class="t" x="494" y="580">0G calls it decisive. The agent is</text>
+  <text class="t" x="494" y="604">told to come back with a press.</text>
+  <text class="k" x="494" y="640">SHE IS HOLDING</text>
+  <text class="t" x="494" y="670">one action, which she approves</text>
+  <text class="t" x="494" y="694">or simply does not</text>
+  <text class="chip" x="820" y="512" text-anchor="end" fill="#1b7a3a">BUILT</text>
+
+  <rect class="card" x="880" y="470" width="370" height="250" rx="16"/>
+  <circle cx="912" cy="506" r="17" fill="#1b1630"/><text class="num" x="912" y="512" text-anchor="middle">7</text>
+  <text class="h" x="944" y="512">Stopped without her</text>
+  <text class="k" x="904" y="548">WHERE · ASLEEP. 03:00</text>
+  <text class="t" x="904" y="580">A tool goes outside the range, or</text>
+  <text class="t" x="904" y="604">0G cannot answer. Refused, recorded.</text>
+  <text class="k" x="904" y="640">SHE IS HOLDING</text>
+  <text class="t" x="904" y="670">a key that was never in the thing</text>
+  <text class="t" x="904" y="694">that was taken over</text>
+  <text class="chip" x="1230" y="512" text-anchor="end" fill="#1b7a3a">BUILT</text>
+
+  <rect class="card" x="1290" y="470" width="330" height="250" rx="16"/>
+  <circle cx="1322" cy="506" r="17" fill="#1b1630"/><text class="num" x="1322" y="512" text-anchor="middle">8</text>
+  <text class="h" x="1354" y="512">The morning page</text>
+  <text class="k" x="1314" y="548">WHERE · PHONE, AT BREAKFAST</text>
+  <text class="t" x="1314" y="580">Stopped · pressed · passed,</text>
+  <text class="t" x="1314" y="604">in one place.</text>
+  <text class="k" x="1314" y="640">SHE IS HOLDING</text>
+  <text class="t" x="1314" y="670">evidence — hers, not the</text>
+  <text class="t" x="1314" y="694">tool maker's word</text>
+  <text class="chip" x="1600" y="512" text-anchor="end" fill="#1b7a3a">BUILT</text>
+
+  <path d="M430 595 L466 595" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+  <path d="M840 595 L876 595" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+  <path d="M1250 595 L1286 595" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+  <path d="M1455 380 L1455 420 L245 420 L245 466" stroke="#1b1630" stroke-width="2.5" fill="none" marker-end="url(#a)"/>
+
+  <!-- row 3 -->
+  <rect class="card" x="60" y="810" width="370" height="200" rx="16"/>
+  <circle cx="92" cy="846" r="17" fill="#1b1630"/><text class="num" x="92" y="852" text-anchor="middle">9</text>
+  <text class="h" x="124" y="852">She lights one</text>
+  <text class="k" x="84" y="888">WHERE · PHONE · WORLD APP</text>
+  <text class="t" x="84" y="920">Because she really used it. One</text>
+  <text class="t" x="84" y="944">person, once, on this version.</text>
+  <text class="t" x="84" y="984">The next tool buyer sees it.</text>
+  <text class="chip" x="410" y="852" text-anchor="end" fill="#1b7a3a">BUILT</text>
+
+  <rect class="card" x="470" y="810" width="370" height="200" rx="16"/>
+  <circle cx="502" cy="846" r="17" fill="#1b1630"/><text class="num" x="502" y="852" text-anchor="middle">10</text>
+  <text class="h" x="534" y="852">The tool updates</text>
+  <text class="k" x="494" y="888">WHERE · NOWHERE, AGAIN</text>
+  <text class="t" x="494" y="920">Every light on the old version goes</text>
+  <text class="t" x="494" y="944">out. Her permit was for that version.</text>
+  <text class="t" x="494" y="984">She signs again, or she does not.</text>
+  <text class="chip" x="820" y="852" text-anchor="end" fill="#1b7a3a">BUILT</text>
+
+  <rect x="880" y="810" width="740" height="200" rx="16" fill="#fffdf8" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="9 7"/>
+  <text class="h" x="904" y="852">The honest part: we do not reach her at 1 or 2</text>
+  <text class="t" x="904" y="888">Everything from 4 onward is running. What is missing is the only thing that changes</text>
+  <text class="t" x="904" y="912">the behaviour of someone who pastes keys: an answer to "give me your key" that is</text>
+  <text class="t" x="904" y="936">easier than pasting one. That is a URL the agent reads, and one screen for the key.</text>
+  <text class="t" x="904" y="976">Until those exist, TOMOSHIBI protects people who already decided to be careful.</text>
+  <path d="M1250 810 L1250 760" stroke="#8f1d14" stroke-width="0" fill="none"/>
+
+  <text class="sub" x="60" y="1075">Where her attention actually goes: three presses a week at most, one page in the morning, and nothing on the days nothing happens.</text>
+  <text class="sub" x="60" y="1110">The device is for the moment of deciding. The phone is for seeing afterwards. The computer is for the one-time setup, and nothing else.</text>
+</svg>

@@ -52,6 +52,25 @@ cloudflared tunnel --url http://127.0.0.1:8787
 出てきた `https://….trycloudflare.com` を、画面の `?broker=` に付けて開く。記録の画面の QR は、その公開のリンクになる。
 **URL は起動のたびに変わる。機械を止めると切れる。** 11/6 に模擬の Broker で、公開の画面から読めること、**実際のスマホで QR から記録が開くこと**を確認した。
 
+### 本番の 0G で通す（Kou さんの機械・決定 13〜15）
+
+Kou さんの機械で Broker が2本動いている：**8797＝本番の 0G**、**8798＝わざと 0G に届かない役**。そこに Ledger を挿して、次を足す。
+
+```bash
+python3 bridge/bridge.py
+```
+
+```bash
+cd broker && node demo-agent.mjs http://127.0.0.1:8797 http://127.0.0.1:8791 http://127.0.0.1:8798
+```
+
+```bash
+python3 -m http.server 8790 --directory web
+```
+
+`http://localhost:8790/gate.html` を開く。`L` で貸す（長押し1回・範囲は `* /v1`）。`1` 残高を読む（ふだん）→ `2` $4,800 の課金（長押し）→ `3` 乗っ取り（実機に BLOCKED）→ `5` 0G に届かない（STOPPED）。
+そのあと鍵の画面の `Show that you use it →` で灯の画面へ移り、World で名乗る。**動画の主役はこの画面**（決定 14）。`ui/index.html` は保険。
+
 ## 3. 撮影の30分前にやること
 
 1. **FLEX の自動ロックを 10 分にする**（Settings → Lock screen）。既定は短く、撮影中に鍵がかかる。

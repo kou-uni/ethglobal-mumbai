@@ -1,0 +1,211 @@
+// Your keys — the console. It does not drive anything: it shows what the AI tool
+// (broker/demo-agent.mjs, its own process) reports, as it happens.
+//   live    the agent is running next to a Broker. With a Ledger plugged in, Permits are signed on the device.
+//   replay  no agent. The page replays answers recorded from the real Broker and 0G (scenes.json),
+//           and says so in a banner. Nothing is invented.
+'use strict'
+
+const $ = (id) => document.getElementById(id)
+const qs = new URLSearchParams(location.search)
+const AGENT = (qs.get('agent') || 'http://127.0.0.1:8792').replace(/\/$/, '')
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
+const short = (h, n = 4) => (typeof h === 'string' && h.length > 2 * n + 4 ? `${h.slice(0, n + 2)}…${h.slice(-n)}` : h)
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+const FLAME = '<svg viewBox="0 0 120 152" aria-hidden="true"><rect x="31" y="96" width="58" height="48" rx="19" fill="#27407a"/><path d="M60 10 C62.2 10 63.8 12.2 64.8 14.8 C70.5 28 90 49 90 68 A30 30 0 1 1 30 68 C30 49 49.5 28 55.2 14.8 C56.2 12.2 57.8 10 60 10 Z" fill="#f0a73b"/><path d="M60 46 C61.3 46 62.2 47.2 62.8 48.6 C65.6 55 75 65.5 75 75 A15 15 0 1 1 45 75 C45 65.5 54.4 55 57.2 48.6 C57.8 47.2 58.7 46 60 46 Z" fill="#ffd98a"/></svg>'
+
+const TIER = { 'ふだん': 'routine', '大事': 'matters', '決定的': 'critical' }
+const WORD = { ALLOWED: 'Let through', DENIED: 'Blocked', NEEDS_PRESS: 'Needs your hand', STOPPED: 'Stopped on purpose' }
+const WHY = {
+  OUT_OF_TARGET: 'It tried to reach a place you did not allow. Stopped before anything left, and recorded against the tool.',
+  OUT_OF_SCOPE: 'It tried to do something you did not allow.', WRONG_KEY: 'It asked for a key it was not lent.',
+  EXPIRED: 'The permission had run out.', EXHAUSTED: 'The permission had been used up. Lend the key again to go on.',
+  BAD_SIGNATURE: 'The permission was not signed by the owner.', INSECURE_TRANSPORT: 'It tried to send the key unencrypted.',
+  ZG_UNREACHABLE: '0G gave no answer. No judgement is made up in its place: nothing ran, and no use was spent.',
+  ESCALATED: '0G read the content and judged it heavy. A standing permission is not enough. Hold the button on your Ledger to let this one request through.',
+}
+const ALLOWED_TEXT = 'The Broker used the key on the tool’s behalf. The tool got the result. It never held the key.'
+
+let mode = 'replay', agent = null, REC = null
+let all = [], epoch = null, seenVerdicts = new Set()
+
+// ── where events come from ──
+const live = {
+  post: (path, body) => fetch(AGENT + path, { method: 'POST', body: JSON.stringify(body || {}) }).catch(() => {}),
+  async poll() {
+    const r = await (await fetch(`${AGENT}/events?since=${epoch === null ? 0 : all.length}`, { cache: 'no-store' })).json()
+    if (r.epoch !== epoch) { epoch = r.epoch; all = []; seenVerdicts = new Set(); if (r.events.length && r.events[0].n !== 0) return this.poll() }
+    if (r.events.length) { all.push(...r.events); render() }
+  },
+}
+// The same events, made here from the recording. Used only when no agent is running.
+const replay = {
+  standing: false, hold: null, busy: false,
+  emit(e) { all.push({ n: all.length, at: new Date().toISOString(), ...e }); render() },
+  rec: (id) => (REC?.scenes || []).find((x) => x.id === id),
+  WHAT: { usual: 'Read the list of repositories', heavy: 'Charge $4,800 → an account nobody has seen before', 'denied-host': 'Send the key to evil.com', 'denied-sneak': 'Send the key to evil.com, with the right name hidden in the path', stopped: 'Charge $4,800 — while 0G cannot be reached' },
+  async ask(uses, why, rid, lines) {
+    this.emit({ type: 'asking', rid, why, uses, device: false, lines })
+    const ok = await new Promise((r) => { this.hold = r }); this.hold = null
+    this.emit(ok ? { type: 'signed', rid, why, uses, device: false, holder: 'the recorded key', lines } : { type: 'declined', rid, why, error: 'declined' })
+    return ok
+  },
+  async post(path, body) {
+    if (path === '/hold') { if (this.hold) this.hold(body?.ok !== false); return }
+    if (path === '/reset') { this.standing = false; all = []; seenVerdicts = new Set(); if (this.hold) this.hold(false); render(); return }
+    if (this.busy) return
+    this.busy = true
+    try {
+      if (path === '/lend') { if (await this.ask(10, 'lend', null, ['KEY stripe-live', 'TO api.stripe.com', 'SCOPE * /v1 x10', 'UNTIL in 1 hour'])) this.standing = true; return }
+      const s = this.rec(body.id); if (!s) return
+      if (!this.standing) { this.emit({ type: 'error', error: 'The key has not been lent yet.' }); return }
+      const rid = 'r' + all.length
+      this.emit({ type: 'request', rid, id: s.id, tool: 'billing-assistant', hijacked: /^denied/.test(s.id), what: this.WHAT[s.id], method: s.request.method, url: s.request.url, body: s.request.body })
+      await sleep(s.response.decision === 'DENIED' ? 500 : Math.min(s.ms || 900, 1800))
+      this.emit({ type: 'verdict', rid, ms: s.ms, response: s.response, device: false })
+      if (s.response.decision === 'NEEDS_PRESS' && await this.ask(1, 'press', rid, (s.response.press || {}).lines || s.permitLines)) {
+        const p = this.rec('pressed'); if (p) this.emit({ type: 'verdict', rid, pressed: true, ms: p.ms, response: p.response, device: false })
+      }
+    } finally { this.busy = false }
+  },
+}
+const src = () => (mode === 'live' ? live : replay)
+
+// ── what the events add up to ──
+function reduce() {
+  const st = { lent: null, asking: null, cards: [], byHand: false, error: null, lendDeclined: false }
+  const card = (rid) => st.cards.find((c) => c.rid === rid)
+  for (const e of all) {
+    if (e.type === 'request') st.cards.push({ ...e, verdicts: [] })
+    else if (e.type === 'verdict') { const c = card(e.rid); if (c) { c.verdicts.push(e); c.declined = false } if (st.lent && !e.pressed && typeof e.response.remaining === 'number') st.lent.left = e.response.remaining }
+    else if (e.type === 'asking') { st.asking = e; st.lendDeclined = false }
+    else if (e.type === 'waiting-device') st.waitingDevice = true
+    else if (e.type === 'signed') { st.asking = null; st.waitingDevice = false; if (e.device) st.byHand = true; if (e.why === 'lend') st.lent = { holder: e.holder, device: e.device, uses: e.uses, left: e.uses } }
+    else if (e.type === 'declined') { st.asking = null; st.waitingDevice = false; const c = card(e.rid); if (c) c.declined = true; else st.lendDeclined = true }
+    else if (e.type === 'device') { const c = card(e.rid); if (c) c.showedOnDevice = e.ok }
+    else if (e.type === 'error') st.error = e
+    if (e.type !== 'error') st.error = st.error && e.n === st.error.n ? st.error : (e.type === 'request' ? null : st.error)
+  }
+  st.uses = st.cards.filter((c) => c.verdicts.some((v) => v.response.decision === 'ALLOWED')).length
+  return st
+}
+const final = (c) => c.verdicts[c.verdicts.length - 1]
+
+function steps(c) {
+  const first = c.verdicts[0], last = final(c)
+  const li = (cls, k, b, s) => `<li class="${cls}"><span class="k"><i></i>${k}</span><b>${esc(b)}</b><span>${esc(s)}</span></li>`
+  if (!first) return li('now', 'Range', 'Checking…', 'Destination, action, key, expiry, uses.') + li('now', '0G', 'Reading it, sealed…', 'Inside an enclave. Nobody else sees the content.') + li('skip', 'Your hand', '—', '')
+  const b = first.response, zg = b.zg || {}, tier = TIER[zg.tier] || zg.tier
+  if (b.decision === 'DENIED') return li('stop', 'Range', 'Outside what you signed', 'Stopped here.') + li('skip', '0G', 'Never shown', 'The content did not leave.') + li('skip', 'Your hand', 'Not asked', 'It never reached you.')
+  const range = li('pass', 'Range', 'Inside what you signed', 'Destination, action, key, expiry, uses.')
+  if (b.decision === 'STOPPED') return range + li('stop', '0G', 'No answer', 'So no judgement was made.') + li('skip', 'Your hand', '—', '')
+  const weigh = li('pass', '0G', tier ? tier[0].toUpperCase() + tier.slice(1) : '—', zg.simulated ? 'Simulated: 0G was not asked.' : `Read inside a sealed enclave (TEE).${zg.requestId ? ' request id ' + zg.requestId : ''}`)
+  if (b.decision === 'ALLOWED') return range + weigh + li('skip', 'Your hand', 'Not needed', 'Routine requests do not wake you.')
+  const pressed = last.pressed
+  return range + weigh + (pressed ? li('pass', 'Your hand', 'You held the button', 'One permission, one use.') : c.declined ? li('stop', 'Your hand', 'You declined', 'The key was not used.') : li('wait', 'Your hand', 'Waiting for you', 'Hold the button on your Ledger.'))
+}
+function nowCard(st) {
+  const c = st.cards[st.cards.length - 1], el = $('now')
+  if (!c) {
+    el.className = 'now'
+    el.innerHTML = st.lent
+      ? `<div class="quiet">${FLAME}<b>All quiet.</b><p>billing-assistant can use <code>stripe-live</code> within the range you signed.<br>You will only be asked when something is heavy.</p></div>`
+      : `<div class="quiet">${FLAME}<b>billing-assistant wants to use your Stripe key.</b><p>Do not paste the key into it. Lend it instead: a range, signed on your Ledger.<br>The tool never gets the key itself, and an AI on this computer cannot press that button.</p><ol class="first"><li class="${mode === 'live' && agent.device ? 'ok' : ''}">Plug in your Ledger and open Tomoshibi</li><li>Press <b>Lend</b>, read the range on the device, hold the button</li><li>Leave the Ledger on your desk. It stays quiet until you are needed</li></ol></div>`
+    return
+  }
+  const last = final(c), b = last?.response, zg = b?.zg || {}
+  const dec = !b ? '' : c.declined ? 'STOPPED' : b.decision
+  const fresh = last && !seenVerdicts.has(last.n); if (last) seenVerdicts.add(last.n)
+  const word = !b ? 'Checking…' : c.declined ? 'Not let through' : WORD[b.decision] || b.decision
+  const text = !b ? '' : c.declined ? 'You declined on the device. The key was not used.' : b.decision === 'ALLOWED' ? ALLOWED_TEXT : WHY[b.reason] || b.message || ''
+  const meta = !b ? '' : [`<b>${esc(c.declined ? 'DECLINED' : b.decision)}</b>`, zg.requestId ? `0G request id ${esc(zg.requestId)}` : '', zg.reason && !zg.simulated ? `0G: ${esc(zg.reason)}` : '', `${esc(last.ms)} ms`, b.violation ? 'recorded against the tool' : '',
+    b.decision === 'DENIED' && c.showedOnDevice ? 'shown on your Ledger' : ''].filter(Boolean).join(' · ')
+  el.className = `now ${dec} ${fresh ? 'fresh' : ''}`
+  el.innerHTML = `<div class="who"><span class="tool ${c.hijacked ? 'bad' : ''}">${esc(c.tool)}${c.hijacked ? ' · taken over' : ''}</span>asks to</div>
+    <p class="what">${esc(c.what)}</p><p class="wire">${esc(c.method)} ${esc(c.url)}</p>
+    <p class="promise">The tool does not hold your key. The Broker uses it on the tool’s behalf, inside the range you signed.</p>
+    <ol class="steps">${steps(c)}</ol>
+    <div class="verdict"><strong>${esc(word)}</strong><p>${esc(text)}</p><div class="meta">${meta}</div></div>`
+}
+function trail(st) {
+  const rows = st.cards.slice().reverse().map((c) => {
+    const v = final(c), b = v?.response; if (!b) return ''
+    const thread = c.verdicts.map((x) => x.response.thread).filter(Boolean).pop()
+    const link = thread && mode === 'live' ? `<a href="trace.html?thread=${encodeURIComponent(thread)}&broker=${encodeURIComponent(agent.broker)}">record →</a>` : ''
+    return `<li><span class="o ${esc(b.decision)}">${esc(WORD[b.decision] || b.decision)}${v.pressed ? ' · by hand' : ''}</span><span>${esc(c.what)}</span>${link}</li>`
+  }).join('')
+  $('trail').innerHTML = rows || '<li class="empty">Nothing yet.</li>'
+}
+function keyCard(st) {
+  const r = agent?.range || { key: 'stripe-live', target: 'api.stripe.com', scope: '* /v1', uses: 10 }
+  $('keyCard').innerHTML = `<h2>Your key</h2><div class="name">${esc(r.key)}</div>` + (st.lent
+    ? `<dl><dt>Lent to</dt><dd>billing-assistant <code>v1.0.0</code></dd><dt>May reach</dt><dd><code>${esc(r.target)}</code></dd><dt>May do</dt><dd><code>${esc(r.scope)}</code></dd><dt>Uses left</dt><dd>${esc(st.lent.left)} of ${esc(st.lent.uses)}</dd><dt>Signed by</dt><dd>${st.lent.device ? `your Ledger <code>${esc(short(st.lent.holder))}</code>` : '<span class="warnt">a software key (no Ledger)</span>'}</dd></dl>
+       <div class="meter"><i style="width:${Math.max(0, Math.min(100, (st.lent.left / st.lent.uses) * 100))}%"></i></div>`
+    : `<p class="sub">Not lent to anyone.${st.lendDeclined ? ' You declined on the device: nothing was signed.' : ''}</p><button class="btn primary" id="lendBtn" ${st.asking ? 'disabled' : ''}>Lend to billing-assistant</button>`)
+  const b = $('lendBtn'); if (b) b.onclick = () => src().post('/lend')
+}
+function ledgerCard(st) {
+  const el = $('ledgerCard'), a = st.asking, dev = mode === 'live' && agent.device
+  const blocked = (() => { const c = st.cards[st.cards.length - 1]; return c && final(c)?.response.decision === 'DENIED' && c.showedOnDevice })()
+  el.className = 'card ' + (a ? 'ask' : blocked ? 'blk' : '')
+  const head = '<h2>Your Ledger</h2>'
+  if (a) {
+    if (a.device) st.waitingDevice = false
+    el.innerHTML = head + `<div class="led ask"><i></i>${a.device ? 'Asking you now' : 'Waiting for approval'}</div>
+      <p class="sub">${a.why === 'lend' ? 'Lend the key within this range?' : 'Let this one request through, once?'}</p>
+      <div class="onscreen">${a.lines.map((l) => `<span>${esc(l)}</span>`).join('')}</div>` +
+      (a.device ? '<p class="sub">Read it on the device, then hold the button. Nothing on this computer can press it for you.</p>'
+        : `<p class="note warn">No Ledger is connected, so this button stands in for it.</p><div class="actions"><button class="btn primary holdbtn" id="holdBtn">Hold to approve</button><button class="btn" id="noBtn">Decline</button></div>`)
+    const h = $('holdBtn')
+    if (h) { let t; const up = () => { clearTimeout(t); h.classList.remove('down') }
+      h.onpointerdown = () => { h.classList.add('down'); t = setTimeout(() => { up(); src().post('/hold', { ok: true }) }, 1150) }
+      h.onpointerup = up; h.onpointerleave = up; $('noBtn').onclick = () => src().post('/hold', { ok: false }) }
+  } else if (st.waitingDevice) { el.className = 'card ask'; el.innerHTML = head + '<div class="led ask"><i></i>Looking for your Ledger…</div><p class="sub">This key was lent on your Ledger, so only your Ledger can let this through. Check the cable and that Tomoshibi is open.</p>'
+  } else if (blocked) el.innerHTML = head + '<div class="led blk"><i></i>Showing BLOCKED</div><p class="sub">The refusal is on the device in your hand, where a program on this computer cannot draw.</p>'
+  else el.innerHTML = head + (dev ? '<div class="led ok"><i></i>Connected · quiet</div><p class="sub">It wakes only when you are needed.</p>'
+    : `<div class="led"><i></i>Not connected</div><p class="sub">${mode === 'live' ? 'Plug in the Ledger and open Tomoshibi. Until then a software key signs, and every record says so.' : 'This is a replay. In the live console, approvals happen on a Ledger Flex.'}</p>`)
+  $('chipLedger').textContent = dev ? 'Ledger connected' : 'no Ledger'; $('chipLedger').className = 'chip ' + (dev ? 'live' : 'warn')
+}
+// Naming yourself is a different question from pressing, so it lives on another page (the sky).
+// This card only says whether you could, and remembers on this computer that you really used the tool.
+function lightCard(st) {
+  if (st.uses > 0 && mode === 'live') try {
+    const k = 'tomoshibi.used', all = JSON.parse(localStorage.getItem(k) || '{}')
+    all[agent.skill + '@' + agent.version] = { uses: st.uses, byHand: st.byHand, at: new Date().toISOString() }
+    localStorage.setItem(k, JSON.stringify(all))
+  } catch {}
+  const sky = $('navSky').getAttribute('href'), href = sky + (sky.includes('?') ? '&' : '?') + 'light=1'
+  $('lightCard').innerHTML = `<h2>Your light</h2>` + (st.uses > 0
+    ? `<p class="sub">You really use this tool: ${st.uses} request${st.uses === 1 ? '' : 's'} on record${st.byHand ? ', lent by hand on your Ledger' : ''}. You can let the people who know you see that.</p><a class="btn primary" href="${esc(href)}">Show that you use it →</a><p class="sub">That is a different question, asked once, by World: are you one real person?</p>`
+    : `<p class="sub">Once the tool has really worked with your key, you can show the people who know you that you use it.</p>`)
+}
+function render() {
+  const st = reduce(); nowCard(st); trail(st); keyCard(st); ledgerCard(st); lightCard(st)
+  journey(!st.lent ? 'lend' : 'work', ['choose', ...(st.lent ? ['lend'] : [])])
+}
+
+async function init() {
+  try { agent = await (await fetch(AGENT + '/health', { signal: AbortSignal.timeout(2500) })).json(); if (agent.ok && agent.brokerUp) mode = 'live' } catch {}
+  if (mode === 'replay') for (const u of ['../ui/scenes.json', 'scenes.json']) { if (REC) break; try { const r = await fetch(u, { cache: 'no-store' }); if (r.ok) REC = await r.json() } catch {} }
+  const broker = qs.get('broker') || (mode === 'live' ? agent.broker : '')
+  $('navSky').href = 'index.html' + (broker ? '?broker=' + encodeURIComponent(broker) : '')
+  if (mode === 'live') {
+    $('chipZg').textContent = agent.simulated ? '0G simulated' : `0G live · ${agent.model || ''}`; $('chipZg').className = 'chip ' + (agent.simulated ? 'warn' : 'live')
+    if (agent.simulated) { $('banner').hidden = false; $('banner').textContent = 'The Broker is in simulated mode: 0G is not being asked. Judgements here come from a stand-in.' }
+    setInterval(() => live.poll().catch(() => {}), 400)
+    setInterval(async () => { try { const h = await (await fetch(AGENT + '/health')).json(); if (h.device !== agent.device) { agent = h; render() } } catch {} }, 4000)
+  } else {
+    $('chipZg').textContent = REC ? `replay · recorded ${String(REC.recordedAt || '').slice(0, 16).replace('T', ' ')}Z` : 'no recording'; $('chipZg').className = 'chip warn'
+    $('banner').hidden = false
+    $('banner').innerHTML = REC ? `Replay. Nothing is sent from this page. These are the answers the real Broker and 0G (<code>${esc(REC.model || '')}</code>) gave at ${esc(REC.recordedAt)}. Run it live with <code>broker/demo-agent.mjs</code>.` : 'No agent is running and no recording was found.'
+  }
+  $('foot').innerHTML = 'The AI tool is its own process. To make it ask from here: <kbd>1</kbd> routine · <kbd>2</kbd> heavy · <kbd>3</kbd> taken over · <kbd>4</kbd> disguised · <kbd>5</kbd> 0G unreachable · <kbd>L</kbd> lend · <kbd>R</kbd> reset'
+  render()
+}
+const KEYS = { 1: 'usual', 2: 'heavy', 3: 'denied-host', 4: 'denied-sneak', 5: 'stopped' }
+document.addEventListener('keydown', (e) => {
+  if (e.target.closest?.('input,textarea') || e.metaKey || e.ctrlKey) return
+  if (KEYS[e.key]) src().post('/run', { id: KEYS[e.key] })
+  else if (e.key === 'l' || e.key === 'L') src().post('/lend')
+  else if (e.key === 'r' || e.key === 'R') src().post('/reset')
+})
+init()

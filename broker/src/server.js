@@ -24,7 +24,8 @@ const world = WORLD_OFF ? offlineWorld : { deviceStart, waitForHuman, verifyIdTo
 const secrets = JSON.parse(process.env.SECRETS ?? '{}')
 
 const json = (res, code, body) => {
-  res.writeHead(code, { 'content-type': 'application/json; charset=utf-8', 'access-control-allow-origin': '*' })
+  // allow-headers: ブラウザが JSON を POST する前の問い合わせ（preflight）に答える。無いと画面から /vouch・/use が呼べない
+  res.writeHead(code, { 'content-type': 'application/json; charset=utf-8', 'access-control-allow-origin': '*', 'access-control-allow-headers': 'content-type' })
   res.end(JSON.stringify(body, (_, v) => (typeof v === 'bigint' ? String(v) : v), 2))
 }
 
@@ -220,6 +221,7 @@ export const app = createServer(async (req, res) => {
         skill,
         version,
         stars: version ? ledger.starCount(skill, version) : undefined,
+        who: version ? ledger.starWho(skill, version) : undefined,
         byVersion: ledger.starsOf(skill),
       })
     }

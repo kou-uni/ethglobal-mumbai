@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Renders the cover image and the app screenshots with headless Chrome, at 1x, without browser chrome.
 //   node tools/shots.mjs            (needs the pages served: python3 -m http.server 8790 --directory web)
-// The app is opened with no AI tool reachable, so it runs in preview. Each state below is set through the
+// The app is opened with ?preview=1, so it stays on the recorded answers. Each state below is set through the
 // page's own debug handle (window.tomoshibi); the screens are the real ones, the data in them is sample data.
 import { spawn } from 'node:child_process'
 import { mkdtempSync, writeFileSync } from 'node:fs'
@@ -32,7 +32,7 @@ await shot('tomoshibi-cover.png')
 
 // ── the app, 1280 wide
 await size(1280, 900)
-await send('Page.navigate', { url: `${PAGES}/app.html?agent=http://127.0.0.1:9` })
+await send('Page.navigate', { url: `${PAGES}/app.html?preview=1` })
 for (let i = 0; i < 80; i++) { await sleep(300); if (await evalJs('window.tomoshibi && tomoshibi.mode') === 'preview') break }
 await evalJs(`tomoshibi.instant=true; document.getElementById('demo').style.display='none'; const s=document.createElement('style'); s.textContent='*{animation:none!important;transition:none!important}.lit-in #hf{transform:scale(1)!important}'; document.head.appendChild(s); 1`)
 const L = ['KEY stripe-live', 'TO api.stripe.com', 'SCOPE * /v1 x20', 'UNTIL 2026-11-13 09:10Z']

@@ -10,10 +10,14 @@ Replaces the screen order in `2026-11-06-filming-runbook.md`. The rules there st
 2. Ledger: plugged in, unlocked, **TOMOSHIBI open** (the sleeping flame). The bottom bar of the app says *Ledger connected*.
 3. Chrome on the Air: `http://localhost:8790/app.html`. Press **Start over** once. Zoom so the frame fills the screen.
 4. Phone: World App signed in, on the same table.
-5. Ask 0G once before filming (press `1` after lending, then **Start over**). If the answer is *No verdict*, 0G is
+5. Lending needs a real hold: after **Start over** the earlier loan is gone. That is shot 6.
+6. Ask 0G once before filming (press `1` after lending, then **Start over**). If the answer is *No verdict*, 0G is
    not answering: see "If 0G is down".
 
 ## The shots
+
+Every TOMOSHIBI screen shows its value in the bar under the name (for example **No hold, no money.**). If the voice
+says only one thing per shot, let it be that line.
 
 | # | Screen | What you do | One line to say |
 |---|---|---|---|
@@ -28,14 +32,15 @@ Replaces the screen order in `2026-11-06-filming-runbook.md`. The rules there st
 | 9 | AI chat → toast | Press `2`, click the toast, camera on the device, **hold** | "Money is about to move, so it waits for my hand. One hold, one refund." |
 | 10 | TOMOSHIBI | Press `3` | "At 3 a.m. the AI makes a mistake. It is stopped, and I did nothing." |
 | 11 | Activity | Click **Activity** | "My week in three numbers. I can explain every line." |
-| 12 | Lights | Click **Lights**, **Show my light**, confirm in World App | "I let people who know me see my light. One real person, really using it." |
+| 12 | Lights | Click **Lights**, **Show my light with World**, scan the code with World App, **Confirm** | "I let people who know me see my light. One real person, really using it." |
 | 13 | Lights (sample) | **Later: a friend chooses** in the bottom bar, then **Use it with TOMOSHIBI** | "My friend chooses by whose light it is. Trust between people becomes the light." |
 
 Shots 6 and 9 are the centre of the film: keep the device and the screen in the same frame if you can.
 
 ## If 0G is down
 
-The app shows **No verdict, so nothing ran**. That is the product working, and it is worth ten seconds on camera
+(On 2026-11-06 the model the Broker was measured on left 0G; `tools/demo-up.sh` now picks its sealed sibling.)
+The app shows **No verdict. Nothing ran.** That is the product working, and it is worth ten seconds on camera
 (press `5` shows the same screen on purpose). But shots 8, 9 and 12 need a verdict. Wait and try again; do not
 switch the Broker to simulated mode for the film without saying so on screen.
 

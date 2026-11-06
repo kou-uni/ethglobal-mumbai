@@ -31,7 +31,12 @@ But revenue stream A is defined as **"per-judgment usage pricing. Only heavy jud
 The more we stop, the less revenue. It is only the difference between a percentage and a flat fee,
 and what Decision 16 tried to eliminate has not been eliminated.
 
-**Proposal (revert if rejected): bill `DENIED` and `STOPPED` as judgments too.**
+**Proposal (adopted, then narrowed): bill `DENIED` as a judgment too.**
+
+> **Correction, same day.** The first draft of this section also proposed billing `STOPPED`.
+> That was wrong: `STOPPED` means our own sealed model was unreachable, so **no verdict exists** and
+> billing it would mean **we earn when we are down**. `STORY.md` is the rule now — `ALLOWED`,
+> `NEEDS_PRESS` and `DENIED` are billed; `STOPPED` and skill-side scope violations are not.
 - The price tag is attached to the number of times a decision was asked for. **Revenue is the same
   whichever way it ends** = the incentive to stop is not distorted
 - It is also correct on the cost side. **A denial judgment costs exactly the same 0G inference**
@@ -71,7 +76,7 @@ For a monthly plan, **the shape** matters more than the amount.
 | Option | Shape | How it works |
 |---|---|---|
 | Current $9/month | Recurring | 80% margin. But "one more subscription" |
-| **$79 billed annually** | Once a year | **The same price as one device.** The comparison holds. Looks cheaper than $9x12=$108, and churn disappears |
+| **$108 billed annually** | Once a year | **About the price of one device**, which is the comparison P1 actually makes. Same amount as $9x12, so every SOM figure stands; what changes is the shape, and churn disappears |
 | D (bundled with a device) first | Someone else pays | **P1 pays nothing.** Fewer decisions. Works against the headwind in §05 (making a person press is heavy) |
 
 **Proposed order: D (partnership) → A (annual) → B.** The current deck is ordered A→B→C→D,

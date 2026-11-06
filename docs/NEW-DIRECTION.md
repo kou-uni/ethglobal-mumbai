@@ -2,15 +2,17 @@
 
 Agreed between Minta and Kou tonight. The two figures below are Minta's drafts. Kou redraws them.
 `docs/STRUCTURE.md` describes the structure as it was before this; the Broker's order of steps in it is still right.
+The words follow the README on main (299d4f8): *switchboard*, *label*, *table*, *row*, *puts the call through*.
 
 ## What changed
 
 1. **The person.** A builder who has the skill and is tired of managing API keys. Not a shop owner without the skill.
-2. **TOMOSHIBI is a Broker, and nothing else.** A gatekeeper for APIs, approved on a hardware wallet. It does not lend anything.
+2. **TOMOSHIBI is a Broker, and nothing else.** The switchboard between her tools and her keys, approved on a hardware
+   wallet. It does not lend anything.
 3. **Supported APIs only.** There is a list. For an API on the list, TOMOSHIBI knows where it goes and how the key is put in.
    Today one entry works: Stripe.
 4. **It keeps the key, swaps it in, and passes the request and the answer through**, the way NAT swaps an address.
-   The tool holds a handle and never the key.
+   The tool holds a label (`stripe-live`) and never the key.
 5. **The permission she approves has three things**: the key, where it goes, until when. There is no "can" line on the page.
 6. **Lights.** The builder lights the tool they built and really run through TOMOSHIBI. World proves a person, the Broker's
    trail proves the use. Lights add up to the builder's name, and other people choose tools by that.
@@ -31,10 +33,10 @@ Agreed between Minta and Kou tonight. The two figures below are Minta's drafts. 
 
 ```mermaid
 flowchart LR
-  T["The AI tool she built<br/>holds a handle<br/>never the key"]
-  B["TOMOSHIBI = the Broker<br/>keeps the Stripe key sk_...<br/>supported APIs only"]
+  T["The AI tool she built<br/>calls by label: stripe-live<br/>never holds the key"]
+  B["TOMOSHIBI = the switchboard (the Broker)<br/>label, where it goes, the real key<br/>supported APIs only"]
   S["Stripe<br/>api.stripe.com"]
-  T -- "1. request + handle" --> B
+  T -- "1. the call, by label" --> B
   B -- "2. real key swapped in, sent on" --> S
   S -- "3. answer" --> B
   B -- "4. answer passed through" --> T
@@ -65,9 +67,9 @@ sequenceDiagram
   P->>G: parks the key (API = Stripe, key sk_..., where it goes, until when)
   G->>L: the same lines
   P->>L: holds the button
-  G-->>AI: a handle, not the key
+  G-->>AI: a label, not the key
   Note over AI,B: From here the tool runs
-  AI->>B: request + handle
+  AI->>B: the call, by label
   B->>Z: how heavy is this?
   alt routine
     B->>S: real key swapped in, sent on
@@ -93,9 +95,9 @@ sequenceDiagram
 |---|---|---|
 | 1 | The chat tab | A builder talking to the AI that helps her build. After she sends the link, the AI reads it, finds Stripe on the list and decides to go through TOMOSHIBI. |
 | 2 | A page an AI can read | `web/llms.txt`: the supported APIs and how to connect. The link in the chat is real. |
-| 3 | Parking the key | One screen: pick an API from the list (only Stripe works), the key, where it goes (fixed by the list), until when. No "can" row. |
-| 4 | After the approval | A screen that hands over the handle, with the call the tool makes. |
-| 5 | Home | Shows a call going through: the tool, TOMOSHIBI, Stripe, and the answer coming back. |
+| 3 | Adding a row | One screen: pick an API from the list (only Stripe works), the key, where it goes (fixed by the list), until when. No "can" row. Only the Ledger can add the row. |
+| 4 | After the approval | A screen that gives the tool its label, with the call the tool makes. |
+| 5 | Home | The table (label, where it goes, until when, the key hidden) and a call being put through: the tool, TOMOSHIBI, Stripe, and the answer coming back. |
 | 6 | Lights | "Light the tool you built", the lights you have, and the sample where someone chooses by them. |
 | 7 | Name on the page | Priya as a builder. |
 | 8 | 0G Storage | The tool seals each finished thread (`POST /seal`) and the trail shows it. |
@@ -104,7 +106,7 @@ sequenceDiagram
 ## Not tonight
 
 - A drop-in proxy (change the base URL and the key, nothing else). Today the tool calls `POST /use`. This needs the Broker to
-  keep the permission behind a handle.
+  keep the permit behind the label.
 - A real call to Stripe. It is still the stub (`EXECUTE=0`).
 - Lights counted per builder. Today they are counted per tool version; the page shows a sample.
 

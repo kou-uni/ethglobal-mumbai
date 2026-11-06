@@ -1,0 +1,34 @@
+name: ledger-app
+on:
+  push:
+    paths: ["ledger-app/**", ".github/workflows/ledger-app.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-flex:
+    runs-on: ubuntu-latest
+    env:
+      IMG: ghcr.io/ledgerhq/ledger-app-builder/ledger-app-dev-tools:latest
+    defaults:
+      run:
+        working-directory: ledger-app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build for Ledger Flex
+        run: docker run --rm -v "$PWD:/app" "$IMG" cargo ledger build flex
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tomoshibi-flex
+          if-no-files-found: error
+          path: |
+            ledger-app/target/flex/release/*.apdu
+            ledger-app/target/flex/release/*.hex
+            ledger-app/target/flex/release/tomoshibi
+      - name: Walk every screen in Speculos
+        run: sh tools/speculos_walk.sh shots
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tomoshibi-speculos-shots
+          path: ledger-app/shots/

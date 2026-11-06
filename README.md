@@ -2,6 +2,16 @@
 
 **A review score never expires. A flame goes out. That is the whole idea.**
 
+[![Watch TOMOSHIBI: an AI asks for a Stripe key in a .env file; she sends one link instead; the key is parked once and approved on a Ledger; routine calls go through, a refund waits for her hold, a call to another destination is refused; 0G's request id and the 0G Storage transaction are shown; she lights the tool she built with World ID.](assets/walkthrough.gif)](https://kou-uni.github.io/ethglobal-mumbai/web/watch.html)
+
+**[▶ Watch in HD · 1 min 56 s](https://kou-uni.github.io/ethglobal-mumbai/web/watch.html)**
+ · **[Try the app](https://mintannn.github.io/tomoshibi/app.html)**
+ · **[How it runs](docs/HOW-IT-RUNS.md)**
+
+<sub>The walkthrough is the real app, driven click by click, with footage of the device and the phone beside it:
+a real Ledger, 0G Private Computer and 0G Storage, and World ID. Stripe is a stand-in in this take and the chat is
+scripted (the app marks both MOCK). Two scenes, the list of APIs and the email, were recorded on a second laptop.</sub>
+
 > ### Your agent is holding a spare key that works until you cancel it.
 >
 > **For anyone who hands an AI agent a real key** — a Stripe secret, a wallet, a logged-in session —

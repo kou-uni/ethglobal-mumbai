@@ -355,3 +355,76 @@ Permalinks are pinned to commit `99e91a1`.
 > be guidance on **privacy-preserving reads**: publishing a public trail is easy, but letting someone
 > query it without revealing which entry they care about is the part we designed and ran out of time
 > to implement.
+
+---
+
+# PASTE-READY — the six boxes, exactly as typed
+
+Plain prose, no markdown. The first box asks for "a sentence or two"; these are two or three.
+Permalinks are pinned to commit `99e91a1` and will not move.
+
+## 0G — $15,000
+
+**Box 1 — How are you using this Protocol / API?**
+
+```
+We put the 0G Private Computer inside our decision loop, not beside it. Before an agent's request runs, the Broker sends the request body to a TEE-attested model (0gm-1.0-35b-a3b, TeeML) and gets back how heavy the action is — routine, significant or decisive — and that verdict decides whether a human has to press a button on a Ledger. The point is that we cannot read the body ourselves: the judgement needs the content, and the operator must not have it. We measured 467 calls at ~2.0 s and $0.000036 per judgement, and the append-only trail is sealed on 0G Galileo (tx 0x74c7cdf9…aef1, block 64103318); when 0G is unreachable we return STOPPED and change nothing rather than invent a verdict.
+```
+
+**Box 2 — Link to the line of code**
+
+```
+https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/weigh.js#L68
+```
+
+**Box 3 — Ease of use:** 8 stars
+
+**Box 4 — Additional feedback for the sponsor**
+
+```
+The OpenAI-compatible surface meant our first working call took minutes, which is the best thing about it. Three things cost us real time. (1) Per-token prices are not in the docs — we found them in the pricing_usd field of GET /v1/models, after a day of planning around a 10x cost uncertainty. Putting that table in the docs would have saved the whole exercise. (2) Thinking is on by default and is not mentioned in the quickstart. Our first integration took 17.2 s per call and we nearly dropped the feature; chat_template_kwargs.enable_thinking=false brought it to 2.0 s. (3) Verifying the TEE attestation end-to-end is hard to find a path for — we can say the endpoint is attested, but a short "how to check the dstack quote yourself" page would let us claim it rather than cite it. Minor: in the storage SDK, indexer.upload() returning a [tx, err] tuple is unusual for JavaScript and cost us one debugging round.
+```
+
+## World — $12,500
+
+**Box 1 — How are you using this Protocol / API?**
+
+```
+A trust signal is worthless if it can be bought, and stars sell for $0.0027 each today. In TOMOSHIBI a "flame" can only be lit by a World-verified human: one sector-scoped pseudonym, one star per version of a skill, and every star goes out when the maker ships a new version, so the signal always describes the code that is running now. We use Agent Pass through the OIDC device_code grant, called straight from a Broker that has no screen, and verify the token against the issuer's JWKS. We bind only the sub — no name, no e-mail, no wallet — so World never learns which skill was endorsed, which key it was, or when it was used.
+```
+
+**Box 2 — Link to the line of code**
+
+```
+https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/world.js#L39
+```
+
+**Box 3 — Ease of use:** 8 stars
+
+**Box 4 — Additional feedback for the sponsor**
+
+```
+Agent Pass being plain OIDC underneath is the right decision and should be said louder in the docs — we spent our first hour looking for a bespoke SDK before realising we could point any OIDC client at it. The device_code grant is what made this work at all, because our Broker is a daemon with no screen; a short "verifying a human from a headless process" guide would land well with the agent crowd this hackathon was aimed at. One concrete sharp edge: /api/v1/device_authorization returns 400 unless the request carries client_secret — a public client is rejected, and the error body does not say so. Documenting that the device flow needs a confidential client would have saved us an hour. Finally, the relationship between the sector-scoped sub and the nullifier vocabulary used elsewhere in the World docs took a while to pin down.
+```
+
+## Ethereum Foundation — $15,000
+
+**Box 1 — How are you using this Protocol / API?**
+
+```
+Our privacy property is structural rather than a promise. The only component that ever sees the body of a request is the sealed model inside the TEE; the Broker proxies the call and keeps only a hash of what came back, so the trail — which is written to be public — contains no request body and no key. The key itself never leaves the Ledger: the device computes the EIP-712 digest internally from the same four lines it displays, so the host cannot ask it to sign something other than what the human read. Stars bind only to a sector-scoped pseudonym, there are no analytics scripts, pixels or third-party cookies, and the whole thing is MIT.
+```
+
+**Box 2 — Link to the line of code**
+
+```
+https://github.com/kou-uni/ethglobal-mumbai/blob/99e91a1ef6a684eb1d2854ba5388ff41ee5269a9/broker/src/execute.js#L21
+```
+
+**Box 3 — Ease of use:** 7 stars
+
+**Box 4 — Additional feedback for the sponsor**
+
+```
+This is less an API than a set of properties to build toward, so the rating is about the track rather than a library. The most useful addition for a team like ours would be a short worked example of what counts as "minimum disclosure" when a third party has to read a payload in order to make a decision. Our whole design turns on that case — something must read the request to judge it, and we solved it by putting the reader inside a TEE so the operator cannot see it. We could not find prior art in the track materials saying whether that counts as privacy-preserving or as a cop-out, and we would have built differently if it were the latter. A second useful addition would be guidance on privacy-preserving reads: publishing a public trail is easy, but letting someone query it without revealing which entry they care about is the part we designed and ran out of time to implement.
+```

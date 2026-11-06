@@ -2,8 +2,8 @@
 
 > **Five slides. The middle of the talk has no slide at all, because the product is running.**
 > The 4-minute running order with every spoken line is in `2026-11-07-finalist-4min.md`;
-> this file is the structure and what each part is for. Built to land at **2:45**, so there is
-> fifteen seconds of slack and no race at the end.
+> this file is the structure and what each part is for. Built to land at **2:50**, so there is
+> ten seconds of slack and no race at the end.
 >
 > Judged on **Technicality / Originality / Practicality / Usability / WOW**.
 > What we are told matters most is **showing a working system**, so the live run is the spine and
@@ -15,13 +15,14 @@
 
 | | Time | What is on screen | What it is for |
 |---|---|---|---|
-| **S1** | 0:00–0:25 | **The problem.** One picture, one sentence | Everyone in the room has done this |
-| **S2** | 0:25–0:45 | **The claim**, and three words | They know what they are about to watch |
-| **— live —** | **0:45–2:15** | **No slide. The product** | Technicality · WOW · Usability |
-| **S3** | 2:15–2:35 | **Who uses it, who pays** | Practicality |
-| **S4** | 2:35–2:45 | **One closing line** | What they repeat to each other afterwards |
+| **S1** | 0:00–0:25 | **The problem.** One picture, three short lines | Everyone in the room has done this |
+| **S2** | 0:25–0:50 | **Before / after**, as one picture | They can see the change before it is explained |
+| **— live —** | **0:50–2:10** | **No slide. The product** | Technicality · WOW · Usability |
+| **S3** | 2:10–2:30 | **What it gives, and what produces it** | Ties what they just watched to why they should care |
+| **S4** | 2:30–2:42 | **Who uses it, who pays** | Practicality |
+| **S5** | 2:42–2:50 | **One closing line** | What they repeat to each other afterwards |
 
-**Total 2:45.** If they cut you off anywhere after the press at ~1:30, the point has landed.
+**Total 2:50.** If they cut you off anywhere after the press at ~1:30, the point has landed.
 
 ---
 
@@ -43,9 +44,17 @@ receipt. We would never hand a credit card over like that.*
 
 ---
 
-## S2 — The claim (0:25–0:45)
+## S2 — Before and after (0:25–0:50)
 
-**On the slide:** the name, one sentence, and three words.
+**One picture, split down the middle. This slide carries the claim, so it must read in two seconds.**
+
+| **Without TOMOSHIBI** | **With TOMOSHIBI** |
+|---|---|
+| The key is **in the agent's hand** | The key is **behind a gate**; the agent holds only a label |
+| Every arrow goes through | Most go through · one waits for a finger · one is struck out |
+| Underneath: *no limit · no expiry · no record* | Underneath: *scope · count · expiry · a record of both* |
+
+**Beneath the whole slide, the name and one sentence:**
 
 > **TOMOSHIBI — the approval layer that keeps the key and gives the agent one approved action at a time.**
 >
@@ -56,24 +65,43 @@ signed on hardware it cannot press. Here it is running."*
 
 ---
 
-## The live run (0:45–2:15) — **no slide**
+## The live run (0:50–2:10) — **no slide**
 
 Five beats. Each one is a different thing the system does, not a different step of a procedure.
 
 | | ~ | What they see | The one sentence |
 |---|---:|---|---|
 | **1 Silent** | 10 s | A routine read passes. `0G: routine` | *"The key never reached the agent. The gate used it on its behalf."* |
-| **2 Heavy → press** | 35 s | `0G: significant` → the real device rewrites itself, four lines → **a long press** → it goes through **once** | *"Money is about to move, so it asks. An agent can tap a hundred times a second. This is the one button it cannot press."* |
+| **2 Heavy → press** | 30 s | `0G: significant` → the real device rewrites itself, four lines → **a long press** → it goes through **once** | *"Money is about to move, so it asks. An agent can tap a hundred times a second. This is the one button it cannot press."* |
 | **3 Refused** | 20 s | An out-of-scope request → `DENIED`, recorded **with the skill's own signature** | *"It stopped before it ran, and it has a name on it."* |
-| **4 The flame** | 15 s | Bump the version → every star goes out at once | *"A star here is a fact, not a promise. Change the version and they all go out."* |
-| **5 The trail** | 10 s | The record, and the transaction on 0G Storage | *"Allowed and refused sit in the same record, and it is on-chain."* |
+| **4 The flame** | 12 s | Bump the version → every star goes out at once | *"A star here is a fact, not a promise. Change the version and they all go out."* |
+| **5 The trail** | 8 s | The record, and the transaction on 0G Storage | *"Allowed and refused sit in the same record, and it is on-chain."* |
 
 **If the device misbehaves:** go on talking and show the same press on screen; the fallback ladder
 is in `2026-11-06-storyboard.md` §"Order of degradation". **Never stop to fix hardware on stage.**
 
 ---
 
-## S3 — Who uses it, who pays (2:15–2:35)
+## S3 — What it gives, and what produces it (2:10–2:30)
+
+**Four rows. The left column is the only part they need to read; the right is there so the room can
+see that each one is a mechanism, not a promise.**
+
+| What the person gets | What produces it |
+|---|---|
+| **The agent cannot leak what it never received** | The secret is substituted at the edge — the agent holds a label |
+| **An ordinary day asks nothing** | A **0G** sealed model weighs each request before it runs |
+| **Money does not move without a finger** | A long press on a **Ledger** device, for that one call only |
+| **An incident can be explained by the person it happened to** | An append-only trail, with the skill's own signature on what it tried |
+
+**And one more, if there is time:** *you choose a tool by **whose** star it is — a **World ID**-verified
+person who actually used that version — and they all go out when the version changes.*
+
+**Said:** *"Four things, and each one is something running rather than something promised."*
+
+---
+
+## S4 — Who uses it, who pays (2:30–2:42)
 
 **On the slide:** two faces and one pricing line. Nothing else.
 
@@ -86,7 +114,7 @@ the more it stops."*
 
 ---
 
-## S4 — The close (2:35–2:45)
+## S5 — The close (2:42–2:50)
 
 **On the slide:** the line alone, on ink.
 
@@ -100,8 +128,8 @@ the more it stops."*
 |---|---|
 | **Technicality** | The press on real hardware, and `DENIED` carrying the skill's signature |
 | **Originality** | Four distinct refusals, never collapsed — and stars that go out |
-| **Practicality** | S3, twenty seconds, and the fact that it is running |
-| **Usability** | Beat 1: on an ordinary day it asks nothing |
+| **Practicality** | S4, twelve seconds, and the fact that it is running |
+| **Usability** | Beat 1, and the first row of S3: on an ordinary day it asks nothing |
 | **WOW** | Beat 4: every flame going out at once |
 
 ---

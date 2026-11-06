@@ -23,82 +23,89 @@
 <rect x="390" y="108" width="750" height="84" rx="16" fill="#FFF4EA" stroke="#f2600c" stroke-width="2.5"/>
 <text class="k" x="414" y="138" fill="#c2410c">THE LEDGER · plugged into the same laptop</text>
 <text class="m" x="414" y="172">hardware, in your hand — not in the laptop, and not in the cloud</text>
-<path d="M765 192 L765 246" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>
 <rect x="40" y="200" width="1120" height="545" rx="22" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="10 8"/>
 <text class="k" x="64" y="234">INSIDE THIS LAPTOP</text>
-<rect class="card" x="64" y="290" width="300" height="84" rx="14"/>
-<text class="h" x="86" y="324">Claude Code, on this PC</text>
+<path d="M765 192 L765 246" stroke="#f2600c" stroke-width="2.5" marker-end="url(#af)"/>
+<circle cx="765" cy="219" r="14" fill="#f2600c"/><text class="num" x="765" y="224" text-anchor="middle">4</text>
+<rect class="card" x="64" y="290" width="280" height="84" rx="14"/>
+<text class="h" x="86" y="324" font-size="19">Claude Code, on this PC</text>
 <text class="m" x="86" y="354">calls: model-main</text>
-<path d="M364 332 L386 332" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
-<rect class="card" x="64" y="394" width="300" height="84" rx="14"/>
-<text class="h" x="86" y="428">the tool you are building</text>
+<path d="M344 332 L386 332" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+<rect class="card" x="64" y="394" width="280" height="84" rx="14"/>
+<text class="h" x="86" y="428" font-size="19">the tool you are building</text>
 <text class="m" x="86" y="458">calls: stripe-live</text>
-<path d="M364 436 L386 436" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
-<rect class="card" x="64" y="498" width="300" height="84" rx="14"/>
-<text class="h" x="86" y="532">a tool you handed out</text>
+<path d="M344 436 L386 436" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+<circle cx="365" cy="436" r="14" fill="#1b1630"/><text class="num" x="365" y="441" text-anchor="middle">1</text>
+<rect class="card" x="64" y="498" width="280" height="84" rx="14"/>
+<text class="h" x="86" y="532" font-size="19">a tool you handed out</text>
 <text class="m" x="86" y="562">calls: resend-tx</text>
-<path d="M364 540 L386 540" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
+<path d="M344 540 L386 540" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 <rect class="card" x="390" y="250" width="750" height="470" rx="18"/>
 <text class="h" x="414" y="288">TOMOSHIBI · the switchboard, on the laptop</text>
 <text class="m" x="414" y="316">two parts: the page you look at, and the broker that holds this table</text>
-<text class="k" x="414" y="360">LABEL</text>
-<text class="k" x="560" y="360">WHAT IT MAY DO</text>
+<text class="k" x="450" y="360">LABEL</text>
+<text class="k" x="590" y="360">WHAT IT MAY DO</text>
 <text class="k" x="1010" y="360">THE REAL KEY</text>
 <path d="M414 374 L1116 374" stroke="#d8d2c6" stroke-width="2"/>
-<text class="lab" x="414" y="412">model-main</text>
-<text class="m" x="560" y="412">api.anthropic.com · POST /v1/messages · 2,000 calls</text>
+<circle cx="424" cy="358" r="14" fill="#1b1630"/><text class="num" x="424" y="363" text-anchor="middle">2</text>
+<text class="lab" x="450" y="412">model-main</text>
+<text class="m" x="590" y="412">api.anthropic.com · POST /v1/messages · 2,000 calls</text>
 <text class="key" x="1010" y="412">sk-ant-••••</text>
-<text class="lab" x="414" y="464">stripe-live</text>
-<text class="m" x="560" y="464">api.stripe.com · * /v1 · 20 calls · 7 days</text>
+<text class="lab" x="450" y="464">stripe-live</text>
+<text class="m" x="590" y="464">api.stripe.com · * /v1 · 20 calls · 7 days</text>
 <text class="key" x="1010" y="464">sk_live_••••</text>
-<text class="lab" x="414" y="516">resend-tx</text>
-<text class="m" x="560" y="516">api.resend.com · POST /emails · 50 calls</text>
+<text class="lab" x="450" y="516">resend-tx</text>
+<text class="m" x="590" y="516">api.resend.com · POST /emails · 50 calls</text>
 <text class="key" x="1010" y="516">re_••••</text>
 <path d="M980 386 L980 588" stroke="#8f1d14" stroke-width="2.5" stroke-dasharray="7 6"/>
 <text class="note" x="414" y="620">The right column is never printed, never logged, and never returned to a tool.</text>
 <text class="m" x="414" y="672">What leaves this laptop: the request itself, its weight, and the trail. Never the right column.</text>
 <text class="k" x="1200" y="234">OUTSIDE · OVER THE NETWORK</text>
-<rect class="card" x="1200" y="250" width="440" height="112" rx="14" style="fill:#fffdf8"/>
-<text class="k" x="1222" y="282">0G PRIVATE COMPUTER</text>
-<text class="m" x="1222" y="312">weighs every request before it runs:</text>
-<text class="m" x="1222" y="336">routine · significant · decisive.</text>
-<text class="m" x="1222" y="360">Its operator cannot read the body</text>
+<rect class="card" x="1200" y="250" width="440" height="116" rx="14" style="fill:#fffdf8"/>
+<text class="k" x="1222" y="280">0G PRIVATE COMPUTER</text>
+<text class="m" x="1222" y="306">weighs every request before it runs:</text>
+<text class="m" x="1222" y="328">routine · significant · decisive.</text>
+<text class="m" x="1222" y="350">Its operator cannot read the body</text>
 <path d="M1146 306 L1196 306" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)" marker-start="url(#a)"/>
-<rect class="card" x="1200" y="372" width="440" height="112" rx="14" style="fill:#fffdf8"/>
-<text class="k" x="1222" y="404">0G STORAGE</text>
-<text class="m" x="1222" y="434">where the trail is sealed — the lineage</text>
-<text class="m" x="1222" y="458">of one version of one tool</text>
+<circle cx="1171" cy="282" r="14" fill="#1b1630"/><text class="num" x="1171" y="287" text-anchor="middle">3</text>
+<rect class="card" x="1200" y="372" width="440" height="116" rx="14" style="fill:#fffdf8"/>
+<text class="k" x="1222" y="402">0G STORAGE</text>
+<text class="m" x="1222" y="428">where the trail is sealed — the lineage</text>
+<text class="m" x="1222" y="450">of one version of one tool</text>
 <path d="M1146 428 L1196 428" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
-<rect class="card" x="1200" y="494" width="440" height="112" rx="14" style="fill:#fffdf8"/>
-<text class="k" x="1222" y="526">WORLD ID</text>
-<text class="m" x="1222" y="556">one person, once. The only way a star</text>
-<text class="m" x="1222" y="580">is lit, and the holder's address is</text>
-<text class="m" x="1222" y="604">never written into it</text>
+<circle cx="1171" cy="404" r="14" fill="#1b1630"/><text class="num" x="1171" y="409" text-anchor="middle">7</text>
+<rect class="card" x="1200" y="494" width="440" height="116" rx="14" style="fill:#fffdf8"/>
+<text class="k" x="1222" y="524">WORLD ID</text>
+<text class="m" x="1222" y="550">one person, once. The only way a star</text>
+<text class="m" x="1222" y="572">is lit, and the holder's address is</text>
+<text class="m" x="1222" y="594">never written into it</text>
 <path d="M1146 550 L1196 550" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
-<rect class="card" x="1200" y="616" width="440" height="112" rx="14" style="fill:#fffdf8"/>
-<text class="k" x="1222" y="648">THE REAL SERVICES</text>
-<text class="m" x="1222" y="678">api.anthropic.com · api.stripe.com</text>
-<text class="m" x="1222" y="702">api.resend.com</text>
-<path d="M1146 672 L1196 672" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
-<text class="k" x="60" y="790">If you know NAT, it is that</text>
+<circle cx="1171" cy="526" r="14" fill="#1b1630"/><text class="num" x="1171" y="531" text-anchor="middle">8</text>
+<rect class="card" x="1200" y="616" width="440" height="116" rx="14" style="fill:#fffdf8"/>
+<text class="k" x="1222" y="646">THE REAL SERVICES</text>
+<text class="m" x="1222" y="672">api.anthropic.com · api.stripe.com</text>
+<text class="m" x="1222" y="694">api.resend.com</text>
+<path d="M1146 672 L1196 672" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)" marker-start="url(#a)"/>
+<circle cx="1171" cy="648" r="14" fill="#1b1630"/><text class="num" x="1171" y="653" text-anchor="middle">5</text>
+<circle cx="1171" cy="696" r="14" fill="#1b1630"/><text class="num" x="1171" y="701" text-anchor="middle">6</text>
+<text class="k" x="60" y="790">The order of one call</text>
 <rect class="card" x="60" y="810" width="860" height="314" rx="16"/>
-<text class="k" x="84" y="844">NAT</text>
-<text class="k" x="470" y="844">TOMOSHIBI</text>
-<path d="M84 858 L896 858" stroke="#d8d2c6" stroke-width="2"/>
-<text class="m" x="84" y="890">a private address, 10.x</text>
-<text class="m" x="470" y="890">a label — meaningless anywhere else</text>
-<text class="m" x="84" y="923">the public address</text>
-<text class="m" x="470" y="923">the real API key</text>
-<text class="m" x="84" y="956">the NAT box</text>
-<text class="m" x="470" y="956">the Broker, on the laptop</text>
-<text class="m" x="84" y="989">the translation table</text>
-<text class="m" x="470" y="989">label → range → secret</text>
-<text class="m" x="84" y="1022">the firewall rules</text>
-<text class="m" x="470" y="1022">the signed permit: target, operation, count, expiry</text>
-<text class="m" x="84" y="1055">nothing gets in by itself</text>
-<text class="m" x="470" y="1055">no label works without a signature that is still good</text>
-<text class="m" x="84" y="1088">the administrator</text>
-<text class="m" x="470" y="1088">the Ledger. Not a password, and not the agent</text>
+<circle cx="96" cy="850" r="14" fill="#1b1630"/><text class="num" x="96" y="855" text-anchor="middle">1</text>
+<text class="m" x="124" y="856">a tool calls, with a label — never a key</text>
+<circle cx="96" cy="884" r="14" fill="#1b1630"/><text class="num" x="96" y="889" text-anchor="middle">2</text>
+<text class="m" x="124" y="890">the row is found and the range checked · outside it → DENIED, recorded</text>
+<circle cx="96" cy="918" r="14" fill="#1b1630"/><text class="num" x="96" y="923" text-anchor="middle">3</text>
+<text class="m" x="124" y="924">0G weighs it: routine · significant · decisive · no answer → STOPPED</text>
+<circle cx="96" cy="952" r="14" fill="#f2600c"/><text class="num" x="96" y="957" text-anchor="middle">4</text>
+<text class="m" x="124" y="958">heavy? the tool fetches a signature from the Ledger over 127.0.0.1 — good for one call</text>
+<circle cx="96" cy="986" r="14" fill="#1b1630"/><text class="num" x="96" y="991" text-anchor="middle">5</text>
+<text class="m" x="124" y="992">one call of the count is reserved, the label is swapped for the key, and it is sent</text>
+<circle cx="96" cy="1020" r="14" fill="#1b1630"/><text class="num" x="96" y="1025" text-anchor="middle">6</text>
+<text class="m" x="124" y="1026">the result comes back to the tool, with a hash of it. Never the key</text>
+<circle cx="96" cy="1054" r="14" fill="#1b1630"/><text class="num" x="96" y="1059" text-anchor="middle">7</text>
+<text class="m" x="124" y="1060">the row is appended, and the thread sealed into 0G Storage</text>
+<circle cx="96" cy="1088" r="14" fill="#1b1630"/><text class="num" x="96" y="1093" text-anchor="middle">8</text>
+<text class="m" x="124" y="1094">afterwards: World ID, one person once — a star on this version</text>
 <text class="k" x="960" y="790">Who it is for</text>
 <rect x="960" y="810" width="680" height="314" rx="16" fill="#fffdf8" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="8 7"/>
 <text class="t" x="984" y="852">You build with Claude Code on this laptop. Shipping anything means</text>

@@ -102,7 +102,14 @@ see that each one is a mechanism, not a promise.**
 
 ## S4 — Who it is for, and what changes for them (2:28–2:40)
 
-**Three people, one line each. This slide is about value, not revenue.**
+**On the slide: one picture — [`assets/trust-loop.png`](../assets/trust-loop.png). Three people, one loop.**
+
+![three people, one loop](../assets/trust-loop.png)
+
+The shopkeeper is the protagonist; the other two are why her choice is not guesswork.
+**The maker** publishes and wants to be trusted. **The marketplace** lists it and has to answer for
+it. **She** lights a star only by having actually used it — so what travels around the loop is a
+record of real use, and nothing else.
 
 | | What changes for them |
 |---|---|

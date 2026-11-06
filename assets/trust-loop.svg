@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" font-family="'Zen Maru Gothic','Hiragino Maru Gothic ProN','Nunito',system-ui,sans-serif">
+  <rect width="1200" height="700" fill="#F3EEE6"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#1b1630"/>
+    </marker>
+    <marker id="ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#f2600c"/>
+    </marker>
+  </defs>
+
+  <text x="600" y="46" text-anchor="middle" font-size="22" fill="#1b1630" opacity=".65">Three people, one loop — and the only thing that travels is a record of real use</text>
+
+  <!-- maker -->
+  <rect x="245" y="70" width="330" height="128" rx="26" fill="#fff" stroke="#1b1630" stroke-width="3"/>
+  <text x="410" y="118" text-anchor="middle" font-size="30" font-weight="700" fill="#1b1630">The maker</text>
+  <text x="410" y="150" text-anchor="middle" font-size="19" fill="#1b1630" opacity=".75">publishes a skill, and</text>
+  <text x="410" y="176" text-anchor="middle" font-size="19" fill="#1b1630" opacity=".75">wants to be trusted</text>
+
+  <!-- marketplace -->
+  <rect x="700" y="70" width="330" height="128" rx="26" fill="#fff" stroke="#1b1630" stroke-width="3"/>
+  <text x="865" y="118" text-anchor="middle" font-size="30" font-weight="700" fill="#1b1630">The marketplace</text>
+  <text x="865" y="150" text-anchor="middle" font-size="19" fill="#1b1630" opacity=".75">lists it — and answers for it</text>
+  <text x="865" y="176" text-anchor="middle" font-size="19" fill="#1b1630" opacity=".75">when it goes wrong</text>
+
+  <!-- shopkeeper -->
+  <rect x="320" y="400" width="560" height="152" rx="30" fill="#ffd0ad" stroke="#1b1630" stroke-width="4"/>
+  <text x="600" y="452" text-anchor="middle" font-size="32" font-weight="700" fill="#1b1630">The shopkeeper</text>
+  <text x="600" y="490" text-anchor="middle" font-size="21" fill="#1b1630" opacity=".8">not an engineer — has work to hand over</text>
+  <text x="600" y="524" text-anchor="middle" font-size="21" fill="#1b1630" opacity=".8">signs one action, never the key</text>
+
+  <path d="M600 552 L600 588" stroke="#1b1630" stroke-width="4" fill="none"/>
+  <!-- gate -->
+  <rect x="455" y="588" width="290" height="58" rx="18" fill="#1b1630"/>
+  <text x="600" y="626" text-anchor="middle" font-size="23" font-weight="700" fill="#F3EEE6">🕯️ TOMOSHIBI</text>
+
+  <!-- maker -> marketplace -->
+  <path d="M585 134 L690 134" stroke="#1b1630" stroke-width="3" fill="none" marker-end="url(#a)"/>
+  <text x="637" y="112" text-anchor="middle" font-size="18" fill="#1b1630">publishes</text>
+
+  <!-- marketplace -> shopkeeper -->
+  <path d="M865 210 C865 330 920 420 890 462" stroke="#1b1630" stroke-width="3" fill="none" marker-end="url(#a)"/>
+  <text x="930" y="300" font-size="20" fill="#1b1630">she finds</text>
+  <text x="930" y="326" font-size="20" fill="#1b1630">it here</text>
+
+  <!-- shopkeeper -> maker : the star -->
+  <path d="M310 462 C250 430 245 330 300 215" stroke="#f2600c" stroke-width="4" fill="none" marker-end="url(#ao)"/>
+  <text x="40" y="300" font-size="22" font-weight="700" fill="#8f1d14">★ a star —</text>
+  <text x="40" y="330" font-size="22" font-weight="700" fill="#8f1d14">only by</text>
+  <text x="40" y="360" font-size="22" font-weight="700" fill="#8f1d14">having used it</text>
+  <text x="40" y="392" font-size="18" fill="#8f1d14" opacity=".85">one verified human,</text>
+  <text x="40" y="416" font-size="18" fill="#8f1d14" opacity=".85">one version</text>
+
+  <!-- gate -> marketplace : the record -->
+  <path d="M755 617 C1080 617 1120 420 1050 212" stroke="#1b1630" stroke-width="2.5" stroke-dasharray="9 7" fill="none" marker-end="url(#a)"/>
+  <text x="560" y="676" text-anchor="middle" font-size="19" fill="#1b1630" opacity=".8">what was stopped, and whose code tried it</text>
+</svg>

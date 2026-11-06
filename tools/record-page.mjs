@@ -38,10 +38,13 @@ await js(`(() => { const d = document.createElement('div'); d.style.cssText = 'p
 const t0 = Date.now()
 while (Date.now() - t0 < Number(longest) * 1000) { await sleep(300); if (await js(`Boolean(${done})`).catch(() => false)) break }
 await sleep(400); recording = false; const end = Date.now() / 1000
+// the page may say where its scenes begin (on the same clock): written next to the video, so it can be cut scene by scene
+const marks = JSON.parse(await js('JSON.stringify(window.switchboardMarks || [])').catch(() => '[]') || '[]')
 await send('Page.stopScreencast'); ws.close(); chrome.kill()
 if (!frames.length) throw new Error('no frames were recorded')
 writeFileSync(join(dir, 'frames.txt'), 'ffconcat version 1.0\n' + frames.map((f, i) => `file '${f.name}'\nduration ${Math.max(0.001, (frames[i + 1]?.t ?? end) - f.t).toFixed(4)}`).join('\n') + `\nfile '${frames[frames.length - 1].name}'\n`)
 const r = spawnSync(FFMPEG, ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', 'frames.txt', '-vf', 'fps=30,scale=1920:1080:flags=lanczos,format=yuv420p', '-c:v', 'libx264', '-preset', 'medium', '-crf', '19', '-movflags', '+faststart', resolve(out)], { cwd: dir, stdio: 'inherit' })
 rmSync(dir, { recursive: true, force: true })
 if (r.status !== 0) throw new Error('ffmpeg failed')
+if (marks.length) writeFileSync(resolve(out).replace(/\.mp4$/, '') + '.marks.json', JSON.stringify(marks.map((m) => ({ name: m.name, t: +(m.t - frames[0].t).toFixed(2) })), null, 1))
 console.log(`${frames.length} frames, ${(end - frames[0].t).toFixed(1)} s ->`, resolve(out))

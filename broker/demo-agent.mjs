@@ -129,6 +129,16 @@ function readSignature(answerHex) {
   return { signature: '0x' + h32(rr) + h32(ss) + (27 + parity).toString(16), holder: getAddress('0x' + hx(holder)) }
 }
 let pageWait = null   // { askId, resolve } while the page is carrying a request to the Ledger
+// A hosted copy can be reached by anyone, and every judgement spends a little of the 0G balance. So it paces itself:
+// so many requests in ten minutes and in a day, then it says it is resting. On a person's own computer there is no limit.
+const HOSTED = HOST !== '127.0.0.1'
+const paced = { run: [], world: [] }
+function rested(kind, per10min, perDay) {
+  if (!HOSTED) return true
+  const t = Date.now(), l = paced[kind] = paced[kind].filter((x) => t - x < 86400000)
+  if (l.filter((x) => t - x < 600000).length >= per10min || l.length >= perDay) return false
+  l.push(t); return true
+}
 const vouches = new Map()   // World device code -> the outcome (a promise), so a second ask gets the same answer
 
 // Look for the device in the background, so /health never waits on a USB exchange.
@@ -242,7 +252,7 @@ const routes = {
   },
   'GET /events': async (_, url) => { const since = Number(url.searchParams.get('since') ?? 0); return { epoch, events: events.slice(since), busy } },
   'POST /lend': async (body) => { lend(body); return { ok: true } },          // answers at once; the outcome arrives as events
-  'POST /run': async ({ id }) => { run(id); return { ok: true } },
+  'POST /run': async ({ id }) => { if (!rested('run', 40, 800)) { emit({ type: 'error', error: 'This shared demo is resting: too many requests in a short time. Try again in a few minutes.' }); return { ok: false, error: 'resting' } } run(id); return { ok: true } },
   'POST /hold': async ({ ok = true }) => { if (softWait) softWait(Boolean(ok)); return { ok: Boolean(softWait) } },
   // Lighting a light is for the person who lent the key. The page starts World itself, but the
   // last step goes through here so the Permit signed on the Ledger travels with it. The page
@@ -283,6 +293,9 @@ createServer(async (req, res) => {
   // /b/… is passed straight on to the Broker. A phone then needs one public address (this process)
   // to reach both the tool and the record. Nothing is added or changed on the way.
   if (url.pathname.startsWith('/b/')) {
+    if (req.method === 'POST' && url.pathname === '/b/vouch/start' && !rested('world', 20, 300)) return send(429, { ok: false, error: 'This shared demo is resting. Try again in a few minutes.' })
+    // A hosted copy passes on only what the pages need. It holds no wallet key, and nobody outside can ask it to write.
+    if (HOSTED && req.method === 'POST' && !['/b/vouch/start', '/b/vouch/finish'].includes(url.pathname)) return send(403, { ok: false, error: 'not available on the hosted copy' })
     let raw = ''
     for await (const c of req) raw += c
     try {

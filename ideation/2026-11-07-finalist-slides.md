@@ -22,7 +22,7 @@
 | **S4** | 2:30–2:42 | **Who uses it, who pays** | Practicality |
 | **S5** | 2:42–2:50 | **One closing line** | What they repeat to each other afterwards |
 
-**Total 2:50.** If they cut you off anywhere after the press at ~1:30, the point has landed.
+**Total 2:50.** The press lands at ~1:20. If they cut you off any time after it, the point is out.
 
 ---
 
@@ -67,15 +67,17 @@ signed on hardware it cannot press. Here it is running."*
 
 ## The live run (0:50–2:10) — **no slide**
 
-Five beats. Each one is a different thing the system does, not a different step of a procedure.
+Four beats, biggest first. Each one is a different thing the system does, not a step of a procedure.
 
 | | ~ | What they see | The one sentence |
 |---|---:|---|---|
-| **1 Silent** | 10 s | A routine read passes. `0G: routine` | *"The key never reached the agent. The gate used it on its behalf."* |
-| **2 Heavy → press** | 30 s | `0G: significant` → the real device rewrites itself, four lines → **a long press** → it goes through **once** | *"Money is about to move, so it asks. An agent can tap a hundred times a second. This is the one button it cannot press."* |
-| **3 Refused** | 20 s | An out-of-scope request → `DENIED`, recorded **with the skill's own signature** | *"It stopped before it ran, and it has a name on it."* |
-| **4 The flame** | 12 s | Bump the version → every star goes out at once | *"A star here is a fact, not a promise. Change the version and they all go out."* |
-| **5 The trail** | 8 s | The record, and the transaction on 0G Storage | *"Allowed and refused sit in the same record, and it is on-chain."* |
+| **1 Heavy → press** | 35 s | `0G: significant` → the real device rewrites itself, four lines → **a long press** → it goes through **once** | *"Routine reads pass silently and the agent never sees the key. But this one moves money, so it asks. An agent can tap a hundred times a second. **This is the one button it cannot press.**"* |
+| **2 Refused** | 20 s | An out-of-scope request → `DENIED`, recorded **with the skill's own signature** | *"It stopped before it ran, and it has a name on it."* |
+| **3 The flame** — **World** | 15 s | Bump the version → every star goes out at once | *"A star here is a fact, not a promise: a verified human who actually used this version. Change the version and they all go out."* |
+| **4 The trail** — **0G** | 10 s | The record, and the transaction on 0G Storage | *"Allowed and refused sit in the same record, and it is on-chain."* |
+
+**The silent routine case is spoken, not demonstrated** — it is the first clause of beat 1.
+Showing it costs ten seconds and it is the least surprising thing the system does.
 
 **If the device misbehaves:** go on talking and show the same press on screen; the fallback ladder
 is in `2026-11-06-storyboard.md` §"Order of degradation". **Never stop to fix hardware on stage.**
@@ -129,8 +131,8 @@ the more it stops."*
 | **Technicality** | The press on real hardware, and `DENIED` carrying the skill's signature |
 | **Originality** | Four distinct refusals, never collapsed — and stars that go out |
 | **Practicality** | S4, twelve seconds, and the fact that it is running |
-| **Usability** | Beat 1, and the first row of S3: on an ordinary day it asks nothing |
-| **WOW** | Beat 4: every flame going out at once |
+| **Usability** | The spoken routine line, and the first row of S3: on an ordinary day it asks nothing |
+| **WOW** | The flame beat: every star going out at once |
 
 ---
 

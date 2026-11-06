@@ -5,7 +5,7 @@ Replaces the screen order in `2026-11-06-filming-runbook.md`. The rules there st
 
 ## Before the camera rolls
 
-1. On the Air: `BRIDGE_PORT=8793 tools/demo-up.sh`, then read the check. It must end with **Ready to film**.
+1. On the Air: `BRIDGE_PORT=8793 tools/demo-up.sh`, then read the check. It must end with **Ready. Nothing is simulated.**
    `SIM` on any line means that service is simulated: do not film until it says `ok`.
 2. Ledger: plugged in, unlocked, **TOMOSHIBI open** (the sleeping flame). The bottom bar of the app says *Ledger connected*.
 3. Chrome on the Air: `http://localhost:8790/app.html`. Press **Start over** once. Zoom so the frame fills the screen.

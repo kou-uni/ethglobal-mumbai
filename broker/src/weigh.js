@@ -74,6 +74,9 @@ export async function weigh(lines, request, opts = {}) {
         temperature: 0,
         max_tokens: opts.maxTokens ?? 2048,
         response_format: { type: 'json_object' },
+        // 思考を切る。付けないと reasoning に1,700トークン使って17秒かかり、20秒の壁で
+        // 「決められなかった」= STOPPED に化ける。実測: 思考あり17.2s / 無し2.0s（2026-11-06）
+        ...(process.env.ZG_THINKING === '1' ? {} : { chat_template_kwargs: { enable_thinking: false } }),
         messages: [
           { role: 'system', content: SYSTEM },
           { role: 'user', content: promptFor(lines, request) },

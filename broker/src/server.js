@@ -13,6 +13,7 @@ import { offlineWeigh } from './offline.js'
 import { deviceStart, waitForHuman, verifyIdToken, ISSUER } from './world.js'
 import { offlineWorld } from './world-offline.js'
 import { ownerOf, OWNER_REASONS } from './owner.js'
+import { APIS } from './apis.js'
 
 const ledger = createStore()
 const EXECUTE = process.env.EXECUTE === '1'
@@ -245,6 +246,8 @@ export const app = createServer(async (req, res) => {
         byVersion: ledger.starsOf(skill),
       })
     }
+    // The services a label can go to (not every API)
+    if (url.pathname === '/apis') return json(res, 200, { apis: APIS })
     // For showing the credits going down on screen (the 0G PC iAI bonus)
     if (url.pathname === '/zg/balance') return json(res, 200, { balance: await balance() })
     // The Broker renders the device's four lines with the same function (so screen and hash never take different paths)

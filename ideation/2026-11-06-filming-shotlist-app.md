@@ -16,26 +16,25 @@ Replaces the screen order in `2026-11-06-filming-runbook.md`. The rules there st
 
 ## The shots
 
-Every TOMOSHIBI screen shows its value in the bar under the name (for example **No hold, no money.**). If the voice
-says only one thing per shot, let it be that line.
+The person is a builder: Priya builds `billing-assistant` with an AI, and is tired of keeping API keys in `.env` files.
+Every TOMOSHIBI screen shows its value in the bar under the name. If the voice says only one thing per shot, let it be that line.
 
 | # | Screen | What you do | One line to say |
 |---|---|---|---|
-| 1 | AI chat | Nothing. Let the `.env` message sit for two seconds | "My AI asks me to put a key in a file. Which file? Where?" |
-| 2 | AI chat | **Send**, then **Approve in TOMOSHIBI** | "I say: use TOMOSHIBI. No file." |
-| 3 | Welcome | **Let's go** | "Three small steps." |
-| 4 | Custody | **Use a test key**, **Keep it with me** | "The key stays here. The AI gets a handle, never the key." |
-| 5 | Choose | **Continue on my Ledger** | "I never hand the key over. I hand over one use of it." |
-| 6 | **Continue on your Ledger** | Camera on the device: **See it**, read, **hold three seconds** | "Nothing starts until I hold. The AI cannot press this." |
-| 7 | Permit signed | **Back to Billing assistant** | "Signed. I pasted once, signed one permit, and held." |
-| 8 | AI chat | Press `1` | "An ordinary request goes through. Nobody asks me." |
-| 9 | AI chat → toast | Press `2`, click the toast, camera on the device, **hold** | "Money is about to move, so it waits for my hand. One hold, one refund." |
-| 10 | TOMOSHIBI | Press `3` | "At 3 a.m. the AI makes a mistake. It is stopped, and I did nothing." |
-| 11 | Trail | Click **Trail** | "The trail in three numbers. I can say what was stopped, and whose code tried it." |
-| 12 | Flame | Click **Flame**, **Light a star with World**, scan the code with World App, **Confirm** | "It worked for me, so I light a star. One real person, who owned the key and used it." |
-| 13 | Flame (sample) | **Later: a friend chooses** in the bottom bar, then **Use it with TOMOSHIBI** | "My friend chooses by whose star it is, not by how many." |
+| 1 | AI chat | Nothing. Let the `.env` message sit for two seconds | "My AI wants my Stripe key in a .env file. Another key, another file." |
+| 2 | AI chat | **Send**. Wait while it reads the link (four ticks). Then **Add the row in TOMOSHIBI** | "I send it the TOMOSHIBI link. It reads it, sees Stripe is supported, and decides to go through TOMOSHIBI." |
+| 3 | Welcome | **Start** | "TOMOSHIBI is the switchboard between my tools and my keys." |
+| 4 | Add a row | **Use a test key**, look at the three lines (label, goes to, until), **Approve on my Ledger** | "Stripe is on the list, so it already knows where the key goes. I park the key once." |
+| 5 | **Approve** | Camera on the device: **See it**, read, **hold three seconds** | "Only my Ledger can add a row. The AI cannot press this." |
+| 6 | The label | Read the code box. **Back to the AI** | "My tool gets a label, never the key. I can delete the .env file." |
+| 7 | AI chat, then Home | Press `1`. Click the **tomoshibi** tab | "A routine call is put through: the label goes in, the key is swapped in, Stripe's answer comes back. Nobody asks me." |
+| 8 | AI chat → toast | Press `2`, click the toast, camera on the device, **hold** | "A refund is heavy, so it waits for my Ledger. One hold, and it goes out once." |
+| 9 | TOMOSHIBI | Press `3` | "The tool tries another destination. This label only reaches Stripe, so it is refused, and I did nothing." |
+| 10 | Trail | Click **Trail** | "Every call, put through or refused, with its reason. Sealed in 0G Storage." |
+| 11 | Lights | Click **Lights**, **Light it with World**, scan the code with World App, **Confirm**, go back to World's page on the phone | "It works for me, so I light the tool I built. World says I am one real person; the trail says I really ran it." |
+| 12 | Lights (sample) | **Later: someone chooses** in the bottom bar, then **Use it with TOMOSHIBI** | "Arjun picks my tool because I built it and I run it. Every light is trust in me as a builder." |
 
-Shots 6 and 9 are the centre of the film: keep the device and the screen in the same frame if you can.
+Shots 5 and 8 are the centre of the film: keep the device and the screen in the same frame if you can.
 
 ## If 0G is down
 

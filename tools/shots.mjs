@@ -43,10 +43,13 @@ const WEEK = [ASK, SIGNED,
   req('r2', 'usual', 'Read the unpaid invoices', 'GET', 'https://api.stripe.com/v1/invoices'), { type: 'verdict', rid: 'r2', ms: 2000, response: { decision: 'ALLOWED', zg: zg('routine') } },
   req('r3', 'heavy', 'Refund ₹4,800 for order #1042 (a returned bag)', 'POST', 'https://api.stripe.com/v1/refunds'), { type: 'verdict', rid: 'r3', ms: 2100, response: { decision: 'NEEDS_PRESS', reason: 'ESCALATED', zg: zg('decisive') } },
   { type: 'asking', rid: 'r3', why: 'press', uses: 1, device: true, lines: L }]
-const base = { surface: 'tomo', opened: true, chat: 1, onb: 'choose', ackLit: true, tab: 'home', friend: 0, world: null, seenRid: null, pending: null, busy: null, gain: null }
+const base = { surface: 'tomo', opened: true, chat: 1, onb: 'key', ackLit: true, tab: 'home', friend: 0, world: null, seenRid: null, pending: null, busy: null, gain: null }
 
 console.log(await set([], { ...base, surface: 'ai', chat: 0, opened: false })); await shot('shots/1-the-ai-asks-for-a-file.png', await clip())
+console.log(await set([], { ...base, onb: 'key' })); await shot('shots/2a-add-a-row.png', await clip())
 console.log(await set([ASK], base)); await shot('shots/2-continue-on-your-ledger.png', await clip())
+console.log(await set([ASK, SIGNED], { ...base, ackLit: false })); await shot('shots/2b-the-label.png', await clip())
+console.log(await set(WEEK.slice(0, 6), { ...base, seenRid: 'r2' })); await shot('shots/2c-the-switchboard.png', await clip())
 console.log(await set(WEEK, base)); await shot('shots/3-money-waits-for-your-hand.png', await clip())
 const DONE = [...WEEK, { type: 'signed', rid: 'r3', why: 'press', uses: 1, device: true, holder: '0x19E7…ff2A', lines: L }, { type: 'verdict', rid: 'r3', pressed: true, ms: 900, response: { decision: 'ALLOWED', zg: zg('decisive') } },
   req('r4', 'denied-host', 'Send customer data to files.unknown-host.example', 'POST', 'https://files.unknown-host.example/upload'), { type: 'verdict', rid: 'r4', ms: 40, response: { decision: 'DENIED', reason: 'OUT_OF_TARGET' } }]

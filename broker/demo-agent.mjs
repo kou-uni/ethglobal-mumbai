@@ -17,6 +17,7 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { keccak256, toHex, getAddress } from 'viem'
 import { DOMAIN, TYPES, normalize, lines, requestHash } from './src/permit.js'
 import { skillMessage, skillIdFrom } from './src/skill.js'
+import { APIS } from './src/apis.js'
 
 const BROKER = (process.argv[2] ?? 'http://127.0.0.1:8787').replace(/\/$/, '')
 const BRIDGE = (process.argv[3] ?? 'http://127.0.0.1:8791').replace(/\/$/, '')
@@ -214,9 +215,22 @@ async function use(signed, id, rid, pressed) {
   const request = { keyRef: signed.permit.key, ...req }
   const skillSignature = await skill.signMessage({ message: skillMessage(requestHash(signed.permit, request)) })
   const t0 = Date.now()
-  const r = await post(id === 'stopped' && DEAF ? DEAF : BROKER, '/use', { permit: signed.permit, signature: signed.signature, request, skillSignature }, 60000)
+  const broker = id === 'stopped' && DEAF ? DEAF : BROKER
+  const r = await post(broker, '/use', { permit: signed.permit, signature: signed.signature, request, skillSignature }, 60000)
   emit({ type: 'verdict', rid, pressed: Boolean(pressed), ms: Date.now() - t0, response: r.body, device: signed.device })
+  sealLater(broker, rid, r.body?.thread)
   return r.body
+}
+
+// Every answer is final, so the thread can go into 0G Storage as soon as it exists. The Broker does the storing
+// (it holds the wallet key); the tool only asks, one at a time, and reports what really happened. A Broker without
+// a wallet key is not asked at all (the hosted copy): nothing is claimed that did not happen.
+let canSeal = null, sealing = Promise.resolve()
+function sealLater(broker, rid, thread) {
+  if (!thread || canSeal === false || process.env.SEAL === '0') return
+  sealing = sealing.then(() => post(broker, '/seal', { thread }, 180000))
+    .then((r) => emit({ type: 'sealed', rid, thread, uploaded: Boolean(r.body?.uploaded), url: r.body?.url ?? null, rootHash: r.body?.rootHash ?? null, reason: r.body?.reason ?? null }))
+    .catch((e) => emit({ type: 'sealed', rid, thread, uploaded: false, url: null, rootHash: null, reason: String(e.message ?? e) }))
 }
 
 // The page may pick how many uses and for how many days (within sane bounds). Everything else is fixed.
@@ -262,9 +276,11 @@ const routes = {
   'GET /health': async () => {
     let broker = null
     try { broker = await (await fetch(BROKER + '/health', { signal: AbortSignal.timeout(1500) })).json() } catch {}
+    if (broker) canSeal = Boolean(broker.zg?.storageKey) && !HOSTED
     return { ok: true, broker: BROKER, brokerUp: Boolean(broker), simulated: Boolean(broker?.zg?.simulated), execute: Boolean(broker?.execute), worldSimulated: Boolean(broker?.world?.simulated),
       model: broker?.zg?.model, device: pageReady() || Date.now() - deviceSeen < (busy ? 600000 : 20000), via: pageReady() ? 'page' : null, lent: Boolean(standing), deaf: Boolean(DEAF),
-      tool: TOOL, range: { key: KEY_LABEL, ...RANGE, uses: STANDING_USES, days: STANDING_DAYS }, skill: skillIdFrom(skill.address), version: TOOL.version }
+      tool: TOOL, range: { key: KEY_LABEL, ...RANGE, uses: STANDING_USES, days: STANDING_DAYS }, skill: skillIdFrom(skill.address), version: TOOL.version,
+      apis: APIS, storage: Boolean(canSeal) }
   },
   'GET /events': async (_, url) => { const since = Number(url.searchParams.get('since') ?? 0); return { epoch, events: events.slice(since), busy } },
   'POST /lend': async (body) => { lend(body); return { ok: true } },          // answers at once; the outcome arrives as events

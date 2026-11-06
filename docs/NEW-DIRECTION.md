@@ -89,7 +89,7 @@ sequenceDiagram
   Note over P,O: Lights add up to the builder's name
 ```
 
-## What changes in the app tonight (`minta/story`)
+## What changed in the app tonight (`minta/story`) — done
 
 | # | Where | Change |
 |---|---|---|
@@ -101,7 +101,7 @@ sequenceDiagram
 | 6 | Lights | "Light the tool you built", the lights you have, and the sample where someone chooses by them. |
 | 7 | Name on the page | Priya as a builder. |
 | 8 | 0G Storage | The tool seals each finished thread (`POST /seal`) and the trail shows it. |
-| 9 | 0G credits | Shown on the page. |
+| 9 | 0G usage | The page shows how many times 0G was asked and the tokens used, read off the Broker's answers. The balance itself is not shown: `GET /zg/balance` returns `null` with our key. |
 
 ## Not tonight
 

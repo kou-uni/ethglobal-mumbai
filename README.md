@@ -39,6 +39,8 @@ PORT=8797 EXECUTE=0 node src/server.js   # needs ZG_API_KEY, ZG_PRIVATE_KEY
 node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
 ```
 
+> **Who this is for, what it stops, and what it assumes — stated plainly:** [`POSITION.md`](POSITION.md)
+
 ## What it does, in four parts
 
 Everything in this repository is one of four things. The rest is support.

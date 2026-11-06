@@ -1,6 +1,6 @@
 # One story — the refusal is the product
 
-**Written 2026-11-06. This file is the spine.** The business model, the way we present to judges,
+**Written 2026-11-06. This file is the spine.** The persona, the conditions and the limits are in [`POSITION.md`](POSITION.md). The business model, the way we present to judges,
 and the India argument are three views of one claim. Where an older document disagrees with this
 file, this file wins and the older one gets corrected.
 

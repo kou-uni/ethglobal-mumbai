@@ -37,7 +37,11 @@ const post = async (url, body, fetchImpl) => {
 export async function deviceStart(opts = {}) {
   const clientId = opts.clientId ?? process.env.WORLD_CLIENT_ID
   if (!clientId) return { ok: false, error: 'WORLD_CLIENT_ID がない（auth.world.org/portal で登録する）' }
-  const r = await post(DEVICE, { client_id: clientId, scope: 'openid' }, opts.fetch ?? fetch)
+  // 秘密つきで登録したクライアント（client_secret_post）は、ここでも名乗らないと 400 で断られる（実測 2026-11-06）
+  const secret = opts.clientSecret ?? process.env.WORLD_CLIENT_SECRET
+  const body = { client_id: clientId, scope: 'openid' }
+  if (secret) body.client_secret = secret
+  const r = await post(DEVICE, body, opts.fetch ?? fetch)
   if (r.status >= 400 || !r.json?.device_code) {
     return { ok: false, error: `World ${r.status}: ${r.json?.error_description ?? r.json?.error ?? r.text.slice(0, 160)}` }
   }

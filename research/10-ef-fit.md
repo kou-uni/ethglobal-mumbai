@@ -1,45 +1,45 @@
-# EF（Ethereum Foundation）の賞との適合性（2026-11-06）
+# Fit with the EF (Ethereum Foundation) prizes (2026-11-06)
 
-> 作り方：サブエージェントが一次情報（公式ドキュメント・GitHub・ETHGlobal の賞ページ）を読んで報告したもの。【確】は一次情報で読んだもの、【未確認】は確かめていないもの。
+> How this was made: a subagent read the primary sources (official docs, GitHub, the ETHGlobal prize pages) and reported back. [verified] means read in a primary source; [unverified] means not confirmed.
 
-## 結論
-**合う順は CROPS ＞ Anon-RPC ＞ Alt mempool。** チェーンは 0G のままでよい。
-**EF の賞は1プロジェクトにつき1つ**なので、CROPS と Anon-RPC の両方に出して、審査員に選んでもらう。
+## Conclusion
+**Fit order is CROPS > Anon-RPC > Alt mempool.** The chain can stay 0G.
+**EF gives one prize per project**, so enter both CROPS and Anon-RPC and let the judges pick.
 
-**本命は CROPS。** 要件が「作り方」（公開リポジトリ・README の節・ライセンス・トラッカーなし・鍵は端末内）で、
-**すでにやっていることと重なる。追加工数はおよそ1時間。** Anon-RPC は #6 が30分で通ったときだけ足す。
+**The main bet is CROPS.** Its requirements are about "how you build" (public repository, a README section, a license, no trackers, keys inside the device),
+and **they overlap with what we are already doing. Roughly one extra hour of work.** Add Anon-RPC only if #6 passes within 30 minutes.
 
-| 順 | 賞 | 総額 / 枠（**1位の額**） | 適合 | 必要な変更 |
+| # | Prize | Total / slots (**amount for 1st**) | Fit | Changes needed |
 |---|---|---|---|---|
-| 1 | Best CROPS App | $3,500 / 3枠（**$2,000** / 1,000 / 500） | 高 | README に CROPS 節（4文字それぞれ1〜2行。Private の行に Ledger・World・0G がそれぞれ何を知るかを書く）、OSS ライセンス、トラッカーなし、3分以内のデモ動画 |
-| 2 | Best Use of Anon-RPC | $5,000 / 3枠（**$2,500** / 1,500 / 1,000） | 中〜高 | 星の読み取りを既定で Anon-RPC 経由にする。全件を取得して端末で絞り込む |
-| 3 | Alt mempool | $5,000 / 3枠（**$2,500** / 1,500 / 1,000） | 低 | devnet で別に実装が要る。本筋から外れる（採らない） |
-| — | CROPS Upgrade to Existing Project | $1,500 | 不適合 | 既存プロジェクトの改善が対象。ゼロから作るので該当しない |
+| 1 | Best CROPS App | $3,500 / 3 slots (**$2,000** / 1,000 / 500) | High | A CROPS section in the README (1–2 lines for each of the four letters; the Private line states what the Ledger, World and 0G each learn), an OSS license, no trackers, a demo video of 3 minutes or less |
+| 2 | Best Use of Anon-RPC | $5,000 / 3 slots (**$2,500** / 1,500 / 1,000) | Medium to high | Make star reads go through Anon-RPC by default. Fetch everything and filter on the device |
+| 3 | Alt mempool | $5,000 / 3 slots (**$2,500** / 1,500 / 1,000) | Low | Needs a separate implementation on a devnet. Off the main line (not taking it) |
+| — | CROPS Upgrade to Existing Project | $1,500 | Not eligible | It targets improvements to an existing project. We are building from zero, so it doesn't apply |
 
-**2026-11-06 訂正（賞ページを再読）。** 上の金額は**総額を3枠で割った額**で、1プロジェクトが取れるのは1位でも $2,000（CROPS）/ $2,500（Anon-RPC）。
-**以前のノートは総額をそのまま書いていた。** → **CROPS と Anon-RPC の1位どうしの差は $500 しかない。**
-Anon-RPC に実装時間を賭ける価値は小さい。**#6 の30分時限はそのままでよい**（`plan.md` D4 を補強する）。
+**Correction 2026-11-06 (re-read the prize pages).** The amounts above are **the total divided across 3 slots**, and what one project can take is $2,000 (CROPS) / $2,500 (Anon-RPC) even at 1st place.
+**The earlier note wrote the totals as-is.** → **The gap between CROPS's and Anon-RPC's first places is only $500.**
+Betting implementation time on Anon-RPC is not worth much. **The 30-minute time box on #6 can stay as it is** (this reinforces `plan.md` D4).
 
-**【確】公式の文言:** "One EF prize per project. You can submit to anon-rpc, the alt mempool and CROPS, but you will be placed in at most one."
-→ **3つ全部に出してよい。取れるのは1つ。** 出すこと自体にコストはない。
+**[verified] Official wording:** "One EF prize per project. You can submit to anon-rpc, the alt mempool and CROPS, but you will be placed in at most one."
+→ **We may enter all three. We can win one.** There is no cost to entering itself.
 
 ## Anon-RPC
-- 【確】specifier（ネットワーク指定用のコントラクト）を渡すと、匿名化された `fetch` が返る。null-origin の iframe 内の Worker で動く。https://ethereum.github.io/anon-rpc/
-- 【確】npm の `@anon-rpc/browser-harness` を使う、ブラウザ専用の仕組み。宛先は任意の URL で、viem の custom transport に渡せる。そのため 0G の RPC も宛先にできるはず（0G では動かしていない）
-- 【確】specifier を読むために、最初に一度だけ mainnet（Nox は Sepolia）の provider が要る。匿名化ネットワークは Tor・Nym（mainnet）と Nox（Sepolia）。Tor のゲートウェイはデモ用で、容量が小さい。https://ethereum.github.io/anon-rpc/wallets/ ・ https://ethereum.github.io/anon-rpc/adopters/
-- **注意**：隠れるのは「誰が照会したか」。「どの仮名・どのスキルを照会したか」という中身は RPC から見える。だから、知り合いの情報を外に出さないには、**レジストリの全イベントを取って端末で絞る**設計にする
-- 【未確認】成熟度の正式な表記
+- [verified] Pass it a specifier (a contract for designating the network) and it returns an anonymized `fetch`. It runs in a Worker inside a null-origin iframe. https://ethereum.github.io/anon-rpc/
+- [verified] It is a browser-only mechanism, used via npm's `@anon-rpc/browser-harness`. The destination can be any URL and can be passed to viem's custom transport. So 0G's RPC should also be usable as a destination (we have not run it against 0G)
+- [verified] To read the specifier you need a mainnet provider once at the start (Sepolia for Nox). The anonymizing networks are Tor and Nym (mainnet) and Nox (Sepolia). The Tor gateway is for demos and has small capacity. https://ethereum.github.io/anon-rpc/wallets/ and https://ethereum.github.io/anon-rpc/adopters/
+- **Note**: what is hidden is "who made the query". The contents — "which pseudonym, which skill was queried" — are visible to the RPC. So to keep information about acquaintances from leaving, the design has to **fetch all the registry's events and filter on the device**
+- [unverified] The official maturity designation
 
-## 賞の要件 【確】https://ethglobal.com/events/mumbai/prizes
-- Anon-RPC：アプリの RPC 読み取りを、既定で Anon-RPC 経由にする
-- CROPS：OSS ライセンスの公開リポジトリ、README の CROPS 節、3分以内のデモ動画、トラッカーなし、鍵と個人データを端末内に置く。ゼロから作るのでこの枠で合っている（既存プロジェクト向けの Continuity 枠は別）
-- どちらの本文にもチェーンの指定は無い
-- 【未確認】EF がパートナー枠3つのうち1つを使うか（Arkiv の欄には「1パートナーとして数える」と明記されている）
+## Prize requirements [verified] https://ethglobal.com/events/mumbai/prizes
+- Anon-RPC: make the app's RPC reads go through Anon-RPC by default
+- CROPS: a public repository with an OSS license, a CROPS section in the README, a demo video of 3 minutes or less, no trackers, keys and personal data kept inside the device. We are building from zero, so this slot fits (the Continuity slot for existing projects is separate)
+- Neither text specifies a chain
+- [unverified] Whether EF uses one of the three partner slots (the Arkiv entry explicitly says "counts as one partner")
 
-## Alt mempool / EIP-8141・Kohaku
-- 【確】フレームトランザクションは、検証・ガス支払い・実行を分けた、ネイティブのアカウント抽象。https://eips.ethereum.org/EIPS/eip-8141 。alt mempool（ERC-8421、ドラフト）は、ステークと評判で、公開 mempool が通さないトランザクションを受け付ける。https://docs.altmempool.wtf/ 。範囲付きの権限とは考え方が近いが、devnet で別に作る必要がある
-- 【確】Kohaku は JS のプライバシー用ツール群。README に「本番には使えない・監査を受けていない」とある。https://github.com/ethereum/kohaku 。直接の関わりは薄い
+## Alt mempool / EIP-8141, Kohaku
+- [verified] Frame transactions are native account abstraction separating validation, gas payment and execution. https://eips.ethereum.org/EIPS/eip-8141 . The alt mempool (ERC-8421, draft) accepts transactions the public mempool won't, using stake and reputation. https://docs.altmempool.wtf/ . Conceptually close to scoped permissions, but it needs to be built separately on a devnet
+- [verified] Kohaku is a set of JS privacy tools. Its README says "not production-ready, not audited". https://github.com/ethereum/kohaku . Only a weak direct connection
 
-## CROPS のどこを体現するか
-- 【確】censorship resistant / open source / private / secure。https://blog.ethereum.org/2026/03/13/ef-mandate
-- いちばん説得力があるのは **Private**。「誰を知っているかが端末から出ない」のは設定ではなく、仕組みそのものだから
+## Which part of CROPS we embody
+- [verified] censorship resistant / open source / private / secure. https://blog.ethereum.org/2026/03/13/ef-mandate
+- The most persuasive one is **Private**. "Who you know never leaves the device" is not a setting; it is the mechanism itself

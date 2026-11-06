@@ -1,27 +1,29 @@
-// 灯（星）を出せるのは、鍵の持ち主だけ（決定 Q1-b = B）。
-// 「使っている」と名乗る人が、**その版への許可に自分で署名していて、その許可が実際に1回は使われている**ことを確かめる。
-// World が確かめるのは「人であること」。ここで確かめるのは「その人が持ち主で、本当に使っていること」。
+// A light (star) can be lit only by the owner of the key (decision Q1-b = B).
+// Before World is asked, check that the person saying "I use this" **signed a Permit for this exact
+// version, and that the Permit has really been used at least once**.
+// World checks "is this a person". This checks "is this the owner, and do they really use it".
 //
-// 確かめられないこと（黙って良く見せない）:
-// - 署名した鍵が Ledger の中にあるかどうか。Broker に見えるのは署名だけで、機器の証明は受け取っていない
-// - World の本人と、この鍵の持ち主が同じ人かどうか。同じ1回の要求に両方が揃っている、までしか言えない
+// What this cannot check (do not let it look better than it is):
+// - Whether the signing key lives in a Ledger. The Broker sees a signature, not a device attestation.
+// - Whether the World person and the key owner are the same human. All we can say is that both
+//   arrived in the same request.
 import { signer, normalize } from './permit.js'
 
 export const OWNER_REASONS = {
-  NOT_OWNER: '鍵の持ち主が署名した、この版への許可が添えられていない（星を出さない）',
-  NOT_USED: 'その許可は、まだ一度も使われていない（星を出さない）',
+  NOT_OWNER: 'no Permit for this version signed by the key owner was sent (no star is issued)',
+  NOT_USED: 'that Permit has never been used (no star is issued)',
 }
 
-/** 持ち主で、使っているか。`{ ok }` か `{ ok:false, reason, detail }`。World を呼ぶ**前**に確かめる。 */
+/** Owner, and in use? `{ ok }` or `{ ok:false, reason, detail }`. Called **before** World. */
 export async function ownerOf({ permit, signature, skill, version }, store, now = Date.now()) {
   const no = (detail) => ({ ok: false, reason: 'NOT_OWNER', detail })
-  if (!permit || !signature) return no('許可か署名が無い')
+  if (!permit || !signature) return no('no permit or no signature')
   let p, who
-  try { p = normalize(permit) } catch { return no('許可の形が違う') }
-  try { who = await signer(p, signature) } catch { return no('署名を読めない') }
-  if (String(who).toLowerCase() !== String(p.holder).toLowerCase()) return no('署名したのは持ち主ではない')
-  if (p.skill !== skill || p.version !== version) return no('別のスキルか、別の版への許可')
-  if (Number(p.expiry) * 1000 <= now) return no('許可の期限が切れている')
-  if (store.used(p.holder, String(p.nonce)) < 1) return { ok: false, reason: 'NOT_USED', detail: 'ALLOWED が1件も無い' }
+  try { p = normalize(permit) } catch { return no('malformed permit') }
+  try { who = await signer(p, signature) } catch { return no('unreadable signature') }
+  if (String(who).toLowerCase() !== String(p.holder).toLowerCase()) return no('not signed by the holder')
+  if (p.skill !== skill || p.version !== version) return no('permit is for another skill or version')
+  if (Number(p.expiry) * 1000 <= now) return no('permit has expired')
+  if (store.used(p.holder, String(p.nonce)) < 1) return { ok: false, reason: 'NOT_USED', detail: 'no ALLOWED record for this permit' }
   return { ok: true }
 }

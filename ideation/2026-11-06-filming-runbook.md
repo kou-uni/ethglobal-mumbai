@@ -1,45 +1,45 @@
-# 撮影の手順書（minta 担当分）— 2026-11-06
+# Filming runbook (minta's part) — 2026-11-06
 
-台本は [storyboard v3](2026-11-06-storyboard.md)。この紙は「当日、どの機械で何を打ち、どこを撮るか」だけを書く。
-**できていないことは、できていないと書く。** 動いたと確認した範囲は §6 にある。
+The script is [storyboard v3](2026-11-06-storyboard.md). This sheet covers only "on the day, which machine do I type what on, and what do I point the camera at."
+**What is not done is written as not done.** What has been confirmed working is in §6.
 
 ---
 
-## 1. 台本と実物のずれ（先に Kou さんと決めたい）
+## 1. Where the script and the real thing diverge (want to settle this with Kou first)
 
-実機の画面は「星座」ではなく「**小さな灯**」で作った（#11 のあと、minta が決めた）。
-台本 v3 はまだ星の言葉で書かれている。**字幕と実機の文字が食い違うと、撮り直しになる。**
+The real device's screen was built as **a small flame**, not a "constellation" (minta decided this after #11).
+Storyboard v3 is still written in star language. **If the subtitles and the text on the device disagree, we reshoot.**
 
-| 台本 v3 | 実機にいま出るもの | 提案 |
+| Storyboard v3 | What the real device shows now | Proposal |
 |---|---|---|
-| 待機：「あなたの空」星座、「2 星」 | 眠っている灯、`All quiet.`、右下に `N lit` | 実機に合わせる |
-| 許可：範囲4行（KEY/TO/SCOPE/UNTIL） | 見出し `Lend <鍵の名前>?`、行は `Goes to` / `Can` / `Ends` | 実機に合わせる |
-| 長押しで署名 | `Hold to light`（長押し） | 同じ |
-| ★のハンコ「星になりました」 | 喜ぶ灯、`A light is lit.` | 実機に合わせる |
-| 白黒反転、✕ と `DENIED` | 白黒反転、番をする灯、`BLOCKED` | 字幕を `BLOCKED` に |
-| （なし） | 灯が消えた絵、`went out`（道具の版が変わった通知） | 2:18 の場面で使える |
+| Idle: "your sky" constellation, "2 stars" | A sleeping flame, `All quiet.`, `N lit` in the bottom right | Match the device |
+| Permit: four lines of scope (KEY/TO/SCOPE/UNTIL) | Heading `Lend <key name>?`, rows `Goes to` / `Can` / `Ends` | Match the device |
+| Long-press to sign | `Hold to light` (long press) | Same |
+| The ★ stamp, "you have become a star" | A happy flame, `A light is lit.` | Match the device |
+| Black-and-white inversion, ✕ and `DENIED` | Black-and-white inversion, a flame standing guard, `BLOCKED` | Change the subtitle to `BLOCKED` |
+| (none) | A picture of a flame going out, `went out` (notification that the tool's version changed) | Can be used in the 2:18 scene |
 
-**提案は1つ：PC の空は「星」のまま、手元の Ledger は「灯」にする。**
-買える星は冷たい点。知っている人が実際に使っている道具だけ、温かい灯になる。
-画面 A（空）はもうこの形で動いている（`Everyone` は白い点 1,284 個、`People I know` は灯）。
-キャッチコピー「星の数ではなく、誰の星か」は変えなくてよい。締めだけ「買える星を、買えない灯に」が候補。
+**There is one proposal: the sky on the PC stays "stars," and the Ledger in your hand becomes "flames."**
+A star you can buy is a cold dot. Only a tool that someone you know is actually using becomes a warm flame.
+Screen A (the sky) already works this way (`Everyone` is 1,284 white dots, `People I know` is flames).
+The tagline "not how many stars, but whose stars" does not need to change. For the closing line, "turn buyable stars into unbuyable flames" is a candidate.
 
-## 2. 何をどの機械で動かすか
+## 2. What runs on which machine
 
-| 動かすもの | 機械 | 理由 |
+| What to run | Machine | Why |
 |---|---|---|
-| Broker（`broker/`） | Kou さんの機械 | 0G と World の鍵が `broker/.env.local` にある |
-| bridge（`bridge/bridge.py`） | **Ledger を挿している機械** | USB を話すのはここだけ |
-| 画面 A・C（`web/`） | 撮影で奥に映す PC | どこでもよい |
+| Broker (`broker/`) | Kou's machine | The 0G and World keys are in `broker/.env.local` |
+| bridge (`bridge/bridge.py`) | **The machine with the Ledger plugged in** | This is the only thing that speaks USB |
+| Screens A and C (`web/`) | The PC in the background of the shot | Anywhere is fine |
 
-**未決：Broker と bridge が別の機械になる。** いまの Broker と bridge は `127.0.0.1` で待つ。
-撮影は**1台にまとめるのが安全**（Kou さんの機械に Ledger を挿す。必要なのは `pip install hidapi` だけ）。
-2台に分けるなら、画面を `?broker=http://<Kou の機械>:8787` で開き、Broker を LAN に出す変更が要る。
+**Undecided: the Broker and the bridge end up on different machines.** The current Broker and bridge listen on `127.0.0.1`.
+**For filming it is safer to put everything on one machine** (plug the Ledger into Kou's machine. All that is needed is `pip install hidapi`).
+If we split across two machines, open the screens with `?broker=http://<Kou's machine>:8787` and we need a change to expose the Broker on the LAN.
 
-### 会場のスマホで QR を開けるようにする（公開の画面＋トンネル）
+### Making the QR openable from phones at the venue (public screens + a tunnel)
 
-画面は `https://mintannn.github.io/tomoshibi/` に置いてある。Broker を動かす機械でトンネルを張ると、
-Broker に HTTPS の公開 URL が付く（アカウント不要。鍵は機械から出ない）。
+The screens are hosted at `https://mintannn.github.io/tomoshibi/`. If you run a tunnel on the machine running the Broker,
+the Broker gets a public HTTPS URL (no account needed; the key never leaves the machine).
 
 ```bash
 brew install cloudflared
@@ -49,12 +49,12 @@ brew install cloudflared
 cloudflared tunnel --url http://127.0.0.1:8787
 ```
 
-出てきた `https://….trycloudflare.com` を、画面の `?broker=` に付けて開く。記録の画面の QR は、その公開のリンクになる。
-**URL は起動のたびに変わる。機械を止めると切れる。** 11/6 に模擬の Broker で、公開の画面から読めること、**実際のスマホで QR から記録が開くこと**を確認した。
+Take the `https://….trycloudflare.com` that comes out and append it to the screen's `?broker=`. The QR on the records screen becomes that public link.
+**The URL changes every time you start it. Stopping the machine breaks it.** On 11/6, with a simulated Broker, we confirmed that it is readable from the public screens and that **the records really do open from the QR on an actual phone**.
 
-### 本番の 0G で通す（Kou さんの機械・決定 13〜15）
+### Running it through the production 0G (Kou's machine, Decisions 13–15)
 
-Kou さんの機械で Broker が2本動いている：**8797＝本番の 0G**、**8798＝わざと 0G に届かない役**。そこに Ledger を挿して、次を足す。
+Two Brokers are running on Kou's machine: **8797 = production 0G**, **8798 = the one deliberately playing "0G unreachable."** Plug the Ledger into that machine and add the following.
 
 ```bash
 python3 bridge/bridge.py
@@ -68,15 +68,15 @@ cd broker && node demo-agent.mjs http://127.0.0.1:8797 http://127.0.0.1:8791 htt
 python3 -m http.server 8790 --directory web
 ```
 
-`http://localhost:8790/gate.html` を開く。`L` で貸す（長押し1回・範囲は `* /v1`）。`1` 残高を読む（ふだん）→ `2` $4,800 の課金（長押し）→ `3` 乗っ取り（実機に BLOCKED）→ `5` 0G に届かない（STOPPED）。
-そのあと鍵の画面の `Show that you use it →` で灯の画面へ移り、World で名乗る。**動画の主役はこの画面**（決定 14）。`ui/index.html` は保険。
+Open `http://localhost:8790/gate.html`. `L` to lend (one long press; scope is `* /v1`). `1` reads the balance (routine) → `2` a $4,800 charge (long press) → `3` hijack (BLOCKED on the real device) → `5` 0G unreachable (STOPPED).
+After that, use `Show that you use it →` on the key screen to move to the flames screen and declare yourself with World. **This screen is the star of the video** (Decision 14). `ui/index.html` is the backup.
 
-## 3. 撮影の30分前にやること
+## 3. To do 30 minutes before filming
 
-1. **FLEX の自動ロックを 10 分にする**（Settings → Lock screen）。既定は短く、撮影中に鍵がかかる。
-2. FLEX を充電する。ケーブルは**データ用**を使う（充電専用だと認識しない）。
-3. FLEX で Tomoshibi を開く。眠っている灯が出ていればよい。
-4. 3つを起動する。
+1. **Set FLEX auto-lock to 10 minutes** (Settings → Lock screen). The default is short and it will lock during filming.
+2. Charge the FLEX. Use a **data** cable (a charge-only cable will not be recognized).
+3. Open Tomoshibi on the FLEX. A sleeping flame showing is enough.
+4. Start the three services.
 
 ```bash
 cd broker && node src/server.js
@@ -90,7 +90,7 @@ python3 bridge/bridge.py
 python3 -m http.server 8790 --directory web
 ```
 
-5. **模擬になっていないことを見る。** `simulated` が出ていたら、それは本物の 0G / World ではない。
+5. **Check that it is not in simulation.** If `simulated` appears, that is not the real 0G / World.
 
 ```bash
 curl -s http://127.0.0.1:8787/health
@@ -100,52 +100,52 @@ curl -s http://127.0.0.1:8787/health
 curl -s http://127.0.0.1:8791/health
 ```
 
-   2つ目は `"ready": true` であること。
+   The second one must be `"ready": true`.
 
-6. ブラウザで `http://localhost:8790/` を開く。右上が `Broker · live` であること（`simulated mode` や `sample data` は本番ではない）。
-7. **通しを1回やる**（§4 の順）。Ledger の `N lit` と、記録の件数がここで増える。本番の前に数を控える。
+6. Open `http://localhost:8790/` in a browser. The top right must say `Broker · live` (`simulated mode` and `sample data` are not production).
+7. **Do one full pass** (in the order of §4). The Ledger's `N lit` and the record count go up here. Note the numbers down before the real take.
 
-## 4. 場面ごとの手順
+## 4. Steps for each scene
 
-| 台本 | 撮るもの | 誰が何をするか |
+| Script | What to shoot | Who does what |
 |---|---|---|
-| **S1 沈黙** 0:20 | 奥：画面 A の `Everyone`。手前：眠っている灯 | 何もしない。Ledger に触らない |
-| **A 寄り** 0:30 | 画面 A | `People I know` を押す。白い点が消えて灯だけ残る |
-| **A 詳細** 0:52 | 画面 A | 灯を1つ押す。誰が／何を／3つの丸 |
-| **S2 生まれる** 1:08 | **Ledger と PC を同じ絵に** | 画面 A の詳細で `Show that I use this` → Ledger に範囲が出る → **長押し** → `A light is lit.` → 画面で人の確認 → 空に灯が1つ増える |
-| **S3 ふだん** 1:38 | 眠っている灯のまま | 下の `demo-ledger.mjs` の前半。Ledger は聞いてこない |
-| **S4 拒否** 1:48 | Ledger のマクロ | `demo-ledger.mjs` が範囲外を送る → 白黒反転して `BLOCKED`。**指を映さない** |
-| **A 引き** 2:18 | 画面 A | `Demo: the tool changes` を押す。その版の灯が一斉に消える |
-| **S5 手の中** 2:36 | スマホ | PC で記録（画面 C）を開く → 下の QR をスマホで読む → 同じ記録が手の中に出る（§5 の条件あり） |
+| **S1 Silence** 0:20 | Background: screen A on `Everyone`. Foreground: the sleeping flame | Do nothing. Do not touch the Ledger |
+| **A close-up** 0:30 | Screen A | Press `People I know`. The white dots disappear, leaving only the flames |
+| **A detail** 0:52 | Screen A | Press one flame. Who / what / three circles |
+| **S2 Birth** 1:08 | **The Ledger and the PC in the same frame** | On screen A's detail view, `Show that I use this` → the scope appears on the Ledger → **long press** → `A light is lit.` → confirmation by a person on the screen → one more flame in the sky |
+| **S3 Routine** 1:38 | The sleeping flame, unchanged | The first half of `demo-ledger.mjs` below. The Ledger does not ask |
+| **S4 Refusal** 1:48 | The Ledger macro | `demo-ledger.mjs` sends an out-of-scope request → black-and-white inversion and `BLOCKED`. **Keep fingers out of frame** |
+| **A wide** 2:18 | Screen A | Press `Demo: the tool changes`. All flames on that version go out at once |
+| **S5 In hand** 2:36 | Phone | Open the records (screen C) on the PC → scan the QR at the bottom with a phone → the same records appear in your hand (conditions in §5) |
 
-S3 と S4 は1本のスクリプトで順に起きる。長押しは2回（最初の許可と、重い要求のとき）。
+S3 and S4 happen in sequence from a single script. There are two long presses (the initial permit, and the heavy request).
 
 ```bash
 cd broker && node demo-ledger.mjs
 ```
 
-出力の最後に `…/trace/0x…` が出る。この `0x…` を `http://localhost:8790/trace.html?thread=0x…` に付けて開くと、S5 の記録になる。
+At the end of the output a `…/trace/0x…` appears. Append that `0x…` to `http://localhost:8790/trace.html?thread=0x…` and open it to get the records for S5.
 
-## 5. まだできていないこと
+## 5. What is not done yet
 
-| できていないこと | 撮影への影響 | どうするか |
+| What is not done | Effect on filming | What to do |
 |---|---|---|
-| **記録の QR は同じ Wi-Fi の中だけ** | 審査員のスマホが会場の別の網にいると開けない | 記録の画面に QR を出した（自作・外部ライブラリなし）。PC の網のアドレスで開くか `&lan=<アドレス>` を付ける。**撮影は自分のスマホで撮る** |
-| **灯が Ledger の許可と結びついていない** | 3つの丸のうち2つは暗いまま | 画面にそう書いてある。口でも言う。Broker 側の変更が要る |
-| **通知は端末が検証しない** | `BLOCKED` は同じ PC のプログラムなら偽造できる | README に書いてある。聞かれたら隠さない |
-| **本物の 0G / World では未確認** | 模擬でしか通していない | Kou さんの鍵がある機械で §3 の通しをやる |
-| **gas** | 0G Storage に書けない | `0xdfcb…42A4` の残高は 0（11/6 02:00 UTC）。faucet は人が押す |
+| **The records QR only works inside the same Wi-Fi** | If a judge's phone is on a different venue network, it will not open | We put a QR on the records screen (homemade, no external library). Open it with the PC's network address, or append `&lan=<address>`. **Shoot with our own phone** |
+| **Flames are not linked to the Ledger permit** | Two of the three circles stay dark | The screen says so. Say it out loud too. It needs a change on the Broker side |
+| **The device does not verify notifications** | `BLOCKED` can be forged by any program on the same PC | It is in the README. Do not hide it if asked |
+| **Unverified against the real 0G / World** | Only ever run through simulation | Do the §3 pass on the machine that has Kou's keys |
+| **Gas** | Cannot write to 0G Storage | The balance of `0xdfcb…42A4` is 0 (11/6 02:00 UTC). The faucet requires a person to press it |
 
-## 6. 確認できていること
+## 6. What has been confirmed
 
-- 実機 FLEX で署名し、Broker のコードで署名者を復元できた（`0x87b5…aFeb`）。
-- 実機で4つの瞬間（許可 → 通る → 範囲外で `BLOCKED` → 重い要求でもう一度押す）が通った。Broker は模擬モード。
-- **画面 A のボタン → 実機 FLEX で長押し → 人の確認 → 空に灯が1つ増える、が通った**（11/6 02:09 UTC。Broker は模擬モード）。S2 はこの流れで撮れる。
-- Broker のテスト 50 件が通る。
+- Signed on the real FLEX device, and the Broker's code recovered the signer (`0x87b5…aFeb`).
+- All four moments worked on the real device (permit → goes through → `BLOCKED` when out of scope → press again for a heavy request). The Broker was in simulation mode.
+- **Button on screen A → long press on the real FLEX → confirmation by a person → one more flame in the sky: this worked** (11/6 02:09 UTC. The Broker was in simulation mode). S2 can be shot in this flow.
+- The Broker's 50 tests pass.
 
-## 7. 画の注意
+## 7. Notes on the shot
 
-- FLEX は電子ペーパー。**自分では光らない。** 斜めから柔らかい光を当てる。真上の照明は映り込む。
-- 画面が切り替わるときに一瞬白黒が反転する。消していない（台本 v3 §1 のとおり、証拠として残す）。
-  ただし `A light is lit.` の前と `BLOCKED` の後だけは、残像を消すために全面を書き直している。
-- **実機の画面を PC のキャプチャで代用しない。**
+- The FLEX is e-paper. **It does not light itself.** Put soft light on it at an angle. Lighting directly overhead reflects.
+- The screen briefly inverts to black-and-white when it changes. We did not remove this (as in storyboard v3 §1, it stays as evidence).
+  However, just before `A light is lit.` and just after `BLOCKED`, we redraw the whole screen to clear the ghosting.
+- **Do not substitute a PC capture for the real device's screen.**

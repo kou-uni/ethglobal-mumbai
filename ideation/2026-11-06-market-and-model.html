@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOMOSHIBI — 市場規模（TAM/SAM/SOM）とビジネスモデル</title>
+<title>TOMOSHIBI — Market Size (TAM/SAM/SOM) and Business Model</title>
 <style>
 :root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
 --hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
@@ -89,302 +89,303 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 <div class="page">
 
 <header class="doc-header">
-  <p class="eyebrow">TOMOSHIBI ／ 市場とビジネスモデル ／ ETHGlobal Mumbai 2026</p>
-  <h1>エージェントに鍵を渡す時代の「承認」を、誰が買うのか</h1>
-  <p class="lead">財布は3つある。<b>守る側</b>（機械の身元・秘密情報の管理）が2030年に約240億ドル、<b>信用を見せる側</b>（作り手のマーケ予算）が約30億ドル、<b>損失を移す側</b>（サイバー保険）が年160億ドル。合わせて<b>430億ドル</b>。その上を流れるエージェントの決済は <b>2030年に1.5兆ドル</b>（2026年の188倍）。TOMOSHIBI はその二つの間、<b>「人が1回だけ押す」層</b>に立つ。ここに値札が付くかを、原価まで下ろして検討した。</p>
-  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>数値の出所は末尾（推計は推計と明記）</span></div>
+  <p class="eyebrow">TOMOSHIBI / Market and Business Model / ETHGlobal Mumbai 2026</p>
+  <h1>Who buys &ldquo;approval&rdquo; in an era where agents are handed the keys</h1>
+  <p class="lead">There are three wallets. The <b>defending</b> side (machine identity and secrets management) is about $24B in 2030; the <b>showing-trust</b> side (makers' marketing budget) about $3B; the <b>loss-shifting</b> side (cyber insurance) $16B a year. Together, <b>$43B</b>. The agent payments flowing above them reach <b>$1.5T in 2030</b> (188&times; that of 2026). TOMOSHIBI stands between the two, at the layer where <b>a person presses once</b>. We examined whether a price tag fits here, down to unit cost.</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>Sources at the end (estimates are marked as estimates)</span></div>
 </header>
 
 <section>
-  <h2>エグゼクティブサマリー</h2>
+  <h2>Executive summary</h2>
   <ol class="summary">
-    <li><b>TAM 430億ドル（年）。</b>守る 240億＋<b>信用を見せる 30億</b>＋<b>損失を移す 160億</b>。TOMOSHIBI は<b>同じ1つの仕組みで、売る側の財布と買う側の財布の両方に当たる</b>——灯は作り手には<b>看板（マーケ）</b>、持ち主には<b>事故が減ること（リスク低減）</b>。</li>
-    <li><b>SAM は20〜70億ドル。</b>決め手は我々の実測だ。<b>0G は「金額」ではなく「お金が動くか」で判定する</b>——$4,800 でも <b>$1 でも「決定的」</b>。つまりエージェントの決済は<b>ほぼ全件が承認の対象</b>で、SAM はエージェント経済と同じ速さで伸びる。</li>
-    <li><b>収益は3本。うち1本は、継続課金の動機が製品の仕組みに内蔵されている。</b>版を上げると灯が一斉に消える——だから<b>スキルの作り手は、版を出すたびに信用を買い直す</b>。チャーン対策を機能で足す必要がない。</li>
-    <li><b>原価は実測で1判定 300トークン</b>（入力277〜304／出力24〜28）。価格の見当は <b>1判定 0.02〜0.2円</b>。<b>いちばん先にやることは値付けではなく、0G の単価を確かめること</b>——原価の幅がまだ10倍ある。</li>
+    <li><b>TAM $43B (per year).</b> Defend $24B + <b>show trust $3B</b> + <b>shift loss $16B</b>. TOMOSHIBI <b>reaches both the seller's wallet and the buyer's wallet with one and the same mechanism</b>&mdash;the flame is a <b>signboard (marketing)</b> to the maker, and <b>fewer accidents (risk reduction)</b> to the holder.</li>
+    <li><b>SAM is $2&ndash;7B.</b> What settles it is our own measurement. <b>0G judges on &ldquo;does money move&rdquo;, not on &ldquo;how much&rdquo;</b>&mdash;$4,800 or <b>$1, both are &ldquo;decisive&rdquo;</b>. So <b>nearly every agent payment is subject to approval</b>, and SAM grows at the same speed as the agent economy.</li>
+    <li><b>Three revenue lines. In one of them, the motive to keep paying is built into how the product works.</b> Raise the version and the flames all go out at once&mdash;so <b>the skill's maker buys trust again with every release</b>. No anti-churn feature needs to be added.</li>
+    <li><b>Measured cost is $0.000036 (&yen;0.0056) per judgement.</b> Both the token counts and the unit prices came from production 0G. Even used up to the ceiling of the $9/month plan, gross margin is <b>80%</b>, and the free tier of 2,000 judgements costs $0.07 a month. <b>Cost is not a constraint on pricing</b>&mdash;so the price can only be justified by <b>value to the buyer</b>, not by cost. That is what we check next.</li>
   </ol>
 </section>
 
 <section>
-  <h2><span class="no">01</span>どの市場にいるのか</h2>
-  <p class="msg">隣の3市場のどれでもない。<b>「鍵を預からずに、1回ずつ人の承認を取る」層は、まだ値札が付いていない。</b></p>
+  <h2><span class="no">01</span>Which market are we in</h2>
+  <p class="msg">None of the three neighbouring markets. <b>The layer that takes a human approval one call at a time, without holding the key, has no price tag yet.</b></p>
 
   <div class="fig-scroll"><div class="matrix" style="--mx-cols:3;--mx-label:150px">
     <div class="mx-h"></div>
-    <div class="mx-h">やっていること</div>
-    <div class="mx-h">エージェントが来ると壊れる点</div>
-    <div class="mx-h">代表</div>
+    <div class="mx-h">What it does</div>
+    <div class="mx-h">Where it breaks when agents arrive</div>
+    <div class="mx-h">Representative</div>
 
-    <div class="mx-label alt"><small>隣01</small>秘密情報の管理</div>
-    <div class="mx-cell">鍵を金庫に入れ、取り出し口を監査する</div>
-    <div class="mx-cell"><b>取り出したあとを見ていない。</b>エージェントは正しく取り出して、間違ったことに使う</div>
+    <div class="mx-label alt"><small>NEIGHBOUR 01</small>Secrets management</div>
+    <div class="mx-cell">Puts keys in a vault and audits the checkout point</div>
+    <div class="mx-cell"><b>It does not watch what happens after checkout.</b> An agent checks the key out correctly, then uses it for the wrong thing</div>
     <div class="mx-cell">Vault, AWS Secrets Manager</div>
 
-    <div class="mx-label alt"><small>隣02</small>機械の身元</div>
-    <div class="mx-cell">証明書で「どの機械か」を証す</div>
-    <div class="mx-cell"><b>どの機械かは分かるが、その1回を人が許したかは分からない</b></div>
+    <div class="mx-label alt"><small>NEIGHBOUR 02</small>Machine identity</div>
+    <div class="mx-cell">Proves &ldquo;which machine&rdquo; with certificates</div>
+    <div class="mx-cell"><b>You know which machine, but not whether a person permitted that one call</b></div>
     <div class="mx-cell">CyberArk, Venafi</div>
 
-    <div class="mx-label alt"><small>隣03</small>エージェント決済</div>
-    <div class="mx-cell">エージェントが払えるようにする</div>
-    <div class="mx-cell"><b>払えるようにする側に、止める理由がない</b>（流量が収益なので）</div>
+    <div class="mx-label alt"><small>NEIGHBOUR 03</small>Agent payments</div>
+    <div class="mx-cell">Lets agents pay</div>
+    <div class="mx-cell"><b>The side that enables paying has no reason to stop anything</b> (volume is revenue)</div>
     <div class="mx-cell">Stripe ACP, x402, Visa</div>
 
-    <div class="mx-label"><small>ここ</small>TOMOSHIBI</div>
-    <div class="mx-cell"><b>鍵を預からない。</b>重い1回だけ、手元の機器で人に押させる。断った記録も残す</div>
-    <div class="mx-cell">—</div>
-    <div class="mx-cell">—</div>
+    <div class="mx-label"><small>HERE</small>TOMOSHIBI</div>
+    <div class="mx-cell"><b>Never holds the key.</b> For the heavy call only, it makes a person press on the device in their hand. Refusals are recorded too</div>
+    <div class="mx-cell">&mdash;</div>
+    <div class="mx-cell">&mdash;</div>
   </div></div>
 
-  <p class="note"><b>隣との関係は競合ではなく、上に乗る形。</b>秘密情報の管理は「鍵をどこに置くか」、TOMOSHIBI は「その鍵が<b>いま</b>使われてよいか」。両方必要で、後者はまだ誰も売っていない。</p>
+  <p class="note"><b>The relation to the neighbours is not competition; we sit on top of them.</b> Secrets management answers &ldquo;where the key is kept&rdquo;; TOMOSHIBI answers &ldquo;whether that key may be used <b>right now</b>&rdquo;. Both are needed, and nobody sells the latter yet.</p>
 </section>
 
 <section>
   <h2><span class="no">02</span>TAM / SAM / SOM</h2>
-  <p class="msg">3つの財布を足すと <b>TAM 430億ドル</b>。そのうち人の承認が要る領域が <b>SAM 20〜70億ドル</b>、3年で届く範囲が <b>SOM 140万ドル</b>。</p>
+  <p class="msg">Add the three wallets and <b>TAM is $43B</b>. The part of it that needs human approval is <b>SAM $2&ndash;7B</b>, and what we can reach in three years is <b>SOM $1.4M</b>.</p>
 
   <figure>
-    <figcaption>図表1　TOMOSHIBI の市場（2030年・年あたり。<b>面積は比率ではない</b>——金額は右に書いた）</figcaption>
+    <figcaption>Figure 1&emsp;TOMOSHIBI's market (2030, per year. <b>Areas are not to scale</b>&mdash;the amounts are written on the right)</figcaption>
     <svg viewBox="0 0 760 310" role="img" aria-label="TAM SAM SOM">
       <rect x="8" y="16" width="420" height="276" fill="#e7e9ec"/>
       <rect x="8" y="120" width="290" height="172" fill="#c9ccd1"/>
       <rect x="8" y="232" width="150" height="60" fill="#173f66"/>
 
       <text x="20" y="42" font-size="13" font-weight="700" fill="#1a1a1a">TAM</text>
-      <text x="20" y="62" font-size="11.5" fill="#555555">エージェントの権限を守る市場</text>
+      <text x="20" y="62" font-size="11.5" fill="#555555">Market guarding agent authority</text>
       <text x="310" y="146" font-size="13" font-weight="700" fill="#1a1a1a">SAM</text>
-      <text x="310" y="166" font-size="11.5" fill="#555555">人の承認が要る要求</text>
+      <text x="310" y="166" font-size="11.5" fill="#555555">Needs human approval</text>
       <text x="172" y="258" font-size="13" font-weight="700" fill="#173f66">SOM</text>
-      <text x="172" y="276" font-size="11.5" fill="#555555">3年で届く範囲</text>
+      <text x="172" y="276" font-size="11.5" fill="#555555">Reachable in 3 years</text>
 
       <line x1="440" y1="30" x2="740" y2="30" stroke="#d9d9d9"/>
-      <text x="440" y="56" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$43B<tspan font-size="13" fill="#555555">／年</tspan></text>
-      <text x="440" y="78" font-size="11.5" fill="#555555">守る（身元・秘密）$24B</text>
-      <text x="440" y="96" font-size="11.5" fill="#555555">見せる（作り手）$3B ／ 移す（保険）$16B</text>
-      <text x="440" y="112" font-size="11.5" fill="#8e8e8e">別解: 決済 $1.5T × 0.1% = $1.5B</text>
+      <text x="440" y="56" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$43B<tspan font-size="13" fill="#555555">/yr</tspan></text>
+      <text x="440" y="78" font-size="11.5" fill="#555555">Defend (identity, secrets) $24B</text>
+      <text x="440" y="96" font-size="11.5" fill="#555555">Show (makers) $3B / Shift (insurance) $16B</text>
+      <text x="440" y="112" font-size="11.5" fill="#8e8e8e">Alt. read: payments $1.5T × 0.1% = $1.5B</text>
 
       <line x1="440" y1="130" x2="740" y2="130" stroke="#d9d9d9"/>
-      <text x="440" y="158" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$2–7B<tspan font-size="13" fill="#555555">／年</tspan></text>
-      <text x="440" y="180" font-size="11.5" fill="#555555">守る $6B ＋ 灯 $0.17B ＋ 事故 $0.8B</text>
-      <text x="440" y="198" font-size="11.5" fill="#555555">下から: 開発者 7.3M 人 × $120/年 ＝ $0.87B</text>
+      <text x="440" y="158" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$2–7B<tspan font-size="13" fill="#555555">/yr</tspan></text>
+      <text x="440" y="180" font-size="11.5" fill="#555555">Defend $6B + flame $0.17B + accidents $0.8B</text>
+      <text x="440" y="198" font-size="11.5" fill="#555555">Bottom-up: 7.3M developers × $120/yr = $0.87B</text>
 
       <line x1="440" y1="232" x2="740" y2="232" stroke="#d9d9d9"/>
-      <text x="440" y="260" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$1.4M<tspan font-size="13" fill="#555555">／年（3年目）</tspan></text>
-      <text x="440" y="282" font-size="11.5" fill="#555555">8,000人 ＋ スキル1,000件 ＋ 企業10社</text>
+      <text x="440" y="260" font-size="26" font-weight="700" fill="#173f66" font-variant-numeric="tabular-nums">$1.4M<tspan font-size="13" fill="#555555">/yr (year 3)</tspan></text>
+      <text x="440" y="282" font-size="11.5" fill="#555555">8,000 people + 1,000 skills + 10 companies</text>
     </svg>
-    <p class="src">出所: 機械の身元 $9.85B（2025）CAGR 10.62%、秘密情報の管理 $4.17B（2025）CAGR 13.4% から5年複利で kou が計算（推計）。エージェント決済は Juniper Research。信用を見せる側（コンプライアンス自動化 $2.7B）と損失を移す側（サイバー保険 $16.3B）は §03。SAM・SOM は下表の仮定による推計で、顧客での検証はしていない。</p>
+    <p class="src">Sources: machine identity $9.85B (2025) CAGR 10.62% and secrets management $4.17B (2025) CAGR 13.4%, compounded over five years by kou (estimate). Agent payments from Juniper Research. The showing-trust side (compliance automation $2.7B) and the loss-shifting side (cyber insurance $16.3B) are in &sect;03. SAM and SOM are estimates based on the assumptions in the table below, and have not been validated with customers.</p>
   </figure>
 
   <div class="tbl"><table>
-    <caption>表1　導出（太字が仮定。仮定を動かせば答えも動く）</caption>
-    <thead><tr><th>層</th><th>作り方</th><th class="num">金額（年）</th><th>仮定の置き方</th></tr></thead>
+    <caption>Table 1&emsp;Derivation (bold is an assumption. Move an assumption and the answer moves)</caption>
+    <thead><tr><th>Layer</th><th>How it is built</th><th class="num">Amount (per year)</th><th>How the assumption is set</th></tr></thead>
     <tbody>
-      <tr><td><b>TAM</b></td><td>機械の身元 $16.3B ＋ 秘密情報 $7.8B（2030推計）</td><td class="num">$24.1B</td><td>重複を引くと <b>$20.5B</b>。<b>どちらの数字でも「エージェントの権限」は百億ドル台</b></td></tr>
-      <tr><td><b>TAM 見せる</b></td><td>コンプライアンス自動化（信用を見せるための支出）2028予測</td><td class="num">$2.7B</td><td><b>作り手が「信用できる」を見せるために実際に払っている額</b>。Vanta は1社 $18.8k/年</td></tr>
-      <tr><td><b>TAM 移す</b></td><td>サイバー保険の保険料（2025）</td><td class="num">$16.3B</td><td><b>買う側が損失を減らすために払っている額</b>。侵害1件の平均は $4.44M</td></tr>
-      <tr><td><b>TAM（別解）</b></td><td>エージェント決済 $1.5T × 手数料 <b>0.1%</b></td><td class="num">$1.5B</td><td>決済に乗せる読み方。McKinsey の $3–5T を採れば $3–5B</td></tr>
-      <tr><td><b>SAM 上から</b></td><td>TAM × <b>25%</b>（人の承認が要る＝不可逆な権限の割合）</td><td class="num">$6.0B</td><td>我々の実測では<b>金が動く要求は $1 でも「決定的」</b>。25% は保守側に置いた</td></tr>
-      <tr><td><b>SAM 下から</b></td><td>開発者 48.4M × <b>15%</b>（実鍵をエージェントに渡す層）× <b>$120/年</b></td><td class="num">$0.87B</td><td>15% は推計。10% なら $0.58B</td></tr>
-      <tr><td><b>SAM 灯の掲示</b></td><td>スキルの作り手 <b>500k 人</b> × $348/年</td><td class="num">$0.17B</td><td>Vanta の顧客単価 $18.8k/年の <b>1/54</b> に置いた（相手が企業ではなく個人の作り手なので）</td></tr>
-      <tr><td><b>SAM 事故の移転</b></td><td>サイバー保険 $16B × <b>5%</b>（エージェント起因の割合・2030）</td><td class="num">$0.8B</td><td>保険は売らない。<b>隣にある財布の大きさ</b>として置く</td></tr>
-      <tr class="total"><td><b>SAM 採用値</b></td><td>上下の幅をそのまま出す</td><td class="num">$2–7B</td><td>一本の数字に丸めない</td></tr>
-      <tr><td><b>SOM 1年目</b></td><td>個人 400人 ＋ スキル 80件</td><td class="num">$0.07M</td><td>ハッカソン後に手で獲る範囲</td></tr>
-      <tr><td><b>SOM 3年目</b></td><td>個人 8,000人×$108 ＋ スキル 1,000件×$348 ＋ 企業 10社×$20k</td><td class="num">$1.41M</td><td>ハードウェアウォレット出荷 <b>8M台</b>の 5% がエージェントを使い、その <b>2%</b> が払う</td></tr>
+      <tr><td><b>TAM</b></td><td>Machine identity $16.3B + secrets $7.8B (2030 estimate)</td><td class="num">$24.1B</td><td>Subtract the overlap and it is <b>$20.5B</b>. <b>Either way, &ldquo;agent authority&rdquo; is a tens-of-billions market</b></td></tr>
+      <tr><td><b>TAM, show</b></td><td>Compliance automation (spend to show trust), 2028 forecast</td><td class="num">$2.7B</td><td><b>What makers actually pay to show they are trustworthy.</b> Vanta is $18.8k/year per company</td></tr>
+      <tr><td><b>TAM, shift</b></td><td>Cyber insurance premiums (2025)</td><td class="num">$16.3B</td><td><b>What the buying side pays to reduce losses.</b> One breach averages $4.44M</td></tr>
+      <tr><td><b>TAM (alternative)</b></td><td>Agent payments $1.5T &times; fee <b>0.1%</b></td><td class="num">$1.5B</td><td>Reading it as riding on payments. Take McKinsey's $3&ndash;5T and it is $3&ndash;5B</td></tr>
+      <tr><td><b>SAM, top-down</b></td><td>TAM &times; <b>25%</b> (share needing human approval, i.e. irreversible authority)</td><td class="num">$6.0B</td><td>In our measurements <b>a request that moves money is &ldquo;decisive&rdquo; even at $1</b>. 25% is set on the conservative side</td></tr>
+      <tr><td><b>SAM, bottom-up</b></td><td>48.4M developers &times; <b>15%</b> (those who hand a real key to an agent) &times; <b>$120/year</b></td><td class="num">$0.87B</td><td>15% is an estimate. At 10% it is $0.58B</td></tr>
+      <tr><td><b>SAM, flame display</b></td><td>Skill makers <b>500k</b> &times; $348/year</td><td class="num">$0.17B</td><td>Set at <b>1/54</b> of Vanta's $18.8k/year per customer (the buyer is an individual maker, not a company)</td></tr>
+      <tr><td><b>SAM, accident transfer</b></td><td>Cyber insurance $16B &times; <b>5%</b> (share caused by agents, 2030)</td><td class="num">$0.8B</td><td>We do not sell insurance. It is placed here as <b>the size of the wallet next door</b></td></tr>
+      <tr class="total"><td><b>SAM, adopted</b></td><td>The range is published as a range</td><td class="num">$2&ndash;7B</td><td>Not rounded to a single number</td></tr>
+      <tr><td><b>SOM, year 1</b></td><td>400 individuals + 80 skills</td><td class="num">$0.07M</td><td>What we can win by hand after the hackathon</td></tr>
+      <tr><td><b>SOM, year 3</b></td><td>8,000 individuals &times; $108 + 1,000 skills &times; $348 + 10 companies &times; $20k</td><td class="num">$1.41M</td><td>5% of the <b>8M</b> hardware wallets shipped use an agent, and <b>2%</b> of those pay</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <section>
-  <h2><span class="no">03</span>二つの財布（信用を売る側と、買う側）</h2>
-  <p class="msg"><b>同じ灯が、作り手には看板代に、持ち主には事故を減らす費用に見える。</b>だから TOMOSHIBI は、1つの仕組みで<b>別々の財布</b>に当たる。</p>
+  <h2><span class="no">03</span>Two wallets (the side selling trust, and the side buying it)</h2>
+  <p class="msg"><b>The same flame looks like signboard spend to the maker, and like accident-reduction spend to the holder.</b> So TOMOSHIBI reaches <b>separate wallets</b> with one mechanism.</p>
 
   <div class="kpis">
-    <div class="kpi"><div class="v">$18.8<small>k/年</small></div><div class="l">信用を見せるために1社が払う額（Vanta: $300M ARR ÷ 16,000社）</div></div>
-    <div class="kpi"><div class="v">$2.7<small>B</small></div><div class="l">コンプライアンス自動化市場（2028予測）</div></div>
-    <div class="kpi"><div class="v">$4.44<small>M</small></div><div class="l">侵害1件の平均費用（世界・2025／米国は $10.22M）</div></div>
-    <div class="kpi"><div class="v">$16<small>B/年</small></div><div class="l">サイバー保険の保険料（2025）</div></div>
+    <div class="kpi"><div class="v">$18.8<small>k/yr</small></div><div class="l">What one company pays to show trust (Vanta: $300M ARR &divide; 16,000 companies)</div></div>
+    <div class="kpi"><div class="v">$2.7<small>B</small></div><div class="l">Compliance automation market (2028 forecast)</div></div>
+    <div class="kpi"><div class="v">$4.44<small>M</small></div><div class="l">Average cost of one breach (global, 2025; US is $10.22M)</div></div>
+    <div class="kpi"><div class="v">$16<small>B/yr</small></div><div class="l">Cyber insurance premiums (2025)</div></div>
   </div>
 
   <div class="tbl"><table>
-    <caption>表2　いま何に払っていて、TOMOSHIBI が何に置き換わるか</caption>
-    <thead><tr><th style="width:140px">立場</th><th>いま払っているもの</th><th>TOMOSHIBI が出すもの</th><th>置き換わるか</th></tr></thead>
+    <caption>Table 2&emsp;What is paid for today, and what TOMOSHIBI replaces</caption>
+    <thead><tr><th style="width:140px">Position</th><th>What they pay for today</th><th>What TOMOSHIBI provides</th><th>Does it replace it?</th></tr></thead>
     <tbody>
       <tr>
-        <td><b>信用を売る側</b><br>（P2 スキルの作り手）</td>
-        <td>監査・認証・バッジ・レビューで「信用できる」を<b>見せる</b>ための費用。<b>これは実在する支出</b>——Vanta は1社あたり年 $18.8k、Drata は $12.5k を取れている</td>
-        <td><b>灯＝使われている事実。</b>監査は「過去に基準を満たした」、灯は「<b>いま、何人が自分の鍵で使っているか</b>」</td>
-        <td><b>一部だけ。</b>監査は規制で要るので消えない。<b>新しい棚</b>が1つ増える形</td>
+        <td><b>The side selling trust</b><br>(P2, the skill maker)</td>
+        <td>Spend to <b>show</b> trustworthiness through audits, certifications, badges and reviews. <b>This is real, existing spend</b>&mdash;Vanta takes $18.8k per company per year, Drata $12.5k</td>
+        <td><b>The flame = the fact of being used.</b> An audit says &ldquo;it met the standard in the past&rdquo;; the flame says &ldquo;<b>how many people are using it right now, with their own key</b>&rdquo;</td>
+        <td><b>Only partly.</b> Audits are required by regulation, so they do not disappear. It adds <b>one new shelf</b></td>
       </tr>
       <tr>
-        <td><b>信用を買う側</b><br>（P1 鍵の持ち主）</td>
-        <td>事故が起きた<b>あと</b>の費用（平均 $4.44M）と、その移転（サイバー保険 年 $16B）</td>
-        <td><b>事故が起きる前に止める</b>。止めた記録と、断った記録が残る</td>
-        <td><b>保険の代わりにはならない。</b>補填はしない。<b>止めた記録は査定に出せる</b>——そこが接点</td>
+        <td><b>The side buying trust</b><br>(P1, the key holder)</td>
+        <td>The cost <b>after</b> an accident (averaging $4.44M), and shifting it (cyber insurance, $16B a year)</td>
+        <td><b>Stops it before the accident happens.</b> The record of what was stopped, and the record of what was refused, remain</td>
+        <td><b>It is not a substitute for insurance.</b> We do not indemnify. <b>The record of what was stopped can be submitted to underwriting</b>&mdash;that is the point of contact</td>
       </tr>
     </tbody>
   </table></div>
 
-  <p><b>なぜこれを市場に数えてよいのか。</b>どちらの財布も、買っているものは同じ「<b>信用</b>」だからだ。売る側は見せるために、買う側は損を減らすために払っている。<b>ただし全額が移ってくるとは数えない。</b>SAM では灯の掲示を <b>$0.17B</b>（作り手 500k 人 × $348/年）、事故の移転を <b>$0.8B</b>（保険料のうちエージェント起因 5%）しか置いていない。<b>桁を盛るのは、TAM の読み方までにする。</b></p>
+  <p><b>Why we may count this as market.</b> Because what both wallets are buying is the same thing: <b>trust</b>. The selling side pays to show it, the buying side pays to lose less. <b>But we do not count the whole amount as moving to us.</b> In SAM we place only <b>$0.17B</b> for flame display (500k makers &times; $348/year) and <b>$0.8B</b> for accident transfer (the 5% of premiums caused by agents). <b>Inflating the order of magnitude stops at how we read TAM.</b></p>
 
-  <p class="note"><b>ここは仮説で、検証の仕方まで決めてある。</b>P2 がマーケ費用として払うかは、<b>「灯が付いている版」と「付いていない版」の採用率の差</b>で測る。差が出なければ B（灯の掲示 $29/月）は成立しない——<b>価格を下げる前に、この差を測る</b>。</p>
+  <p class="note"><b>This is a hypothesis, and how to test it is already decided.</b> Whether P2 pays it as marketing spend is measured by <b>the difference in adoption between a version with a flame and a version without one</b>. If no difference shows up, B (flame display, $29/month) does not stand&mdash;<b>measure that difference before cutting the price</b>.</p>
 </section>
 
 <section>
-  <h2><span class="no">04</span>なぜ、いまなのか</h2>
-  <p class="msg">エージェントが<b>お金を動かし始めた年</b>に、押す場所がまだ無い。</p>
+  <h2><span class="no">04</span>Why now</h2>
+  <p class="msg">In the year agents <b>started moving money</b>, there is still nowhere to press.</p>
 
   <div class="kpis">
-    <div class="kpi"><div class="v">188<small>倍</small></div><div class="l">エージェント決済 2026→2030（$8B→$1.5T）</div></div>
-    <div class="kpi"><div class="v">3<small>%</small></div><div class="l">いまエージェントが関わる取引の割合（2026/6）</div></div>
-    <div class="kpi"><div class="v">48.4<small>M</small></div><div class="l">世界の開発者（2025 Q3）</div></div>
-    <div class="kpi"><div class="v">18<small>M</small></div><div class="l">World ID で確かめられた人（160か国）</div></div>
+    <div class="kpi"><div class="v">188<small>&times;</small></div><div class="l">Agent payments 2026&rarr;2030 ($8B&rarr;$1.5T)</div></div>
+    <div class="kpi"><div class="v">3<small>%</small></div><div class="l">Share of transactions an agent is involved in today (2026/6)</div></div>
+    <div class="kpi"><div class="v">48.4<small>M</small></div><div class="l">Developers worldwide (2025 Q3)</div></div>
+    <div class="kpi"><div class="v">18<small>M</small></div><div class="l">People verified with World ID (160 countries)</div></div>
   </div>
 
-  <p>3% という数字が効く。<b>まだ事故が起ききっていない。</b>事故が普通になってから「止める層」を売りに行くと、その頃には決済の各社が自分で薄い承認機能を内蔵している。<b>いま要るのは、鍵を預からない側から型を出しておくこと</b>。</p>
-  <p class="note"><b>追い風ではなく、逆風も書く。</b>「人に押させる」は体験として重い。<b>競合は他社ではなく「全部自動で通してしまう楽さ」</b>。だから TOMOSHIBI は<b>ふだん何も出さない</b>設計にしてある（§04 の価格もそこに合わせた——黙っている時間には課金しない）。</p>
+  <p>The 3% figure is what matters. <b>The accidents have not all happened yet.</b> Go to sell the &ldquo;stopping layer&rdquo; after accidents are routine, and by then each payment company will have built a thin approval feature of its own. <b>What is needed now is to put out the pattern from the side that does not hold the key.</b></p>
+  <p class="note"><b>Write the headwind, not just the tailwind.</b> &ldquo;Making a person press&rdquo; is heavy as an experience. <b>The competitor is not another company; it is the ease of letting everything through automatically.</b> That is why TOMOSHIBI is designed to <b>show nothing most of the time</b> (the pricing in &sect;04 is matched to that&mdash;we do not charge for the silent hours).</p>
 </section>
 
 <section>
-  <h2><span class="no">05</span>ビジネスモデル</h2>
-  <p class="msg"><b>流量ではなく、判断に値札を付ける。</b>鍵を預からないのが商品なので、預かって稼ぐ道は最初から断つ。</p>
+  <h2><span class="no">05</span>Business model</h2>
+  <p class="msg"><b>Put the price tag on the judgement, not on volume.</b> Not holding the key is the product, so the path of earning by holding it is cut off from the start.</p>
 
   <div class="tbl"><table>
-    <caption>表3　収益の3本＋1本</caption>
-    <thead><tr><th style="width:124px">誰が払う</th><th>何に払う</th><th style="width:150px">価格（叩き台）</th><th>なぜ払い続けるか</th></tr></thead>
+    <caption>Table 3&emsp;Three revenue lines, plus one</caption>
+    <thead><tr><th style="width:124px">Who pays</th><th>What they pay for</th><th style="width:150px">Price (first draft)</th><th>Why they keep paying</th></tr></thead>
     <tbody>
-      <tr><td><b>A 鍵の持ち主</b><br>（P1）</td><td>判定の従量。<b>重い判定だけ数える</b></td><td>無料 2,000判定/月<br><b>$9/月</b> で 50,000判定<br>超過 $1 / 1,000判定</td><td>鍵を渡した相手が増えるほど判定が増える。<b>やめると「誰が何をしたか」の記録が途切れる</b></td></tr>
-      <tr><td><b>B スキルの作り手</b><br>（P2）</td><td><b>灯の掲示</b>（いまの版に何人がともしているか）</td><td><b>$29/月・スキル</b></td><td><b>版を上げると灯が一斉に消える。</b>出すたびに信用を買い直す——<b>継続の動機が仕様に内蔵されている</b></td></tr>
-      <tr><td><b>C 企業</b></td><td>自社に置く Broker と、系譜の保全（監査に出せる形）</td><td><b>$20k/年〜</b></td><td>監査の要件は毎年来る。止めると過去の証跡が読めなくなる</td></tr>
-      <tr><td>D 機器メーカー<br>（提携・将来）</td><td>端末に同梱する承認アプリ</td><td>端末1台あたりの分配</td><td>端末を売る側は<b>「使い道」が欲しい</b>。眠っている機器が動く</td></tr>
+      <tr><td><b>A. The key holder</b><br>(P1)</td><td>Metered judgements. <b>Only heavy judgements are counted</b></td><td>Free 2,000 judgements/month<br><b>$9/month</b> for 50,000 judgements<br>Overage $1 / 1,000 judgements</td><td>The more parties they hand a key to, the more judgements. <b>Stop, and the record of who did what breaks off</b></td></tr>
+      <tr><td><b>B. The skill maker</b><br>(P2)</td><td><b>Flame display</b> (how many are lighting the current version)</td><td><b>$29/month per skill</b></td><td><b>Raise the version and the flames all go out.</b> Trust is bought again with every release&mdash;<b>the motive to continue is built into the spec</b></td></tr>
+      <tr><td><b>C. Companies</b></td><td>A Broker placed on their own infrastructure, and preservation of the trail (in a form you can submit to an audit)</td><td><b>From $20k/year</b></td><td>Audit requirements come every year. Stop, and the past evidence can no longer be read</td></tr>
+      <tr><td>D. Device makers<br>(partnership, future)</td><td>An approval app bundled with the device</td><td>A share per device sold</td><td>The side selling devices wants <b>a use for them</b>. Dormant devices start moving</td></tr>
     </tbody>
   </table></div>
 
-  <h3>やらないこと（製品と矛盾するため）</h3>
+  <h3>What we will not do (it would contradict the product)</h3>
   <ul>
-    <li><b>鍵・資金を預からない。</b>預かれば保険と規制が要り、「預けなくていい」という主張そのものが消える</li>
-    <li><b>決済額の%を取らない。</b>流量が収益になった瞬間、<b>止めるほど損をする会社</b>になる。§03 の逆風そのものになってしまう</li>
-    <li><b>要求の中身を売らない・学習に使わない。</b>中身は 0G の封印の中にあり、<b>我々も読めない</b>。読めないことが売り物</li>
-    <li><b>灯を買えるようにしない。</b>買える星は冷たい。<b>金で付く灯を1個でも許すと、商品価値がゼロになる</b></li>
+    <li><b>Never hold keys or funds.</b> Holding them means insurance and regulation, and the very claim &ldquo;you do not have to hand it over&rdquo; disappears</li>
+    <li><b>Take no percentage of payment volume.</b> The moment volume becomes revenue, we become <b>a company that loses by stopping things</b>. We would become the headwind in &sect;03 ourselves</li>
+    <li><b>Never sell request contents, never train on them.</b> The contents sit inside the 0G seal, and <b>we cannot read them either</b>. Not being able to read them is what we sell</li>
+    <li><b>Never make the flame purchasable.</b> A star you can buy is cold. <b>Allow even one flame lit with money and the product's value goes to zero</b></li>
   </ul>
 </section>
 
 <section>
-  <h2><span class="no">06</span>単位経済（原価は実測から）</h2>
-  <p class="msg">1判定あたり <b>300トークン</b>。原価の見当は <b>0.02〜0.2円</b>——まだ10倍の幅があり、<b>これを潰すのが値付けの第一歩</b>。</p>
+  <h2><span class="no">06</span>Unit economics (cost from measurement)</h2>
+  <p class="msg">Per judgement, <b>300 tokens and $0.000036 (&yen;0.0056)</b>. <b>The 10&times; range has collapsed</b>&mdash;five times cheaper even than the lower bound we had guessed. <b>Cost is not a constraint on pricing.</b></p>
 
   <div class="tbl"><table>
-    <caption>表4　1判定の原価（トークン数は 2026-11-06 の本番 0G の記録から実測）</caption>
-    <thead><tr><th>項目</th><th class="num">実測</th><th>備考</th></tr></thead>
+    <caption>Table 4&emsp;Cost of one judgement (<b>both token counts and unit prices measured from production 0G on 2026-11-06</b>. No guessed values remain)</caption>
+    <thead><tr><th>Item</th><th class="num">Measured</th><th>Notes</th></tr></thead>
     <tbody>
-      <tr><td>入力トークン</td><td class="num">277〜304</td><td>うち <b>192 はキャッシュ済み</b>（型文が固定なので効く）</td></tr>
-      <tr><td>出力トークン</td><td class="num">24〜28</td><td>思考を切ってあるので短い（決定10）</td></tr>
-      <tr><td>応答時間</td><td class="num">約 2.0 秒</td><td>思考ありは 17.2 秒でタイムアウトに当たる</td></tr>
-      <tr><td>推論の単価</td><td class="num"><b>未確認</b></td><td><b>0G の価格表を見ていない。</b>$5/M 入力なら $0.0019、$0.5/M なら $0.0002</td></tr>
-      <tr class="total"><td><b>1判定の原価</b></td><td class="num">$0.0002〜0.0019</td><td>価格 $0.001/判定 なら、粗利は <b>−90%〜+80%</b>。<b>ここが決まらないと値段は決められない</b></td></tr>
+      <tr><td>Input tokens</td><td class="num">283.9 (277&ndash;304)</td><td>Average over 467 calls. Of those, <b>192 are cached</b> (the boilerplate is fixed, so it works. <b>Whether a cache discount exists is [unverified]</b>&mdash;if it does, the figure comes down further)</td></tr>
+      <tr><td>Output tokens</td><td class="num">28.0 (24&ndash;32)</td><td>Short because thinking is turned off (Decision 10)</td></tr>
+      <tr><td>Response time</td><td class="num">about 2.0 s</td><td>With thinking on it is 17.2 s, which hits the timeout</td></tr>
+      <tr><td>Inference unit price</td><td class="num"><b>$0.08/M input<br>$0.48/M output</b></td><td><b>Measured.</b> <span class="mono">pricing_usd</span> from <span class="mono">GET router-api.0g.ai/v1/models</span> (<span class="mono">0gm-1.0-35b-a3b</span>). The price list was inside the API we were already calling every time</td></tr>
+      <tr class="total"><td><b>Cost per judgement</b></td><td class="num">$0.000036</td><td>At $9/month for 50,000 judgements, gross margin is <b>80%</b>; at $1/1,000 overage, <b>96%</b>. The free tier of 2,000 judgements costs <b>$0.07</b> a month&mdash;<b>giving it away does not hurt</b></td></tr>
     </tbody>
   </table></div>
 
-  <p><b>効く手は2つある。</b>ひとつは<b>ふだんの要求を 0G に投げないこと</b>——範囲の中の読み取り（GET）は規則だけで通し、<b>お金が動きうる要求だけを 0G に渡す</b>。実測では課金系だけが「決定的」になるので、判定の数は<b>1桁減る</b>。もうひとつはキャッシュで、すでに入力の 63% が当たっている。</p>
-  <p class="note"><b>ただし、投げないと決めた瞬間に「読まずに通した」経路ができる。</b>どこまでを規則で通すかは<b>安全と原価の取引</b>で、こっそり決めてはいけない。<b>規則で通した要求も、系譜に「0G に聞かずに通した」と残す</b>のが条件。</p>
+  <p><b>Two levers work.</b> One is <b>not sending everyday requests to 0G</b>&mdash;reads (GET) inside the scope pass on rules alone, and <b>only requests that could move money are handed to 0G</b>. In our measurements only the billing-related ones come out &ldquo;decisive&rdquo;, so the number of judgements <b>drops by an order of magnitude</b>. The other is caching, which already hits 63% of input.</p>
+  <p class="note"><b>But because cost collapsed, the purpose of those two levers changed.</b> Halving $0.000036 helps nobody. <b>The reason to send fewer is no longer cost but speed alone (not making anyone wait 2 seconds).</b> There is no longer any reason to cut safety for the sake of cost.</p>
+  <p class="note"><b>The moment we decide not to send, a path of &ldquo;passed without reading&rdquo; comes into existence.</b> How far rules alone may pass is <b>a trade between safety and cost</b>, and must not be decided quietly. The condition is that <b>a request passed on rules is also recorded in the trail as &ldquo;passed without asking 0G&rdquo;</b>.</p>
 </section>
 
 <section>
-  <h2><span class="no">07</span>サステナブルに回るか</h2>
-  <p class="msg">回る条件は1つ。<b>「消える」ことが、こちらの都合ではなく利用者の利益であり続けること。</b></p>
+  <h2><span class="no">07</span>Does it run sustainably</h2>
+  <p class="msg">There is one condition. That <b>&ldquo;going out&rdquo; keeps being in the user's interest, not in ours</b>.</p>
 
   <div class="fig-scroll"><div class="chevrons">
-    <div class="chev">鍵を預けずに使える<small>入口は無料</small></div>
-    <div class="chev on">重い要求が増える<small>判定の従量（A）</small></div>
-    <div class="chev">使った事実が灯になる<small>作り手に価値が出る</small></div>
-    <div class="chev on">版が上がると消える<small>買い直し（B）</small></div>
-    <div class="chev">灯が看板になる<small>新しい利用者（P3）</small></div>
+    <div class="chev">Usable without handing over the key<small>free at the door</small></div>
+    <div class="chev on">Heavy requests increase<small>metered judgements (A)</small></div>
+    <div class="chev">Use becomes a flame<small>value accrues to the maker</small></div>
+    <div class="chev on">A new version puts it out<small>buying again (B)</small></div>
+    <div class="chev">The flame becomes a signboard<small>new users (P3)</small></div>
   </div></div>
 
   <div class="tbl"><table>
-    <caption>表5　壊れ方と、先に置いた歯止め</caption>
-    <thead><tr><th style="width:190px">壊れ方</th><th>何が起きるか</th><th>歯止め</th></tr></thead>
+    <caption>Table 5&emsp;How it breaks, and the brakes placed in advance</caption>
+    <thead><tr><th style="width:190px">How it breaks</th><th>What happens</th><th>The brake</th></tr></thead>
     <tbody>
-      <tr><td><b>うるさくて切られる</b></td><td>P1 が最も怖れること。切られたら収益はゼロ</td><td><b>ふだんは何も出さない。</b>割り込みは3場面のみ。<b>黙っている時間に課金しない</b>ので、こちらにも増やす動機がない</td></tr>
-      <tr><td><b>灯が消えるのが嫌がられる</b></td><td>B の収益源が、作り手にとっての罰に見える</td><td>消えるのは<b>版が変わったときだけ</b>。使い続けている人は出し直せる。<b>「古い評価を新しく見せない」という買い手の利益</b>と一致している</td></tr>
-      <tr><td><b>決済各社が内蔵する</b></td><td>承認が決済に吸収される</td><td><b>彼らは鍵を預かる側</b>。預からない承認は作れない。<b>手元の機器と、断った記録</b>が境界</td></tr>
-      <tr><td><b>0G の単価が上がる</b></td><td>A の粗利が消える</td><td>判定の数を減らす設計（§05）。<b>ただし「読まずに通す」は系譜に明記する</b></td></tr>
-      <tr><td><b>灯を売れと言われる</b></td><td>短期の売上と引き換えに商品価値が消える</td><td><b>売らない</b>（§04）。ここは値段の話ではない</td></tr>
+      <tr><td><b>Too noisy, so it is switched off</b></td><td>What P1 fears most. Switched off, revenue is zero</td><td><b>Show nothing most of the time.</b> Interruptions in three situations only. <b>We do not charge for the silent hours</b>, so we have no motive to add more either</td></tr>
+      <tr><td><b>Flames going out is resented</b></td><td>B's revenue source looks like a punishment to the maker</td><td>It goes out <b>only when the version changes</b>. Those who keep using it can light it again. It coincides with the buyer's interest: <b>do not show an old rating as a new one</b></td></tr>
+      <tr><td><b>Payment companies build it in</b></td><td>Approval is absorbed into payments</td><td><b>They are the side that holds keys.</b> They cannot build approval that does not hold them. <b>The device in your hand, and the record of refusals</b>, are the boundary</td></tr>
+      <tr><td><b>0G's unit price rises</b></td><td>A's gross margin disappears</td><td>Design that reduces the number of judgements (&sect;05). <b>But &ldquo;passed without reading&rdquo; is written explicitly in the trail</b></td></tr>
+      <tr><td><b>We are told to sell flames</b></td><td>Short-term revenue in exchange for the product's value disappearing</td><td><b>We do not sell them</b> (&sect;04). This is not a matter of price</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <section>
-  <h2><span class="no">08</span>3年の形</h2>
+  <h2><span class="no">08</span>The shape of three years</h2>
   <div class="fig-scroll"><div class="roadmap">
     <div class="rm-row rm-head">
       <div class="rm-lane"></div>
-      <div class="rm-h">1年目 前半</div><div class="rm-h">1年目 後半</div><div class="rm-h">2年目 前半</div>
-      <div class="rm-h">2年目 後半</div><div class="rm-h">3年目 前半</div><div class="rm-h">3年目 後半</div>
+      <div class="rm-h">Year 1 H1</div><div class="rm-h">Year 1 H2</div><div class="rm-h">Year 2 H1</div>
+      <div class="rm-h">Year 2 H2</div><div class="rm-h">Year 3 H1</div><div class="rm-h">Year 3 H2</div>
     </div>
     <div class="rm-row">
-      <div class="rm-lane">無料で配る</div>
-      <div class="rm-bar on" style="grid-column:2/4">OSS の Broker ＋ 機器アプリ</div>
+      <div class="rm-lane">Give away free</div>
+      <div class="rm-bar on" style="grid-column:2/4">OSS Broker + device app</div>
     </div>
     <div class="rm-row">
-      <div class="rm-lane">A 判定の従量</div>
-      <div class="rm-bar" style="grid-column:3/5">有料の線を引く</div>
-      <div class="rm-bar on" style="grid-column:5/8">8,000人</div>
+      <div class="rm-lane">A. Metered judgements</div>
+      <div class="rm-bar" style="grid-column:3/5">Draw the paid line</div>
+      <div class="rm-bar on" style="grid-column:5/8">8,000 people</div>
     </div>
     <div class="rm-row">
-      <div class="rm-lane">B 灯の掲示</div>
-      <div class="rm-bar" style="grid-column:4/6">作り手を入れる</div>
-      <div class="rm-bar on" style="grid-column:6/8">1,000スキル</div>
+      <div class="rm-lane">B. Flame display</div>
+      <div class="rm-bar" style="grid-column:4/6">Bring makers in</div>
+      <div class="rm-bar on" style="grid-column:6/8">1,000 skills</div>
     </div>
     <div class="rm-row">
-      <div class="rm-lane">C 企業</div>
-      <div class="rm-ms" style="grid-column:6">◆ 最初の10社</div>
+      <div class="rm-lane">C. Companies</div>
+      <div class="rm-ms" style="grid-column:6">◆ First 10 companies</div>
     </div>
     <div class="rm-row">
-      <div class="rm-lane">収益（年）</div>
+      <div class="rm-lane">Revenue (per year)</div>
       <div class="rm-bar" style="grid-column:3/5">$0.07M</div>
       <div class="rm-bar" style="grid-column:5/7">$0.4M</div>
       <div class="rm-bar on" style="grid-column:7/8">$1.4M</div>
     </div>
   </div></div>
-  <p class="src">推計。顧客での検証はしていない。前提は表1（ハードウェアウォレット出荷8M台の5%がエージェントを使い、その2%が払う）。</p>
+  <p class="src">Estimate. Not validated with customers. The assumptions are in Table 1 (5% of the 8M hardware wallets shipped use an agent, and 2% of those pay).</p>
 </section>
 
 <section>
-  <h2><span class="no">09</span>次のアクション</h2>
+  <h2><span class="no">09</span>Next actions</h2>
   <div class="tbl"><table>
-    <thead><tr><th>やること</th><th style="width:96px">誰</th><th style="width:128px">いつまで</th></tr></thead>
+    <thead><tr><th>Action</th><th style="width:96px">Who</th><th style="width:128px">By when</th></tr></thead>
     <tbody>
-      <tr><td><b>0G の推論単価を確かめる</b>（原価の幅10倍を潰す。値付けはその後）</td><td>kou</td><td>ハッカソン後すぐ</td></tr>
-      <tr><td>「お金が動きうる要求だけ 0G に渡す」規則の線を引く（通した経路は系譜に明記）</td><td>kou</td><td>2週間</td></tr>
-      <tr><td>P1 に20人聞く：<b>月 $9 を払うのは、何件目の「止めた」を見たときか</b></td><td>kou</td><td>1か月</td></tr>
-      <tr><td>P2 に10人聞く：<b>版を上げて灯が消えるのは、損か得か</b>（B の生死はここ）</td><td>minta・kou</td><td>1か月</td></tr>
-      <tr><td>ピッチでは <b>TAM $24B・SAM $2–6B</b> を出し、<b>SOM は3年目 $1.4M と正直に出す</b></td><td>kou</td><td>11/7 提出</td></tr>
+      <tr><td><s>Confirm 0G's inference unit price</s> &rarr; <b>done (2026-11-06). $0.08/M and $0.48/M, $0.000036 per judgement.</b> Cost is off the table</td><td>kou</td><td><b>Complete</b></td></tr>
+      <tr><td>Draw the rule line for &ldquo;only requests that could move money go to 0G&rdquo; (paths passed are written explicitly in the trail)</td><td>kou</td><td>2 weeks</td></tr>
+      <tr><td>Ask 20 P1s: <b>at which &ldquo;stopped&rdquo; event would you start paying $9 a month</b></td><td>kou</td><td>1 month</td></tr>
+      <tr><td>Ask 10 P2s: <b>is a version bump putting the flames out a loss or a gain</b> (B lives or dies here)</td><td>minta, kou</td><td>1 month</td></tr>
+      <tr><td>In the pitch, show <b>TAM $24B and SAM $2&ndash;6B</b>, and <b>show SOM honestly as $1.4M in year 3</b></td><td>kou</td><td>11/7 submission</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <section>
-  <h2>出所</h2>
+  <h2>Sources</h2>
   <ul>
-    <li>機械の身元の管理: $9.85B（2025）→ $26.97B（2035）、CAGR 10.62% — <a href="https://www.snsinsider.com/reports/machine-identity-security-market">SNS Insider</a>（2026）</li>
-    <li>秘密情報の管理: $4.17B（2025）→ $10.09B（2032）、CAGR 13.4% — <a href="https://www.kbvresearch.com/secrets-management-solutions-market/">KBV Research</a>／別推計 $2.47B→$11.40B, CAGR 18.5% — <a href="https://trendxinsights.com/syndicated-market-research-reports/secrets-management-market/">TrendX</a></li>
-    <li>エージェント決済: $8B（2026）→ $1.5T（2030） — Juniper Research（<a href="https://stellagent.ai/insights/agentic-commerce-1-5-trillion-forecast-2030">報道</a>）。McKinsey は 2030年に $3–5T</li>
-    <li>エージェントが関わる取引の割合 3%（2026/6） — Checkout.com 調査（<a href="https://www.growthcentr.com/agentic-payments-statistics-2026/">まとめ</a>）</li>
-    <li>AI エージェント市場: $7.84B（2025）→ $52.62B（2030）、CAGR 46.3% — <a href="https://www.marketsandmarkets.com/Market-Reports/ai-agents-market-15761548.html">MarketsandMarkets</a></li>
-    <li>世界の開発者 48.4M（2025 Q3） — SlashData（<a href="https://shiftmag.dev/there-are-47-million-developers-in-the-world-5200/">報道</a>）</li>
-    <li>ハードウェアウォレット市場 $506–680M（2025）、Ledger 累計出荷 8M台超 — <a href="https://www.imarcgroup.com/hardware-wallet-market">IMARC</a>／<a href="https://coinlaw.io/ledger-statistics/">CoinLaw</a></li>
-    <li>World ID で確かめられた人 18M・160か国（2026） — <a href="https://www.biometricupdate.com/202610/world-brings-biometric-proof-of-human-to-banking-and-ai-agents">Biometric Update</a></li>
-    <li>コンプライアンス自動化（信用を見せる側）: $850M（2025）→ $2.7B（2028） — <a href="https://www.soc2certification.com/blog/soc2-automation-market-size-2025">SOC2 Certification</a>。Vanta $300M ARR・16,000社（2026/4） — <a href="https://www.businesswire.com/news/home/20260429269142/en/Vanta-Crosses-$300M-ARR-as-Growth-Accelerates-from-AI">BusinessWire</a>。Drata $100M ARR・8,000社超 — <a href="https://sacra.com/c/drata/">Sacra</a></li>
-    <li>侵害1件の平均費用 $4.44M（世界）／$10.22M（米国）・2025 — IBM Cost of a Data Breach（<a href="https://axis-intelligence.com/cyber-insurance-statistics/">まとめ</a>）。サイバー保険の保険料 $15.6–16.3B（2025） — <a href="https://www.datamintelligence.com/research-report/cyber-risk-insurance-market">DataM Intelligence</a> ほか</li>
-    <li><b>1判定のトークン数・応答時間</b>: 2026-11-06 に本番 0G へ投げた記録（<span class="mono">ui/scenes.json</span>）から実測。<b>推論の単価は未確認</b></li>
-    <li><b>「$1 でも決定的」</b>: 2026-11-06 の実測（<span class="mono">ideation/2026-11-06-decisions.md</span> 13）</li>
+    <li>Machine identity management: $9.85B (2025) &rarr; $26.97B (2035), CAGR 10.62% &mdash; <a href="https://www.snsinsider.com/reports/machine-identity-security-market">SNS Insider</a> (2026)</li>
+    <li>Secrets management: $4.17B (2025) &rarr; $10.09B (2032), CAGR 13.4% &mdash; <a href="https://www.kbvresearch.com/secrets-management-solutions-market/">KBV Research</a> / alternative estimate $2.47B&rarr;$11.40B, CAGR 18.5% &mdash; <a href="https://trendxinsights.com/syndicated-market-research-reports/secrets-management-market/">TrendX</a></li>
+    <li>Agent payments: $8B (2026) &rarr; $1.5T (2030) &mdash; Juniper Research (<a href="https://stellagent.ai/insights/agentic-commerce-1-5-trillion-forecast-2030">coverage</a>). McKinsey puts 2030 at $3&ndash;5T</li>
+    <li>Share of transactions involving an agent, 3% (2026/6) &mdash; Checkout.com survey (<a href="https://www.growthcentr.com/agentic-payments-statistics-2026/">summary</a>)</li>
+    <li>AI agent market: $7.84B (2025) &rarr; $52.62B (2030), CAGR 46.3% &mdash; <a href="https://www.marketsandmarkets.com/Market-Reports/ai-agents-market-15761548.html">MarketsandMarkets</a></li>
+    <li>Developers worldwide 48.4M (2025 Q3) &mdash; SlashData (<a href="https://shiftmag.dev/there-are-47-million-developers-in-the-world-5200/">coverage</a>)</li>
+    <li>Hardware wallet market $506&ndash;680M (2025); Ledger cumulative shipments over 8M units &mdash; <a href="https://www.imarcgroup.com/hardware-wallet-market">IMARC</a> / <a href="https://coinlaw.io/ledger-statistics/">CoinLaw</a></li>
+    <li>People verified with World ID 18M, 160 countries (2026) &mdash; <a href="https://www.biometricupdate.com/202610/world-brings-biometric-proof-of-human-to-banking-and-ai-agents">Biometric Update</a></li>
+    <li>Compliance automation (the showing-trust side): $850M (2025) &rarr; $2.7B (2028) &mdash; <a href="https://www.soc2certification.com/blog/soc2-automation-market-size-2025">SOC2 Certification</a>. Vanta $300M ARR, 16,000 companies (2026/4) &mdash; <a href="https://www.businesswire.com/news/home/20260429269142/en/Vanta-Crosses-$300M-ARR-as-Growth-Accelerates-from-AI">BusinessWire</a>. Drata $100M ARR, over 8,000 companies &mdash; <a href="https://sacra.com/c/drata/">Sacra</a></li>
+    <li>Average cost of one breach $4.44M (global) / $10.22M (US), 2025 &mdash; IBM Cost of a Data Breach (<a href="https://axis-intelligence.com/cyber-insurance-statistics/">summary</a>). Cyber insurance premiums $15.6&ndash;16.3B (2025) &mdash; <a href="https://www.datamintelligence.com/research-report/cyber-risk-insurance-market">DataM Intelligence</a> and others</li>
+    <li><b>Tokens and response time per judgement</b>: measured from 467 calls sent to production 0G on 2026-11-06 (<span class="mono">ui/scenes.json</span> + <span class="mono">broker/data/ledger.jsonl</span>). <b>Unit prices</b> measured the same day from <span class="mono">pricing_usd</span> in <span class="mono">GET /v1/models</span> ($0.00000008/token input, $0.00000048/token output)</li>
+    <li><b>&ldquo;Decisive even at $1&rdquo;</b>: measured 2026-11-06 (<span class="mono">ideation/2026-11-06-decisions.md</span> 13)</li>
   </ul>
-  <p class="note"><b>調査会社の数字は会社ごとに2倍以上ばらつく。</b>この資料は<b>一次の価格表に当たっていない推計</b>で、出てくる金額は「桁」として読むもの。桁が動かない主張（百億ドル台の市場／決済はほぼ全件が承認対象）だけを、ピッチで使う。</p>
+  <p class="note"><b>Analyst-firm numbers differ by more than 2&times; from firm to firm.</b> This document is <b>an estimate that has not been checked against primary price lists</b>, and the amounts in it are to be read as orders of magnitude. Only the claims whose order of magnitude does not move (a tens-of-billions market / nearly every payment is subject to approval) are used in the pitch.</p>
 </section>
 
 <footer class="doc-footer">
-  <span>TOMOSHIBI — 市場とビジネスモデル（2026-11-06）</span>
-  <span>関連: ideation/2026-11-06-touchpoints.html ／ 2026-11-06-final-image.md</span>
+  <span>TOMOSHIBI &mdash; Market and Business Model (2026-11-06)</span>
+  <span>Related: ideation/2026-11-06-touchpoints.html / 2026-11-06-final-image.md</span>
 </footer>
 
 </div>

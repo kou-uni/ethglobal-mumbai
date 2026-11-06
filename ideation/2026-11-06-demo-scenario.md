@@ -1,101 +1,101 @@
-# デモの筋書き（2026-11-06）— 何を、どの順で、人に見せるか
+# Demo script (2026-11-06) — what to show people, in what order
 
-> **画面は `ui/index.html`（門）と `ui/stars.html`（灯）。** どちらも1枚の HTML で、ビルドは要らない。
-> 中の値は**本番の 0G Private Computer に実際に投げた応答**（`ui/scenes.json`・録画時刻つき）。
-> 「生で投げる」に切り替えると、その場で 0G に投げ直して**新しい request id** が出る。
+> **The screens are `ui/index.html` (the gate) and `ui/stars.html` (the flames).** Both are single HTML files; no build needed.
+> The values inside are **responses actually sent to the production 0G Private Computer** (`ui/scenes.json`, with the recording timestamp).
+> Switching to "send live" re-sends to 0G on the spot and produces **a new request id**.
 
-## 0. 誰に、どの場面で見せるか
+## 0. Who we show it to, and in what setting
 
-| 場面 | 相手 | 時間 | 相手の状態 |
+| Setting | Audience | Time | Their state |
 |---|---|---|---|
-| ブース | 審査員（立っている・端末は見ない） | **90秒** | 他に20個見ている。1つしか覚えて帰らない |
-| 提出動画 | 審査員（あとで座って見る） | **3分以内**（2:55 で切る） | 音を出さないかもしれない |
-| 通し確認 | 自分たち | 5分 | 撮影の直前。壊れていないことの確認 |
+| Booth | Judges (standing, not looking at a device) | **90 seconds** | They are seeing 20 other projects. They will remember exactly one |
+| Submission video | Judges (watching later, seated) | **Under 3 minutes** (cut at 2:55) | They may have the sound off |
+| Dry run | Ourselves | 5 minutes | Right before filming. Confirming nothing is broken |
 
-**覚えて帰ってもらう1つ：** *AI が鍵を持たずに鍵を使える。そして、止まり方が4通りに分かれている。*
+**The one thing we want them to take away:** *an AI can use a key without holding it. And it stops in four different ways.*
 
-**見せない：** 端末のログ、設定画面、`npm test` の緑。**当日の体験に数えない。**
+**Do not show:** device logs, settings screens, the green of `npm test`. **They do not count as the experience on the day.**
 
-## 1. 画面の役割（3つしかない）
+## 1. What the screens are for (there are only three)
 
-| 画面 | 何を見せるか | 出どころ |
+| Screen | What it shows | Source |
 |---|---|---|
-| **門** `ui/index.html` | エージェントの要求 → 範囲 → **0G が封印の中で読む** → 重さ → 実行。判定が4通りに分かれる | Broker `/use`（録画 or 生） |
-| **手元の機器**（門の右列） | 4行と「押す」。**押されるまで鍵は使われない** | `spec/permit-signature.md` の4行。実機は minta の自作アプリ |
-| **灯** `ui/stars.html` | 星は事実。**版が上がると一斉に消える** | Broker `/stars/<skill>?version=` |
-| **World で確かめる**（灯の画面の中） | 名乗るときだけ1回。4段と、3つの結末（確かめられた／断った／期限切れ） | Broker `/vouch/start` → `/vouch/finish` |
+| **Gate** `ui/index.html` | The agent's request → scope → **0G reads it inside the seal** → weight → execution. The judgment splits four ways | Broker `/use` (recorded or live) |
+| **The device in hand** (right column of the gate) | The four lines and "press." **The key is not used until it is pressed** | The four lines from `spec/permit-signature.md`. The real device is minta's own app |
+| **Flames** `ui/stars.html` | Stars are facts. **When the version goes up, they all go out at once** | Broker `/stars/<skill>?version=` |
+| **Confirm with World** (inside the flames screen) | Once, only when you declare yourself. Four steps and three outcomes (confirmed / refused / expired) | Broker `/vouch/start` → `/vouch/finish` |
 
-## 2. 3分の進行表（提出動画）
+## 2. Three-minute running order (submission video)
 
-| 時間 | 画面 | 操作 | 言うこと（日本語の口語。英語字幕は別途） | 画面に出る証拠 |
+| Time | Screen | Action | What to say (spoken Japanese. English subtitles separately) | Evidence on screen |
 |---|---|---|---|---|
-| 0:00–0:15 | 門（待機） | — | 「AI に API キーを渡したくない。でも AI に仕事はさせたい」 | タイトルと4行 |
-| 0:15–0:40 | 門 ①ふだん | 投げる | 「ふだんの読み取りは、そのまま通る。**鍵はエージェントに渡っていない**」 | `ALLOWED` / 0G「ふだん」/ **request id** |
-| 0:40–1:10 | 門 ②重い | 投げる | 「同じ範囲の中。でも中身は4,800ドルの送金で、宛先が知らない口座。**中身を読まないと重さは分からない。でもその中身を我々に見せたくない**」 | `NEEDS_PRESS` / 0G「決定的」＋理由 / **request id** |
-| 1:10–1:30 | 手元の機器 | **押す** | 「手元に4行が出る。押して初めて、**この1回だけ**通る」 | 枠が灯色になる → `ALLOWED`（使い切り） |
-| 1:30–1:55 | 門 ④範囲外 | 投げる | 「乗っ取られたスキルが別の宛先へ。**実行する前に止まる。しかも誰が要求したかが署名ごと残る**」 | `DENIED` / 違反として刻む / **0G には見せていない** |
-| 1:55–2:20 | 門 ⑥届かない | 投げる | 「0G に届かないとき、**既定値を作らない**。偽の判断は、通してしまうのと同じくらい悪い」 | `STOPPED` / 回数も減らない |
-| 2:20–2:45 | 灯 | 版を上げる | 「星は約束ではなく事実。**版が変われば一斉に消える**。だから数が『いま使われている』を指す」 | 灯が1本ずつ消える → 0 |
-| 2:45–2:55 | 門（系譜） | — | 「通ったことも、止めたことも、断られたことも、同じ1本に残る」 | 系譜の列と root hash |
+| 0:00–0:15 | Gate (idle) | — | "I don't want to hand my API key to an AI. But I do want the AI to do the work" | Title and the four lines |
+| 0:15–0:40 | Gate ① routine | Send | "A routine read goes straight through. **The key was never handed to the agent**" | `ALLOWED` / 0G "routine" / **request id** |
+| 0:40–1:10 | Gate ② heavy | Send | "Same scope. But the body is a $4,800 transfer to an account it doesn't know. **You can't know the weight without reading the body. But we don't want to see that body**" | `NEEDS_PRESS` / 0G "decisive" + reason / **request id** |
+| 1:10–1:30 | The device in hand | **Press** | "Four lines appear in your hand. Only once you press does **this one call** go through" | The frame turns flame-colored → `ALLOWED` (single use) |
+| 1:30–1:55 | Gate ④ out of scope | Send | "A hijacked skill goes to a different destination. **It stops before it executes. And who made the request stays on record, signature and all**" | `DENIED` / recorded as a violation / **never shown to 0G** |
+| 1:55–2:20 | Gate ⑥ unreachable | Send | "When 0G is unreachable, **we do not invent a default**. A fake judgment is as bad as letting it through" | `STOPPED` / the call budget is not decremented either |
+| 2:20–2:45 | Flames | Bump the version | "A star is a fact, not a promise. **When the version changes they all go out at once.** That is why the count means 'in use right now'" | The flames go out one by one → 0 |
+| 2:45–2:55 | Gate (trail) | — | "What went through, what we stopped, and what was refused all stay on the same single trail" | The trail column and the root hash |
 
-**World は灯のくだり（2:20〜）の中で見せる。** 「鍵を使うたびには聞かない。名乗るときだけ1回」と一言添える。
-画面遷移とプロセスの設計は `ideation/2026-11-06-screen-flow.html`。
+**Show World inside the flames segment (from 2:20).** Add one line: "we don't ask every time a key is used. Only once, when you declare yourself."
+The screen transitions and process design are in `ideation/2026-11-06-screen-flow.html`.
 
-**③と⑤は動画に入れない**（時間が足りない）。ブースで聞かれたら出す。
+**③ and ⑤ are not in the video** (not enough time). Show them at the booth if asked.
 
-## 3. 90秒版（ブース）
+## 3. The 90-second version (booth)
 
-**②重い → 押す → ④範囲外 → 灯の版上げ。** これだけ。①と⑥は口で言う。
-審査員が触りたがったら**キーボードを渡す**。`?s=heavy` のような深いリンクで、どの場面からでも始められる。
+**② heavy → press → ④ out of scope → bump the version on the flames.** That is all. ① and ⑥ are spoken.
+If a judge wants to touch it, **hand them the keyboard**. A deep link like `?s=heavy` lets you start from any scene.
 
-## 4. 壊れたときの退避（**その場で判断しない。ここで決めてある**）
+## 4. Fallbacks when something breaks (**do not decide on the spot. It is decided here**)
 
-| 起きること | どうするか |
+| What happens | What to do |
 |---|---|
-| 0G が遅い・落ちている | **「録画」のまま進める。**画面に録画の時刻と「本番の 0G に投げた応答」と出ている。偽の判断は一度も出ない |
-| Broker が落ちた | 同上。門は録画だけで最後まで通る |
-| 実機（Ledger）が繋がらない | 門の右列の「押す」で代用し、**「実機ではここが手元の機器」と口で言う**。実機の映像は別撮りを差し込む |
-| World が繋がらない | 灯の画面は試作の状態で見せ、`human_denied` の行を指す。**模擬モードは撮影では使わない** |
-| gas が来ない | root hash は出す。**「0G Storage には未投下」と画面にそのまま出ている**。置いていないものを置いたと言わない |
+| 0G is slow or down | **Carry on in "recorded" mode.** The screen shows the recording timestamp and "response sent to production 0G." Not one fake judgment is ever produced |
+| The Broker went down | Same as above. The gate runs to the end on recordings alone |
+| The real device (Ledger) will not connect | Substitute the "press" in the right column of the gate, and **say out loud "on the real device this is the device in your hand."** Splice in separately shot footage of the real device |
+| World will not connect | Show the flames screen in its prototype state and point at the `human_denied` row. **Do not use simulation mode for filming** |
+| Gas does not arrive | Show the root hash. **The screen plainly says "not yet submitted to 0G Storage."** Do not say we put something there when we did not |
 
-## 5. 撮影の前に確かめる（1行ずつ潰す）
+## 5. Check before filming (go down the list one by one)
 
-- [ ] `curl -s 127.0.0.1:8797/health` に **`simulated` が無い**（模擬モードが混ざっていない）
-- [ ] `node broker/record-ui.mjs http://127.0.0.1:8797 http://127.0.0.1:8798` を撮影直前に流し直す（**録画の時刻を当日にする**）
-- [ ] `node ui/build.mjs` で `ui/index.html` を作り直す
-- [ ] 門の「生で投げる」で 1 回通し、**request id が新しく出る**のを確認
-- [ ] 画面の倍率を上げる（審査員は小さい字を読まない）
-- [ ] 2:55 で切れる長さに収まっている
+- [ ] `curl -s 127.0.0.1:8797/health` has **no `simulated`** (no simulation mode mixed in)
+- [ ] Re-run `node broker/record-ui.mjs http://127.0.0.1:8797 http://127.0.0.1:8798` right before filming (**so the recording timestamp is today's**)
+- [ ] Rebuild `ui/index.html` with `node ui/build.mjs`
+- [ ] Do one live pass with "send live" on the gate and confirm **a new request id comes out**
+- [ ] Increase the screen zoom (judges will not read small text)
+- [ ] It fits in a length that can be cut at 2:55
 
-## 6. まだ無いもの（**黙って良く見せない**）
+## 6. What we do not have yet (**do not quietly make it look better**)
 
-- 実機の自作アプリと門は、まだ**同じ画面で繋がっていない**（4行の値は同じ関数から出ている）
-- 灯の画面の数は試作の持ち値。Broker から読むボタンで実値に差し替わる
-- 0G Storage への投下は gas 待ち。root hash は出るが tx はまだ無い
+- The real device's own app and the gate are **not yet connected on the same screen** (the four line values come from the same function)
+- The numbers on the flames screen are prototype values. The button that reads from the Broker swaps in real values
+- Submission to 0G Storage is waiting on gas. The root hash comes out but there is no tx yet
 
 ---
 
-## 9. 動画と審査の規則（ETHGlobal 公式・2026-11-06 追記）
+## 9. Video and judging rules (ETHGlobal official, added 2026-11-06)
 
-**全文と適合状況は `2026-11-06-submission-rules.md`。ここは撮影に直接効くものだけ。**
+**The full text and our compliance status are in `2026-11-06-submission-rules.md`. Only what directly affects filming is here.**
 
-| 規則 | いまの台本への影響 |
+| Rule | Effect on the current script |
 |---|---|
-| **2〜4分。2分未満・4分超はアップロードが弾かれる** | 2:55 は可。**縮めるときも 2:00 を割らない**。伸ばす余地が1分ある |
-| **720p 未満は弾かれる** | 画面収録を 1080p で |
-| **読み上げ・AI ボイスオーバーは不可** | **肉声で話す。** 合成音声に逃げない |
-| **スマホで撮らない** | 画面収録＋外部マイク |
-| **早送りで尺に収めない** | 待ち時間はカットで飛ばす（早回しではなく編集） |
-| 文字＋音楽だけは不可 | 必ず声を入れる |
-| スライドは1枚4行まで | 冒頭と締めのスライドを4行に |
-| 自己紹介は20秒まで | 名乗りは1行 |
+| **2–4 minutes. Under 2 or over 4 is rejected at upload** | 2:55 is fine. **Even when trimming, do not go under 2:00.** There is a minute of room to extend |
+| **Under 720p is rejected** | Record the screen at 1080p |
+| **No narration read by AI / AI voiceover** | **Speak in a real voice.** Do not fall back on synthetic speech |
+| **Do not shoot with a phone** | Screen recording plus an external mic |
+| **Do not fast-forward to fit the length** | Cut out the waiting (edit it out, do not speed it up) |
+| Text plus music alone is not allowed | A voice must be included |
+| Slides are limited to four lines each | Keep the opening and closing slides to four lines |
+| Self-introduction limited to 20 seconds | Name yourselves in one line |
 
-**Finalist 審査は7分＝デモ4分＋質疑3分。** 3分版とは別に**4分版**が要る。
+**Finalist judging is 7 minutes = 4 minutes demo + 3 minutes Q&A.** We need **a 4-minute version** in addition to the 3-minute one.
 
-### 質疑3つ（定番・答えを用意しておく）
+### Three Q&A items (the standard ones. Have the answers ready)
 
-| 聞かれること | 答えの芯 |
+| What they ask | The core of the answer |
 |---|---|
-| 何に着想を得たか | **レビューの点数は消えない。灯は消える。**エージェントに星を持たせるなら、消えるものにしないと意味がない |
-| どの道具をなぜ使ったか | **要求の中身を読まないと重さは決まらないのに、中身を我々に見せたくない** → 封印された推論（0G）。**押すのは人でなければならない** → 手元の機器（Ledger）。**誰が保証したかが要る** → 人であることの証明（World） |
-| どの困難をどう解いたか | **「0G に届かない」を「安全側の既定値」で埋めなかった。** 届かないときは判断を作らず `STOPPED` にし、回数も減らさない。偽の判断は、止まることより悪い |
+| What inspired you | **Review scores never go away. Flames go out.** If you are going to give agents stars, they have to be the kind that go out, or they mean nothing |
+| Which tools did you use and why | **You cannot determine the weight without reading the body of the request, yet we do not want to see that body** → sealed inference (0G). **The one who presses must be a person** → the device in hand (Ledger). **We need to know who vouched** → proof of personhood (World) |
+| What was hard and how did you solve it | **We did not paper over "0G is unreachable" with a "safe default."** When it is unreachable we make no judgment, return `STOPPED`, and do not decrement the call budget either. A fake judgment is worse than stopping |

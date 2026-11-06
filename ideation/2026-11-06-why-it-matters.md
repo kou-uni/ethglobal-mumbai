@@ -1,205 +1,198 @@
-# 社会課題・新しさ・スポンサー技術が芯であること
+# The social problem, the novelty, and the sponsor tech being the core
 
-**この3つは別々の話ではない。1本につながっている。**
+**These three are not separate stories. They connect into one line.**
 
-> **「誰がやったのか」が答えられない世界になりつつある。**（社会課題）
-> **偽物を見分けるのをやめて、本物だけを数える。**（新しさ）
-> **本物を数えるには、World と Ledger と 0G が全部要る。**（スポンサーが芯）
+> **We are heading toward a world where "who did it" cannot be answered.** (the social problem)
+> **Stop trying to tell fakes apart. Count only the real ones.** (the novelty)
+> **To count the real ones you need World, Ledger and 0G, all of them.** (the sponsors are the core)
 
 ---
 
-## 1. 社会課題 — 開発者の不便ではない
+## 1. The social problem — not a developer inconvenience
 
-### これを開発者ツールとして語ると、必ず小さくなる
+### Framed as a developer tool, this always comes out small
 
-「鍵の管理が面倒」「依存が怖い」。**それは症状。**
+"Key management is a hassle", "dependencies are scary". **Those are symptoms.**
 
-### 本当の問題：責任の連鎖が切れている
+### The real problem: the chain of responsibility is broken
 
-**信用はこれまで、「人が居る」ことで担保されていた。**
+**Up to now, credibility was backed by the fact that a person was there.**
 
-- 紹介してくれた人が居た
-- 店には人が立っていた
-- レビューを書いたのは人だった（**嘘でも、人だった**）
+- There was a person who made the introduction
+- There was a person standing in the shop
+- The person who wrote the review was a person (**a liar, maybe, but a person**)
 
-**AI は、この前提を外した。**
-**人が居なくても、信用の形だけなら完璧に作れる。**
+**AI removed that premise.**
+**Without a person there, the shape of credibility can be manufactured perfectly.**
 
-そして**何かが起きたとき、「誰がやったのか」に答えが無い。**
-本人はやっていない。AI がやった。AI が使った道具がやった。
-**その道具を黙って書き換えた誰かがやった。**
+And **when something happens, there is no answer to "who did it".**
+The person didn't do it. The AI did. The tool the AI used did.
+**Someone who quietly rewrote that tool did.**
 
-### これは仮説ではない
+### This is not a hypothesis
 
-| 事実 | 意味 |
+| Fact | Meaning |
 |---|---|
-| MCP サーバー **43,012 個**（2026-10）／月 **11,809** 増 | **代理人の数が、人の数より速く増えている** |
-| 解析された 15,465 個の**ガバナンスはゼロ** | **誰も責任を持っていない** |
-| **未登録のドメインに解決したサーバーが6件** | **誰でもそのドメインを取れば、その道具になれる。
-その時点で、何千もの代理人が、実在する人の鍵で、その人として動く** |
-| **62% が1バージョン出したきり** | **残り38%は動いている。黙って** |
+| **43,012** MCP servers (2026-10) / **11,809** added per month | **The number of agents is growing faster than the number of people** |
+| **Zero governance** across the 15,465 analyzed | **Nobody is taking responsibility** |
+| **6 servers resolving to unregistered domains** | **Anyone who grabs that domain becomes that tool. At that moment, thousands of agents are acting as real people, with those people's keys** |
+| **62% shipped one version only** | **The remaining 38% are moving. Quietly** |
 
-**ここで何かが起きたとき、誰も「私がやった」と言えないし、
-誰も「あなたがやった」と言えない。**
+**When something happens here, nobody can say "I did it",
+and nobody can say "you did it".**
 
-### だから、これは社会の問題
+### So this is a problem for society
 
-> **人が居なくても世界が動くようになったとき、
-> 「人が居る」ことそのものが、初めて情報になった。**
+> **When the world started moving without people in it,
+> the fact that a person is there became information for the first time.**
 
-**この作品がやっているのは、評価の改善ではない。
-行為を、人まで辿れる状態に戻すこと。**
+**What this work does is not improving ratings.
+It is returning actions to a state where they can be traced back to a person.**
 
-**そして、辿れる状態を作るのに、我々自身が覗き魔になってはいけない。**
-→ §3 の 0G。
+**And in building that traceable state, we must not ourselves become the peeping tom.**
+→ 0G in §3.
 
 ---
 
-## 2. 新しさ — 上流ではなく、下流を証明する
+## 2. The novelty — proving the downstream, not the upstream
 
-### いまある4つの方法
+### The four existing approaches
 
-| 方法 | 何を見るか | 限界 |
+| Approach | What it looks at | Limit |
 |---|---|---|
-| **スキャン**（Socket / Snyk） | **中身**を機械で読む | 常にイタチごっこ。**新しい手口には後出しでしか勝てない** |
-| **出どころの証明**（Sigstore / provenance） | **誰が作ったか** | **作った人が信用できるかは解かない。** そして**一度きりの過去の事実** |
-| **評判**（Star / DL 数） | **何人が言ったか** | **買える。腐らない。版と無関係** |
-| **隔離**（sandbox） | 被害の範囲 | **機能も同じだけ減る** |
+| **Scanning** (Socket / Snyk) | Reads the **contents** by machine | Always a cat-and-mouse game. **It can only beat new techniques after the fact** |
+| **Provenance** (Sigstore / provenance) | **Who built it** | **It doesn't solve whether the builder is trustworthy.** And it is **a one-time fact about the past** |
+| **Reputation** (stars / download counts) | **How many people said so** | **Buyable. Never decays. Unrelated to the version** |
+| **Isolation** (sandbox) | The blast radius | **Functionality shrinks by exactly the same amount** |
 
-### こちらの方法
+### Our approach
 
-> **誰が「作った」かではなく、
-> 誰が「いま、自分の鍵で使っている」かを証明する。**
+> **Prove not who "built" it,
+> but who is "using it right now, with their own key".**
 
-**上流（provenance）ではなく、下流（attestation of use）。**
+**Not upstream (provenance), but downstream (attestation of use).**
 
-| | 出どころの証明 | この星 |
+| | Provenance | This star |
 |---|---|---|
-| 誰を見るか | **作った人** | **使っている人** |
-| いつの話か | **過去（署名した瞬間）** | **現在（いまも使っている）** |
-| 失効 | **手で取り消す** | **使うのをやめた時点で、自動で消える** |
-| 払う代償 | 無い | **本人が先に被害を受ける立場に居る** |
+| Who it looks at | **The builder** | **The user** |
+| What time it refers to | **The past (the moment of signing)** | **The present (still using it)** |
+| Revocation | **Revoked by hand** | **Goes out automatically the moment you stop using it** |
+| Price paid | None | **The person is in the position of being harmed first** |
 
-**ここが新しい。「自動で失効する評判」は、ほとんど存在しない。**
+**This is what is new. "Reputation that expires automatically" barely exists.**
 
-### なぜ新しさが成立するのか
+### Why the novelty holds up
 
-**偽物を見分けるのは、もう負けている。** 生成の速さに検知は追いつかない。
+**Telling fakes apart is already a losing game.** Detection cannot keep up with the speed of generation.
 
-> **見分けるのをやめる。本物だけを数える。**
+> **Stop telling them apart. Count only the real ones.**
 
-**そのためには「本物」を数えられる単位が要る。** → §3。
-
----
-
-## 3. スポンサー技術が芯であること（削除テスト）
-
-**「入れました」ではなく、「抜いたら何が壊れるか」で書く。**
-
-### World — これは機能ではなく、**単位**
-
-| | |
-|---|---|
-| **抜くと** | 一人が 10,000 個の星を出せる。**重みが成立せず、GitHub の Star に戻る** |
-| **つまり** | **World は「1票」の定義そのもの。** 票が無ければ、数える対象が無い |
-| **最小限であること** | 名前も国も年齢も要らない。**「同じ人が2回押していない」だけが欲しい。** nullifier はちょうどその粒度 |
-| **使い方** | **Agent Pass を「星を出す瞬間」に置く**（`spec/world-agent-pass.md` §2）。鍵を使うたびではない |
-
-> **人を数えられなければ、この作品は一行も成立しない。**
-
-### Ledger — **「人がやった」の唯一の証拠**
-
-| | |
-|---|---|
-| **抜くと** | **星を、ソフトが出せる。** 鍵を持った AI が、自分に星を付けられる |
-| **つまり** | **「まだ中に人が居る」が証明できなくなる。** 星が、また言葉に戻る |
-| **芯である理由** | **3つの中で、唯一ソフトで代替できない。** AI には指が無い |
-| **使い方** | 範囲4行を**端末の中で**ハッシュして署名（`spec/permit-signature.md`）。
-**画面に出ているものと、署名されるものが同じ** |
-
-### 0G — **中身を読まずに判断する、という矛盾を成立させる部品**
-
-**ここが一番誤解されやすいので、はっきり書く。**
-
-> **0G は「記録置き場」ではない。**
-
-**この作品は、「何を要求しているか」で重さを決めなければならない。**
-**だがその中身を読んだ瞬間、我々が新しい覗き魔になる。**
-**§1 で「辿れる状態を作るのに、覗き魔になってはいけない」と書いたのは、ここ。**
-
-| | |
-|---|---|
-| **0G Private Computer を抜くと** | **重さを決めるために、我々が中身を読むことになる。
-監視をやめさせる道具が、監視装置になる。作品が自己矛盾する** |
-| **0G Storage を抜くと** | **系譜を我々が書き換えられる。**
-「誰がやったか」を取り戻す話なのに、その記録を我々が握る。**また自己矛盾する** |
-| **判断ループの中に居る理由** | **0G の判定が「Ledger が起きるかどうか」を決めている。**
-記録ではなく、**分岐**。0G が届かなければ Ledger は自動で通さない（safe-stop） |
-
-> **なぜ 0G か：中身を見ずに重さを決めなければならないから。
-> 読んだ瞬間、我々が新しい覗き魔になる。**
-
-**これが1文の答え**（0G 賞の必須項目「依存の理由を1文で」）。
-
-### EF / CROPS — **トラストの層を、誰かの会社が持ってはいけない**
-
-| | |
-|---|---|
-| **抜くと** | **信用の層を、我々の会社が持つ。** それは新しい門番でしかない。
-**門番を減らす話をしながら、門番になる** |
-| **つまり** | **公開・検閲耐性・鍵は手元、は飾りではなく、この作品が自分に課す条件** |
-| **正直に書くこと** | **Broker はいま信頼点。** TEE に載るまではそう書く。**黙らない** |
-
-### EF / Anon-RPC — **カナリアを守るための匿名性**
-
-| | |
-|---|---|
-| **抜くと** | **空を見ただけで、その人の道具立てが全部見える。**
-先に行く人が、何を試しているかで特定される。**助けている人が、一番危なくなる** |
-| **つまり** | **匿名の読み取りは、先に行く人の安全装備の一部**（`2026-11-06-the-twist.md` §2） |
-| **実装** | 全件取って手元で絞る。**問い合わせの中身を外に出さない** |
-
-### まとめ：抜いたら何が残るか
-
-| 抜くもの | 残るもの |
-|---|---|
-| World | **GitHub の Star**（買える） |
-| Ledger | **ソフトが自分に付ける星**（言葉に戻る） |
-| 0G Private Computer | **中身を読む監視装置** |
-| 0G Storage | **我々が書き換えられる台帳** |
-| EF（公開・検閲耐性） | **新しい門番** |
-| Anon-RPC | **カナリアを狙える名簿** |
-
-**どれを抜いても、作品が自分の主張に反する。**
-**「使っている」のではなく、「無いと主張が崩れる」。**
+**For that you need a unit in which "real" can be counted.** → §3.
 
 ---
 
-## 4. 4分での置き方
+## 3. The sponsor tech being the core (the deletion test)
 
-| 秒 | 何を言うか | 効く相手 |
+**Write it not as "we used it" but as "what breaks if you pull it out".**
+
+### World — this is not a feature, it is the **unit**
+
+| | |
+|---|---|
+| **Pull it out** | One person can give 10,000 stars. **Weight stops working, and we're back to GitHub stars** |
+| **In other words** | **World is the definition of "one vote" itself.** With no votes, there is nothing to count |
+| **Being minimal** | No name, no country, no age needed. **All we want is "the same person hasn't pressed twice".** The nullifier is exactly that granularity |
+| **How we use it** | **Put Agent Pass at "the moment a star is given"** (`spec/world-agent-pass.md` §2). Not every time a key is used |
+
+> **If you cannot count people, not one line of this work holds up.**
+
+### Ledger — **the only evidence that "a human did it"**
+
+| | |
+|---|---|
+| **Pull it out** | **Software can give the star.** An AI holding the key can award itself a star |
+| **In other words** | **"Someone is still inside" becomes unprovable.** The star goes back to being words |
+| **Why it is core** | **Of the three, it is the only one software cannot substitute for.** An AI has no fingers |
+| **How we use it** | Hash and sign the 4 scope lines **inside the device** (`spec/permit-signature.md`). **What is shown on screen and what is signed are the same thing** |
+
+### 0G — **the part that makes the contradiction of "judging without reading the contents" work**
+
+**This is the most easily misunderstood part, so let's be explicit.**
+
+> **0G is not a "place to put records".**
+
+**This work has to decide the weight based on "what is being requested".**
+**But the moment we read those contents, we become the new peeping tom.**
+**This is what §1 meant by "in building a traceable state, we must not become the peeping tom".**
+
+| | |
+|---|---|
+| **Pull out 0G Private Computer** | **We end up reading the contents in order to decide the weight. The tool meant to stop surveillance becomes a surveillance device. The work contradicts itself** |
+| **Pull out 0G Storage** | **We can rewrite the trail ourselves.** This is a story about recovering "who did it", and yet we would hold the record. **It contradicts itself again** |
+| **Why it is in the decision loop** | **0G's judgement decides whether the Ledger wakes up.** Not a record, a **branch**. If 0G is unreachable, the Ledger does not let it through automatically (safe-stop) |
+
+> **Why 0G: because we have to decide the weight without looking at the contents.
+> The moment we read them, we become the new peeping tom.**
+
+**That is the one-sentence answer** (0G's required item, "the reason for the dependency in one sentence").
+
+### EF / CROPS — **the trust layer must not be owned by anyone's company**
+
+| | |
+|---|---|
+| **Pull it out** | **Our company owns the layer of credibility.** That is just a new gatekeeper. **We would become the gatekeeper while talking about reducing gatekeepers** |
+| **In other words** | **Open, censorship-resistant, keys stay in your hand — these are not decoration; they are the conditions this work imposes on itself** |
+| **What to write honestly** | **The Broker is currently a trust point.** Write that until it is in a TEE. **Don't go quiet about it** |
+
+### EF / Anon-RPC — **anonymity to protect the canary**
+
+| | |
+|---|---|
+| **Pull it out** | **Just looking at the sky reveals a person's entire toolkit.** The person who goes first gets identified by what they are trying. **The one who is helping becomes the one most at risk** |
+| **In other words** | **Anonymous reads are part of the safety equipment for the person who goes first** (`2026-11-06-the-twist.md` §2) |
+| **Implementation** | Fetch everything and filter locally. **Don't let the content of the query leave** |
+
+### Summary: what is left if you pull it out
+
+| What is pulled | What is left |
+|---|---|
+| World | **GitHub stars** (buyable) |
+| Ledger | **A star software gives itself** (back to words) |
+| 0G Private Computer | **A surveillance device that reads the contents** |
+| 0G Storage | **A ledger we can rewrite** |
+| EF (open, censorship-resistant) | **A new gatekeeper** |
+| Anon-RPC | **A roster for targeting canaries** |
+
+**Pull out any one of them and the work contradicts its own claim.**
+**Not "we use it", but "without it the claim collapses".**
+
+---
+
+## 4. How to lay it out in 4 minutes
+
+| Second | What to say | Who it lands on |
 |---|---|---|
-| 0:00 | **「その API キー、どこに置きましたか？」**（一拍）**「置き場所、無いですよね」** | 全員（共感） |
-| 0:20 | 置き場所の問題だと思っていた。**置き場所の問題ではなかった** | 全員（反転1） |
-| 0:40 | **「GitHub の Star です。ただし自分の鍵で使っていないと押せず、やめたら消えます」** | 開発者（即理解） |
-| 1:00 | **43,012 / ガバナンス 0 / 未登録ドメイン6件** | 審査員（規模） |
-| 1:20 | **人が居なくても信用の形は作れる。だから「人が居る」が初めて情報になった** | 審査員（社会課題） |
-| 1:50 | **見分けるのをやめて、本物だけ数える**（上流ではなく下流） | 審査員（新しさ） |
-| 2:10 | **削除テスト。** 抜いたら何が残るかを3つ | **スポンサー（ここが本番）** |
-| 2:40 | 実演：長押し → ★ → 星 | 全員（WOW） |
-| 3:10 | **星が一斉に消える。「誰かが、先に出てきた」** | 全員（山） |
-| 3:40 | **先に行く人は、すでにリスクで払っている。その支払いを装備に替える** | 審査員（Practicality） |
-| 3:55 | 審査員の手に Ledger。**「いま押したのが、AI には押せないボタンです」** | 全員 |
+| 0:00 | **"That API key — where did you put it?"** (a beat) **"There isn't a good place, is there."** | Everyone (empathy) |
+| 0:20 | I thought it was a question of where to put it. **It wasn't a question of where** | Everyone (inversion 1) |
+| 0:40 | **"It's a GitHub star. Except you can't press it unless you're using it with your own key, and it goes out when you stop."** | Developers (instant comprehension) |
+| 1:00 | **43,012 / governance 0 / 6 unregistered domains** | Judges (scale) |
+| 1:20 | **The shape of credibility can be made without a person. So "a person is there" became information for the first time** | Judges (the social problem) |
+| 1:50 | **Stop telling them apart, count only the real ones** (downstream, not upstream) | Judges (novelty) |
+| 2:10 | **The deletion test.** Three of "what is left if you pull it out" | **Sponsors (this is the real part)** |
+| 2:40 | Live demo: long press → ★ → star | Everyone (WOW) |
+| 3:10 | **The stars go out all at once. "Someone got out first"** | Everyone (climax) |
+| 3:40 | **The person who goes first is already paying in risk. We convert that payment into equipment** | Judges (Practicality) |
+| 3:55 | The Ledger in a judge's hand. **"What you just pressed is the button an AI cannot press"** | Everyone |
 
 ---
 
-## 5. 来る反論と、答え
+## 5. Objections that will come, and the answers
 
-| 反論 | 答え |
+| Objection | Answer |
 |---|---|
-| **「Broker が全部見えるなら、同じでは？」** | **そのとおり。いまは信頼点。** だから TEE に載せる設計で、載るまではそう書いている。**隠していない** |
-| 「ハードが要るなら普及しない」 | **段3 まで要らない。** MVP（`2026-11-06-product-mvp.md`）はハード無しで動く。**ハードは、偽れないことが要る段から** |
-| 「星が少なすぎて使えないのでは」 | **最初は使えない。だから MVP は星から作らない。** 一人で価値のある検知から作り、**使うだけで網が貯まる** |
-| 「結局スキャンのほうが早い」 | **スキャンは中身を見る。こちらは人を見る。** 新しい手口はスキャンを抜けるが、**先に踏んだ人は抜けない** |
-| **「World が落ちたら？」** | **星は出せなくなるが、既存の星と検知は動く。** 止まるのは発行だけ |
-| **「0G が落ちたら？」** | **Ledger が自動で通さない（safe-stop）。** 止まって見えるのが正しい動作 |
+| **"If the Broker can see everything, isn't it the same?"** | **Correct. It is a trust point right now.** That is why the design puts it in a TEE, and until it is in one we write exactly that. **We're not hiding it** |
+| "If it needs hardware it won't get adopted" | **It isn't needed until stage 3.** The MVP (`2026-11-06-product-mvp.md`) works without hardware. **The hardware comes in at the stage where unforgeability is needed** |
+| "Won't there be too few stars to be useful?" | **It isn't useful at first. Which is why the MVP doesn't start from stars.** It starts from detection that is worth something alone, and **just using it accumulates the web** |
+| "Scanning is faster in the end" | **Scanning looks at the contents. We look at people.** A new technique gets past scanning, but **it doesn't get past the person who stepped on it first** |
+| **"What if World goes down?"** | **You can't give stars, but existing stars and the detection keep working.** Only issuance stops |
+| **"What if 0G goes down?"** | **The Ledger does not let it through automatically (safe-stop).** Appearing to stop is the correct behavior |

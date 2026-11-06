@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOMOSHIBI — アーキテクチャとシーケンス</title>
+<title>TOMOSHIBI — Architecture and sequences</title>
 <style>
 :root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
 --hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
@@ -89,350 +89,350 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 <div class="page">
 
 <header class="doc-header">
-  <p class="eyebrow">TOMOSHIBI ／ 図 ／ 2026-11-06</p>
-  <h1>アーキテクチャと、5つの流れ</h1>
-  <p class="lead">文章で書いた設計（入出力・画面遷移・市場）を、<b>線と順番</b>にした。<b>通る・押させる・止める・決めない・灯をともす</b>の5本。図は手で描かず <span class="mono">ideation/build-diagrams.py</span> から生成している（流れを直したらスクリプトを直す）。</p>
-  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>実装: broker/src/server.js ・ bridge/bridge.py</span></div>
+  <p class="eyebrow">TOMOSHIBI / diagrams / 2026-11-06</p>
+  <h1>The architecture, and the five flows</h1>
+  <p class="lead">The design written out in prose (inputs and outputs, screen flow, market) turned into <b>lines and order</b>. Five flows: <b>passes, requires a press, stops, declines to decide, lights a flame</b>. The diagrams are not drawn by hand; they are generated from <span class="mono">ideation/build-diagrams.py</span> (change a flow by changing the script).</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>Implementation: broker/src/server.js, bridge/bridge.py</span></div>
 </header>
 
 <section>
-  <h2>エグゼクティブサマリー</h2>
+  <h2>Executive summary</h2>
   <ol class="summary">
-    <li><b>門はひとつ、答えは4つ。</b>通した／押されるまで通さない／止めた／決められないので止めた。<b>5つ目の答えを作らない</b>ことが設計の芯。</li>
-    <li><b>鍵と本文は、門を越えない。</b>鍵は手元の機器から出ず、要求の本文は 0G の封印の中だけ。<b>Broker は中身を読まずに重さを受け取る</b>。</li>
-    <li><b>人が出てくるのは2か所だけ。</b>重い要求の長押しと、灯をともす1回の名乗り。<b>ふだんの流れに人は登場しない</b>（図01に人がいないことが答え）。</li>
+    <li><b>One gate, four answers.</b> Let through / not until it is pressed / stopped / could not decide, so stopped. <b>Never inventing a fifth answer</b> is the core of the design.</li>
+    <li><b>Keys and bodies do not cross the gate.</b> The key never leaves the device, and the request body stays inside the 0G seal. <b>The Broker receives a weight without reading the content.</b></li>
+    <li><b>A person appears in two places only.</b> The long press on a heavy request, and the single sign-in that lights a flame. <b>No person appears in the routine flow</b> — that there is no person in diagram 01 is the answer.</li>
   </ol>
 </section>
 
 <section>
-  <h2><span class="no">01</span>アーキテクチャ</h2>
-  <p class="msg"><b>左が手元、真ん中が門、右が「信じなくてよい相手」。</b>信頼が要るのは真ん中の1点だけで、そこに何も預けない。</p>
+  <h2><span class="no">01</span>Architecture</h2>
+  <p class="msg"><b>Left is the near side, the middle is the gate, the right is the parties we need not trust.</b> Trust is required at one point only, and nothing is deposited there.</p>
   <figure>
-    <figcaption>図表1　構成と、境界を越えるもの／越えないもの</figcaption>
+    <figcaption>Figure 1 — The parts, and what does and does not cross the boundary</figcaption>
 
 <svg viewBox="0 0 760 468" role="img" aria-label="architecture">
-  <text x="8" y="14" font-size="10.5" letter-spacing="0.08em" fill="#8e8e8e">手元（人と鍵）</text>
-  <text x="268" y="14" font-size="10.5" letter-spacing="0.08em" fill="#8e8e8e">門</text>
-  <text x="520" y="14" font-size="10.5" letter-spacing="0.08em" fill="#8e8e8e">外（我々が信じなくてよい相手）</text>
+  <text x="8" y="14" font-size="10.5" letter-spacing="0.08em" fill="#8e8e8e">Near side (person and key)</text>
+  <text x="268" y="14" font-size="10.5" letter-spacing="0.08em" fill="#8e8e8e">The gate</text>
+  <text x="520" y="14" font-size="10.5" letter-spacing="0.08em" fill="#8e8e8e">Outside (parties we need not trust)</text>
   <line x1="0" y1="20" x2="760" y2="20" stroke="#d9d9d9"/>
 
   <rect x="8" y="40" width="200" height="66" fill="#e7e9ec"/>
-  <text x="20" y="62" font-size="12" font-weight="700" fill="#1a1a1a">エージェント</text>
-  <text x="20" y="80" font-size="10.5" fill="#555555">スキルの実体。鍵は持てない</text>
-  <text x="20" y="96" font-size="10.5" fill="#555555">要求に自分の署名を付ける</text>
+  <text x="20" y="62" font-size="12" font-weight="700" fill="#1a1a1a">Agent</text>
+  <text x="20" y="80" font-size="10.5" fill="#555555">The skill itself. Holds no key</text>
+  <text x="20" y="96" font-size="10.5" fill="#555555">Signs each request itself</text>
 
   <rect x="8" y="124" width="200" height="88" fill="#e7e9ec"/>
-  <text x="20" y="146" font-size="12" font-weight="700" fill="#1a1a1a">手元の機器（Ledger）</text>
-  <text x="20" y="164" font-size="10.5" fill="#555555">4行を表示し、長押しで署名</text>
-  <text x="20" y="180" font-size="10.5" fill="#555555">鍵は外に出ない</text>
-  <text x="20" y="198" font-size="10.5" fill="#8e8e8e">bridge（127.0.0.1・USB HID）</text>
+  <text x="20" y="146" font-size="12" font-weight="700" fill="#1a1a1a">Device (Ledger)</text>
+  <text x="20" y="164" font-size="10.5" fill="#555555">Shows 4 lines; long press signs</text>
+  <text x="20" y="180" font-size="10.5" fill="#555555">The key never leaves</text>
+  <text x="20" y="198" font-size="10.5" fill="#8e8e8e">bridge (127.0.0.1, USB HID)</text>
 
   <rect x="8" y="230" width="200" height="66" fill="#e7e9ec"/>
-  <text x="20" y="252" font-size="12" font-weight="700" fill="#1a1a1a">本人の画面・スマホ</text>
-  <text x="20" y="270" font-size="10.5" fill="#555555">灯の空／系譜（読むだけ）</text>
-  <text x="20" y="286" font-size="10.5" fill="#555555">World App で1回だけ名乗る</text>
+  <text x="20" y="252" font-size="12" font-weight="700" fill="#1a1a1a">Key holder's screen</text>
+  <text x="20" y="270" font-size="10.5" fill="#555555">Flame sky / trail (read only)</text>
+  <text x="20" y="286" font-size="10.5" fill="#555555">Names themselves once in World</text>
 
   <rect x="248" y="40" width="200" height="256" fill="#173f66"/>
-  <text x="262" y="64" font-size="13" font-weight="700" fill="#ffffff">Broker（門）</text>
-  <text x="262" y="82" font-size="10" fill="#ffffff" opacity="0.75">鍵を預からない。判断を作らない</text>
-  <text x="262" y="112" font-size="11" fill="#ffffff">① 2つの署名を検証する</text>
-  <text x="262" y="136" font-size="11" fill="#ffffff">② 範囲と回数を照合する</text>
-  <text x="262" y="160" font-size="11" fill="#ffffff">③ 重さを 0G に聞く</text>
-  <text x="262" y="184" font-size="11" fill="#ffffff">④ 通す／押させる／止める</text>
-  <text x="262" y="208" font-size="11" fill="#ffffff">⑤ 系譜に追記する（消す口なし）</text>
-  <text x="262" y="232" font-size="11" fill="#ffffff">⑥ 灯を (スキル, 版) に積む</text>
-  <text x="262" y="262" font-size="10" fill="#ffffff" opacity="0.75">唯一の信頼点。TEE には載せていない</text>
-  <text x="262" y="280" font-size="10" fill="#ffffff" opacity="0.75">（黙って良く見せない）</text>
+  <text x="262" y="64" font-size="13" font-weight="700" fill="#ffffff">Broker (the gate)</text>
+  <text x="262" y="82" font-size="10" fill="#ffffff" opacity="0.75">Holds no key. Invents no verdict</text>
+  <text x="262" y="112" font-size="11" fill="#ffffff">1 Verify the two signatures</text>
+  <text x="262" y="136" font-size="11" fill="#ffffff">2 Check scope and call budget</text>
+  <text x="262" y="160" font-size="11" fill="#ffffff">3 Ask 0G for the weight</text>
+  <text x="262" y="184" font-size="11" fill="#ffffff">4 Pass / require a press / stop</text>
+  <text x="262" y="208" font-size="11" fill="#ffffff">5 Append-only trail (no delete)</text>
+  <text x="262" y="232" font-size="11" fill="#ffffff">6 Add flames to (skill, version)</text>
+  <text x="262" y="262" font-size="10" fill="#ffffff" opacity="0.75">Only trusted point. Not on a TEE</text>
+  <text x="262" y="280" font-size="10" fill="#ffffff" opacity="0.75">(we do not quietly oversell it)</text>
 
   <rect x="488" y="40" width="264" height="56" fill="#e7e9ec"/>
-  <text x="500" y="60" font-size="12" font-weight="700" fill="#1a1a1a">0G Private Computer（TeeML）</text>
-  <text x="500" y="78" font-size="10.5" fill="#555555">重さを決める。本文は封印の中。我々も読めない</text>
+  <text x="500" y="60" font-size="12" font-weight="700" fill="#1a1a1a">0G Private Computer (TeeML)</text>
+  <text x="500" y="78" font-size="10.5" fill="#555555">Decides weight. The body stays sealed from us</text>
 
   <rect x="488" y="110" width="264" height="56" fill="#e7e9ec"/>
-  <text x="500" y="130" font-size="12" font-weight="700" fill="#1a1a1a">World（Agent Pass）</text>
-  <text x="500" y="148" font-size="10.5" fill="#555555">人であることだけ。仮名（sub）を返す</text>
+  <text x="500" y="130" font-size="12" font-weight="700" fill="#1a1a1a">World (Agent Pass)</text>
+  <text x="500" y="148" font-size="10.5" fill="#555555">Humanness only. Returns a pseudonym (sub)</text>
 
   <rect x="488" y="180" width="264" height="56" fill="#e7e9ec"/>
-  <text x="500" y="200" font-size="12" font-weight="700" fill="#1a1a1a">相手の API</text>
-  <text x="500" y="218" font-size="10.5" fill="#555555">代理で叩く先（api.stripe.com など）</text>
+  <text x="500" y="200" font-size="12" font-weight="700" fill="#1a1a1a">The counterparty API</text>
+  <text x="500" y="218" font-size="10.5" fill="#555555">Called on its behalf (e.g. api.stripe.com)</text>
 
   <rect x="488" y="250" width="264" height="56" fill="#e7e9ec"/>
-  <text x="500" y="270" font-size="12" font-weight="700" fill="#1a1a1a">0G Storage（系譜）</text>
-  <text x="500" y="288" font-size="10.5" fill="#555555">誰が許し、何を要求し、通ったか止まったか</text>
+  <text x="500" y="270" font-size="12" font-weight="700" fill="#1a1a1a">0G Storage (the trail)</text>
+  <text x="500" y="288" font-size="10.5" fill="#555555">Who permitted what, and whether it passed</text>
 
   <defs><marker id="c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"/></marker></defs>
   <line x1="208" y1="73" x2="240" y2="73" stroke="#1a1a1a" marker-end="url(#c)"/>
-  <text x="224" y="64" text-anchor="middle" font-size="9.5" fill="#555555">要求</text>
+  <text x="224" y="64" text-anchor="middle" font-size="9" fill="#555555">request</text>
   <line x1="240" y1="168" x2="210" y2="168" stroke="#1a1a1a" marker-end="url(#c)"/>
-  <text x="224" y="159" text-anchor="middle" font-size="9.5" fill="#555555">4行</text>
+  <text x="224" y="159" text-anchor="middle" font-size="9" fill="#555555">4 lines</text>
   <line x1="208" y1="186" x2="240" y2="186" stroke="#1a1a1a" marker-end="url(#c)"/>
-  <text x="224" y="202" text-anchor="middle" font-size="9.5" fill="#555555">署名</text>
+  <text x="224" y="202" text-anchor="middle" font-size="9" fill="#555555">signed</text>
   <line x1="208" y1="262" x2="240" y2="262" stroke="#1a1a1a" marker-end="url(#c)"/>
-  <text x="224" y="253" text-anchor="middle" font-size="9.5" fill="#555555">灯・系譜</text>
+  <text x="224" y="253" text-anchor="middle" font-size="9" fill="#555555">flames</text>
 
   <line x1="448" y1="68" x2="480" y2="68" stroke="#1a1a1a" marker-end="url(#c)"/>
-  <text x="464" y="59" text-anchor="middle" font-size="9.5" fill="#555555">本文</text>
+  <text x="464" y="59" text-anchor="middle" font-size="9" fill="#555555">body</text>
   <line x1="448" y1="138" x2="480" y2="138" stroke="#1a1a1a" marker-end="url(#c)"/>
-  <text x="464" y="129" text-anchor="middle" font-size="9.5" fill="#555555">名乗り</text>
+  <text x="464" y="129" text-anchor="middle" font-size="9" fill="#555555">sign-in</text>
   <line x1="448" y1="208" x2="480" y2="208" stroke="#1a1a1a" marker-end="url(#c)"/>
-  <text x="464" y="199" text-anchor="middle" font-size="9.5" fill="#555555">代理実行</text>
+  <text x="464" y="199" text-anchor="middle" font-size="9" fill="#555555">proxy</text>
   <line x1="448" y1="278" x2="480" y2="278" stroke="#1a1a1a" marker-end="url(#c)"/>
-  <text x="464" y="269" text-anchor="middle" font-size="9.5" fill="#555555">追記</text>
+  <text x="464" y="269" text-anchor="middle" font-size="9" fill="#555555">append</text>
 
   <line x1="0" y1="330" x2="760" y2="330" stroke="#d9d9d9"/>
-  <text x="8" y="352" font-size="11" font-weight="700" fill="#1a1a1a">この線を、絶対に越えないもの</text>
-  <text x="8" y="374" font-size="10.5" fill="#555555">鍵の平文 — 手元の機器から出ない。Broker も 0G も、エージェントも受け取らない</text>
-  <text x="8" y="392" font-size="10.5" fill="#555555">要求の本文 — 0G の封印の中だけ。系譜にも、我々のログにも入れない</text>
-  <text x="8" y="410" font-size="10.5" fill="#555555">本人の身元 — World は仮名（sub）しか返さない。氏名・メール・ウォレットは要らない</text>
-  <text x="8" y="428" font-size="10.5" fill="#555555">資金 — 預からない。TOMOSHIBI の中で金が動く経路は存在しない</text>
-  <text x="8" y="452" font-size="10.5" fill="#8e8e8e">※ 0G に届かないとき、Broker は判断を作らずに STOPPED を返す（既定値を置かない）</text>
+  <text x="8" y="352" font-size="11" font-weight="700" fill="#1a1a1a">What never crosses this line</text>
+  <text x="8" y="374" font-size="10.5" fill="#555555">Key material — never leaves the device. Not the Broker, not 0G, not the agent ever receives it</text>
+  <text x="8" y="392" font-size="10.5" fill="#555555">The request body — inside the 0G seal only. Never in the trail, never in our logs</text>
+  <text x="8" y="410" font-size="10.5" fill="#555555">The key holder's identity — World returns only a pseudonym (sub). No name, email or wallet</text>
+  <text x="8" y="428" font-size="10.5" fill="#555555">Funds — never held. No path inside TOMOSHIBI moves money</text>
+  <text x="8" y="452" font-size="10.5" fill="#8e8e8e">Note: when 0G cannot be reached, the Broker invents no verdict and returns STOPPED (no default)</text>
 </svg>
 
-    <p class="src">出所: <span class="mono">broker/src/server.js</span>（口の一覧）・<span class="mono">bridge/bridge.py</span>（USB HID・127.0.0.1）・<span class="mono">spec/permit-signature.md</span>（署名の契約）。</p>
+    <p class="src">Sources: <span class="mono">broker/src/server.js</span> (the list of endpoints), <span class="mono">bridge/bridge.py</span> (USB HID, 127.0.0.1), <span class="mono">spec/permit-signature.md</span> (the signature contract).</p>
   </figure>
 </section>
 
 <section>
-  <h2><span class="no">02</span>流れ01 — ふだんの要求 — 黙って通る</h2>
-  <p class="msg">範囲の中で、0G が「ふだん」と読んだ要求。<b>人は何もしない。画面も出ない。</b></p>
+  <h2><span class="no">02</span>Flow 01 — A routine request — it passes in silence</h2>
+  <p class="msg">A request inside scope that 0G read as routine. <b>The person does nothing. No screen appears.</b></p>
   <figure>
-    <figcaption>図表2　ふだんの要求 — 黙って通る（返り: <span class="mono">ALLOWED 200</span>）</figcaption>
+    <figcaption>Figure 2 — A routine request — it passes in silence (returns: <span class="mono">ALLOWED 200</span>)</figcaption>
     <div class="fig-scroll"><svg viewBox="0 0 740 428" role="img" aria-label="sequence">
 <rect x="16.0" y="10" width="132.0" height="38" fill="#e7e9ec"/>
-<text x="82.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">エージェント</text>
-<text x="82.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">スキルの実体</text>
+<text x="82.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Agent</text>
+<text x="82.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">The skill itself</text>
 <line x1="82.0" y1="56" x2="82.0" y2="420" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="160.0" y="10" width="132.0" height="38" fill="#173f66"/>
-<text x="226.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">門（Broker）</text>
-<text x="226.0" y="45" text-anchor="middle" font-size="9.5" fill="#ffffff" opacity="0.8">唯一の信頼点</text>
+<text x="226.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">Gate (Broker)</text>
+<text x="226.0" y="45" text-anchor="middle" font-size="9.5" fill="#ffffff" opacity="0.8">Only trusted point</text>
 <line x1="226.0" y1="56" x2="226.0" y2="420" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="304.0" y="10" width="132.0" height="38" fill="#e7e9ec"/>
 <text x="370.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">0G</text>
-<text x="370.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">封印された推論</text>
+<text x="370.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">Sealed inference</text>
 <line x1="370.0" y1="56" x2="370.0" y2="420" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="448.0" y="10" width="132.0" height="38" fill="#e7e9ec"/>
-<text x="514.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">相手の API</text>
+<text x="514.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Their API</text>
 <text x="514.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">api.stripe.com</text>
 <line x1="514.0" y1="56" x2="514.0" y2="420" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="592.0" y="10" width="132.0" height="38" fill="#e7e9ec"/>
-<text x="658.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">系譜</text>
+<text x="658.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Trail</text>
 <text x="658.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">0G Storage</text>
 <line x1="658.0" y1="56" x2="658.0" y2="420" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#173f66"/></marker></defs>
 <line x1="86.0" y1="90.0" x2="218.0" y2="90.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="154.0" y="83.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">① 要求 ＋ 許可 ＋ 2つの署名</text>
+<text x="154.0" y="83.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">1 Request + permit + two signatures</text>
 <path d="M226.0 118.0 h 26 v 16 h -26" fill="none" stroke="#1a1a1a" marker-end="url(#a)"/>
-<text x="258.0" y="129.0" font-size="10.5" fill="#1a1a1a">② 署名を検証（持ち主・スキル）</text>
+<text x="258.0" y="129.0" font-size="10.5" fill="#1a1a1a">2 Verify signatures (holder, skill)</text>
 <path d="M226.0 154.0 h 26 v 16 h -26" fill="none" stroke="#1a1a1a" marker-end="url(#a)"/>
-<text x="258.0" y="165.0" font-size="10.5" fill="#1a1a1a">③ 範囲と回数を照合</text>
+<text x="258.0" y="165.0" font-size="10.5" fill="#1a1a1a">3 Check scope and call budget</text>
 <line x1="230.0" y1="198.0" x2="362.0" y2="198.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="298.0" y="191.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">④ 本文を封印の中へ（鍵は渡さない）</text>
+<text x="298.0" y="191.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">4 Body into the seal (no key handed over)</text>
 <line x1="366.0" y1="234.0" x2="234.0" y2="234.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="298.0" y="227.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">⑤「ふだん」＋ request id</text>
+<text x="298.0" y="227.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">5 "routine" + request id</text>
 <line x1="230.0" y1="270.0" x2="506.0" y2="270.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="370.0" y="263.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">⑥ 代理で実行</text>
+<text x="370.0" y="263.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">6 Call on its behalf</text>
 <line x1="510.0" y1="306.0" x2="234.0" y2="306.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="370.0" y="299.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">⑦ 結果</text>
+<text x="370.0" y="299.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">7 Result</text>
 <line x1="230.0" y1="342.0" x2="650.0" y2="342.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="442.0" y="335.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">⑧ 系譜に追記（本文は入れない）</text>
+<text x="442.0" y="335.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">8 Append to the trail (body excluded)</text>
 <line x1="222.0" y1="378.0" x2="90.0" y2="378.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="154.0" y="371.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">⑨ ALLOWED ＋ 残り回数</text>
+<text x="154.0" y="371.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">9 ALLOWED + calls remaining</text>
 </svg></div>
   </figure>
 </section>
 
 <section>
-  <h2><span class="no">03</span>流れ02 — 重い要求 — 押されるまで通さない</h2>
-  <p class="msg">0G が「決定的」と読んだ要求は、<b>立っている許可では通らない</b>。要るのは<b>使い切りの許可</b>＝その場の一押し。</p>
+  <h2><span class="no">03</span>Flow 02 — A heavy request — nothing passes until it is pressed</h2>
+  <p class="msg">A request 0G read as decisive <b>does not pass on a standing permit</b>. It needs a <b>single-use permit</b> — a press on the spot.</p>
   <figure>
-    <figcaption>図表3　重い要求 — 押されるまで通さない（返り: <span class="mono">409 NEEDS_PRESS → 200 ALLOWED</span>）</figcaption>
+    <figcaption>Figure 3 — A heavy request — nothing passes until it is pressed (returns: <span class="mono">409 NEEDS_PRESS -&gt; 200 ALLOWED</span>)</figcaption>
     <div class="fig-scroll"><svg viewBox="0 0 740 464" role="img" aria-label="sequence">
 <rect x="16.0" y="10" width="108.0" height="38" fill="#e7e9ec"/>
-<text x="70.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">エージェント</text>
-<text x="70.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">スキルの実体</text>
+<text x="70.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Agent</text>
+<text x="70.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">The skill itself</text>
 <line x1="70.0" y1="56" x2="70.0" y2="456" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="136.0" y="10" width="108.0" height="38" fill="#173f66"/>
-<text x="190.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">門（Broker）</text>
-<text x="190.0" y="45" text-anchor="middle" font-size="9.5" fill="#ffffff" opacity="0.8">唯一の信頼点</text>
+<text x="190.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">Gate (Broker)</text>
+<text x="190.0" y="45" text-anchor="middle" font-size="9.5" fill="#ffffff" opacity="0.8">Only trusted point</text>
 <line x1="190.0" y1="56" x2="190.0" y2="456" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="256.0" y="10" width="108.0" height="38" fill="#e7e9ec"/>
 <text x="310.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">0G</text>
-<text x="310.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">封印された推論</text>
+<text x="310.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">Sealed inference</text>
 <line x1="310.0" y1="56" x2="310.0" y2="456" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="376.0" y="10" width="108.0" height="38" fill="#e7e9ec"/>
-<text x="430.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">手元の機器</text>
+<text x="430.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Device</text>
 <text x="430.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">Ledger Flex</text>
 <line x1="430.0" y1="56" x2="430.0" y2="456" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="496.0" y="10" width="108.0" height="38" fill="#e7e9ec"/>
-<text x="550.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">相手の API</text>
+<text x="550.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Their API</text>
 <text x="550.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">api.stripe.com</text>
 <line x1="550.0" y1="56" x2="550.0" y2="456" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="616.0" y="10" width="108.0" height="38" fill="#e7e9ec"/>
-<text x="670.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">系譜</text>
+<text x="670.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Trail</text>
 <text x="670.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">0G Storage</text>
 <line x1="670.0" y1="56" x2="670.0" y2="456" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#173f66"/></marker></defs>
 <line x1="74.0" y1="90.0" x2="182.0" y2="90.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="130.0" y="83.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">① $4,800 の送金を要求</text>
+<text x="130.0" y="83.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">1 Requests a $4,800 transfer</text>
 <line x1="194.0" y1="126.0" x2="302.0" y2="126.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="250.0" y="119.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">② 本文を封印の中へ</text>
+<text x="250.0" y="119.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">2 Body into the seal</text>
 <line x1="306.0" y1="162.0" x2="198.0" y2="162.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="250.0" y="155.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">③「決定的」</text>
+<text x="250.0" y="155.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">3 "decisive"</text>
 <line x1="186.0" y1="198.0" x2="78.0" y2="198.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="130.0" y="191.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">④ NEEDS_PRESS（通さない）</text>
+<text x="130.0" y="191.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">4 NEEDS_PRESS (not passed)</text>
 <line x1="194.0" y1="234.0" x2="422.0" y2="234.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="310.0" y="227.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">⑤ 4行を機器に出す</text>
+<text x="310.0" y="227.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">5 Four lines to the device</text>
 <path d="M430.0 262.0 h 26 v 16 h -26" fill="none" stroke="#1a1a1a" marker-end="url(#a)"/>
-<text x="462.0" y="273.0" font-size="10.5" fill="#1a1a1a">⑥ 人が長押し（5秒）</text>
+<text x="462.0" y="273.0" font-size="10.5" fill="#1a1a1a">6 Person long-presses (5s)</text>
 <line x1="426.0" y1="306.0" x2="198.0" y2="306.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="310.0" y="299.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">⑦ 使い切りの許可に署名</text>
+<text x="310.0" y="299.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">7 Signs a single-use permit</text>
 <line x1="194.0" y1="342.0" x2="542.0" y2="342.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="370.0" y="335.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">⑧ この1回だけ実行</text>
+<text x="370.0" y="335.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">8 Runs this one call only</text>
 <line x1="194.0" y1="378.0" x2="662.0" y2="378.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="430.0" y="371.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">⑨ 誰が押したかを追記</text>
+<text x="430.0" y="371.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">9 Appends who pressed</text>
 <line x1="186.0" y1="414.0" x2="78.0" y2="414.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="130.0" y="407.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">⑩ ALLOWED（残り 0）</text>
+<text x="130.0" y="407.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">10 ALLOWED (0 left)</text>
 </svg></div>
   </figure>
 </section>
 
 <section>
-  <h2><span class="no">04</span>流れ03 — 範囲の外 — 止めて、違反として刻む</h2>
-  <p class="msg">宣言した範囲を外れた要求は、<b>スキル自身の署名ごと</b>記録に残る。<b>0G には聞かない</b>（聞く前に外れている）。</p>
+  <h2><span class="no">04</span>Flow 03 — Outside scope — stopped, and recorded as a violation</h2>
+  <p class="msg">A request outside the declared scope is recorded <b>together with the skill's own signature</b>. <b>0G is not asked</b> (it is already out of scope).</p>
   <figure>
-    <figcaption>図表4　範囲の外 — 止めて、違反として刻む（返り: <span class="mono">DENIED 403</span>）</figcaption>
+    <figcaption>Figure 4 — Outside scope — stopped, and recorded as a violation (returns: <span class="mono">DENIED 403</span>)</figcaption>
     <div class="fig-scroll"><svg viewBox="0 0 740 284" role="img" aria-label="sequence">
 <rect x="16.0" y="10" width="228.0" height="38" fill="#e7e9ec"/>
-<text x="130.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">エージェント</text>
-<text x="130.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">スキルの実体</text>
+<text x="130.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Agent</text>
+<text x="130.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">The skill itself</text>
 <line x1="130.0" y1="56" x2="130.0" y2="276" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="256.0" y="10" width="228.0" height="38" fill="#173f66"/>
-<text x="370.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">門（Broker）</text>
-<text x="370.0" y="45" text-anchor="middle" font-size="9.5" fill="#ffffff" opacity="0.8">唯一の信頼点</text>
+<text x="370.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">Gate (Broker)</text>
+<text x="370.0" y="45" text-anchor="middle" font-size="9.5" fill="#ffffff" opacity="0.8">Only trusted point</text>
 <line x1="370.0" y1="56" x2="370.0" y2="276" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="496.0" y="10" width="228.0" height="38" fill="#e7e9ec"/>
-<text x="610.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">系譜</text>
+<text x="610.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Trail</text>
 <text x="610.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">0G Storage</text>
 <line x1="610.0" y1="56" x2="610.0" y2="276" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#173f66"/></marker></defs>
 <line x1="134.0" y1="90.0" x2="362.0" y2="90.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="250.0" y="83.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">① 別の宛先（evil.com）へ</text>
+<text x="250.0" y="83.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">1 To a different target (evil.com)</text>
 <path d="M370.0 118.0 h 26 v 16 h -26" fill="none" stroke="#1a1a1a" marker-end="url(#a)"/>
-<text x="402.0" y="129.0" font-size="10.5" fill="#1a1a1a">② 範囲の照合で落ちる</text>
+<text x="402.0" y="129.0" font-size="10.5" fill="#1a1a1a">2 Fails the scope check</text>
 <line x1="374.0" y1="162.0" x2="602.0" y2="162.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="490.0" y="155.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">③ 違反として追記（スキルの署名つき）</text>
+<text x="490.0" y="155.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">3 Append as a violation (with skill signature)</text>
 <line x1="366.0" y1="198.0" x2="138.0" y2="198.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="250.0" y="191.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">④ DENIED ＋ 理由</text>
+<text x="250.0" y="191.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">4 DENIED + reason</text>
 <path d="M370.0 226.0 h 26 v 16 h -26" fill="none" stroke="#1a1a1a" marker-end="url(#a)"/>
-<text x="402.0" y="237.0" font-size="10.5" fill="#1a1a1a">⑤ 回数は減らさない</text>
+<text x="402.0" y="237.0" font-size="10.5" fill="#1a1a1a">5 Call budget not decremented</text>
 </svg></div>
   </figure>
 </section>
 
 <section>
-  <h2><span class="no">05</span>流れ04 — 0G に届かない — 決めないで止める</h2>
-  <p class="msg"><b>既定値を作らない。</b>「たぶん軽いから通す」も「とりあえず止める」も、どちらも偽の判断になる。</p>
+  <h2><span class="no">05</span>Flow 04 — 0G unreachable — stop instead of deciding</h2>
+  <p class="msg"><b>No default is created.</b> "Probably light, let it through" and "stop just in case" are both false verdicts.</p>
   <figure>
-    <figcaption>図表5　0G に届かない — 決めないで止める（返り: <span class="mono">STOPPED 503</span>）</figcaption>
+    <figcaption>Figure 5 — 0G unreachable — stop instead of deciding (returns: <span class="mono">STOPPED 503</span>)</figcaption>
     <div class="fig-scroll"><svg viewBox="0 0 740 284" role="img" aria-label="sequence">
 <rect x="16.0" y="10" width="228.0" height="38" fill="#e7e9ec"/>
-<text x="130.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">エージェント</text>
-<text x="130.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">スキルの実体</text>
+<text x="130.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Agent</text>
+<text x="130.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">The skill itself</text>
 <line x1="130.0" y1="56" x2="130.0" y2="276" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="256.0" y="10" width="228.0" height="38" fill="#173f66"/>
-<text x="370.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">門（Broker）</text>
-<text x="370.0" y="45" text-anchor="middle" font-size="9.5" fill="#ffffff" opacity="0.8">唯一の信頼点</text>
+<text x="370.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">Gate (Broker)</text>
+<text x="370.0" y="45" text-anchor="middle" font-size="9.5" fill="#ffffff" opacity="0.8">Only trusted point</text>
 <line x1="370.0" y1="56" x2="370.0" y2="276" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="496.0" y="10" width="228.0" height="38" fill="#e7e9ec"/>
 <text x="610.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">0G</text>
-<text x="610.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">封印された推論</text>
+<text x="610.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">Sealed inference</text>
 <line x1="610.0" y1="56" x2="610.0" y2="276" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#173f66"/></marker></defs>
 <line x1="134.0" y1="90.0" x2="362.0" y2="90.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="250.0" y="83.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">① ふだんの要求</text>
+<text x="250.0" y="83.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">1 A routine request</text>
 <line x1="374.0" y1="126.0" x2="602.0" y2="126.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="490.0" y="119.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">② 問い合わせ</text>
+<text x="490.0" y="119.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">2 Query</text>
 <line x1="606.0" y1="162.0" x2="378.0" y2="162.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="490.0" y="155.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">③ 応答なし（30秒）</text>
+<text x="490.0" y="155.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">3 No response (30s)</text>
 <line x1="366.0" y1="198.0" x2="138.0" y2="198.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="250.0" y="191.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">④ STOPPED「決められないので止めた」</text>
+<text x="250.0" y="191.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">4 STOPPED "could not decide, so stopped"</text>
 <path d="M370.0 226.0 h 26 v 16 h -26" fill="none" stroke="#1a1a1a" marker-end="url(#a)"/>
-<text x="402.0" y="237.0" font-size="10.5" fill="#1a1a1a">⑤ 回数は減らさない・系譜には残す</text>
+<text x="402.0" y="237.0" font-size="10.5" fill="#1a1a1a">5 Budget intact, kept in the trail</text>
 </svg></div>
   </figure>
 </section>
 
 <section>
-  <h2><span class="no">06</span>流れ05 — 灯をともす — World で1回だけ名乗る</h2>
-  <p class="msg"><b>鍵を使うたびには聞かない。</b>World に出るのは、灯を1つ出すときだけ。</p>
+  <h2><span class="no">06</span>Flow 05 — Lighting a flame — naming yourself once with World</h2>
+  <p class="msg"><b>Not asked on every use of the key.</b> World appears only when a flame is lit.</p>
   <figure>
-    <figcaption>図表6　灯をともす — World で1回だけ名乗る（返り: <span class="mono">確かめられた ／ human_denied ／ proof_expired</span>）</figcaption>
+    <figcaption>Figure 6 — Lighting a flame — naming yourself once with World (returns: <span class="mono">verified / human_denied / proof_expired</span>)</figcaption>
     <div class="fig-scroll"><svg viewBox="0 0 740 392" role="img" aria-label="sequence">
 <rect x="16.0" y="10" width="168.0" height="38" fill="#e7e9ec"/>
-<text x="100.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">本人の画面</text>
-<text x="100.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">灯の空</text>
+<text x="100.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Key holder</text>
+<text x="100.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">Flame sky</text>
 <line x1="100.0" y1="56" x2="100.0" y2="384" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="196.0" y="10" width="168.0" height="38" fill="#173f66"/>
-<text x="280.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">門（Broker）</text>
-<text x="280.0" y="45" text-anchor="middle" font-size="9.5" fill="#ffffff" opacity="0.8">唯一の信頼点</text>
+<text x="280.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#ffffff">Gate (Broker)</text>
+<text x="280.0" y="45" text-anchor="middle" font-size="9.5" fill="#ffffff" opacity="0.8">Only trusted point</text>
 <line x1="280.0" y1="56" x2="280.0" y2="384" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="376.0" y="10" width="168.0" height="38" fill="#e7e9ec"/>
 <text x="460.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">World</text>
 <text x="460.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">Agent Pass</text>
 <line x1="460.0" y1="56" x2="460.0" y2="384" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <rect x="556.0" y="10" width="168.0" height="38" fill="#e7e9ec"/>
-<text x="640.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">本人のスマホ</text>
+<text x="640.0" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1a1a1a">Their phone</text>
 <text x="640.0" y="45" text-anchor="middle" font-size="9.5" fill="#8e8e8e" opacity="1">World App</text>
 <line x1="640.0" y1="56" x2="640.0" y2="384" stroke="#d9d9d9" stroke-dasharray="3 4"/>
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1a1a1a"/></marker><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#173f66"/></marker></defs>
 <line x1="104.0" y1="90.0" x2="272.0" y2="90.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="190.0" y="83.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">① この版に灯をともしたい</text>
+<text x="190.0" y="83.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">1 I want to light a flame on this version</text>
 <line x1="284.0" y1="126.0" x2="452.0" y2="126.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="370.0" y="119.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">② device flow を開始</text>
+<text x="370.0" y="119.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">2 Start the device flow</text>
 <line x1="456.0" y1="162.0" x2="288.0" y2="162.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="370.0" y="155.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">③ コードと待ち受け</text>
+<text x="370.0" y="155.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">3 Code and polling</text>
 <line x1="276.0" y1="198.0" x2="108.0" y2="198.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="190.0" y="191.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">④ コードを出して待つ（残り10分）</text>
+<text x="190.0" y="191.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">4 Show the code and wait (10 min left)</text>
 <line x1="636.0" y1="234.0" x2="468.0" y2="234.0" stroke="#1a1a1a"  marker-end="url(#a)"/>
-<text x="550.0" y="227.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">⑤ 本人が端末で承認する</text>
+<text x="550.0" y="227.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#1a1a1a">5 Key holder approves on their device</text>
 <line x1="456.0" y1="270.0" x2="288.0" y2="270.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="370.0" y="263.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">⑥ 仮名（sub）つきの署名</text>
+<text x="370.0" y="263.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">6 Signature with a pseudonym (sub)</text>
 <path d="M280.0 298.0 h 26 v 16 h -26" fill="none" stroke="#1a1a1a" marker-end="url(#a)"/>
-<text x="312.0" y="309.0" font-size="10.5" fill="#1a1a1a">⑦ 署名を検証し、(スキル,版) に灯を1つ</text>
+<text x="312.0" y="309.0" font-size="10.5" fill="#1a1a1a">7 Verify it, add one flame to (skill, version)</text>
 <line x1="276.0" y1="342.0" x2="108.0" y2="342.0" stroke="#173f66" stroke-dasharray="5 4" marker-end="url(#b)"/>
-<text x="190.0" y="335.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">⑧ 灯がともる（誰のかは仮名のまま）</text>
+<text x="190.0" y="335.0" text-anchor="middle" font-size="10.5" font-weight="700" fill="#173f66">8 The flame lights (whose it is stays pseudonymous)</text>
 </svg></div>
   </figure>
 </section>
 
 <section>
-  <h2><span class="no">07</span>版が上がると、灯は消える</h2>
-  <p class="msg"><b>これは障害ではなく仕様。</b>消えるから、<b>いま使われているか</b>が分かる。</p>
+  <h2><span class="no">07</span>When the version rises, the flames go out</h2>
+  <p class="msg"><b>This is the specification, not a fault.</b> Because they go out, you can see <b>whether a skill is in use now</b>.</p>
   <div class="fig-scroll"><div class="chevrons">
-    <div class="chev">v1.0.0 に灯が42<small>積み上がる</small></div>
-    <div class="chev on">作り手が v1.1.0 を出す<small>(スキル, 版) が変わる</small></div>
-    <div class="chev on">42の灯が一斉に消える<small>前の版に42あった事実は残る</small></div>
-    <div class="chev">使い続けている人が出し直す<small>World で1回</small></div>
-    <div class="chev">新しい灯が積み上がる<small>いまの版の事実</small></div>
+    <div class="chev">42 flames on v1.0.0<small>they accumulate</small></div>
+    <div class="chev on">The maker ships v1.1.0<small>(skill, version) changes</small></div>
+    <div class="chev on">All 42 flames go out at once<small>the fact of 42 on the old version remains</small></div>
+    <div class="chev">People still using it light one again<small>once, with World</small></div>
+    <div class="chev">New flames accumulate<small>a fact about the current version</small></div>
   </div></div>
-  <p class="note"><b>買う側（P3）にとっての意味。</b>灯が0なら「新しい版で、まだ誰も使っていない」。<b>古い評価を新しいと勘違いしない</b>ための仕掛けで、作り手への罰ではない。</p>
+  <p class="note"><b>What this means for the buyer (P3).</b> Zero flames means "a new version that nobody is using yet". It is a device for <b>not mistaking an old rating for a current one</b>, not a punishment for the maker.</p>
 </section>
 
 <section>
-  <h2><span class="no">08</span>次のアクション</h2>
+  <h2><span class="no">08</span>Next actions</h2>
   <div class="tbl"><table>
-    <thead><tr><th>やること</th><th style="width:96px">誰</th><th style="width:120px">いつまで</th></tr></thead>
+    <thead><tr><th>Action</th><th style="width:96px">Who</th><th style="width:120px">By when</th></tr></thead>
     <tbody>
-      <tr><td>図02（重い要求）の⑤〜⑦を<b>実機で通して、同じ順番か確かめる</b></td><td>kou・minta</td><td>撮影前</td></tr>
-      <tr><td>図05（World）を本物のクライアント登録で1回通す</td><td>kou</td><td>11/6 中</td></tr>
-      <tr><td>動画は図01 →図02 →図03 の順で見せる（止まり方が主役）</td><td>minta</td><td>11/6 22:00 IST</td></tr>
+      <tr><td>Run steps 5-7 of diagram 02 (the heavy request) <b>on real hardware and confirm the order matches</b></td><td>kou, minta</td><td>Before filming</td></tr>
+      <tr><td>Run diagram 05 (World) once with a real client registration</td><td>kou</td><td>During 11/6</td></tr>
+      <tr><td>Show the video in the order 01 -> 02 -> 03 (the way it stops is the lead)</td><td>minta</td><td>11/6 22:00 IST</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <footer class="doc-footer">
-  <span>TOMOSHIBI — アーキテクチャとシーケンス（2026-11-06）</span>
-  <span>生成: ideation/build-diagrams.py ／ 関連: actors-io.html ・ screen-flow.html</span>
+  <span>TOMOSHIBI — Architecture and sequences (2026-11-06)</span>
+  <span>Generated by ideation/build-diagrams.py / related: actors-io.html, screen-flow.html</span>
 </footer>
 
 </div>

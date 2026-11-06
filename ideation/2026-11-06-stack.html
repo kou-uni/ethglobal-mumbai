@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOMOSHIBI — システムスタック</title>
+<title>TOMOSHIBI — System Stack</title>
 <style>
 :root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
 --hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
@@ -89,135 +89,135 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 <div class="page">
 
 <header class="doc-header">
-  <p class="eyebrow">TOMOSHIBI ／ システムスタック ／ 2026-11-06</p>
-  <h1>何の上に立っているのか — プロトコル・ツール・プロダクト</h1>
-  <p class="lead">7段ある。<b>我々が作ったのは3段だけ</b>で、残りは借りている。借りているものが落ちたとき何が起きるかと、<b>撮影当日の退避</b>まで1枚にした。</p>
-  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>印【確】＝今日このマシンで動かして確かめた</span></div>
+  <p class="eyebrow">TOMOSHIBI / System Stack / 2026-11-06</p>
+  <h1>What we stand on — protocol, tools, product</h1>
+  <p class="lead">There are seven layers. <b>We built only three</b>; the rest are borrowed. This one page covers what happens when a borrowed layer goes down, and the <b>fallback for the filming day</b>.</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>Mark [verified] = run and checked on this machine today</span></div>
 </header>
 
 <section>
-  <h2>エグゼクティブサマリー</h2>
+  <h2>Executive summary</h2>
   <ol class="summary">
-    <li><b>作ったのは3段：手元の機器アプリ・門（Broker）・画面。</b>残り4段（封印された推論／人であることの証明／台帳と保存／配信）は借りもので、<b>どれも差し替え可能な位置に置いてある</b>。</li>
-    <li><b>借りものが落ちても、嘘はつかない。</b>0G が落ちれば <span class="mono">STOPPED</span>、World が落ちれば灯が出ないだけ、Storage が落ちれば系譜は Broker に残る。<b>落ちたことを隠して通す経路は1つも無い。</b></li>
-    <li><b>今日、0G Storage への書き込みが通った【確】。</b>root <span class="mono">0x3b28…6244</span> ／ tx <span class="mono">0x8b0a…3916</span>。ガスが届いたので、系譜は<b>本当に鎖の上にある</b>。</li>
+    <li><b>We built three layers: the device app, the gate (Broker), and the screens.</b> The other four (sealed inference / proof of personhood / ledger and storage / delivery) are borrowed, and <b>each sits in a position where it can be swapped out</b>.</li>
+    <li><b>When a borrowed layer goes down, we do not lie about it.</b> If 0G goes down, <span class="mono">STOPPED</span>; if World goes down, no flame is issued; if Storage goes down, the trail stays in the Broker. <b>There is not one path that hides a failure and passes anyway.</b></li>
+    <li><b>Today, a write to 0G Storage went through [verified].</b> root <span class="mono">0x3b28…6244</span> / tx <span class="mono">0x8b0a…3916</span>. The gas arrived, so the trail <b>really is on the chain</b>.</li>
   </ol>
 </section>
 
 <section>
-  <h2><span class="no">01</span>スタック（下が土台、上が人に近い）</h2>
-  <p class="msg"><b>濃い段が我々のもの。</b>薄い段は借りもので、<b>落ちたときの振る舞いまで決めてある</b>。</p>
+  <h2><span class="no">01</span>The stack (bottom is the foundation, top is closest to people)</h2>
+  <p class="msg"><b>The dark layers are ours.</b> The light layers are borrowed, and <b>their behavior when they go down is already decided</b>.</p>
   <figure>
-    <figcaption>図表1　7段のスタック</figcaption>
+    <figcaption>Figure 1. The seven-layer stack</figcaption>
     <svg viewBox="0 0 760 336" role="img" aria-label="stack">
       <g font-size="11.5">
       <rect x="8" y="8" width="520" height="38" fill="#173f66"/>
-      <text x="22" y="26" font-size="12" font-weight="700" fill="#ffffff">⑦ 画面</text>
-      <text x="22" y="40" font-size="10.5" fill="#ffffff" opacity="0.8">web/gate.html・index.html・trace.html ／ ui/（試作・保険）</text>
-      <text x="544" y="31" fill="#555555">ビルド無し・外部読込み無し</text>
+      <text x="22" y="26" font-size="12" font-weight="700" fill="#ffffff">⑦ Screens</text>
+      <text x="22" y="40" font-size="10.5" fill="#ffffff" opacity="0.8">web/gate.html, index.html, trace.html / ui/ (prototype, backup)</text>
+      <text x="544" y="31" fill="#555555">No build, no external loads</text>
 
       <rect x="8" y="52" width="520" height="38" fill="#173f66"/>
-      <text x="22" y="70" font-size="12" font-weight="700" fill="#ffffff">⑥ 門（Broker）</text>
-      <text x="22" y="84" font-size="10.5" fill="#ffffff" opacity="0.8">署名の検証・範囲の照合・回数・系譜・灯　Node + viem/jose</text>
-      <text x="544" y="75" fill="#555555">唯一の信頼点。テスト50件</text>
+      <text x="22" y="70" font-size="12" font-weight="700" fill="#ffffff">⑥ The gate (Broker)</text>
+      <text x="22" y="84" font-size="10.5" fill="#ffffff" opacity="0.8">Signature check, scope match, call budget, trail, flame — Node + viem/jose</text>
+      <text x="544" y="75" fill="#555555">Only trust point. 50 tests</text>
 
       <rect x="8" y="96" width="520" height="38" fill="#173f66"/>
-      <text x="22" y="114" font-size="12" font-weight="700" fill="#ffffff">⑤ 手元の機器（Ledger アプリ＋bridge）</text>
-      <text x="22" y="128" font-size="10.5" fill="#ffffff" opacity="0.8">Rust の自作アプリ（Flex）／ bridge.py（USB HID・127.0.0.1）</text>
-      <text x="544" y="119" fill="#555555">鍵はここから出ない</text>
+      <text x="22" y="114" font-size="12" font-weight="700" fill="#ffffff">⑤ Device (Ledger app + bridge)</text>
+      <text x="22" y="128" font-size="10.5" fill="#ffffff" opacity="0.8">Our own Rust app (Flex) / bridge.py (USB HID, 127.0.0.1)</text>
+      <text x="544" y="119" fill="#555555">Keys never leave here</text>
 
       <rect x="8" y="140" width="520" height="38" fill="#e7e9ec"/>
-      <text x="22" y="158" font-size="12" font-weight="700" fill="#1a1a1a">④ 署名の規格</text>
-      <text x="22" y="172" font-size="10.5" fill="#555555">EIP-712 Permit（4行＝KEY/TO/SCOPE/UNTIL）・secp256k1・m/44'/60'/0'/0/0</text>
-      <text x="544" y="163" fill="#555555">借: 規格。落ちない</text>
+      <text x="22" y="158" font-size="12" font-weight="700" fill="#1a1a1a">④ Signature standard</text>
+      <text x="22" y="172" font-size="10.5" fill="#555555">EIP-712 Permit (4 lines = KEY/TO/SCOPE/UNTIL), secp256k1, m/44'/60'/0'/0/0</text>
+      <text x="544" y="163" fill="#555555">Borrowed: a standard. Never down</text>
 
       <rect x="8" y="184" width="520" height="38" fill="#e7e9ec"/>
-      <text x="22" y="202" font-size="12" font-weight="700" fill="#1a1a1a">③ 封印された推論（0G Private Computer / TeeML）</text>
-      <text x="22" y="216" font-size="10.5" fill="#555555">重さを決める。router-api.0g.ai/v1 ・ 0gm-1.0-35b-a3b</text>
-      <text x="544" y="207" fill="#555555">落ちたら STOPPED</text>
+      <text x="22" y="202" font-size="12" font-weight="700" fill="#1a1a1a">③ Sealed inference (0G Private Computer / TeeML)</text>
+      <text x="22" y="216" font-size="10.5" fill="#555555">Decides the weight. router-api.0g.ai/v1, 0gm-1.0-35b-a3b</text>
+      <text x="544" y="207" fill="#555555">If down: STOPPED</text>
 
       <rect x="8" y="228" width="520" height="38" fill="#e7e9ec"/>
-      <text x="22" y="246" font-size="12" font-weight="700" fill="#1a1a1a">② 人であることの証明（World Agent Pass）</text>
-      <text x="22" y="260" font-size="10.5" fill="#555555">OIDC device flow ・ auth.world.org ・ sector 単位の仮名（sub）</text>
-      <text x="544" y="251" fill="#555555">落ちたら灯が出ないだけ</text>
+      <text x="22" y="246" font-size="12" font-weight="700" fill="#1a1a1a">② Proof of personhood (World Agent Pass)</text>
+      <text x="22" y="260" font-size="10.5" fill="#555555">OIDC device flow, auth.world.org, per-sector pseudonym (sub)</text>
+      <text x="544" y="251" fill="#555555">If down: no flame is issued</text>
 
       <rect x="8" y="272" width="520" height="38" fill="#e7e9ec"/>
-      <text x="22" y="290" font-size="12" font-weight="700" fill="#1a1a1a">① 台帳と保存（0G Galileo ・ 0G Storage）</text>
-      <text x="22" y="304" font-size="10.5" fill="#555555">chainId 16602 ・ 系譜の root hash と tx</text>
-      <text x="544" y="295" fill="#555555">落ちたら Broker に残す</text>
+      <text x="22" y="290" font-size="12" font-weight="700" fill="#1a1a1a">① Ledger and storage (0G Galileo, 0G Storage)</text>
+      <text x="22" y="304" font-size="10.5" fill="#555555">chainId 16602, trail root hash and tx</text>
+      <text x="544" y="295" fill="#555555">If down: kept in the Broker</text>
       </g>
       <line x1="8" y1="322" x2="752" y2="322" stroke="#d9d9d9"/>
-      <text x="8" y="334" font-size="10.5" fill="#8e8e8e">配信は GitHub Pages（画面）と cloudflared の一時 URL（Broker・撮影と審査の時間だけ）。凍結中の Funnel は触らない。</text>
+      <text x="8" y="334" font-size="10.5" fill="#8e8e8e">Delivery: GitHub Pages (screens) and a temporary cloudflared URL (Broker, only during filming and judging). Frozen Funnel untouched.</text>
     </svg>
   </figure>
 </section>
 
 <section>
-  <h2><span class="no">02</span>プロトコル／ツール／プロダクト</h2>
-  <p class="msg"><b>規格は借り、道具は小さく、作るのは「境界」だけ。</b></p>
+  <h2><span class="no">02</span>Protocol / tools / product</h2>
+  <p class="msg"><b>Borrow the standards, keep the tools small, build only the "boundary."</b></p>
   <div class="tbl"><table>
-    <caption>表1　層ごとの内訳（プロダクト列が、我々が書いたもの）</caption>
-    <thead><tr><th style="width:118px">層</th><th>プロトコル（規格）</th><th>ツール（使っているもの）</th><th>プロダクト（作ったもの）</th></tr></thead>
+    <caption>Table 1. Breakdown by layer (the Product column is what we wrote)</caption>
+    <thead><tr><th style="width:118px">Layer</th><th>Protocol (standard)</th><th>Tools (what we use)</th><th>Product (what we built)</th></tr></thead>
     <tbody>
-      <tr><td><b>⑦ 画面</b></td><td>HTTP / HTML・<span class="mono">fetch</span>。QR</td><td>素の JS。<b>ビルド無し・依存無し</b>。Chrome（撮影）</td><td><span class="mono">web/gate.html・index.html・trace.html</span>／<span class="mono">ui/index.html・stars.html</span>（試作と保険）</td></tr>
-      <tr><td><b>⑥ 門</b></td><td>HTTP（<span class="mono">/use /seal /trace /vouch /stars</span>）</td><td>Node 24 ／ <span class="mono">viem 2.57</span>（署名検証）・<span class="mono">jose 6.2</span>（JWKS）・<span class="mono">ethers 6.13</span>・<span class="mono">@0gfoundation/0g-storage-ts-sdk 1.2</span></td><td><span class="mono">broker/src/</span>（permit・scope・tier・weigh・world・episode・store・server）。テスト50件</td></tr>
-      <tr><td><b>⑤ 手元</b></td><td>APDU（USB HID）</td><td>Rust ／ Ledger の Rust SDK（<span class="mono">app-boilerplate-rust</span> から）／ Python の <span class="mono">hidapi</span></td><td><span class="mono">ledger-app/</span>（Flex の自作アプリ）／<span class="mono">bridge/bridge.py</span>（127.0.0.1 の小さな口）</td></tr>
-      <tr><td><b>④ 署名</b></td><td><b>EIP-712</b>・EIP-155・secp256k1・BIP-44（<span class="mono">m/44'/60'/0'/0/0</span>）</td><td>—（規格そのもの）</td><td><span class="mono">spec/permit-signature.md</span>（Ledger と Broker の契約）・4行の作り方（<span class="mono">lines()</span>）</td></tr>
-      <tr><td><b>③ 推論</b></td><td>OpenAI 互換 <span class="mono">/chat/completions</span>（<span class="mono">x-request-id</span> が賞の要件）</td><td>0G Private Computer（TeeML）／ モデル <span class="mono">0gm-1.0-35b-a3b</span>／ 思考は切る</td><td><span class="mono">broker/src/weigh.js</span>（型文・タイムアウト30秒・<b>失敗を STOPPED に写す</b>）・<span class="mono">tier.js</span></td></tr>
-      <tr><td><b>② 身元</b></td><td><b>OIDC</b> device code grant ・ JWKS ・ pairwise（sector）の <span class="mono">sub</span></td><td>World Agent Pass（<span class="mono">auth.world.org</span>）／ World App（本人の端末）</td><td><span class="mono">broker/src/world.js</span>（<span class="mono">human_denied</span>／<span class="mono">proof_expired</span> を別物として扱う）</td></tr>
-      <tr><td><b>① 台帳</b></td><td>EVM JSON-RPC ・ 0G Storage の merkle root</td><td>0G Galileo（<span class="mono">chainId 16602</span>・<span class="mono">evmrpc-testnet.0g.ai</span>）／ indexer-turbo ／ chainscan</td><td><span class="mono">broker/src/episode.js</span>（系譜を1件ずつ追記し、<b>本文と鍵を入れない</b>）</td></tr>
+      <tr><td><b>⑦ Screens</b></td><td>HTTP / HTML, <span class="mono">fetch</span>. QR</td><td>Plain JS. <b>No build, no dependencies</b>. Chrome (filming)</td><td><span class="mono">web/gate.html, index.html, trace.html</span> / <span class="mono">ui/index.html, stars.html</span> (prototype and backup)</td></tr>
+      <tr><td><b>⑥ The gate</b></td><td>HTTP (<span class="mono">/use /seal /trace /vouch /stars</span>)</td><td>Node 24 / <span class="mono">viem 2.57</span> (signature check), <span class="mono">jose 6.2</span> (JWKS), <span class="mono">ethers 6.13</span>, <span class="mono">@0gfoundation/0g-storage-ts-sdk 1.2</span></td><td><span class="mono">broker/src/</span> (permit, scope, tier, weigh, world, episode, store, server). 50 tests</td></tr>
+      <tr><td><b>⑤ Device</b></td><td>APDU (USB HID)</td><td>Rust / Ledger's Rust SDK (from <span class="mono">app-boilerplate-rust</span>) / Python's <span class="mono">hidapi</span></td><td><span class="mono">ledger-app/</span> (our own app for Flex) / <span class="mono">bridge/bridge.py</span> (a small endpoint on 127.0.0.1)</td></tr>
+      <tr><td><b>④ Signature</b></td><td><b>EIP-712</b>, EIP-155, secp256k1, BIP-44 (<span class="mono">m/44'/60'/0'/0/0</span>)</td><td>— (the standard itself)</td><td><span class="mono">spec/permit-signature.md</span> (the contract between Ledger and Broker), how the 4 lines are built (<span class="mono">lines()</span>)</td></tr>
+      <tr><td><b>③ Inference</b></td><td>OpenAI-compatible <span class="mono">/chat/completions</span> (<span class="mono">x-request-id</span> is a prize requirement)</td><td>0G Private Computer (TeeML) / model <span class="mono">0gm-1.0-35b-a3b</span> / thinking turned off</td><td><span class="mono">broker/src/weigh.js</span> (fixed prompt, 30-second timeout, <b>maps failure to STOPPED</b>), <span class="mono">tier.js</span></td></tr>
+      <tr><td><b>② Identity</b></td><td><b>OIDC</b> device code grant, JWKS, pairwise (sector) <span class="mono">sub</span></td><td>World Agent Pass (<span class="mono">auth.world.org</span>) / World App (the key holder's device)</td><td><span class="mono">broker/src/world.js</span> (treats <span class="mono">human_denied</span> and <span class="mono">proof_expired</span> as different things)</td></tr>
+      <tr><td><b>① Ledger</b></td><td>EVM JSON-RPC, 0G Storage merkle root</td><td>0G Galileo (<span class="mono">chainId 16602</span>, <span class="mono">evmrpc-testnet.0g.ai</span>) / indexer-turbo / chainscan</td><td><span class="mono">broker/src/episode.js</span> (appends the trail one entry at a time, and <b>puts no message bodies or keys in it</b>)</td></tr>
     </tbody>
   </table></div>
-  <p class="src">依存は4つだけ（<span class="mono">viem・jose・ethers・0g-storage-ts-sdk</span>）。画面側は依存ゼロ。<span class="mono">broker/package.json</span> より。</p>
+  <p class="src">Only four dependencies (<span class="mono">viem, jose, ethers, 0g-storage-ts-sdk</span>). The screen side has zero. From <span class="mono">broker/package.json</span>.</p>
 </section>
 
 <section>
-  <h2><span class="no">03</span>落ちたら何が起きるか</h2>
-  <p class="msg"><b>借りものが落ちる前提で、落ち方を先に決めてある。</b>「たぶん大丈夫」で通す経路は作らない。</p>
+  <h2><span class="no">03</span>What happens when something goes down</h2>
+  <p class="msg"><b>We assume the borrowed layers will go down, so how they fail is decided up front.</b> We build no path that passes on "probably fine."</p>
   <div class="tbl"><table>
-    <thead><tr><th style="width:150px">落ちるもの</th><th>その瞬間の振る舞い</th><th>人に見えるもの</th><th style="width:150px">撮影当日の退避</th></tr></thead>
+    <thead><tr><th style="width:150px">What goes down</th><th>Behavior at that moment</th><th>What people see</th><th style="width:150px">Fallback on filming day</th></tr></thead>
     <tbody>
-      <tr><td><b>0G（推論）</b></td><td><b>判断を作らない。</b>回数も減らさない</td><td><span class="mono">STOPPED</span>「決められないので止めた」</td><td><b>退避しない。</b>むしろ図04として<b>見せる</b></td></tr>
-      <tr><td><b>World</b></td><td>灯が出ない。既にある灯は消えない</td><td>断りは <span class="mono">human_denied</span>、時間切れは <span class="mono">proof_expired</span></td><td>灯の場面は<b>録画で見せる</b>（登録が間に合わない場合）</td></tr>
-      <tr><td><b>0G Storage</b></td><td>系譜は Broker に残る（追記のみ）</td><td>「0G Storage に置けていない」と出す</td><td><b>今日 tx が通った【確】</b>ので、当日は本番で出す</td></tr>
-      <tr><td><b>実機（Ledger / bridge）</b></td><td>署名が取れない＝通らない</td><td>画面に<b>「実機の代わり」と明記</b>して代役で署名</td><td>代役（決定 Q3-b）。<b>黙って代役にしない</b></td></tr>
-      <tr><td><b>外部 API（Stripe 等）</b></td><td>代理実行は <span class="mono">EXECUTE=0</span> で止めてある</td><td>判定までを見せる</td><td>公開時は <span class="mono">SECRETS</span> 空・<span class="mono">EXECUTE</span> 切り</td></tr>
-      <tr><td><b>GitHub Pages</b></td><td>画面が開けない</td><td>—</td><td>ローカルの <span class="mono">python3 -m http.server</span> と録画</td></tr>
-    </tbody>
-  </table></div>
-</section>
-
-<section>
-  <h2><span class="no">04</span>いま動いているもの／まだのもの</h2>
-  <div class="tbl"><table>
-    <thead><tr><th style="width:190px">段</th><th style="width:96px">状態</th><th>根拠</th></tr></thead>
-    <tbody>
-      <tr><td>③ 0G の推論</td><td><b>動く【確】</b></td><td>本番キーで6/6一致・1判定 300トークン・2.0秒</td></tr>
-      <tr><td>① 0G Storage</td><td><b>動く【確】</b></td><td><b>今日</b> root <span class="mono">0x3b28…6244</span> ／ tx <span class="mono">0x8b0a…3916</span>（ガス 約10 OG 着）</td></tr>
-      <tr><td>⑥ 門</td><td><b>動く【確】</b></td><td>テスト50件・<span class="mono">demo.mjs</span> が通る／刻む／止まる／一押しを全部出す</td></tr>
-      <tr><td>⑤ 手元の機器</td><td>実機で関門1まで</td><td>Flex で自作アプリが動いた（#16）。<b>bridge 経由の通しは未確認</b></td></tr>
-      <tr><td>② World</td><td><b>まだ</b></td><td>クライアント登録がこれから（<b>minta 担当</b>）。<span class="mono">/health</span> は <span class="mono">clientId:false</span></td></tr>
-      <tr><td>⑦ 画面</td><td>動く</td><td>GitHub Pages で公開中。実機つなぎ込みは <span class="mono">web/gate.html</span></td></tr>
+      <tr><td><b>0G (inference)</b></td><td><b>No decision is produced.</b> The call budget is not decremented either</td><td><span class="mono">STOPPED</span> "could not decide, so it stopped"</td><td><b>No fallback.</b> We <b>show it</b> instead, as figure 04</td></tr>
+      <tr><td><b>World</b></td><td>No flame is issued. Flames that already exist are not put out</td><td>A refusal is <span class="mono">human_denied</span>, a timeout is <span class="mono">proof_expired</span></td><td>Show the flame scene <b>from a recording</b> (if registration is not done in time)</td></tr>
+      <tr><td><b>0G Storage</b></td><td>The trail stays in the Broker (append-only)</td><td>Shows "not stored on 0G Storage"</td><td><b>A tx went through today [verified]</b>, so on the day we show it live</td></tr>
+      <tr><td><b>Real device (Ledger / bridge)</b></td><td>No signature can be taken = nothing passes</td><td>Sign with a stand-in, <b>labeled "stand-in for the real device"</b> on the screen</td><td>Stand-in (decision Q3-b). <b>Never switch to a stand-in silently</b></td></tr>
+      <tr><td><b>External APIs (Stripe etc.)</b></td><td>Proxy execution is held off with <span class="mono">EXECUTE=0</span></td><td>We show everything up to the decision</td><td>When published, <span class="mono">SECRETS</span> empty and <span class="mono">EXECUTE</span> off</td></tr>
+      <tr><td><b>GitHub Pages</b></td><td>The screens will not open</td><td>—</td><td>Local <span class="mono">python3 -m http.server</span> and a recording</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <section>
-  <h2><span class="no">05</span>次のアクション</h2>
+  <h2><span class="no">04</span>What works now / what does not yet</h2>
   <div class="tbl"><table>
-    <thead><tr><th>やること</th><th style="width:96px">誰</th><th style="width:120px">いつまで</th></tr></thead>
+    <thead><tr><th style="width:190px">Layer</th><th style="width:96px">State</th><th>Evidence</th></tr></thead>
     <tbody>
-      <tr><td>World のクライアント登録 → device flow を1回通す</td><td><b>minta</b></td><td>11/6 20:00 IST</td></tr>
-      <tr><td>bridge 経由で実機の署名を門まで通す（⑤→⑥）</td><td>kou・minta</td><td>撮影前</td></tr>
-      <tr><td>撮影直前に <span class="mono">/health</span> を見て <span class="mono">simulated</span> が無いことを確認</td><td>kou</td><td>撮影前</td></tr>
-      <tr><td>公開時は <span class="mono">SECRETS</span> 空・<span class="mono">EXECUTE=0</span>・URL は公開リポジトリに書かない</td><td>kou</td><td>公開時</td></tr>
+      <tr><td>③ 0G inference</td><td><b>Works [verified]</b></td><td>6/6 match with the production key, 300 tokens per decision, 2.0 seconds</td></tr>
+      <tr><td>① 0G Storage</td><td><b>Works [verified]</b></td><td><b>Today</b> root <span class="mono">0x3b28…6244</span> / tx <span class="mono">0x8b0a…3916</span> (about 10 OG of gas arrived)</td></tr>
+      <tr><td>⑥ The gate</td><td><b>Works [verified]</b></td><td>50 tests; <span class="mono">demo.mjs</span> produces all of passes / records / stops / one press</td></tr>
+      <tr><td>⑤ Device</td><td>Up to checkpoint 1 on the real device</td><td>Our own app ran on Flex (#16). <b>The run through the bridge is unverified</b></td></tr>
+      <tr><td>② World</td><td><b>Not yet</b></td><td>Client registration still to come (<b>minta owns it</b>). <span class="mono">/health</span> shows <span class="mono">clientId:false</span></td></tr>
+      <tr><td>⑦ Screens</td><td>Works</td><td>Published on GitHub Pages. The real-device hookup is <span class="mono">web/gate.html</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">05</span>Next actions</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Action</th><th style="width:96px">Who</th><th style="width:120px">By when</th></tr></thead>
+    <tbody>
+      <tr><td>Register the World client, then run the device flow through once</td><td><b>minta</b></td><td>11/6 20:00 IST</td></tr>
+      <tr><td>Get a real-device signature through the bridge to the gate (⑤→⑥)</td><td>kou, minta</td><td>Before filming</td></tr>
+      <tr><td>Just before filming, check <span class="mono">/health</span> and confirm there is no <span class="mono">simulated</span></td><td>kou</td><td>Before filming</td></tr>
+      <tr><td>When publishing, <span class="mono">SECRETS</span> empty, <span class="mono">EXECUTE=0</span>, and no URL written into the public repository</td><td>kou</td><td>At publication</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <footer class="doc-footer">
-  <span>TOMOSHIBI — システムスタック（2026-11-06）</span>
-  <span>関連: 2026-11-06-diagrams.html ／ broker/README.md ／ spec/permit-signature.md</span>
+  <span>TOMOSHIBI — System Stack (2026-11-06)</span>
+  <span>Related: 2026-11-06-diagrams.html / broker/README.md / spec/permit-signature.md</span>
 </footer>
 
 </div>

@@ -1,6 +1,6 @@
-<!doctype html><html lang="ja"><meta charset="utf-8">
+<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>TOMOSHIBI — 俯瞰図（UX・UI・アーキテクチャ）</title>
+<title>TOMOSHIBI — Overview (UX, UI, architecture)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -54,71 +54,71 @@ svg .ttl{font-size:13px;font-weight:500}
 
 <header>
   <div class="eyebrow">ETHGlobal Mumbai 2026 · kou × minta · 2026-11-06 04:00 IST</div>
-  <h1>TOMOSHIBI — 星の数ではなく、誰の星か</h1>
-  <p class="lead">AI が見られない場所を手元に1つ持ち、AI には「誰が信頼したか」を持たせる。星は約束ではなく<b>事実</b>——「いま自分の鍵でこの版を使っている」。宣言した範囲を外れた要求は、証拠ごと刻まれる。</p>
+  <h1>TOMOSHIBI — not how many stars, but whose stars</h1>
+  <p class="lead">Keep one place in hand that the AI cannot see, and give the AI "who trusted this". A star is not a promise but a <b>fact</b> — "I am using this version with my own key right now". A request that leaves the declared scope is recorded together with its evidence.</p>
 </header>
 
-<!-- ───────── 1. 画面 ───────── -->
+<!-- ───────── 1. Screens ───────── -->
 <section>
-  <h2>1. 人が見る画面は3つしかない</h2>
-  <p class="lead">作ったものを並べない。<b>1回の使用</b>のあいだに人の目に触れるものだけを置く。</p>
-  <div class="plate"><svg viewBox="0 0 880 300" role="img" aria-label="3つの画面のワイヤーフレーム">
-    <!-- A: 星空 -->
+  <h2>1. A person sees only three screens</h2>
+  <p class="lead">Don't line up everything we built. Put down only what meets a person's eyes during <b>one use</b>.</p>
+  <div class="plate"><svg viewBox="0 0 880 300" role="img" aria-label="Wireframes of the three screens">
+    <!-- A: star sky -->
     <rect x="16" y="30" width="250" height="250" rx="8" fill="var(--paper)" stroke="var(--line)"/>
     <rect x="16" y="30" width="250" height="28" rx="8" fill="var(--chain-tint)"/>
-    <text x="30" y="49" class="ttl">A  星空（ブラウザ）</text>
+    <text x="30" y="49" class="ttl">A  Star sky (browser)</text>
     <g fill="var(--chain)">
       <circle cx="60" cy="90" r="3.5"/><circle cx="110" cy="78" r="2.5"/><circle cx="160" cy="98" r="3"/>
       <circle cx="210" cy="84" r="2"/><circle cx="86" cy="120" r="2.5"/><circle cx="140" cy="132" r="3.5"/>
       <circle cx="196" cy="124" r="2.5"/><circle cx="238" cy="104" r="2"/><circle cx="46" cy="140" r="2"/>
     </g>
-    <text x="30" y="178" class="t2">スキル：mcp-invoice v1.4.2</text>
-    <text x="30" y="198">★ 知り合い 3 人が、いま使っている</text>
-    <text x="30" y="220" class="t2">うち「一緒に働いた」1 ／「会った」2</text>
+    <text x="30" y="178" class="t2">Skill: mcp-invoice v1.4.2</text>
+    <text x="30" y="198">★ 3 people you know are using it</text>
+    <text x="30" y="220" class="t2">Of those: "worked with" 1 / "met" 2</text>
     <rect x="30" y="236" width="222" height="30" rx="4" fill="var(--hand-tint)" stroke="var(--hand)"/>
-    <text x="41" y="256" fill="var(--hand)">この範囲で使うことを許可する</text>
+    <text x="41" y="256" fill="var(--hand)">Permit use within this scope</text>
 
     <!-- B: Ledger -->
     <rect x="300" y="30" width="250" height="250" rx="8" fill="var(--paper)" stroke="var(--line)"/>
     <rect x="300" y="30" width="250" height="28" rx="8" fill="var(--hand-tint)"/>
-    <text x="314" y="49" class="ttl">B  Ledger の実機</text>
+    <text x="314" y="49" class="ttl">B  The Ledger device</text>
     <rect x="316" y="72" width="218" height="124" rx="6" fill="#0d1110" stroke="var(--line)"/>
     <text x="332" y="96" class="mono" fill="#7fe3c4">KEY    stripe-live</text>
     <text x="332" y="118" class="mono" fill="#e8efee">TO     api.stripe.com</text>
     <text x="332" y="140" class="mono" fill="#e8efee">SCOPE  POST /v1/charges x3</text>
     <text x="332" y="162" class="mono" fill="#e8efee">UNTIL  2026-11-07 09:00Z</text>
-    <text x="332" y="184" class="mono" fill="#9aa8a5">長押しで署名</text>
-    <text x="316" y="222" class="t2">この4行から、そのまま32バイトが作られる。</text>
-    <text x="316" y="240" class="t2">PC が計算したハッシュには署名しない。</text>
-    <text x="316" y="262" fill="var(--pc)">押さなければ、何も起きない</text>
+    <text x="332" y="184" class="mono" fill="#9aa8a5">Hold to sign</text>
+    <text x="316" y="222" class="t2">The 32 bytes come from these 4 lines.</text>
+    <text x="316" y="240" class="t2">No signing of a hash the PC computed.</text>
+    <text x="316" y="262" fill="var(--pc)">Nothing happens unless you press.</text>
 
-    <!-- C: 記録 -->
+    <!-- C: record -->
     <rect x="584" y="30" width="280" height="250" rx="8" fill="var(--paper)" stroke="var(--line)"/>
     <rect x="584" y="30" width="280" height="28" rx="8" fill="var(--ext-tint)"/>
-    <text x="598" y="49" class="ttl">C  系譜（QR 1枚で開く）</text>
+    <text x="598" y="49" class="ttl">C  Trail (one QR opens it)</text>
     <text x="598" y="80" class="mono t2">thread 0x2dc6…3279</text>
     <line x1="598" y1="90" x2="850" y2="90" stroke="var(--line)"/>
-    <text x="598" y="110">① 誰が許したか</text><text x="790" y="110" class="mono t2">nullifier</text>
-    <text x="598" y="132">② 何を・どこへ・いつまで</text><text x="790" y="132" class="mono t2">Ledger 署名</text>
-    <text x="598" y="154">③ 何を実行したか</text><text x="790" y="154" class="mono t2">use</text>
-    <text x="598" y="176">④ 何が返ったか</text><text x="790" y="176" class="mono t2">bodyHash</text>
-    <text x="598" y="198">⑤ AI がどう読んだか</text><text x="790" y="198" class="mono t2">req_8f2a…</text>
+    <text x="598" y="110">① Who permitted it</text><text x="790" y="110" class="mono t2">nullifier</text>
+    <text x="598" y="132">② What, where, until when</text><text x="790" y="132" class="mono t2">Ledger sig</text>
+    <text x="598" y="154">③ What was executed</text><text x="790" y="154" class="mono t2">use</text>
+    <text x="598" y="176">④ What came back</text><text x="790" y="176" class="mono t2">bodyHash</text>
+    <text x="598" y="198">⑤ How the AI read it</text><text x="790" y="198" class="mono t2">req_8f2a…</text>
     <line x1="598" y1="212" x2="850" y2="212" stroke="var(--line)"/>
     <text x="598" y="234" class="t2">0G credits −0.0031 0G</text>
     <rect x="598" y="246" width="252" height="24" rx="4" fill="var(--pc-tint)" stroke="var(--pc)"/>
-    <text x="609" y="263" fill="var(--pc)">DENIED  OUT_OF_TARGET — 違反として刻む</text>
+    <text x="609" y="263" fill="var(--pc)" font-size="11">DENIED  OUT_OF_TARGET — violation logged</text>
   </svg></div>
   <div class="cards">
-    <div class="card"><b>A は「判断」をしない画面</b><p>点数を見比べさせない。<b>知り合いが何人いま使っているか</b>だけ。評価できないものを、評価しなくてよくする。</p></div>
-    <div class="card"><b>B は「読める」ことが全部</b><p>範囲が4行で読めて、押さなければ通らない。ここが PC の外にある唯一の場所。</p></div>
-    <div class="card"><b>C は後から効く画面</b><p>価値の最大点は署名の瞬間ではない。<b>数日後、何もしていないのに星が消えたと知るとき。</b></p></div>
+    <div class="card"><b>A is the screen that makes no judgement</b><p>No scores to compare. Only <b>how many people you know are using it right now</b>. What you cannot evaluate, you no longer have to evaluate.</p></div>
+    <div class="card"><b>For B, being readable is everything</b><p>The scope reads in 4 lines, and nothing passes unless you press. This is the one place that sits outside the PC.</p></div>
+    <div class="card"><b>C is the screen that works later</b><p>The peak of its value is not the moment of signing. <b>It is days later, when you learn the stars went out although you did nothing.</b></p></div>
   </div>
 </section>
 
-<!-- ───────── 2. ジャーニー ───────── -->
+<!-- ───────── 2. Journey ───────── -->
 <section>
-  <h2>2. 1回の使用が、どう流れるか</h2>
-  <div class="plate"><svg viewBox="0 0 880 210" role="img" aria-label="使用の流れ">
+  <h2>2. How one use flows</h2>
+  <div class="plate"><svg viewBox="0 0 880 210" role="img" aria-label="Flow of one use">
     <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
       <path d="M0 0 L10 5 L0 10 z" fill="var(--ink2)"/></marker></defs>
     <g stroke="var(--ink2)" marker-end="url(#a)" fill="none">
@@ -127,99 +127,99 @@ svg .ttl{font-size:13px;font-weight:500}
     </g>
     <g>
       <rect x="16" y="36" width="112" height="48" rx="5" fill="var(--pc-tint)" stroke="var(--pc)"/>
-      <text x="30" y="58">スキルが</text><text x="30" y="75">鍵を要求</text>
+      <text x="30" y="58">Skill requests</text><text x="30" y="75">a key</text>
       <rect x="188" y="36" width="88" height="48" rx="5" fill="var(--chain-tint)" stroke="var(--chain)"/>
-      <text x="202" y="58">星を引く</text><text x="202" y="75" class="t2">誰が使用中か</text>
+      <text x="202" y="58">Pull stars</text><text x="202" y="75" class="t2">who is using</text>
       <rect x="336" y="36" width="88" height="48" rx="5" fill="var(--paper)" stroke="var(--line)"/>
-      <text x="350" y="58">重さ判定</text><text x="350" y="75" class="t2">0G TeeML</text>
+      <text x="350" y="58">Weighing</text><text x="350" y="75" class="t2">0G TeeML</text>
       <rect x="484" y="36" width="88" height="48" rx="5" fill="var(--hand-tint)" stroke="var(--hand)"/>
-      <text x="498" y="58">Ledger が</text><text x="498" y="75">4行を出す</text>
+      <text x="498" y="58">Ledger</text><text x="498" y="75" font-size="10.5">shows 4 lines</text>
       <rect x="632" y="36" width="88" height="48" rx="5" fill="var(--paper)" stroke="var(--line)"/>
-      <text x="646" y="58">Broker が</text><text x="646" y="75">代理実行</text>
+      <text x="646" y="58">Broker</text><text x="646" y="75">proxies it</text>
       <rect x="780" y="36" width="84" height="48" rx="5" fill="var(--ext-tint)" stroke="var(--ext)"/>
-      <text x="794" y="58">系譜に</text><text x="794" y="75">刻む</text>
+      <text x="794" y="58">Write to</text><text x="794" y="75">the trail</text>
       <rect x="152" y="124" width="112" height="46" rx="5" fill="var(--pc-tint)" stroke="var(--pc)"/>
-      <text x="166" y="146" fill="var(--pc)">範囲の外</text><text x="166" y="163" class="t2">端末まで届かない</text>
+      <text x="166" y="146" fill="var(--pc)">Out of scope</text><text x="166" y="163" class="t2" font-size="9">never reaches device</text>
     </g>
-    <text x="290" y="152" class="t2">ふだんの要求は人に出ない。人が出てくるのは「大事」と「決定的」だけ</text>
-    <text x="290" y="172" class="t2">範囲外は Broker が止める。Ledger は、その要求を人に見せることすらしない</text>
+    <text x="290" y="152" class="t2">Routine requests never reach a person. A person appears only for "significant" and "decisive"</text>
+    <text x="290" y="172" class="t2">Out of scope is stopped by the Broker. The Ledger never even shows that request to a person</text>
   </svg></div>
-  <p class="note"><b>いちばん効く瞬間は、この図の外にある。</b>数日後、スキルの manifest が黙って書き換わると星が一斉に消え、Priya は「更新していないのに、変わっている」を知る。</p>
+  <p class="note"><b>The moment that matters most is outside this diagram.</b> Days later, when the skill's manifest is quietly rewritten, the stars go out all at once, and Priya learns "it changed, and I never updated it".</p>
 </section>
 
-<!-- ───────── 3. アーキテクチャ ───────── -->
+<!-- ───────── 3. Architecture ───────── -->
 <section>
-  <h2>3. 構造 — 4つの層と、3つの場所</h2>
+  <h2>3. Structure — four layers and three places</h2>
   <div class="legend">
-    <span><i class="sw" style="background:var(--pc)"></i>信頼しない（PC の中）</span>
-    <span><i class="sw" style="background:var(--hand)"></i>手元（AI が届かない）</span>
-    <span><i class="sw" style="background:var(--chain)"></i>誰でも検証できる</span>
-    <span><i class="sw" style="background:var(--ext)"></i>外</span>
+    <span><i class="sw" style="background:var(--pc)"></i>Not trusted (inside the PC)</span>
+    <span><i class="sw" style="background:var(--hand)"></i>In hand (out of the AI's reach)</span>
+    <span><i class="sw" style="background:var(--chain)"></i>Anyone can verify</span>
+    <span><i class="sw" style="background:var(--ext)"></i>Outside</span>
   </div>
-  <div class="plate"><svg viewBox="0 0 880 420" role="img" aria-label="アーキテクチャ">
+  <div class="plate"><svg viewBox="0 0 880 420" role="img" aria-label="Architecture">
     <defs><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
       <path d="M0 0 L10 5 L0 10 z" fill="var(--ink2)"/></marker></defs>
 
     <rect x="16" y="24" width="248" height="186" rx="8" fill="var(--pc-tint)" stroke="var(--pc)"/>
-    <text x="32" y="48" class="ttl" fill="var(--pc)">PC の中（信頼しない）</text>
+    <text x="32" y="48" class="ttl" fill="var(--pc)">Inside the PC (not trusted)</text>
     <rect x="32" y="62" width="216" height="40" rx="5" fill="var(--paper)" stroke="var(--line)"/>
-    <text x="46" y="80">AI エージェント / 野良スキル</text><text x="46" y="95" class="t2">.env を読める。鍵は渡さない</text>
+    <text x="46" y="80">AI agent / unvetted skills</text><text x="46" y="95" class="t2">Can read .env. No keys given to it</text>
     <rect x="32" y="112" width="216" height="40" rx="5" fill="var(--paper)" stroke="var(--line)"/>
-    <text x="46" y="130">画面 A 星空 / 画面 C 系譜</text><text x="46" y="145" class="t2">見るだけ。ここでは何も守らない</text>
-    <text x="32" y="176" class="t2">ここで起きることは、全部</text>
-    <text x="32" y="192" class="t2">疑ってよいものとして設計する</text>
+    <text x="46" y="130">Screen A stars / Screen C trail</text><text x="46" y="145" class="t2">View only. Nothing protected here</text>
+    <text x="32" y="176" class="t2">Everything that happens here is</text>
+    <text x="32" y="192" class="t2">designed to be treated as suspect</text>
 
     <rect x="16" y="228" width="248" height="166" rx="8" fill="var(--hand-tint)" stroke="var(--hand)"/>
-    <text x="32" y="252" class="ttl" fill="var(--hand)">手元（AI が届かない）</text>
+    <text x="32" y="252" class="ttl" fill="var(--hand)">In hand (out of AI's reach)</text>
     <rect x="32" y="266" width="216" height="52" rx="5" fill="var(--paper)" stroke="var(--line)"/>
-    <text x="46" y="286">③ 鍵 — Ledger</text>
-    <text x="46" y="302" class="t2">元鍵は出ない。範囲を表示し、</text><text x="46" y="314" class="t2">長押しで子トークンに署名する</text>
+    <text x="46" y="286">③ Key — Ledger</text>
+    <text x="46" y="302" class="t2">The root key never leaves. Shows the</text><text x="46" y="314" class="t2">scope; hold to sign a child token</text>
     <rect x="32" y="328" width="216" height="50" rx="5" fill="var(--paper)" stroke="var(--line)"/>
-    <text x="46" y="348">① 人 — World ID</text>
-    <text x="46" y="364" class="t2">その瞬間だけのゼロ知識証明。</text>
-    <text x="46" y="376" class="t2">保証人が実在の1人であること</text>
+    <text x="46" y="348">① Person — World ID</text>
+    <text x="46" y="364" class="t2">A ZK proof good only for that moment</text>
+    <text x="46" y="376" class="t2">The guarantor is one real person</text>
 
     <rect x="300" y="24" width="252" height="370" rx="8" fill="var(--paper)" stroke="var(--line)" stroke-dasharray="4 3"/>
-    <text x="316" y="48" class="ttl">Broker（信頼点。本番は TEE）</text>
+    <text x="316" y="48" class="ttl" font-size="12">Broker (trust point; TEE in prod)</text>
     <rect x="316" y="62" width="220" height="112" rx="5" fill="var(--bg)" stroke="var(--line)"/>
-    <text x="330" y="82">範囲チェック</text>
-    <text x="330" y="102" class="mono t2">鍵 / 宛先 / 操作 / 回数 / 期限</text>
-    <text x="330" y="120" class="mono t2">https のみ・ホスト完全一致</text>
-    <text x="330" y="140" class="mono t2">nonce の持ち主 = 署名が通った要求</text>
-    <text x="330" y="160" class="mono t2">回数は実行の前に押さえる</text>
+    <text x="330" y="82">Scope check</text>
+    <text x="330" y="102" class="mono t2">key/dest/op/call budget/expiry</text>
+    <text x="330" y="120" class="mono t2">https only, exact host match</text>
+    <text x="330" y="140" class="mono t2">nonce owner = signed request</text>
+    <text x="330" y="160" class="mono t2">call budget held before run</text>
     <rect x="316" y="184" width="220" height="60" rx="5" fill="var(--bg)" stroke="var(--line)"/>
-    <text x="330" y="204">重さの判定</text>
-    <text x="330" y="222" class="t2">ふだん＝自動 ／ 大事＝Ledger</text>
-    <text x="330" y="236" class="t2">決定的＝World ID</text>
+    <text x="330" y="204">Weight decision</text>
+    <text x="330" y="222" class="t2">routine = auto / significant = Ledger</text>
+    <text x="330" y="236" class="t2">decisive = World ID</text>
     <rect x="316" y="254" width="220" height="56" rx="5" fill="var(--bg)" stroke="var(--line)"/>
-    <text x="330" y="274">代理実行</text>
-    <text x="330" y="292" class="t2">平文の鍵はスキルに渡らない。</text>
-    <text x="330" y="304" class="t2">返るのは結果と内容証明だけ</text>
+    <text x="330" y="274">Proxy execution</text>
+    <text x="330" y="292" class="t2">No plaintext key reaches the skill.</text>
+    <text x="330" y="304" class="t2">Only the result and proof of content</text>
     <rect x="316" y="320" width="220" height="58" rx="5" fill="var(--pc-tint)" stroke="var(--pc)"/>
     <text x="330" y="340" fill="var(--pc)">DENIED</text>
-    <text x="330" y="358" class="t2">範囲外＝違反として刻む</text>
-    <text x="330" y="372" class="t2">細った状態・署名なしは刻まない</text>
+    <text x="330" y="358" class="t2">out of scope = recorded as violation</text>
+    <text x="330" y="372" class="t2">degraded or unsigned: no violation</text>
 
     <rect x="588" y="24" width="276" height="196" rx="8" fill="var(--chain-tint)" stroke="var(--chain)"/>
-    <text x="604" y="48" class="ttl" fill="var(--chain)">0G Galileo（誰でも検証できる）</text>
+    <text x="604" y="48" class="ttl" fill="var(--chain)">0G Galileo (anyone can verify)</text>
     <rect x="604" y="62" width="244" height="44" rx="5" fill="var(--paper)" stroke="var(--line)"/>
-    <text x="618" y="82">② 保証 — VouchRegistry</text>
-    <text x="618" y="97" class="t2">誰が、どの濃さで、どの版を使っているか</text>
+    <text x="618" y="82">② Vouch — VouchRegistry</text>
+    <text x="618" y="97" class="t2">who, at what strength, uses which version</text>
     <rect x="604" y="114" width="244" height="44" rx="5" fill="var(--paper)" stroke="var(--line)"/>
-    <text x="618" y="134">違反 — ViolationRegistry</text>
-    <text x="618" y="149" class="t2">スキルに刻む。保証人の重みは下げない</text>
+    <text x="618" y="134">Violation — ViolationRegistry</text>
+    <text x="618" y="149" class="t2">on the skill; guarantor weight unchanged</text>
     <rect x="604" y="166" width="244" height="40" rx="5" fill="var(--paper)" stroke="var(--line)"/>
-    <text x="618" y="186">④ 系譜 — 0G Storage（追記専用）</text>
-    <text x="618" y="200" class="t2">5つの記録を同じ thread で数珠つなぎに</text>
+    <text x="618" y="186">④ Trail — 0G Storage (append-only)</text>
+    <text x="618" y="200" class="t2">five records strung on the same thread</text>
 
     <rect x="588" y="236" width="276" height="76" rx="8" fill="var(--chain-tint)" stroke="var(--chain)"/>
     <text x="604" y="260" class="ttl" fill="var(--chain)">0G Private Computer</text>
-    <text x="604" y="280" class="t2">重さの判定と、返答の読み取り（TeeML）。</text>
-    <text x="604" y="296" class="t2">判断ごとに request ID が付く＝領収書</text>
+    <text x="604" y="280" class="t2">Weight decisions and response reading (TeeML).</text>
+    <text x="604" y="296" class="t2">each decision gets a request ID = a receipt</text>
 
     <rect x="588" y="330" width="276" height="64" rx="8" fill="var(--ext-tint)" stroke="var(--ext)"/>
-    <text x="604" y="354" class="ttl" fill="var(--ext)">外部 API</text>
-    <text x="604" y="374" class="t2">Broker だけが叩く。https 以外は通さない</text>
+    <text x="604" y="354" class="ttl" fill="var(--ext)">External API</text>
+    <text x="604" y="374" class="t2">Only the Broker calls it. https only passes</text>
 
     <g stroke="var(--ink2)" marker-end="url(#b)" fill="none">
       <path d="M264 118 H300"/><path d="M300 300 H272" stroke="var(--hand)"/>
@@ -229,31 +229,31 @@ svg .ttl{font-size:13px;font-weight:500}
   </svg></div>
 </section>
 
-<!-- ───────── 4. 現在地 ───────── -->
+<!-- ───────── 4. Where we are ───────── -->
 <section>
-  <h2>4. いま動いているもの／まだのもの</h2>
+  <h2>4. What runs now / what does not yet</h2>
   <table>
-    <tr><th>層</th><th>状態</th><th>根拠</th></tr>
-    <tr><td>③ 鍵 — Broker の範囲チェック・代理実行・内容証明</td><td class="done">動く</td><td><code>broker/</code>・試験19件・<code>node demo.mjs</code></td></tr>
-    <tr><td>④ 系譜 — 追記専用の記録と thread</td><td class="done">動く（ローカル JSONL）</td><td><code>GET /trace/:thread</code></td></tr>
-    <tr><td>③ 鍵 — Ledger 実機で4行を出し、長押しで署名</td><td class="todo">関門1</td><td>Flex で自作アプリは起動済み</td></tr>
-    <tr><td>④ 系譜 — 0G Storage へ</td><td class="todo">未</td><td><code>store.append</code> 1箇所の差し替え</td></tr>
-    <tr><td>重さ判定 — 0G Private Computer / request ID</td><td class="todo">未</td><td>0G 賞の必須項目</td></tr>
-    <tr><td>① 人 — World Agent Pass（device flow で拒否・期限切れ）</td><td class="todo">未</td><td><code>spec/world-agent-pass.md</code></td></tr>
-    <tr><td>② 保証 — 星が消える（版の照合）</td><td class="todo">未</td><td><code>version</code> を manifest ハッシュにする案</td></tr>
+    <tr><th>Layer</th><th>State</th><th>Evidence</th></tr>
+    <tr><td>③ Key — Broker scope check, proxy execution, proof of content</td><td class="done">Runs</td><td><code>broker/</code>, 19 tests, <code>node demo.mjs</code></td></tr>
+    <tr><td>④ Trail — append-only records and thread</td><td class="done">Runs (local JSONL)</td><td><code>GET /trace/:thread</code></td></tr>
+    <tr><td>③ Key — show the 4 lines on the Ledger device, hold to sign</td><td class="todo">Gate 1</td><td>A custom app already boots on the Flex</td></tr>
+    <tr><td>④ Trail — onto 0G Storage</td><td class="todo">Not yet</td><td>swap <code>store.append</code> in one place</td></tr>
+    <tr><td>Weight decision — 0G Private Computer / request ID</td><td class="todo">Not yet</td><td>Required item for the 0G prize</td></tr>
+    <tr><td>① Person — World Agent Pass (denial and expiry in the device flow)</td><td class="todo">Not yet</td><td><code>spec/world-agent-pass.md</code></td></tr>
+    <tr><td>② Vouch — stars go out (version matching)</td><td class="todo">Not yet</td><td>plan to make <code>version</code> the manifest hash</td></tr>
   </table>
-  <p class="note"><b>黙って良く見せない。</b>Broker はいま平文の鍵を持つ信頼点で、TEE には載っていない。拒否の通知は PC を経由して端末に届き、端末側で検証していない。QR の先はまだ Broker 自身。<b>この3つは発表で1行ずつ言う。</b></p>
+  <p class="note"><b>No quietly looking better than we are.</b> The Broker is today a trust point holding plaintext keys, and it does not run in a TEE. The denial notice reaches the device through the PC, and the device does not verify it. The QR still points at the Broker itself. <b>We say each of these three in one line at the presentation.</b></p>
 </section>
 
-<!-- ───────── 5. スポンサー ───────── -->
+<!-- ───────── 5. Sponsors ───────── -->
 <section>
-  <h2>5. どの層が、どの賞に対応するか</h2>
+  <h2>5. Which layer maps to which prize</h2>
   <table>
-    <tr><th>社</th><th>担う層</th><th>要件のうち、この設計がそのまま満たすもの</th></tr>
-    <tr><td>World</td><td>① 人</td><td>証明→保護された動作の全経路。<b>拒否・期限切れは device flow に標準で入っている</b></td></tr>
-    <tr><td>0G Private Computer</td><td>重さ判定</td><td>主たる流れの中での推論＋request ID。credits の消費が画面 C に出る</td></tr>
-    <tr><td>0G Physical AI</td><td>③ 鍵</td><td>判断ループ内の 0G 呼び出し／episode log／<b>実機デモ（Hardware 枠は独立）</b></td></tr>
-    <tr><td>EF CROPS</td><td>① 人・④ 系譜</td><td>最小限の情報しか渡さない設計。OSS・トラッカーなし</td></tr>
+    <tr><th>Sponsor</th><th>Layer it carries</th><th>Requirements this design meets as it stands</th></tr>
+    <tr><td>World</td><td>① Person</td><td>The whole path from proof to a protected action. <b>Denial and expiry come as standard in the device flow</b></td></tr>
+    <tr><td>0G Private Computer</td><td>Weight decision</td><td>Inference inside the main flow plus a request ID. Credit spend shows on screen C</td></tr>
+    <tr><td>0G Physical AI</td><td>③ Key</td><td>0G calls inside the decision loop / episode log / <b>live hardware demo (the Hardware track is separate)</b></td></tr>
+    <tr><td>EF CROPS</td><td>① Person, ④ Trail</td><td>A design that hands over only the minimum information. Open source, no trackers</td></tr>
   </table>
 </section>
 

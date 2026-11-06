@@ -1,112 +1,183 @@
-# TOMOSHIBI — ETHGlobal Mumbai 2026
+# TOMOSHIBI 🕯️
 
-ETHGlobal Mumbai 2026（kou-uni × mintannn）。ハックは 11/5 21:00 → 11/7 09:00 IST。
+**A review score never expires. A flame goes out. That is the whole idea.**
 
-> **作業を再開するときは [START-HERE.md](START-HERE.md) を先に読む。**
-> いまの状態・動かし方・次の一手がそこに全部ある。
+AI agents are starting to ask for our API keys the way apps once asked for passwords — a secret
+with no scope, no expiry and no receipt, handed to code we did not read. **TOMOSHIBI puts one
+button in front of the key that an AI cannot press.** You sign a scope on a Ledger device — which
+key, which destination, which operation, how many times, until when — and the four lines on the
+device screen are built from the same bytes that get signed. The skill never receives the secret.
+Anything outside the signed scope is refused *before* it happens, and recorded with the skill's own
+signature on the request.
 
-**TOMOSHIBI**（灯火 / a small flame that can go out）
+And a star is not a review. A star means *I, a verified human, am using this version with my own
+key.* **When the version changes, every star goes out at once.**
 
-**AIが見られない場所を手元に持ち、AIには「誰が信頼したか」を持たせる。** — 星の数ではなく、誰の星か。
+## Try it now
 
-レビューの点数は消えない。**灯は消える。だから意味がある。**
-
-| 場所 | 中身 |
+| | |
 |---|---|
-| `ideation/2026-11-06-decisions.md` | **決定の記録。** 何を決めたか（最新） |
-| **`ideation/2026-11-07-finalist-4min.md`** | **Finalist 審査（7分）の台本。** デモ4分の進行表・押されたら捨てる順・質疑3分（定番3つ＋来るとわかっている突っ込み6つ） |
-| **`ideation/2026-11-06-submission-rules.md`** | **提出と審査の規則（ETHGlobal 公式）。** 締切・禁止事項・審査基準・動画の規則と、こちらの適合状況 |
-| **`ideation/2026-11-06-stack.html`** | **システムスタック。** 7段（プロトコル／ツール／プロダクト）と、借りものが落ちたときの振る舞い |
-| `ideation/2026-11-06-minta-proposal.md` | minta の提案：星は約束ではなく事実にする（採用） |
-| **`ui/`** | **動くデモ画面（試作）。** `index.html`＝門（4通りの止まり方が見える）／`stars.html`＝灯（版が上がると消える）。値は本番の 0G に実際に投げた応答 |
-| **`ideation/2026-11-06-market-and-model.html`** | **市場規模（TAM/SAM/SOM）とビジネスモデル。** TAM $43B・SAM $2–7B・SOM $1.4M（3年目）／収益3本と、1判定の原価（実測300トークン）／やらないこと |
-| **`ideation/2026-11-06-diagrams.html`** | **アーキテクチャ図と5つのシーケンス図。** 通る／押させる／止める／決めない／灯をともす（生成: `ideation/build-diagrams.py`） |
-| `ideation/2026-11-06-touchpoints.html` | **誰が・いつ・どの画面に出会い、何を変えるか。** 決めてほしいこと9個の内訳／スタックチャンを入れるなら③だけ |
-| `ideation/2026-11-06-screen-flow.html` | **画面遷移とプロセス。** 画面5枚・遷移表・使用のプロセス・World のプロセス・決めてほしいこと3つ |
-| `ideation/2026-11-06-demo-scenario.md` | **デモの筋書き。** 3分の進行表・90秒版・壊れたときの退避・撮影前の確認 |
-| `ideation/2026-11-06-storyboard.md` | **デモ台本。** 画面3つ・3分の絵コンテ・映え5つ・キャッチコピー（[スマホで見る](https://htmlpreview.github.io/?https://github.com/kou-uni/ethglobal-mumbai/blob/main/ideation/2026-11-06-storyboard.html)） |
-| `ideation/2026-11-06-final-image.md` | **仕上がり。** アーキテクチャ図・ビジネスモデル・ペルソナ・ジャーニー（動画の絵コンテ） |
-| `ideation/2026-11-06-philosophy.md` | **思想。** なぜこれを作るのか（機能は削れても、ここは削らない） |
-| `ideation/2026-11-06-review.md` | **まず読む。** ストーリーと機能を1枚に（合意／提案の印つき） |
-| `ideation/2026-11-06-integrated.md` | 議論の統合版 |
-| `ideation/2026-11-06-architecture.md` | アーキテクチャ（叩き台 v2） |
-| `ideation/2026-11-06-architecture-v2.html` | 図（ダウンロードしてブラウザで開く） |
-| `research/10-ef-fit.md` | EF の賞との適合性（CROPS ＞ Anon-RPC） |
+| The gate — four different ways to stop | https://kou-uni.github.io/ethglobal-mumbai/ui/index.html |
+| The flame — stars go out when the version changes | https://kou-uni.github.io/ethglobal-mumbai/ui/stars.html |
+| The live screen wired to the device | https://kou-uni.github.io/ethglobal-mumbai/web/gate.html |
 
-## いま決まっていること・作るもの
+```bash
+git clone https://github.com/kou-uni/ethglobal-mumbai && cd ethglobal-mumbai/broker
+npm i && npm test                 # 50 / 50
+PORT=8797 EXECUTE=0 node src/server.js   # needs ZG_API_KEY, ZG_PRIVATE_KEY
+node demo.mjs http://127.0.0.1:8797      # all five paths, end to end
+```
 
-| 場所 | 中身 |
+## Verifiable facts (not adjectives)
+
+| | |
 |---|---|
-| `ideation/2026-11-06-plan.md` | **実施方針と時間割。** 分担・関門・捨てるもの |
-| `ideation/2026-11-06-tech-value-review.md` | **World / Ledger / 0G の位置づけと、実装に載っているかの再評価** |
-| `research/11-prize-gap.md` | **賞ごとの「狙えるか・足りないもの・埋め方」**（上限 $11,250） |
-| **`broker/`** | **動くもの。** `use` → 範囲チェック → **0G が重さを決める** → 代理実行 → 系譜、と **World で星を出す**。`npm test` 47件 / `node demo.mjs` |
-| `ideation/2026-11-06-world-integration-notes.md` | **World 導入の振り返り**（両方の World 賞で必須。§6 は提出用の英語） |
-| `spec/permit-signature.md` | **署名の契約。** 導出パス・EIP-712・Broker の検証。Ledger と Broker の境界 |
-| `spec/world-agent-pass.md` | **World Agent Pass の正体と入れ方**（OIDC / device flow） |
+| A trail sealed on **0G mainnet-testnet (Galileo, chainId 16602)** | tx [`0x74c7cdf9…aef1`](https://chainscan-galileo.0g.ai/tx/0x74c7cdf9bca055c502918e62a7ac9fc7634d1326471433ab10161045aa97aef1) · block **64103318** · `status 0x1` |
+| 0G Storage root hash | `0xc0e0c7a911547490680d545ad9d4638a9bf23bd72d8a3004edf9b4ffaa5be080` |
+| Tests | **50 / 50**, including the frozen cross-side signature vector (`spec/permit-signature.md` §6) |
+| Measured against the **real** 0G Private Computer (TeeML, TDX-attested) | **467 calls** · 2.0 s per verdict · **$0.000036** per verdict |
+| Hardware | A custom **Ledger** app in Rust. No blind signing: the host never sends a digest |
 
-**分担（#12）：人が見るものは minta、人が見ないものは kou。**
-境界は `spec/permit-signature.md` の JSON 1本と Broker の HTTP。
+## What was hard
+
+1. **The screen and the signature cannot disagree.** The EIP-712 digest is computed *inside* the
+   device from the same four values it displays. The host never sends a digest, so blind signing is
+   structurally impossible — not merely discouraged.
+2. **The count holds under concurrency.** The call budget is reserved before execution with no
+   `await` between the check and the record. 100 simultaneous requests against `maxCalls=3` let
+   through 0 extra — covered by a test.
+3. **Refusing to invent a verdict.** If the sealed model is unreachable we return `STOPPED` and
+   change nothing — no default, no rule-based stand-in. **A fabricated verdict is worse than no
+   verdict.** Four stops are kept apart because a different stop means a different responsibility:
+   `DENIED` (you drew that line in advance) · `STOPPED` (nobody could decide) ·
+   `NEEDS_PRESS` (irreversible, and no human has pressed yet) · `human_denied` / `proof_expired`.
+
+## Why this is not the thing next to it
+
+Secrets managers decide *where a key lives*. Certificate systems decide *which machine it is*.
+Agent payment rails decide *that it can pay* — and have no reason to stop anything, since volume is
+their revenue. **None of them decide whether this one request, right now, was allowed by a human —
+and none of them keep the refusals.**
+
+## Why India picked this problem before we did
+
+From **April 2026** the RBI requires a *dynamic, per-transaction* authentication factor for
+card-not-present payments, and it applies whether a human or an agent initiates it. NPCI is building
+agent payments on UPI with spending limits, audit trails, identity checks and a liability framework.
+And CERT-In's Digital Threat Report 2025-26 asks to *"mandate human-in-the-loop controls for agentic
+AI actions above defined financial thresholds, with full audit trails."*
+
+**That last sentence is our product description.** We have not integrated with UPI and do not claim
+to — the match is structural, and that is the claim. Sources and the honest limits:
+[`ideation/2026-11-06-why-mumbai.md`](ideation/2026-11-06-why-mumbai.md).
+
+---
+
+> Start at [START-HERE.md](START-HERE.md) for the current state, how to run it, and what is next.
+> ETHGlobal Mumbai 2026 (kou-uni × mintannn). Hacking window: 11/5 21:00 → 11/7 09:00 IST.
+
+**TOMOSHIBI** (*tomoshibi* / a small flame that can go out) —
+**Keep the one place an AI cannot see on your own device, and let the AI carry only who trusted what.**
+Not how many stars. Whose star.
+
+## Design and decision records
+
+| Where | What |
+|---|---|
+| `ideation/2026-11-06-decisions.md` | **The decision record.** What we decided (most recent) |
+| **`ideation/2026-11-07-finalist-4min.md`** | **Script for the 7-minute finalist round.** Run sheet for the 4-minute demo, the order we cut things if we are pressed, 3 minutes of Q&A (the 3 usual questions plus the 6 hard ones we know are coming) |
+| **`ideation/2026-11-06-submission-rules.md`** | **Submission and judging rules (official ETHGlobal).** Deadlines, what is not allowed, judging criteria, video rules, and where we stand against each |
+| **`ideation/2026-11-06-stack.html`** | **The system stack.** Seven layers (protocol / tooling / product) and what happens when a borrowed piece goes down |
+| `ideation/2026-11-06-minta-proposal.md` | minta's proposal: make a star a fact, not a promise (adopted) |
+| **`ui/`** | **Working demo screens (prototype).** `index.html` = the gate (all four ways to stop are visible) / `stars.html` = the flame (goes out when the version rises). The values are real responses from live 0G |
+| **`ideation/2026-11-06-market-and-model.html`** | **Market size (TAM/SAM/SOM) and business model.** TAM $43B · SAM $2–7B · SOM $1.4M (year three) / three revenue lines and the cost of one verdict (measured: $0.000036) / what we will not do |
+| **`ideation/2026-11-06-diagrams.html`** | **Architecture diagram and five sequence diagrams.** Let it through / make them press / stop it / decline to decide / light a flame (generated by `ideation/build-diagrams.py`) |
+| `ideation/2026-11-06-touchpoints.html` | **Who meets which screen, when, and what it changes for them.** Breakdown of the nine open decisions, and which of them Stack-chan would touch |
+| `ideation/2026-11-06-screen-flow.html` | **Screen flow and process.** Five screens · transition table · the usage flow · the World flow · three open decisions |
+| `ideation/2026-11-06-demo-scenario.md` | **The demo storyline.** 3-minute run sheet · 90-second cut · the fallback when something breaks · the checks before we record |
+| `ideation/2026-11-06-storyboard.md` | **The demo script.** Three screens · a 3-minute storyboard · the five shots that land · taglines ([view on phone](https://htmlpreview.github.io/?https://github.com/kou-uni/ethglobal-mumbai/blob/main/ideation/2026-11-06-storyboard.html)) |
+| `ideation/2026-11-06-final-image.md` | **The finished picture.** Architecture diagram · business model · personas · journey (storyboard for the video) |
+| `ideation/2026-11-06-philosophy.md` | **Philosophy.** Why we are building this (features can be cut; this cannot) |
+| `ideation/2026-11-06-review.md` | **Read this first.** The story and the features on one page (marked agreed / proposed) |
+| `ideation/2026-11-06-integrated.md` | The merged discussion |
+| `ideation/2026-11-06-architecture.md` | Architecture (draft v2) |
+| `ideation/2026-11-06-architecture-v2.html` | Diagram (download it and open it in a browser) |
+| `research/10-ef-fit.md` | Fit with the EF prizes (CROPS > Anon-RPC) |
+
+## What is settled, and what we are building
+
+| Where | What |
+|---|---|
+| `ideation/2026-11-06-plan.md` | **How we work and the timetable.** Who does what · the checkpoints · what we drop |
+| `ideation/2026-11-06-tech-value-review.md` | **Where World / Ledger / 0G each sit, and a re-check of whether they are really in the build** |
+| `research/11-prize-gap.md` | **Per prize: can we win it, what is missing, how to close the gap** (ceiling $11,250) |
+| **`broker/`** | **The working thing.** `use` → scope check → **0G decides the weight** → proxied execution → trail, plus **lighting a star with World**. `npm test` 50 tests / `node demo.mjs` |
+| `ideation/2026-11-06-world-integration-notes.md` | **Retrospective on the World integration** (required for both World prizes; §6 is the English text for the submission) |
+| `spec/permit-signature.md` | **The signing contract.** Derivation path · EIP-712 · how the Broker verifies. The boundary between Ledger and Broker |
+| `spec/world-agent-pass.md` | **What World Agent Pass actually is, and how to wire it in** (OIDC / device flow) |
+
+**Split of work (#12): minta owns everything people see, kou owns everything they do not.**
+The boundary is one JSON in `spec/permit-signature.md` and the Broker's HTTP.
 
 
-## プライバシー（EF CROPS）
+## Privacy (EF CROPS)
 
-**誰が、何を知るか。設計で分けてある。**
+**Who knows what. The design keeps them apart.**
 
-| | 知っているもの | 知らないもの |
+| | Knows | Does not know |
 |---|---|---|
-| **Ledger（手元の機器）** | 範囲の4行（鍵のラベル・宛先・操作・期限）と、押したかどうか | 要求の本文。鍵の平文も外に出ない |
-| **World** | **人であること・同じ人であること**（sector 単位の仮名） | 何のスキルに星を出したか・何の鍵か・いつ使ったか |
-| **0G Private Computer（TeeML）** | 要求の本文（**封印された中で**。重さを決めるため） | 鍵の平文。**我々も読めない**（TEE の中で完結する） |
-| **Broker** | 範囲・判定・系譜 | — **ここが唯一の信頼点。今回は TEE に載せていない**（下の「黙って良く見せない」） |
-| **系譜（0G Storage）** | 誰が許し、何を要求し、通ったか止まったか | **本文も鍵も入れない。** 公開前提で書いている |
+| **Ledger (the device)** | The four lines of scope (key label, destination, operation, expiry), and whether it was pressed | The body of the request. The key never leaves in the clear either |
+| **World** | **That this is a human, and the same human** (a per-sector pseudonym) | Which skill got a star · which key · when it was used |
+| **0G Private Computer (TeeML)** | The body of the request (**inside the seal**, to decide the weight) | The key in the clear. **We cannot read it either** — it stays inside the TEE |
+| **Broker** | Scope · verdicts · the trail | — **This is the one point of trust, and we did not put it in a TEE this time**. We say so rather than let it pass unnoticed |
+| **The trail (0G Storage)** | Who permitted it, what was requested, and whether it went through or stopped | **No body, no key.** It is written to be public |
 
-- **星は仮名でしか結ばない。** World の `sub`（sector 単位）だけを刻む。氏名・メール・ウォレットは要らない
-- **トラッカーは使っていない。** 解析スクリプト・ピクセル・サードパーティ Cookie いずれも無し
-- **OSS。** MIT（`LICENSE`）。依存は `viem` / `jose` / `ethers` / `@0gfoundation/0g-storage-ts-sdk`
-- **照会で漏らさない。** 星の読み取りは既定で Anon-RPC 経由にし、全件を取って端末で絞る方針
-  （**未実装。** `research/10-ef-fit.md`、判定は #6）
+- **A star binds to a pseudonym and nothing else.** We seal only the World `sub` (per sector). No name, no email, no wallet
+- **No trackers.** No analytics scripts, no pixels, no third-party cookies
+- **Open source.** MIT (`LICENSE`). Dependencies are `viem` / `jose` / `ethers` / `@0gfoundation/0g-storage-ts-sdk`
+- **Lookups must not leak.** Star reads go through Anon-RPC by default: fetch everything, filter on the device
+  (**not implemented.** `research/10-ef-fit.md`, decision #6)
 
-## 0G（なぜ要るのか・なぜ明日も来るのか）
+## 0G (why we need it, and why people come back tomorrow)
 
-**0G を外すと何が壊れるか（1文）:**
-**要求の中身を読まないと重さは決まらないのに、中身を我々に見せたくない。封印された推論でしか成り立たない。**
-0G を外すと、重さを決めるために Broker が本文を平文で読むことになる — この作品の前提が壊れる。
+**What breaks without 0G, in one sentence:**
+**You cannot decide the weight without reading the request, and we must not be the ones reading it. Only sealed inference makes that work.**
+Drop 0G and the Broker has to read the body in the clear to decide the weight — which breaks the premise of the whole thing.
 
-**また来る理由（2行）:**
-星は1回では意味がない。**同じ鍵で使い続けている事実が積み上がるほど重くなる。**
-そして版が変われば星は一斉に消えるので、**使い続けている人だけが、消えたことに気づいて出し直す。**
+**Why people come back (two lines):**
+One star means nothing. **The weight grows as the fact of still using it, with the same key, piles up.**
+And every star goes out at once when the version changes, so **only the people still using it notice, and light one again.**
 
-## どう作ったか（ETHGlobal の規定に沿った開示）
+## How we built it (disclosure per the ETHGlobal rules)
 
-**ハック期間中（11/5 21:00 IST 以降）に作った。** 事前のプロジェクト固有のコードは使っていない。
+**Built inside the hacking window (from 11/5 21:00 IST).** No pre-existing project-specific code.
 
-### 再利用したもの（公開のスターターキット・ライブラリ）
+### What we reused (public starter kits and libraries)
 
-| 場所 | 由来 | ライセンス |
+| Where | Origin | License |
 |---|---|---|
-| `ledger-app/` | LedgerHQ **`app-boilerplate-rust`** から開始（アプリの中身は今回書いた） | Apache-2.0 |
-| `broker/` の依存 | `viem` / `jose` / `ethers` / `@0gfoundation/0g-storage-ts-sdk` | 各 OSS |
-| `bridge/bridge.py` | `hidapi`（Python） | 各 OSS |
+| `ledger-app/` | Started from LedgerHQ **`app-boilerplate-rust`** (the app itself was written here) | Apache-2.0 |
+| `broker/` dependencies | `viem` / `jose` / `ethers` / `@0gfoundation/0g-storage-ts-sdk` | Respective OSS licenses |
+| `bridge/bridge.py` | `hidapi` (Python) | Respective OSS licenses |
 
-本体（`broker/src/`・`web/`・`ui/`・`spec/`・`ideation/`）は**今回書いたもの**。
+Everything else (`broker/src/`, `web/`, `ui/`, `spec/`, `ideation/`) **was written here**.
 
-### AI ツールの使い方
+### How we used AI tools
 
-**使った：Claude Code（Anthropic）。2人のうち、人が見ない側の実装と文書で使っている。**
+**We used Claude Code (Anthropic). Of the two of us, it was used on the side people do not see: the implementation and the documents.**
 
-| 範囲 | 使い方 |
+| Scope | How |
 |---|---|
-| `broker/src/`・`broker/test/` | **人が設計を決め、AI に書かせ、人がテストで検証した。** 判定の境界（4つの止まり方・範囲照合・回数）は人が仕様として先に書いた（`spec/`） |
-| `ideation/`・`research/` | 構成と文章の起草に使用。**数字・判定・実測値は人が実行して確かめたものだけを載せている**（【確】の印） |
-| `web/`・`ui/` | **minta が設計・実装**（画面は人の手） |
-| `ledger-app/`（Rust） | **minta が実機で実装**（AI 補助あり） |
+| `broker/src/`, `broker/test/` | **A human decided the design, the AI wrote it, a human verified it with tests.** The boundaries of the verdict (the four ways to stop, scope matching, the call budget) were written by a human as a spec first (`spec/`) |
+| `ideation/`, `research/` | Used to draft the structure and the prose. **Only numbers, verdicts and measurements a human ran and confirmed are on the page** (marked [verified]) |
+| `web/`, `ui/` | **Designed and built by minta** (the screens are human work) |
+| `ledger-app/` (Rust) | **Built by minta on real hardware** (with AI assistance) |
 
-**spec 駆動の成果物は全部このリポジトリにある：**
-`spec/permit-signature.md`（Ledger と Broker の契約）・`spec/world-agent-pass.md`・
-`ideation/2026-11-06-decisions.md`（何を決め、何を捨てたか・18件）・
-`ideation/2026-11-06-plan.md`（時間割と関門）。
-**生成物だけでなく、どう指示し、何を却下したかが残っている。**
+**Everything the spec-driven work produced is in this repository:**
+`spec/permit-signature.md` (the contract between Ledger and Broker) · `spec/world-agent-pass.md` ·
+`ideation/2026-11-06-decisions.md` (what we decided and what we dropped — 25 of them) ·
+`ideation/2026-11-06-plan.md` (timetable and checkpoints).
+**Not just the output: how we prompted it and what we rejected is on the record too.**
 
-AI が作って人が確かめていないものは、提出物に入れていない。
-実測していない数字には【未確認】と書いてある。
+Nothing the AI made and a human did not check is in the submission.
+Any number we did not measure ourselves is marked [unverified].

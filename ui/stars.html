@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOMOSHIBI — 灯（星の画面・試作）</title>
+<title>TOMOSHIBI — Flames (star screen, prototype)</title>
 <style>
 :root{--ink:#1a1a1a;--ink-2:#555;--ink-3:#8e8e8e;--accent:#173f66;--flame:#c67c16;
   --brick:#a33c2e;--hairline:#d9d9d9;--fill:#e7e9ec;--paper:#fff}
@@ -75,58 +75,58 @@ footer b{color:var(--ink-2)}
 <div class="wrap">
 
 <header>
-  <p class="eyebrow">TOMOSHIBI — prototype / minta さんが仕上げる前の試作</p>
-  <h1>灯<small>レビューの点数は消えない。灯は消える。だから意味がある</small></h1>
-  <p class="lead">星は約束ではなく事実。「自分の鍵で、この版を使っている」人だけが出せる。版が変われば、前の版の灯は一斉に消える。</p>
+  <p class="eyebrow">TOMOSHIBI — prototype / draft before minta finishes the design</p>
+  <h1>Flames<small>Review scores never go out. Flames do. That is why they mean something</small></h1>
+  <p class="lead">A star is a fact, not a promise. Only someone running this version with their own key can give one. When the version changes, every flame on the previous version goes out at once.</p>
 </header>
 
 <div class="skill">
   <span class="name" id="sname">invoice-reader</span>
-  <span class="ver">いま動いている版 <b id="ver">1.0.0</b></span>
+  <span class="ver">Live version <b id="ver">1.0.0</b></span>
   <span class="small mono" id="sid">skill 0x3c44cddd…</span>
 </div>
 
 <div class="flames" id="flames"></div>
 
 <div class="count">
-  <div class="kpi"><div class="v" id="n-now">0</div><div class="l">この版の灯</div></div>
-  <div class="kpi"><div class="v dim" id="n-out">0</div><div class="l">版が上がって消えた灯</div></div>
-  <div class="kpi"><div class="v dim" id="n-ver">1</div><div class="l">これまでの版</div></div>
+  <div class="kpi"><div class="v" id="n-now">0</div><div class="l">Flames on this version</div></div>
+  <div class="kpi"><div class="v dim" id="n-out">0</div><div class="l">Flames put out by version bumps</div></div>
+  <div class="kpi"><div class="v dim" id="n-ver">1</div><div class="l">Versions so far</div></div>
 </div>
 
 <div class="acts">
-  <button class="main" id="vouch">星を出す（World で1回だけ確かめる）</button>
-  <button id="bump">版を上げる</button>
-  <button id="load">Broker から読む</button>
-  <button id="reset">はじめから</button>
+  <button class="main" id="vouch">Give a star (verify once with World)</button>
+  <button id="bump">Bump the version</button>
+  <button id="load">Read from Broker</button>
+  <button id="reset">Start over</button>
 </div>
 
 <div class="world" id="world">
   <div class="wsteps" id="wsteps"></div>
-  <p class="st" id="wst">World で確かめている</p>
+  <p class="st" id="wst">Verifying with World</p>
   <p class="small mono" id="wdetail"></p>
   <div class="code" id="wcode"></div>
   <div class="acts" id="wacts">
-    <button class="main" id="w-ok">（試作）本人が確かめた</button>
-    <button id="w-ng">（試作）本人が断った</button>
-    <button id="w-ex">（試作）期限が切れた</button>
-    <button id="w-cancel">やめる</button>
+    <button class="main" id="w-ok">(prototype) the key holder verified</button>
+    <button id="w-ng">(prototype) the key holder declined</button>
+    <button id="w-ex">(prototype) the proof expired</button>
+    <button id="w-cancel">Cancel</button>
   </div>
-  <p class="small" style="margin:12px 0 0">World が確かめるのは「人であること・同じ人であること」だけ。<b>何に星を出したかは World に渡らない。</b></p>
+  <p class="small" style="margin:12px 0 0">World verifies only that you are a human, and the same human. <b>What you gave a star to never reaches World.</b></p>
 </div>
 
-<h2>版の履歴</h2>
+<h2>Version history</h2>
 <table>
-  <thead><tr><th style="width:90px">版</th><th class="num" style="width:60px">灯</th><th style="width:130px">いま</th><th>何が起きたか</th></tr></thead>
+  <thead><tr><th style="width:90px">Version</th><th class="num" style="width:60px">Flames</th><th style="width:130px">Now</th><th>What happened</th></tr></thead>
   <tbody id="hist"></tbody>
 </table>
 
-<p class="note"><b>消えるのが機能。</b>版が変われば、前の版に付いた灯は数に入らない。使い続けている人だけが、消えたことに気づいて出し直す。だから灯の数は「昔よかった」ではなく「いま使われている」を指す。</p>
+<p class="note"><b>Going out is the feature.</b> When the version changes, flames on the previous version stop counting. Only people still using the skill notice and give one again. So the flame count says "in use now", not "was good once".</p>
 
 <footer>
-  <p><b>この画面は試作。</b>デザインは minta さんが仕上げる。数と状態の出どころは Broker の <span class="mono">GET /stars/&lt;skill&gt;?version=</span>（「Broker から読む」で実際に取りにいく）。</p>
-  <p><b>World が確かめるのは「人であること・同じ人であること」だけ。</b>何に星を出したか、何の鍵かは World に渡らない。星には sector 単位の仮名（<span class="mono">sub</span>）しか刻まない。</p>
-  <p><b>断られたことも残す。</b><span class="mono">human_denied</span> / <span class="mono">proof_expired</span> は、失敗ではなく記録すべき結果として系譜に入る。</p>
+  <p><b>This screen is a prototype.</b> minta will finish the design. The counts and state come from the Broker's <span class="mono">GET /stars/&lt;skill&gt;?version=</span> ("Read from Broker" really fetches it).</p>
+  <p><b>World verifies only that you are a human, and the same human.</b> What you gave a star to, and which key was involved, never reach World. A star records nothing but a per-sector pseudonym (<span class="mono">sub</span>).</p>
+  <p><b>A refusal is recorded too.</b> <span class="mono">human_denied</span> / <span class="mono">proof_expired</span> enter the trail as results worth keeping, not as failures.</p>
 </footer>
 
 </div>
@@ -135,7 +135,7 @@ footer b{color:var(--ink-2)}
 var $ = function (id) { return document.getElementById(id) }
 var BROKER = new URLSearchParams(location.search).get('broker') || 'http://127.0.0.1:8797'
 var SKILL = '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc'
-var state = { version: '1.0.0', now: 7, deviceCode: null, history: [{ v: '1.0.0', n: 7, live: true, why: '最初の版' }] }
+var state = { version: '1.0.0', now: 7, deviceCode: null, history: [{ v: '1.0.0', n: 7, live: true, why: 'First version' }] }
 
 var FLAME = '<svg class="fl" viewBox="0 0 120 152">' +
   '<rect class="base" x="31" y="96" width="58" height="48" rx="19" fill="#173f66"/>' +
@@ -150,25 +150,25 @@ function draw() {
   $('n-ver').textContent = state.history.length
   $('hist').innerHTML = state.history.slice().reverse().map(function (h) {
     return '<tr><td class="mono">' + h.v + '</td><td class="num">' + h.n + '</td><td>' +
-      (h.live ? '<b style="color:var(--flame)">灯っている</b>' : '<span class="small">消えた</span>') +
+      (h.live ? '<b style="color:var(--flame)">Lit</b>' : '<span class="small">Out</span>') +
       '</td><td class="small">' + h.why + '</td></tr>'
   }).join('')
 }
 
-// 灯を1本ずつ消す。**一斉に消えることが見えないと、この作品の芯が伝わらない**
+// Put the flames out one at a time. **If you cannot see them all go out, the core of this piece does not land**
 function blowOut(done) {
   var els = Array.prototype.slice.call($('flames').children)
   els.forEach(function (el, i) { setTimeout(function () { el.classList.add('out') }, i * 90) })
   setTimeout(done, els.length * 90 + 500)
 }
 
-// ── World（Agent Pass）。**星を出すときだけ、1回。鍵を使うたびには呼ばない** ──
-// 段: ①合図を頼む ②本人の端末で確かめる ③署名を検証 ④灯が増える
-var WSTEPS = ['合図を頼む', '本人の端末で確かめる', '署名を検証', '灯が増える']
+// ── World (Agent Pass). **Once, only when a star is given. Never on every use of the key** ──
+// Stages: 1 ask for the challenge  2 verify on the holder's device  3 check the signature  4 a flame is added
+var WSTEPS = ['Ask for the challenge', 'Verify on the device', 'Check the signature', 'A flame is added']
 function wsteps(i, bad) {
   $('wsteps').innerHTML = WSTEPS.map(function (t, n) {
     var k = bad && n === i ? 'ng' : n < i ? 'done' : n === i ? 'on' : ''
-    return '<span class="wstep ' + k + '">' + (n + 1) + '　' + t + '</span>'
+    return '<span class="wstep ' + k + '">' + (n + 1) + '&nbsp;&nbsp;' + t + '</span>'
   }).join('')
 }
 function wshow(cls, title, detail, acts) {
@@ -180,23 +180,23 @@ function wshow(cls, title, detail, acts) {
 }
 
 $('vouch').onclick = async function () {
-  wsteps(0); wshow('', 'World に合図を頼んでいる', 'POST /vouch/start → device_authorization（issuer https://auth.world.org）', false)
+  wsteps(0); wshow('', 'Asking World for a challenge', 'POST /vouch/start -> device_authorization (issuer https://auth.world.org)', false)
   $('wcode').innerHTML = ''
   var st = null
   try {
     var r = await fetch(BROKER + '/vouch/start', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })
     st = await r.json()
-  } catch (e) { st = { ok: false, error: 'Broker に届かない（' + BROKER + '）' } }
+  } catch (e) { st = { ok: false, error: 'Cannot reach the Broker (' + BROKER + ')' } }
   if (!st.ok) {
-    // **繋がらないときは、繋がったふりをしない。**試作の段だけ見せる
+    // **When nothing is connected, do not pretend it is.** Show the screen stages only
     st = { ok: true, stub: true, userCode: 'WLD-4K2P', verificationUri: 'https://auth.world.org/device', expiresIn: 600 }
   }
   wsteps(1)
-  wshow('', '本人の端末で確かめるのを待っている', st.stub
-    ? '【試作】Broker も World も繋がっていないので、画面の段だけ出している。下のボタンで3つの結末を見られる'
-    : 'device code を出した。期限 ' + (st.expiresIn || 600) + ' 秒。断られたか、押していないかを混ぜない', true)
+  wshow('', 'Waiting for the key holder to verify on their device', st.stub
+    ? '[prototype] Neither the Broker nor World is connected, so only the screen stages are shown. The buttons below walk through the three outcomes'
+    : 'Device code issued. Expires in ' + (st.expiresIn || 600) + ' seconds. Declined and not-yet-pressed are never merged', true)
   $('wcode').innerHTML = '<span class="uc">' + (st.userCode || '—') + '</span>' +
-    '<div class="qr">QR<br>verification_uri_complete が返れば1枚で済む<br>（未確認）</div>' +
+    '<div class="qr">QR<br>one code is enough if verification_uri_complete comes back<br>[unverified]</div>' +
     '<span class="small mono">' + (st.verificationUri || '') + '</span>'
   state.deviceCode = st.deviceCode || null
 }
@@ -206,26 +206,26 @@ function wdone(kind) {
     wsteps(3)
     state.now += 1
     state.history[state.history.length - 1].n = state.now
-    wshow('', '確かめられた。灯が1つ増えた', '刻んだのは sector 単位の仮名（sub）だけ。同じ人は、同じ版に二度は出せない', false)
+    wshow('', 'Verified. One flame added', 'Only a per-sector pseudonym (sub) is recorded. The same person cannot give twice on the same version', false)
     draw()
   } else if (kind === 'human_denied') {
     wsteps(1, true)
-    wshow(' denied', '本人が断った — 灯は出ない（human_denied）', '断ったことも系譜に残す。無かったことにはしない', false)
+    wshow(' denied', 'The key holder declined — no flame (human_denied)', 'The refusal stays in the trail. It is not erased', false)
   } else if (kind === 'proof_expired') {
     wsteps(1, true)
-    wshow(' denied', '期限が切れた — 灯は出ない（proof_expired）', '「断った」と「人が居なかった」は別の結末として分けて残す', false)
+    wshow(' denied', 'The proof expired — no flame (proof_expired)', '"Declined" and "nobody was there" are kept as separate outcomes', false)
   } else if (kind === 'ALREADY_VOUCHED') {
     wsteps(2, true)
-    wshow(' denied', 'この版にはもう灯を出している', '使用済みの識別子は atomic に弾く（二重には数えない）', false)
+    wshow(' denied', 'A flame has already been given on this version', 'A used identifier is rejected atomically (never counted twice)', false)
   } else {
     wsteps(2, true)
-    wshow(' denied', 'World の署名を確かめられない', String(kind), false)
+    wshow(' denied', 'Cannot verify the World signature', String(kind), false)
   }
 }
 
 $('w-ok').onclick = async function () {
-  if (!state.deviceCode) return wdone('ok')   // 試作の段
-  wsteps(2); wshow('', '署名を確かめている', 'JWKS で検証する。id_token を読んで済ませない', false)
+  if (!state.deviceCode) return wdone('ok')   // prototype stage
+  wsteps(2); wshow('', 'Checking the signature', 'Verified against JWKS. Reading the id_token is not enough', false)
   try {
     var r = await fetch(BROKER + '/vouch/finish', { method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ deviceCode: state.deviceCode, skill: SKILL, version: state.version }) })
@@ -243,8 +243,8 @@ $('bump').onclick = function () {
   $('world').className = 'world'
   blowOut(function () {
     state.history[state.history.length - 1].live = false
-    state.history[state.history.length - 1].why = state.version + ' → ' + next + ' で一斉に消えた'
-    state.history.push({ v: next, n: 0, live: true, why: '新しい版。灯はここから出し直し' })
+    state.history[state.history.length - 1].why = state.version + ' → ' + next + ': went out all at once'
+    state.history.push({ v: next, n: 0, live: true, why: 'New version. Flames start over from here' })
     state.version = next; state.now = 0
     draw()
   })
@@ -255,18 +255,18 @@ $('load').onclick = async function () {
     var b = await r.json()
     state.now = b.stars || 0
     state.history[state.history.length - 1].n = state.now
-    state.history[state.history.length - 1].why = 'Broker から読んだ（' + new Date().toLocaleTimeString() + '）'
+    state.history[state.history.length - 1].why = 'Read from Broker (' + new Date().toLocaleTimeString() + ')'
     draw()
   } catch (e) {
-    alert('Broker に届かない（' + BROKER + '）。?broker=... で宛先を変えられる')
+    alert('Cannot reach the Broker (' + BROKER + '). Use ?broker=... to change the address')
   }
 }
 $('reset').onclick = function () {
-  state = { version: '1.0.0', now: 7, deviceCode: null, history: [{ v: '1.0.0', n: 7, live: true, why: '最初の版' }] }
+  state = { version: '1.0.0', now: 7, deviceCode: null, history: [{ v: '1.0.0', n: 7, live: true, why: 'First version' }] }
   $('world').className = 'world'; draw()
 }
 draw()
-// ?w=1 で World の待ち画面を開いた状態にする（確認・撮影用）
+// ?w=1 opens the World waiting screen straight away (for checks and filming)
 if (new URLSearchParams(location.search).get('w')) setTimeout(function () { $('vouch').onclick() }, 60)
 </script>
 </body>

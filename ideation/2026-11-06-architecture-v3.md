@@ -1,99 +1,104 @@
-# アーキテクチャ v3（2026-11-06 朝・**実装に合わせて書き直した**）
+# Architecture v3 (2026-11-06 morning — **rewritten to match the implementation**)
 
-> v2（`2026-11-06-architecture.md`）は、捨てたもの（M5Stick・スタックチャン・ENS・ViolationRegistry）が
-> 図に残っていて、0G の役割も「返答を読んで警告する」古いままだった。**v3 がいまの正。**
-> **動いているものと、まだのものを分けて書く。**
+> v2 (`2026-11-06-architecture.md`) still had things we threw away (M5Stick, Stack-chan, ENS,
+> ViolationRegistry) in the diagram, and 0G's role was still the old one, "read the response and warn."
+> **v3 is the current truth.**
+> **What is running and what is not are written separately.**
 
 ---
 
-## 1. 一文
+## 1. One sentence
 
-**AI が鍵を持たずに鍵を使える。範囲は手元の機器で署名し、重さは封印された AI が決め、
-外れた要求は実行される前に止まって証拠が残る。**
+**An AI can use a key without holding it. The scope is signed on a device in your hand, the weight is
+decided by a sealed AI, and a request outside the scope stops before it executes, leaving evidence.**
 
-## 2. 1回の使用で、何が順に起きるか
-
-```
-① スキルが use を投げる          （鍵は渡らない。要求にはスキル自身の署名が付く）
-② Broker が範囲と突き合わせる    → 外れていれば   ✗ DENIED       実行しない・違反として刻む
-③ 0G が要求の本文を読んで重さを決める → 届かなければ ✗ STOPPED      判断を作らない（safe-stop）
-④ 重ければ手元の一押しを要求する  → 押さなければ   ✗ NEEDS_PRESS  鍵は使われない
-⑤ Broker が代理で API を叩く      → 通った         ✓ ALLOWED      返答のハッシュを添えて刻む
-⑥ 系譜を 0G Storage に置く        （root hash が出る。本文も鍵も入れない）
-```
-
-**別の線として、星を出すときだけ World を通る。**
+## 2. What happens, in order, in one use
 
 ```
-⑦ 星を出す（＝この版を使っていると名乗る）
-   → World で「人であること・同じ人であること」を1回だけ確かめる
-   → 断られた            ✗ human_denied    星は出ない
-   → 期限が切れた        ✗ proof_expired   星は出ない
-   → 確かめられた        ✓ STAR            版ごとに1人1つ
+① A skill sends a use           (the key is not handed over. The request carries the skill's own signature)
+② The Broker checks it against the scope → outside it  ✗ DENIED       not executed, recorded as a violation
+③ 0G reads the body of the request and decides the weight → unreachable ✗ STOPPED   no judgment is made (safe-stop)
+④ If heavy, a press on the device is required → not pressed   ✗ NEEDS_PRESS  the key is not used
+⑤ The Broker calls the API on its behalf → it went through   ✓ ALLOWED      recorded with a hash of the response
+⑥ The trail is put on 0G Storage  (a root hash comes out. Neither the body nor the key goes in)
 ```
 
-## 3. 拒否が4種類あることが、この設計の中身
+**On a separate line, World is involved only when a star is issued.**
 
-**「止まりました」を一語で済ませない。止まり方が違えば、責任の所在が違う。**
+```
+⑦ Issue a star (= declare that you use this version)
+   → World confirms "a person, and the same person" exactly once
+   → refused               ✗ human_denied    no star
+   → expired               ✗ proof_expired   no star
+   → confirmed             ✓ STAR            one per person per version
+```
 
-| | 誰が止めたか | 何を意味するか | どこで |
+## 3. The fact that there are four kinds of refusal is the substance of this design
+
+**Do not settle for a single word, "it stopped." A different way of stopping means a different place
+for liability.**
+
+| | Who stopped it | What it means | Where |
 |---|---|---|---|
-| `DENIED` | **本人が前もって引いた線** | 宣言した範囲を外れた要求。**スキルの署名ごと刻む** | Broker（`src/scope.js`） |
-| `STOPPED` | **誰も止めていない。決められない** | 0G に届かず重さが決まらない。**決めずに通すことをしない** | Broker（`src/weigh.js`） |
-| `NEEDS_PRESS` | **いま、人がまだ押していない** | 重い要求。立っている許可では通さない | Broker（`src/tier.js`） |
-| `human_denied` / `proof_expired` | **人が断った / 人が居なかった** | 星を出さない。断ったことも残る | World（`src/world.js`） |
+| `DENIED` | **A line the owner drew in advance** | A request outside the declared scope. **Recorded together with the skill's signature** | Broker (`src/scope.js`) |
+| `STOPPED` | **Nobody stopped it. It cannot be decided** | 0G is unreachable, so the weight cannot be determined. **We do not let things through undecided** | Broker (`src/weigh.js`) |
+| `NEEDS_PRESS` | **Right now, a person has not pressed yet** | A heavy request. A standing permit does not let it through | Broker (`src/tier.js`) |
+| `human_denied` / `proof_expired` | **A person refused / nobody was there** | No star is issued. The refusal is also kept | World (`src/world.js`) |
 
-## 4. 部品（**いま動いているものだけ太字**）
+## 4. Parts (**only what is running right now is in bold**)
 
-| 置き場 | 部品 | 持つもの | 状態 |
+| Location | Part | What it holds | State |
 |---|---|---|---|
-| 手元 | **Ledger（自作アプリ）** | 元鍵 | **実機で動作**（minta／`minta/ledger-app`）。digest は端末内で計算 |
-| 手元 | **Broker** | 子トークン・系譜 | **動く**（`broker/`・試験50件）。**ここが唯一の信頼点** |
-| 外 | **0G Private Computer（TeeML）** | 要求の本文（封印の中） | **配線済み**。API キー待ち（`0gm-1.0-35b-a3b`・tee_attested） |
-| 外 | **0G Storage（Log層）** | 系譜 | **配線済み。** tx が組み上がるまで実測。gas 待ち（Flow `0x22E0…5296`） |
-| 外 | **World（Agent Pass）** | 人であることの証明 | **配線済み**。クライアント登録待ち（OIDC device flow） |
-| 画面 | 星空・記録 | — | minta が実装中 |
-| チェーン | VouchRegistry | 星 | **出していない。** 星は Broker の追記ログにある。`verifyingContract` は 0x0 で凍結 |
-| — | Anon-RPC | 星の読み取り | **設計のみ**（EF・#6 の判定次第） |
+| In hand | **Ledger (our own app)** | The root key | **Running on the real device** (minta / `minta/ledger-app`). The digest is computed on the device |
+| In hand | **Broker** | Child tokens, the trail | **Running** (`broker/`, 50 tests). **This is the single point of trust** |
+| External | **0G Private Computer (TeeML)** | The body of the request (inside the seal) | **Wired up**. Waiting on the API key (`0gm-1.0-35b-a3b`, tee_attested) |
+| External | **0G Storage (Log layer)** | The trail | **Wired up.** Measured up to the point where the tx is assembled. Waiting on gas (Flow `0x22E0…5296`) |
+| External | **World (Agent Pass)** | Proof of being a person | **Wired up**. Waiting on client registration (OIDC device flow) |
+| Screens | Star field, records | — | minta is implementing |
+| Chain | VouchRegistry | Stars | **Not deployed.** Stars are in the Broker's append-only log. `verifyingContract` is frozen at 0x0 |
+| — | Anon-RPC | Reading stars | **Design only** (depends on the EF / #6 decision) |
 
-## 5. 誰が何を知るか（**設計で分けてある**）
+## 5. Who knows what (**separated by design**)
 
-| | 知っている | 知らない |
+| | Knows | Does not know |
 |---|---|---|
-| Ledger | 範囲の4行・押したかどうか | 要求の本文 |
-| World | 人であること・同じ人であること（仮名） | 何に星を出したか・何の鍵か |
-| 0G（TeeML） | **要求の本文**（封印の中で） | 鍵の平文。**我々も読めない** |
-| Broker | 範囲・判定・系譜 | — **信頼点。今回は TEE に載っていない** |
-| 系譜（公開） | 誰が許し、何を要求し、通ったか止まったか | 本文も鍵も入れない |
+| Ledger | The four lines of scope, whether it was pressed | The body of the request |
+| World | That it is a person, and the same person (pseudonymously) | What the star was issued for, which key it is |
+| 0G (TeeML) | **The body of the request** (inside the seal) | The key in plaintext. **We cannot read it either** |
+| Broker | Scope, judgments, the trail | — **The point of trust. This time it is not running in a TEE** |
+| The trail (public) | Who permitted it, what was requested, whether it went through or stopped | Neither the body nor the key goes in |
 
-## 6. 図
+## 6. Diagram
 
 ```mermaid
 flowchart LR
-  SK["スキル / AI<br/>（信頼しない）"]
-  BR["Broker<br/>範囲チェック・代理実行"]
-  LG["Ledger<br/>範囲に署名・重い要求を押す"]
-  ZG["0G Private Computer<br/>封印の中で本文を読み<br/>重さを決める"]
-  ST["0G Storage<br/>系譜（追記のみ）"]
-  WD["World<br/>人であることを1回"]
-  API[("外部 API")]
-  STAR["星<br/>（版ごと）"]
+  SK["Skill / AI<br/>(not trusted)"]
+  BR["Broker<br/>scope check, proxied execution"]
+  LG["Ledger<br/>signs the scope, presses heavy requests"]
+  ZG["0G Private Computer<br/>reads the body inside the seal<br/>and decides the weight"]
+  ST["0G Storage<br/>trail (append-only)"]
+  WD["World<br/>a person, once"]
+  API[("external API")]
+  STAR["Star<br/>(per version)"]
 
-  SK -- "use（鍵は渡らない）" --> BR
-  BR -- "範囲外なら実行しない" --> BR
-  BR -- "4行＋操作＋本文" --> ZG
-  ZG -- "ふだん / 大事 / 決定的<br/>＋ request id" --> BR
-  BR -- "重ければ押させる" --> LG
-  LG -- "署名" --> BR
-  BR -- "通ったときだけ" --> API
+  SK -- "use (the key is not handed over)" --> BR
+  BR -- "if out of scope, do not execute" --> BR
+  BR -- "4 lines + operation + body" --> ZG
+  ZG -- "routine / significant / decisive<br/>+ request id" --> BR
+  BR -- "if heavy, make them press" --> LG
+  LG -- "signature" --> BR
+  BR -- "only when it went through" --> API
   BR --> ST
-  WD -- "星を出すときだけ" --> STAR
+  WD -- "only when issuing a star" --> STAR
   BR --> STAR
 ```
 
-## 7. 限界（**黙って良く見せない**）
+## 7. Limits (**do not quietly make it look better**)
 
-- **Broker が鍵を持つ。信頼点はここ1点。** 本番は Broker ごと 0G Private Computer に載せるのが筋。今回は載せていない
-- **星はチェーンに出していない。** Broker の追記ログにある。VouchRegistry 未デプロイ
-- **模擬モードがある**（`ZG_OFFLINE` / `WORLD_OFFLINE`）。記録に `simulated: true` が残る。**撮影では外す**
-- 版の照合（`version` が変わったときの自動消灯）は、星の読み取り側でのみ成立。Broker は `version` を見ていない
+- **The Broker holds the key. The point of trust is this one place.** In production the right move is
+  to run the whole Broker on the 0G Private Computer. We have not done that this time
+- **Stars are not on chain.** They are in the Broker's append-only log. VouchRegistry is not deployed
+- **There is a simulation mode** (`ZG_OFFLINE` / `WORLD_OFFLINE`). It leaves `simulated: true` in the
+  record. **Turn it off for filming**
+- Version matching (automatically going dark when `version` changes) only holds on the star-reading
+  side. The Broker does not look at `version`

@@ -1,21 +1,21 @@
-// 【模擬】0G が無いときの替え玉。**開発のためだけにある。**
+// [SIMULATED] A stand-in for when 0G is unavailable. **It exists only for development.**
 //
-// 0G の賞の原文に「決定を偽装するフォールバックは失格」とある。
-// だからこれは**偽装しない**：出す記録すべてに `simulated: true` を押し、
-// /health にも demo にも「模擬」と出る。**撮影と提出のときは使わない。**
-// 使うには ZG_OFFLINE=1 を明示する。既定では動かない。
-const HEAVY = [/delete/i, /transfer/i, /withdraw/i, /payout/i, /送金/, /解約/]
+// The 0G prize text says a fallback that fakes a decision is disqualifying.
+// So this one **does not fake anything**: every record it produces is stamped `simulated: true`,
+// and both /health and the demo say so. **Do not use it while filming or submitting.**
+// Using it requires ZG_OFFLINE=1 explicitly. It is off by default.
+const HEAVY = [/delete/i, /transfer/i, /withdraw/i, /payout/i, /refund/i, /送金/, /解約/]
 const MID = [/charge/i, /payment/i, /mail/i, /post/i, /publish/i]
 
 export async function offlineWeigh(lines, request) {
   const s = `${request.method} ${request.url} ${request.body ?? ''}`
-  const tier = HEAVY.some((r) => r.test(s)) ? '決定的' : MID.some((r) => r.test(s)) ? '大事' : 'ふだん'
+  const tier = HEAVY.some((r) => r.test(s)) ? 'decisive' : MID.some((r) => r.test(s)) ? 'significant' : 'routine'
   return {
     ok: true,
     reachable: false,
-    simulated: true,          // ← これが記録に残る。0G に聞いた結果ではない
+    simulated: true,          // <- this stays in the record. It is not an answer from 0G
     tier,
-    reason: '模擬（0G には聞いていない）',
+    reason: 'simulated (0G was never asked)',
     requestId: null,
     model: 'offline-stub',
     usage: null,

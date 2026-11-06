@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOMOSHIBI — 誰が、いつ、どの画面に出会うか（と、決めてほしいことの内訳）</title>
+<title>TOMOSHIBI — Who meets which screen, when (and the breakdown of what we need decided)</title>
 <style>
 :root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
 --hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
@@ -89,204 +89,204 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 <div class="page">
 
 <header class="doc-header">
-  <p class="eyebrow">TOMOSHIBI ／ 設計 ／ minta さんへ</p>
-  <h1>誰が、いつ、どの画面に出会い、何を変えるのか</h1>
-  <p class="lead">画面の枚数ではなく、<b>人の1日のどこに割り込むか</b>で設計する。あわせて「決めてほしいこと3つ」を、そのまま○×で返せる粒度まで割った。スタックチャンを入れるなら<b>どの1シーンか</b>、そして<b>どの場面をどの機器でやるか</b>（スマホかPCか実機か）も書いた。</p>
-  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>前提: 画面5枚・遷移表は screen-flow.html</span></div>
+  <p class="eyebrow">TOMOSHIBI / Design / For minta</p>
+  <h1>Who meets which screen, when, and what they change</h1>
+  <p class="lead">Design by <b>where in a person's day we interrupt</b>, not by how many screens there are. Alongside that, the &ldquo;three things we need decided&rdquo; are split down to a grain you can answer with a plain yes or no. If Stack-chan goes in, <b>which single scene</b> it belongs to, and <b>which scene runs on which device</b> (phone, PC, or the physical device), are written down too.</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>Assumes: 5 screens; the transition table is in screen-flow.html</span></div>
 </header>
 
 <section>
-  <h2>エグゼクティブサマリー</h2>
+  <h2>Executive summary</h2>
   <ol class="summary">
-    <li><b>この製品の価値は、ほとんどの時間「何も出ないこと」。</b>持ち主が画面を見るのは1日1回あるかないか。<b>割り込む回数を増やす提案は、それ自体が失敗。</b></li>
-    <li><b>割り込んでよい場面は3つだけ。</b>重い要求が来たとき（押す）／灯が消えたとき（名乗り直す）／止められたことに後から気づくとき（系譜）。</li>
-    <li><b>鍵に触る場面だけが機器に縛られる。</b>実機に触れるのは<b>機器が挿さっている PC の中のプロセスだけ</b>（<span class="mono">bridge</span> は 127.0.0.1）。ほかは全部 Web で、スマホで開く。<b>新しいネイティブアプリは作らない。</b></li>
-    <li><b>スタックチャンを入れるなら「重い要求が来た」の合図だけ。</b>判断も承認も持たせない。<b>合図は実機から出さないと意味がない</b>が、<b>押す場所は鍵を持つ機器のまま</b>。</li>
+    <li><b>The value of this product is that, most of the time, nothing appears.</b> The holder looks at a screen once a day at most. <b>Any proposal that increases the number of interruptions is itself a failure.</b></li>
+    <li><b>There are only three moments where interrupting is allowed.</b> When a heavy request arrives (press) / when the flame goes out (vouch again) / when you find out afterwards that something was stopped (the trail).</li>
+    <li><b>Only the moments that touch the key are tied to a device.</b> The only thing that can touch the physical device is <b>a process on the PC the device is plugged into</b> (<span class="mono">bridge</span> listens on 127.0.0.1). Everything else is Web, opened on a phone. <b>We build no new native app.</b></li>
+    <li><b>If Stack-chan goes in, it is the signal for &ldquo;a heavy request arrived&rdquo; and nothing else.</b> It holds neither judgement nor approval. <b>A signal is meaningless unless it comes from the physical device</b>, but <b>the place you press stays the device that holds the key</b>.</li>
   </ol>
 </section>
 
 <section>
-  <h2><span class="no">01</span>決めてほしいこと — 内訳（○×で返せる粒度）</h2>
-  <p class="msg">9個に割った。<b>太字が推し。</b>返事が無ければ「既定」で進める（既定は全部、いま動いている形）。</p>
+  <h2><span class="no">01</span>What we need decided &mdash; the breakdown (at a grain you can answer yes/no)</h2>
+  <p class="msg">Split into nine. <b>Bold is our recommendation.</b> With no answer we proceed on the &ldquo;default&rdquo; (every default is the form that is running now).</p>
 
-  <h3>Q1　灯（星）を出す導線</h3>
+  <h3>Q1&emsp;The path to lighting a flame (star)</h3>
   <div class="tbl"><table>
-    <thead><tr><th style="width:116px">決めること</th><th style="width:186px">選択肢</th><th>決めると何が変わるか</th><th style="width:86px">手間</th><th style="width:92px">既定</th></tr></thead>
+    <thead><tr><th style="width:116px">To decide</th><th style="width:186px">Options</th><th>What changes once decided</th><th style="width:86px">Effort</th><th style="width:92px">Default</th></tr></thead>
     <tbody>
-      <tr><td><b>Q1-a</b> ボタンを置く場所</td><td><b>A 灯の画面＋系譜の両方</b>／B 灯の画面だけ／C 使うたびに誘う</td><td>名乗る動機は「使い終わった直後」が最高。Cは押す（機器）と意味が混ざるので<b>採らない</b></td><td>A は画面1か所追加（30分）</td><td>B</td></tr>
-      <tr><td><b>Q1-b</b> 誰が灯を出せるか</td><td>A 誰でも（World で人だと確かめるだけ）／<b>B 鍵の持ち主だけ</b></td><td><b>いまの実装は A。</b>B にするには <span class="mono">/vouch/finish</span> に持ち主の署名を足す（＝「使っている」が本当になる）</td><td>B は Broker 30分・画面なし</td><td>A（ただし<b>「今回は制限していない」と口で言う</b>）</td></tr>
-      <tr><td><b>Q1-c</b> 灯の単位</td><td><b>A (スキル, 版) ごと</b>／B スキルごと</td><td>A だから版が上がると消える。<b>名前の意味そのもの</b>（決定9で合意済み・確認だけ）</td><td>—</td><td>A</td></tr>
+      <tr><td><b>Q1-a</b> Where the button goes</td><td><b>A both the flame screen and the trail</b>/B the flame screen only/C prompt on every use</td><td>The motive to vouch peaks &ldquo;right after finishing&rdquo;. C mixes its meaning with pressing (on the device), so <b>we do not take it</b></td><td>A adds one place on screen (30 min)</td><td>B</td></tr>
+      <tr><td><b>Q1-b</b> Who can light a flame</td><td>A anyone (World only confirms they are human)/<b>B the key holder only</b></td><td><b>The current implementation is A.</b> To make it B, add the holder's signature to <span class="mono">/vouch/finish</span> (= &ldquo;is using it&rdquo; becomes true)</td><td>B is 30 min on the Broker, no screen work</td><td>A (but <b>say out loud that &ldquo;we have not restricted this for now&rdquo;</b>)</td></tr>
+      <tr><td><b>Q1-c</b> The unit of a flame</td><td><b>A per (skill, version)</b>/B per skill</td><td>It is because of A that a version bump puts it out. <b>That is what the name means</b> (already agreed in Decision 9; confirmation only)</td><td>&mdash;</td><td>A</td></tr>
     </tbody>
   </table></div>
 
-  <h3>Q2　World の待ち画面</h3>
+  <h3>Q2&emsp;The World waiting screen</h3>
   <div class="tbl"><table>
-    <thead><tr><th style="width:116px">決めること</th><th style="width:186px">選択肢</th><th>決めると何が変わるか</th><th style="width:86px">手間</th><th style="width:92px">既定</th></tr></thead>
+    <thead><tr><th style="width:116px">To decide</th><th style="width:186px">Options</th><th>What changes once decided</th><th style="width:86px">Effort</th><th style="width:92px">Default</th></tr></thead>
     <tbody>
-      <tr><td><b>Q2-a</b> 主役</td><td><b>A コードを主・QRを従</b>／B QR 1枚だけ</td><td><span class="mono">verification_uri_complete</span> が返るか<b>未確認</b>。返らないと B は完結しない。A なら<b>どちらでも壊れない</b></td><td>QR ライブラリ1つ（15分）</td><td>A</td></tr>
-      <tr><td><b>Q2-b</b> 待ち方</td><td><b>A 画面の一部で待つ</b>／B 全画面モーダル</td><td>A なら灯の数が見えたまま待てる（何のために待っているかが消えない）</td><td>—</td><td>A</td></tr>
-      <tr><td><b>Q2-c</b> 残り時間</td><td><b>A 分で出す（残り10分）</b>／B 秒刻み／C 出さない</td><td>B は急かすだけ。C は「死んでいるのか待っているのか」が分からない</td><td>10分</td><td>A</td></tr>
-      <tr><td><b>Q2-d</b> 断られた後</td><td><b>A もう一度の口を出す</b>／B 出さない</td><td>A でも<b>断った記録は消さない</b>（系譜に残したまま、新しい試行として並ぶ）</td><td>—</td><td>A</td></tr>
+      <tr><td><b>Q2-a</b> The lead element</td><td><b>A code first, QR secondary</b>/B a single QR only</td><td>Whether <span class="mono">verification_uri_complete</span> comes back is <b>[unverified]</b>. If it does not, B cannot complete. With A, <b>neither case breaks</b></td><td>One QR library (15 min)</td><td>A</td></tr>
+      <tr><td><b>Q2-b</b> How it waits</td><td><b>A wait inside part of the screen</b>/B full-screen modal</td><td>With A you can wait with the flame count still visible (what you are waiting for does not disappear)</td><td>&mdash;</td><td>A</td></tr>
+      <tr><td><b>Q2-c</b> Time remaining</td><td><b>A show it in minutes (10 minutes left)</b>/B by the second/C do not show it</td><td>B only rushes people. With C you cannot tell whether it is dead or waiting</td><td>10 min</td><td>A</td></tr>
+      <tr><td><b>Q2-d</b> After a refusal</td><td><b>A offer a way to try again</b>/B do not</td><td>Even with A, <b>the record of the refusal is not erased</b> (it stays in the trail, and the retry is listed alongside as a new attempt)</td><td>&mdash;</td><td>A</td></tr>
     </tbody>
   </table></div>
 
-  <h3>Q3　実機（手元の機器）の代役</h3>
+  <h3>Q3&emsp;The stand-in for the physical device (the device in your hand)</h3>
   <div class="tbl"><table>
-    <thead><tr><th style="width:116px">決めること</th><th style="width:186px">選択肢</th><th>決めると何が変わるか</th><th style="width:86px">手間</th><th style="width:92px">既定</th></tr></thead>
+    <thead><tr><th style="width:116px">To decide</th><th style="width:186px">Options</th><th>What changes once decided</th><th style="width:86px">Effort</th><th style="width:92px">Default</th></tr></thead>
     <tbody>
-      <tr><td><b>Q3-a</b> 代役を出す条件</td><td>A 常に画面にも出す／<b>B 実機が繋がらないときだけ</b></td><td>A だと実機の意味が薄れて見える（「結局ブラウザで押せるのか」と思われる）</td><td>判定1行</td><td>A（いまは常時出ている）</td></tr>
-      <tr><td><b>Q3-b</b> 表示の文言</td><td><b>A「実機の代わり（この画面で署名している）」</b>／B 無印</td><td>B は黙って代役を本物に見せること。<b>今回の原則に反する</b></td><td>文言だけ</td><td>A</td></tr>
-      <tr><td><b>Q3-c</b> 撮影でどちらを映すか</td><td><b>A 実機を主・画面は保険</b>／B 画面だけ</td><td>A なら「手元の機器」の主張が映像で立つ。繋がらない日は B に落ちる（筋書き §4）</td><td>撮影の段取り</td><td>A</td></tr>
+      <tr><td><b>Q3-a</b> When the stand-in appears</td><td>A always show it on screen too/<b>B only when the physical device will not connect</b></td><td>With A the point of the physical device looks diluted (people think &ldquo;so you can just press in the browser after all&rdquo;)</td><td>One line of logic</td><td>A (it is always shown at present)</td></tr>
+      <tr><td><b>Q3-b</b> The wording shown</td><td><b>A &ldquo;stand-in for the physical device (signing on this screen)&rdquo;</b>/B unlabelled</td><td>B means quietly passing the stand-in off as the real thing. <b>That contradicts the principle we are working to</b></td><td>Wording only</td><td>A</td></tr>
+      <tr><td><b>Q3-c</b> Which one to film</td><td><b>A physical device first, screen as the fallback</b>/B the screen only</td><td>With A the claim about &ldquo;the device in your hand&rdquo; lands on camera. On a day it will not connect, we fall back to B (scenario &sect;4)</td><td>Filming logistics</td><td>A</td></tr>
     </tbody>
   </table></div>
-  <p class="note"><b>Q3-d は決定済み（報告）。</b>ブラウザには鍵を置かない。デモの「押す」は、<b>事前に署名した使い切りの許可を20本</b>用意して1本ずつ使う形にしてある（実物と同じ構造）。画面が鍵を持つ実装は入れていない。</p>
+  <p class="note"><b>Q3-d is already decided (reporting it).</b> No key is placed in the browser. The demo's &ldquo;press&rdquo; is built as <b>20 pre-signed, single-use permits</b>, consumed one at a time (the same structure as the real thing). No implementation in which the screen holds a key has been added.</p>
 </section>
 
 <section>
-  <h2><span class="no">02</span>誰が、どんなときに、何に出会うか</h2>
-  <p class="msg">登場するのは3人。<b>持ち主はほとんど何も見ない</b>。それが成功の形。</p>
+  <h2><span class="no">02</span>Who meets what, and when</h2>
+  <p class="msg">Three people appear. <b>The holder sees almost nothing.</b> That is what success looks like.</p>
 
   <div class="fig-scroll"><div class="matrix" style="--mx-cols:3;--mx-label:124px">
     <div class="mx-h"></div>
-    <div class="mx-h">どんな人・どこに居る</div>
-    <div class="mx-h">この製品に来る目的</div>
-    <div class="mx-h">いちばん怖いこと</div>
+    <div class="mx-h">Who they are, where they are</div>
+    <div class="mx-h">Why they come to this product</div>
+    <div class="mx-h">What scares them most</div>
 
-    <div class="mx-label"><small>P1</small>鍵の持ち主</div>
-    <div class="mx-cell">個人開発者・フリーランス。AI に仕事をさせたいが、API キーを渡すのが怖い。平日の昼、他の作業中</div>
-    <div class="mx-cell"><b>渡さずに働かせたい。</b>そして<b>普段は忘れていたい</b></div>
-    <div class="mx-cell">気づかないうちに課金・送金されること。そして<b>うるさくて結局切ること</b></div>
+    <div class="mx-label"><small>P1</small>The key holder</div>
+    <div class="mx-cell">Solo developer or freelancer. Wants AI to do the work, but is afraid of handing over an API key. Weekday afternoon, in the middle of something else</div>
+    <div class="mx-cell"><b>Wants it working without handing anything over.</b> And <b>wants to forget about it the rest of the time</b></div>
+    <div class="mx-cell">Being charged or having money sent without noticing. And <b>it being so noisy they switch it off in the end</b></div>
 
-    <div class="mx-label alt"><small>P2</small>スキルの作り手</div>
-    <div class="mx-cell">AI スキルを公開している側。版を上げるたび、使われ方が変わる</div>
-    <div class="mx-cell">信用を<b>積む</b>。灯が付いていることが看板になる</div>
-    <div class="mx-cell">版を上げたら灯が全部消えること（＝<b>仕様。だから消える意味が伝わっていないと恨まれる</b>）</div>
+    <div class="mx-label alt"><small>P2</small>The skill maker</div>
+    <div class="mx-cell">The side publishing an AI skill. Every version bump changes how it is used</div>
+    <div class="mx-cell"><b>Builds up</b> trust. A lit flame is the signboard</div>
+    <div class="mx-cell">All the flames going out on a version bump (= <b>by design. So if the meaning of going out is not conveyed, it breeds resentment</b>)</div>
 
-    <div class="mx-label alt"><small>P3</small>これから使う人</div>
-    <div class="mx-cell">そのスキルを入れるか決める人。審査員もここに座る。10秒で判断する</div>
-    <div class="mx-cell">このスキルは<b>いま</b>信じられるか</div>
-    <div class="mx-cell">古い評価を新しいと勘違いすること</div>
+    <div class="mx-label alt"><small>P3</small>The prospective user</div>
+    <div class="mx-cell">The person deciding whether to install that skill. Judges sit here too. They decide in 10 seconds</div>
+    <div class="mx-cell">Can this skill be trusted <b>right now</b></div>
+    <div class="mx-cell">Mistaking an old rating for a current one</div>
   </div></div>
 
   <div class="tbl"><table>
-    <caption>表2　ジャーニー（左から時間。◆が「人が何かを決める」点）</caption>
-    <thead><tr><th>いつ</th><th>誰</th><th>その人が直面する画面</th><th>何秒</th><th>その人が変えるもの</th></tr></thead>
+    <caption>Table 2&emsp;The journey (time runs from the left. ◆ marks a point where a person decides something)</caption>
+    <thead><tr><th>When</th><th>Who</th><th>The screen they face</th><th>Seconds</th><th>What they change</th></tr></thead>
     <tbody>
-      <tr><td>① 初めて許す</td><td>P1</td><td><b>S1 範囲をつくる</b>（4行に署名）</td><td>60秒</td><td>◆ <b>何を・どこまで許すか</b>を自分で決める。ここだけは代行させない</td></tr>
-      <tr><td>② ふだん</td><td>P1</td><td><b>何も出ない</b></td><td>0秒</td><td>何も変えない。<b>これが価値。</b>通知を足したくなるが足さない</td></tr>
-      <tr><td>③ 重い要求が来た</td><td>P1</td><td><b>S3 手元の機器が灯る</b>（4行＋押す）</td><td>5秒</td><td>◆ <b>この1回を通すか</b>。押さなければ何も起きない</td></tr>
-      <tr><td>④ 止められていた</td><td>P1</td><td><b>S2 門 / S4 系譜</b>（DENIED と、誰が要求したか）</td><td>20秒</td><td>◆ <b>そのスキルを外すか</b>。証拠つきで決められる</td></tr>
-      <tr><td>⑤ 決められなかった</td><td>P1</td><td><b>S2 門</b>（STOPPED）</td><td>10秒</td><td>◆ <b>待つか、自分でやるか。</b>「勝手に通った」より不便だが、<b>不便の理由が分かる</b></td></tr>
-      <tr><td>⑥ 名乗る</td><td>P1</td><td><b>S6 World</b>（1回だけ）</td><td>30秒</td><td>◆ <b>自分の評判を賭ける</b>。断ってもよい（断った記録も残る）</td></tr>
-      <tr><td>⑦ 版が上がった</td><td>P2 / P1</td><td><b>S5 灯</b>（一斉に消える）</td><td>5秒</td><td>P2 は何もできない。P1 だけが<b>出し直せる</b>。使い続けている人しか灯は戻らない</td></tr>
-      <tr><td>⑧ 採用を決める</td><td>P3</td><td><b>S5 灯</b>（いまの版の数と、消えた履歴）</td><td>10秒</td><td>◆ <b>入れるかどうか。</b>見ているのは「いま使われているか」</td></tr>
+      <tr><td>① Granting the first permit</td><td>P1</td><td><b>S1 Create the scope</b> (sign the 4 lines)</td><td>60 s</td><td>◆ <b>Decide for yourself what, and how far, to permit.</b> This is the one thing never delegated</td></tr>
+      <tr><td>② Everyday</td><td>P1</td><td><b>Nothing appears</b></td><td>0 s</td><td>Changes nothing. <b>That is the value.</b> It is tempting to add notifications; we do not</td></tr>
+      <tr><td>③ A heavy request arrives</td><td>P1</td><td><b>S3 The device in your hand lights up</b> (4 lines + press)</td><td>5 s</td><td>◆ <b>Whether to let this one call through.</b> Press nothing and nothing happens</td></tr>
+      <tr><td>④ It had been stopped</td><td>P1</td><td><b>S2 Gate / S4 Trail</b> (DENIED, and who requested it)</td><td>20 s</td><td>◆ <b>Whether to remove that skill.</b> Decidable with evidence in hand</td></tr>
+      <tr><td>⑤ It could not be decided</td><td>P1</td><td><b>S2 Gate</b> (STOPPED)</td><td>10 s</td><td>◆ <b>Wait, or do it yourself.</b> Less convenient than &ldquo;it just went through&rdquo;, but <b>the reason for the inconvenience is visible</b></td></tr>
+      <tr><td>⑥ Vouching</td><td>P1</td><td><b>S6 World</b> (once only)</td><td>30 s</td><td>◆ <b>Stake your own reputation.</b> You may refuse (the refusal is recorded too)</td></tr>
+      <tr><td>⑦ The version went up</td><td>P2 / P1</td><td><b>S5 Flames</b> (all go out at once)</td><td>5 s</td><td>P2 can do nothing. Only P1 can <b>light it again</b>. Flames come back only from people who keep using it</td></tr>
+      <tr><td>⑧ Deciding to adopt</td><td>P3</td><td><b>S5 Flames</b> (the count on the current version, and the history of going out)</td><td>10 s</td><td>◆ <b>Whether to install it.</b> What they look at is &ldquo;is it being used now&rdquo;</td></tr>
     </tbody>
   </table></div>
-  <p class="src">出所: 画面は <span class="mono">ui/</span> の実装、判定は Broker の返り値。秒数は設計上の狙いで、実測ではない。</p>
+  <p class="src">Sources: the screens are the <span class="mono">ui/</span> implementation, the judgements are the Broker's return values. The seconds are design targets, not measurements.</p>
 
-  <p class="note"><b>割り込みの総量を増やさない。</b>①③⑥⑦以外で人を呼ばない。「通知で安心を届ける」系の機能は、P1 のいちばん怖いこと（うるさくて切る）に直撃するので足さない。</p>
+  <p class="note"><b>Do not increase the total volume of interruptions.</b> Do not call the person anywhere but ①③⑥⑦. Features of the &ldquo;deliver reassurance through notifications&rdquo; kind hit P1's biggest fear (too noisy, so switch it off) head on, so we do not add them.</p>
 </section>
 
 <section>
-  <h2><span class="no">03</span>どの場面を、どの機器でやるか（仮説）</h2>
-  <p class="msg"><b>鍵に触る場面だけが機器に縛られる。それ以外は全部 Web で、スマホで開く。新しいネイティブアプリは1つも作らない。</b></p>
+  <h2><span class="no">03</span>Which scene runs on which device (hypothesis)</h2>
+  <p class="msg"><b>Only the scenes that touch the key are tied to a device. Everything else is Web, opened on a phone. Not one new native app gets built.</b></p>
 
-  <p><b>縛りの出どころは1か所。</b>実機とやり取りしているのは <span class="mono">bridge/bridge.py</span> で、USB HID を話し <b>127.0.0.1 でしか待ち受けていない</b>。つまり<b>実機に触れるのは、その機器が挿さっている機械の中のプロセスだけ</b>。スマホのブラウザから押す経路は、いまの実装には存在しない。ここが全部の前提になる。</p>
+  <p><b>The constraint comes from exactly one place.</b> What talks to the physical device is <span class="mono">bridge/bridge.py</span>; it speaks USB HID and <b>listens only on 127.0.0.1</b>. So <b>the only thing that can touch the physical device is a process on the machine it is plugged into</b>. A path for pressing from a phone browser does not exist in the current implementation. Everything else follows from this.</p>
 
   <div class="tbl"><table>
-    <caption>表3　場面ごとの機器（◯=その機器が要る／—=画面を持たない）</caption>
-    <thead><tr><th>場面</th><th style="width:74px">UI</th><th style="width:150px">使う機器</th><th style="width:150px">形態</th><th>なぜそこに縛られるか</th></tr></thead>
+    <caption>Table 3&emsp;Devices per scene (◯ = that device is required / &mdash; = has no screen)</caption>
+    <thead><tr><th>Scene</th><th style="width:74px">UI</th><th style="width:150px">Device used</th><th style="width:150px">Form</th><th>Why it is tied there</th></tr></thead>
     <tbody>
-      <tr><td>① 初めて許す</td><td>あり</td><td><b>Ledger ＋ PC</b></td><td>デスクトップの Web ＋ ローカルの bridge</td><td>USB で挿す行為そのものがある。<b>年に数回の設定作業</b>で、4行を腰を据えて読む場面。スマホに置く理由がない</td></tr>
-      <tr><td>② ふだん</td><td><b>なし</b></td><td>なし（サーバ常駐）</td><td>—</td><td><b>画面を持たないことが仕様。</b>ここに機器を足す提案は全部ノー</td></tr>
-      <tr><td>③ 重い要求が来た</td><td>あり</td><td><b>Ledger 単体</b>（押す）<br>＋ 気づく機器（別でよい）</td><td>機器内の自作アプリ</td><td>4行の表示も押下も<b>機器の中</b>。ホストの画面は補助にすぎない。<b>気づく手段だけは別の機器に出してよい</b>（下）</td></tr>
-      <tr><td>④ 止められていた</td><td>あり（読むだけ）</td><td>スマホ or PC</td><td>Web・URL 1本</td><td>後から証拠を読む場面。<b>インストールを挟んだら読まれない</b></td></tr>
-      <tr><td>⑤ 決められなかった</td><td>あり（読むだけ）</td><td>スマホ or PC</td><td>Web・URL 1本</td><td>同上。不便の理由が読めればいい</td></tr>
-      <tr><td>⑥ 名乗る</td><td>あり（2台に割れる）</td><td><b>PC（待つ）＋ スマホ（World App）</b></td><td>既存のネイティブを<b>借りる</b></td><td>World ID の証明は World App の中にしかない。<b>device flow を選んだ理由そのもの</b>。こちらは待つだけ</td></tr>
-      <tr><td>⑦ 版が上がった</td><td>あり（読むだけ）</td><td><b>スマホ優先</b></td><td>Web</td><td>移動中に気づく・人に見せる場面。灯が消える絵は小さい画面でも伝わる</td></tr>
-      <tr><td>⑧ 採用を決める</td><td>あり（10秒）</td><td>スマホ or PC</td><td>Web・URL 1本</td><td>審査員もここに座る。<b>10秒でインストールはしない</b></td></tr>
+      <tr><td>① Granting the first permit</td><td>Yes</td><td><b>Ledger + PC</b></td><td>Desktop Web + local bridge</td><td>The act of plugging in over USB is part of it. A setup task done a few times a year, where you sit down and read the 4 lines. <b>No reason to put it on a phone</b></td></tr>
+      <tr><td>② Everyday</td><td><b>None</b></td><td>None (resident on the server)</td><td>&mdash;</td><td><b>Having no screen is the spec.</b> Every proposal to add a device here is a no</td></tr>
+      <tr><td>③ A heavy request arrives</td><td>Yes</td><td><b>Ledger alone</b> (pressing)<br>+ a device to notice on (may be separate)</td><td>A custom app inside the device</td><td>Both the 4-line display and the press happen <b>inside the device</b>. The host screen is only an aid. <b>Only the means of noticing may sit on another device</b> (below)</td></tr>
+      <tr><td>④ It had been stopped</td><td>Yes (read only)</td><td>Phone or PC</td><td>Web, one URL</td><td>Reading the evidence afterwards. <b>Put an install in the way and it never gets read</b></td></tr>
+      <tr><td>⑤ It could not be decided</td><td>Yes (read only)</td><td>Phone or PC</td><td>Web, one URL</td><td>Same as above. It is enough to be able to read the reason for the inconvenience</td></tr>
+      <tr><td>⑥ Vouching</td><td>Yes (splits across two devices)</td><td><b>PC (waiting) + phone (World App)</b></td><td><b>Borrow</b> an existing native app</td><td>The World ID proof exists only inside World App. <b>That is exactly why device flow was chosen.</b> Our side only waits</td></tr>
+      <tr><td>⑦ The version went up</td><td>Yes (read only)</td><td><b>Phone first</b></td><td>Web</td><td>Noticed on the move, shown to other people. The picture of flames going out reads even on a small screen</td></tr>
+      <tr><td>⑧ Deciding to adopt</td><td>Yes (10 s)</td><td>Phone or PC</td><td>Web, one URL</td><td>Judges sit here too. <b>Nobody installs anything in 10 seconds</b></td></tr>
     </tbody>
   </table></div>
-  <p class="src">出所: ①③は <span class="mono">bridge/bridge.py</span> と <span class="mono">ledger-app/</span> の実装（実測）。④〜⑧は <span class="mono">web/</span> の静的ページ（ビルドなし・外部読み込みなし）。機器の割り当ては設計上の仮説で、利用者で検証していない。</p>
+  <p class="src">Sources: ① and ③ from the <span class="mono">bridge/bridge.py</span> and <span class="mono">ledger-app/</span> implementations (measured). ④&ndash;⑧ are static pages under <span class="mono">web/</span> (no build, no external loads). The device assignment is a design hypothesis, not validated with users.</p>
 
-  <h3>ネイティブアプリを作る理由になるのは、2つだけ</h3>
+  <h3>Only two things would justify building a native app</h3>
   <div class="fig-scroll"><div class="matrix" style="--mx-cols:3;--mx-label:132px">
     <div class="mx-h"></div>
-    <div class="mx-h">何が解ける</div>
-    <div class="mx-h">Web でできない理由</div>
-    <div class="mx-h">判断</div>
+    <div class="mx-h">What it solves</div>
+    <div class="mx-h">Why Web cannot do it</div>
+    <div class="mx-h">Verdict</div>
 
-    <div class="mx-label"><small>A</small>押下をスマホへ</div>
-    <div class="mx-cell">③ が <b>PC から解放される</b>。Flex は Bluetooth を持つので、理屈ではスマホ単体で「4行を読んで押す」まで閉じる。<b>本命はこちら</b></div>
-    <div class="mx-cell">モバイルのブラウザに <span class="mono">WebHID</span> が無く、<span class="mono">WebBluetooth</span> も iOS に無い（<b>未確認・今回は測っていない</b>）。<b>Web では成立しない分岐</b></div>
-    <div class="mx-cell"><b>今回やらない。</b>BLE で自作アプリと話せるか自体が未確認</div>
+    <div class="mx-label"><small>A</small>Move the press to the phone</div>
+    <div class="mx-cell">③ <b>is freed from the PC</b>. Flex has Bluetooth, so in principle the whole &ldquo;read the 4 lines and press&rdquo; closes on the phone alone. <b>This is the real candidate</b></div>
+    <div class="mx-cell">Mobile browsers have no <span class="mono">WebHID</span>, and <span class="mono">WebBluetooth</span> is absent on iOS (<b>[unverified] &mdash; we did not measure it this time</b>). <b>A branch that cannot work on Web</b></div>
+    <div class="mx-cell"><b>Not doing it this time.</b> Whether BLE can even talk to the custom app is itself [unverified]</div>
 
-    <div class="mx-label alt"><small>B</small>気づきの通知</div>
-    <div class="mx-cell">③ の「見ていないと届かない」が解ける</div>
-    <div class="mx-cell"><b>Web でもできる</b>（通知は既存の経路でよい）</div>
-    <div class="mx-cell"><b>これだけのためにネイティブは作らない。</b>割に合わない</div>
+    <div class="mx-label alt"><small>B</small>Notification to notice</div>
+    <div class="mx-cell">Solves ③'s &ldquo;it does not reach you unless you are looking&rdquo;</div>
+    <div class="mx-cell"><b>Web can do this too</b> (existing notification paths are fine)</div>
+    <div class="mx-cell"><b>We do not build native just for this.</b> Not worth it</div>
   </div></div>
 
-  <h3>③だけは「気づく機器」と「決める機器」を分けてよい</h3>
-  <p>重い要求は<b>持ち主が画面を見ていないときに来る</b>。だから気づきは<b>携帯するもの・目に入るところにあるもの</b>（スマホ、または机の上のスタックチャン）に出し、<b>決めるのは鍵のある機器</b>のままにする。分けたほうが安全で、しかも安い — <b>気づく側は通せてはいけない＝読むだけでよい</b>からだ。鍵も署名も持たせる必要がない。</p>
-  <p class="note"><b>決めるとしたら1つだけ。</b>③の気づきをどこから出すか（A 出さない／B スマホの通知／C 実機の合図）。<b>既定は A（今回は出さない）。</b>誤爆する合図は、信頼の話をしている製品が自分で信頼を落とす。</p>
+  <h3>③ alone may split &ldquo;the device you notice on&rdquo; from &ldquo;the device you decide on&rdquo;</h3>
+  <p>A heavy request <b>arrives while the holder is not looking at a screen</b>. So put the noticing on something carried, or something in the line of sight (a phone, or a Stack-chan on the desk), and <b>keep the deciding on the device that holds the key</b>. Splitting them is safer, and cheaper too &mdash; <b>the noticing side must not be able to let anything through, so it only needs to read</b>. It needs neither a key nor a signature.</p>
+  <p class="note"><b>If one thing is to be decided, it is this.</b> Where ③'s notice comes from (A do not show it / B a phone notification / C a signal from the physical device). <b>The default is A (not shown this time).</b> A signal that misfires makes a product that talks about trust lose trust by its own hand.</p>
 
-  <h3>当日、机の上に何を置くか</h3>
+  <h3>What sits on the desk on the day</h3>
   <div class="tbl"><table>
-    <thead><tr><th style="width:120px">場面</th><th>機器</th><th>渡すもの</th></tr></thead>
+    <thead><tr><th style="width:120px">Scene</th><th>Devices</th><th>What we hand over</th></tr></thead>
     <tbody>
-      <tr><td>撮影</td><td><b>Ledger Flex（実機）＋ PC（門の画面）＋ iPhone（World App）</b></td><td>—（映像）</td></tr>
-      <tr><td>ブース</td><td>実機は机の上。<b>審査員の手に渡るのは本人のスマホ</b></td><td><b>URL 1本だけ。</b>QR も LAN も出さない</td></tr>
-      <tr><td>提出</td><td>—</td><td>GitHub Pages の URL と動画</td></tr>
+      <tr><td>Filming</td><td><b>Ledger Flex (physical device) + PC (gate screen) + iPhone (World App)</b></td><td>&mdash; (video)</td></tr>
+      <tr><td>Booth</td><td>The physical device stays on the desk. <b>What reaches a judge's hand is their own phone</b></td><td><b>One URL, nothing else.</b> No QR, no LAN address</td></tr>
+      <tr><td>Submission</td><td>&mdash;</td><td>The GitHub Pages URL and the video</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <section>
-  <h2><span class="no">04</span>スタックチャンを入れるなら、どのシーンか</h2>
-  <p class="msg"><b>③「重い要求が来た」の合図、1点だけ。</b>判断も承認も鍵も持たせない。</p>
+  <h2><span class="no">04</span>If Stack-chan goes in, which scene</h2>
+  <p class="msg"><b>The signal for ③ &ldquo;a heavy request arrived&rdquo;, and that alone.</b> It is given no judgement, no approval, no key.</p>
 
   <div class="fig-scroll"><div class="chevrons">
-    <div class="chev">① 初めて許す<small>画面の仕事</small></div>
-    <div class="chev">② ふだん<small>黙っている</small></div>
-    <div class="chev on">③ 重い要求<small>こちらを向いて知らせる</small></div>
-    <div class="chev">④⑤ 止まった<small>あとで系譜</small></div>
-    <div class="chev on">⑦ 灯が消えた<small>一度だけ知らせる</small></div>
+    <div class="chev">① First permit<small>the screen's job</small></div>
+    <div class="chev">② Everyday<small>stays silent</small></div>
+    <div class="chev on">③ Heavy request<small>turns to you and tells you</small></div>
+    <div class="chev">④⑤ Stopped<small>the trail, later</small></div>
+    <div class="chev on">⑦ The flame went out<small>tells you once</small></div>
   </div></div>
 
-  <p><b>なぜ③なのか。</b>重い要求は、<b>持ち主が画面を見ていないときに来る</b>。端末に出すカウントダウンや通知は、見ていない人には届かない。<b>合図は実機から出さなければ意味がない</b>（2026-09-12 に同じ失敗をしている。会場で誰も端末を見なかった）。スタックチャンは机の上にいて、こちらを向ける・光る・短く言える。<b>その1点だけが、画面にできないこと。</b></p>
+  <p><b>Why ③.</b> A heavy request <b>arrives while the holder is not looking at a screen</b>. A countdown or notification put on a device screen does not reach someone who is not looking. <b>A signal is meaningless unless it comes from the physical device</b> (we made this same mistake on 2026-09-12: nobody at the venue looked at a device). Stack-chan sits on the desk, can turn towards you, glow, and say one short line. <b>That one point is the thing a screen cannot do.</b></p>
 
   <div class="tbl"><table>
-    <thead><tr><th>場面</th><th>スタックチャンがすること</th><th>してはいけないこと</th></tr></thead>
+    <thead><tr><th>Scene</th><th>What Stack-chan does</th><th>What it must not do</th></tr></thead>
     <tbody>
-      <tr><td>③ 重い要求</td><td>こちらを向く／灯色に光る／<b>「4,800ドルの送金を頼まれてる」と一言</b></td><td><b>承認しない。</b>うなずきや音声で通せるようにしない（鍵を持つ機器から押す、を崩さない）</td></tr>
-      <tr><td>③ のあと</td><td>押されたら光を消す。押されなければ<b>黙って待つ</b></td><td>催促を繰り返さない。急かすと、人は中身を読まずに押す</td></tr>
-      <tr><td>⑦ 灯が消えた</td><td>一度だけ知らせる（「版が変わって灯が消えた」）</td><td>出し直しをその場で求めない。World は本人の端末の仕事</td></tr>
-      <tr><td>④⑤ 止まった</td><td><b>何もしない</b></td><td>止めたことを喋らない。止まるのは正常で、毎回喋るとただの騒音になる</td></tr>
-      <tr><td>② ふだん</td><td><b>何もしない</b></td><td>「見守っています」演出をしない</td></tr>
+      <tr><td>③ Heavy request</td><td>Turns towards you/glows flame-coloured/<b>says one line: &ldquo;it is being asked to send $4,800&rdquo;</b></td><td><b>Never approves.</b> Never lets a nod or a voice let something through (do not break &ldquo;press on the device that holds the key&rdquo;)</td></tr>
+      <tr><td>③ Afterwards</td><td>Goes dark once pressed. If it is not pressed, <b>it waits in silence</b></td><td>Never nags repeatedly. Rush a person and they press without reading what it says</td></tr>
+      <tr><td>⑦ The flame went out</td><td>Tells you once (&ldquo;the version changed and the flame went out&rdquo;)</td><td>Does not demand a re-light on the spot. World is the job of the owner's own device</td></tr>
+      <tr><td>④⑤ Stopped</td><td><b>Does nothing</b></td><td>Does not announce that it stopped something. Stopping is normal, and announcing it every time is just noise</td></tr>
+      <tr><td>② Everyday</td><td><b>Does nothing</b></td><td>No &ldquo;I am watching over you&rdquo; theatrics</td></tr>
     </tbody>
   </table></div>
 
-  <p><b>入れるとしても、今回は作らない。</b>提出まで時間が無く、<b>合図が誤爆すると信頼の話をしている製品が自分で信頼を落とす</b>。今回は「③の合図を実機から出す」という設計上の位置づけだけ残し、動画でも触れない。聞かれたら<b>口で</b>答える（ブースで1番聞かれそうな質問なので、この表のまま答える）。</p>
-  <p class="src">前提: スタックチャンは 11/6 の決定で今回の制作物から外している（<span class="mono">ideation/2026-11-06-decisions.md</span> 1）。ここはその判断を覆していない。</p>
+  <p><b>Even if it goes in, we are not building it this time.</b> There is no time before submission, and <b>if the signal misfires, a product that talks about trust loses trust by its own hand</b>. For now we keep only the design position &mdash; &ldquo;③'s signal comes from the physical device&rdquo; &mdash; and do not mention it in the video either. If asked, we answer <b>out loud</b> (it is the question most likely to come up at the booth, so we answer straight from this table).</p>
+  <p class="src">Assumes: Stack-chan was dropped from this build by the 11/6 decision (<span class="mono">ideation/2026-11-06-decisions.md</span> 1). Nothing here overturns that.</p>
 </section>
 
 <section>
-  <h2><span class="no">05</span>次のアクション</h2>
+  <h2><span class="no">05</span>Next actions</h2>
   <div class="tbl"><table>
-    <thead><tr><th>やること</th><th>誰</th><th>いつまで</th></tr></thead>
+    <thead><tr><th>Action</th><th>Who</th><th>By when</th></tr></thead>
     <tbody>
-      <tr><td>Q1-a / Q1-b / Q2-a / Q3-a に○×（他は既定で進める）</td><td>minta・kou</td><td>11/6 18:00 IST</td></tr>
-      <tr><td>決まった形で画面を仕上げる（芯は issue #19 の10項目）</td><td>minta</td><td>11/6 22:00 IST（撮影前）</td></tr>
-      <tr><td>World のクライアント登録 → device flow を端から端まで1回通す</td><td>kou</td><td>11/6 20:00 IST</td></tr>
-      <tr><td>③の合図（スタックチャン）は<b>作らない</b>。ブースの口頭回答としてだけ持つ</td><td>kou</td><td>—</td></tr>
+      <tr><td>Yes/no on Q1-a / Q1-b / Q2-a / Q3-a (the rest proceed on defaults)</td><td>minta, kou</td><td>11/6 18:00 IST</td></tr>
+      <tr><td>Finish the screens in the agreed form (the core is the 10 items in issue #19)</td><td>minta</td><td>11/6 22:00 IST (before filming)</td></tr>
+      <tr><td>Register the World client → run device flow end to end once</td><td>kou</td><td>11/6 20:00 IST</td></tr>
+      <tr><td>③'s signal (Stack-chan) <b>does not get built</b>. Keep it only as a spoken answer at the booth</td><td>kou</td><td>&mdash;</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <footer class="doc-footer">
-  <span>TOMOSHIBI — タッチポイント設計（2026-11-06）</span>
-  <span>画面と遷移: ideation/2026-11-06-screen-flow.html ／ 芯: issue #19</span>
+  <span>TOMOSHIBI &mdash; Touchpoint design (2026-11-06)</span>
+  <span>Screens and transitions: ideation/2026-11-06-screen-flow.html / Core: issue #19</span>
 </footer>
 
 </div>

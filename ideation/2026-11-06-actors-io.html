@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>TOMOSHIBI — 誰が何を入れて、何が出るのか</title>
+<title>TOMOSHIBI — Who puts what in, and what comes out</title>
 <style>
 :root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
 --hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
@@ -89,196 +89,196 @@ table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
 <div class="page">
 
 <header class="doc-header">
-  <p class="eyebrow">TOMOSHIBI ／ 入力と出力 ／ 2026-11-06</p>
-  <h1>誰が何を入れて、何が出るのか</h1>
-  <p class="lead"><b>この製品の中で、お金は1円も動かない。</b>預け金（トークンを預ける）も保険（保険料を払う）も、11/6 未明に捨てた。<b>いま賭けているのは「自分の鍵そのもの」</b>。その前提で、登場する全員の入力・出力・賭けているもの・受け取るものを1枚にした。</p>
-  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>前提: 決定1（預け金を捨てる）・決定9（灯は版ごと）</span></div>
+  <p class="eyebrow">TOMOSHIBI / Inputs and outputs / 2026-11-06</p>
+  <h1>Who puts what in, and what comes out</h1>
+  <p class="lead"><b>Not one yen moves inside this product.</b> Both the deposit (staking tokens) and the insurance (paying a premium) were dropped in the early hours of 11/6. <b>What is staked now is &ldquo;your own key itself&rdquo;.</b> On that basis, the inputs, outputs, stakes and returns of everyone involved are on one page.</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>Assumes: Decision 1 (drop the deposit), Decision 9 (flames are per version)</span></div>
 </header>
 
 <section>
-  <h2>エグゼクティブサマリー</h2>
+  <h2>Executive summary</h2>
   <ol class="summary">
-    <li><b>人が入れるのは3つだけ。</b>範囲の4行に1回署名する／重い要求を1回押す／World で1回名乗る。<b>それ以外は何も入れない</b>（鍵も、金も、個人情報も渡さない）。</li>
-    <li><b>出るのは4つ。</b>通ったか止まったかの判定／使い切りの許可／灯1つ／消せない系譜。<b>出力はすべて「事実」で、約束は1つも含まない。</b></li>
-    <li><b>預け金と保険は捨てた（決定1）。</b>預け金は「金を持つ人ほど信用される」に反転し、保険料は<b>保険業の規制</b>に触れうる。代わりに賭けるのは<b>自分の鍵</b>——保証人は他人を保証する人ではなく、<b>同じ船に乗っている人</b>になった。</li>
-    <li><b>金が動く経路は1本だけ。</b>利用者 → TOMOSHIBI の月額と従量。<b>利用者どうしの送金も、決済額の%も無い。</b></li>
+    <li><b>A person puts in only three things.</b> One signature on the 4 lines of the scope / one press per heavy request / one vouch through World. <b>Nothing else goes in</b> (no key, no money, no personal data).</li>
+    <li><b>Four things come out.</b> The judgement of whether it passed or was stopped / a single-use permit / one flame / a trail that cannot be erased. <b>Every output is a fact, and not one of them contains a promise.</b></li>
+    <li><b>The deposit and the insurance were dropped (Decision 1).</b> A deposit inverts into &ldquo;the more money you hold, the more you are trusted&rdquo;, and a premium may run into <b>insurance regulation</b>. What is staked instead is <b>your own key</b>&mdash;the guarantor stopped being someone who vouches for another and became <b>someone in the same boat</b>.</li>
+    <li><b>Money moves along exactly one path.</b> User → TOMOSHIBI, as a monthly fee and metered usage. <b>There are no transfers between users, and no percentage of payment volume.</b></li>
   </ol>
 </section>
 
 <section>
-  <h2><span class="no">01</span>人の3人（入力と出力）</h2>
-  <p class="msg"><b>持ち主は「範囲」と「押す」を出し、作り手は「宣言」と「署名」を出す。買う人は何も出さない。</b></p>
+  <h2><span class="no">01</span>The three people (inputs and outputs)</h2>
+  <p class="msg"><b>The holder supplies the scope and the press; the maker supplies the declaration and the signature. The buyer supplies nothing.</b></p>
 
   <div class="fig-scroll"><div class="matrix" style="--mx-cols:4;--mx-label:130px">
     <div class="mx-h"></div>
-    <div class="mx-h">入れるもの</div>
-    <div class="mx-h">出るもの</div>
-    <div class="mx-h">賭けているもの</div>
-    <div class="mx-h">受け取るもの</div>
+    <div class="mx-h">What they put in</div>
+    <div class="mx-h">What comes out</div>
+    <div class="mx-h">What they stake</div>
+    <div class="mx-h">What they receive</div>
 
-    <div class="mx-label"><small>P1</small>鍵の持ち主</div>
+    <div class="mx-label"><small>P1</small>The key holder</div>
     <div class="mx-cell">
       <ul>
-        <li><b>範囲の4行＋署名</b>（鍵のラベル・宛先・操作・期限／回数）— 年に数回</li>
-        <li><b>長押し1回</b>（重い要求ごと）</li>
-        <li><b>World で1回名乗る</b>（灯を出すときだけ）</li>
+        <li><b>The 4 lines of the scope + a signature</b> (key label, destination, operation, expiry / call budget) &mdash; a few times a year</li>
+        <li><b>One long press</b> (per heavy request)</li>
+        <li><b>One vouch through World</b> (only when lighting a flame)</li>
       </ul>
     </div>
     <div class="mx-cell">
       <ul>
-        <li>使い切りの許可（Permit ＋ 署名）</li>
-        <li>押した／押さなかったという事実</li>
-        <li><b>灯1つ</b>（その版に、自分の鍵で使っている）</li>
+        <li>A single-use permit (Permit + signature)</li>
+        <li>The fact of having pressed, or not pressed</li>
+        <li><b>One flame</b> (using that version with their own key)</li>
       </ul>
     </div>
-    <div class="mx-cell"><b>自分の鍵そのもの。</b>範囲を広く切れば、損をするのは自分。<b>預け金は置かない</b></div>
-    <div class="mx-cell">働くエージェント。止められた記録。<b>何も起きない夜</b></div>
+    <div class="mx-cell"><b>Their own key itself.</b> Cut the scope too wide and they are the one who loses. <b>No deposit is placed</b></div>
+    <div class="mx-cell">An agent that works. A record of what was stopped. <b>Nights on which nothing happens</b></div>
 
-    <div class="mx-label alt"><small>P2</small>スキルの作り手</div>
+    <div class="mx-label alt"><small>P2</small>The skill maker</div>
     <div class="mx-cell">
       <ul>
-        <li><b>宣言した範囲</b>（この道具が触る先）</li>
-        <li><b>要求ごとのスキル署名</b></li>
-        <li>版（上げるたびに灯は消える）</li>
+        <li><b>The declared scope</b> (what this tool touches)</li>
+        <li><b>A skill signature per request</b></li>
+        <li>The version (every bump puts the flames out)</li>
       </ul>
     </div>
     <div class="mx-cell">
       <ul>
-        <li>範囲内なら通る</li>
-        <li>範囲外なら <b>自分の署名つきで違反として刻まれる</b></li>
-        <li>いまの版の灯の数と、<b>誰の灯か</b></li>
+        <li>Inside the scope, it passes</li>
+        <li>Outside the scope, <b>it is carved in as a violation, with their own signature on it</b></li>
+        <li>The flame count on the current version, and <b>whose flames they are</b></li>
       </ul>
     </div>
-    <div class="mx-cell"><b>名前と、積んだ灯。</b>版を上げれば自分で消える。ここも<b>預け金は無い</b></div>
-    <div class="mx-cell">信用。<b>採用されること</b></div>
+    <div class="mx-cell"><b>Their name, and the flames they have built up.</b> Bump the version and they put them out themselves. <b>No deposit here either</b></div>
+    <div class="mx-cell">Trust. <b>Being adopted</b></div>
 
-    <div class="mx-label alt"><small>P3</small>これから使う人</div>
-    <div class="mx-cell"><b>何も入れない。</b>URL を開くだけ（インストールも登録も無し）</div>
-    <div class="mx-cell">自分の判断（入れる／入れない）</div>
-    <div class="mx-cell">—</div>
-    <div class="mx-cell"><b>「いま」信じられるかの答え。</b>古い評価を新しいと勘違いしない</div>
+    <div class="mx-label alt"><small>P3</small>The prospective user</div>
+    <div class="mx-cell"><b>Nothing goes in.</b> They just open a URL (no install, no sign-up)</div>
+    <div class="mx-cell">Their own decision (install / do not install)</div>
+    <div class="mx-cell">&mdash;</div>
+    <div class="mx-cell"><b>The answer to whether it can be trusted &ldquo;now&rdquo;.</b> No mistaking an old rating for a current one</div>
   </div></div>
 
-  <p class="note"><b>保証人という役は無くなった。</b>以前は「他人のスキルを保証する第三者」を置き、預け金を賭けさせる設計だった。いまは<b>灯を出せるのは、その版を自分の鍵で使っている人だけ</b>。保証ではなく<b>同じ船に乗っている事実</b>を出している（決定1・minta 提案）。</p>
+  <p class="note"><b>The role of guarantor is gone.</b> The earlier design placed a third party who vouched for someone else's skill, and made them stake a deposit. Now <b>only someone using that version with their own key can light a flame</b>. What is shown is not a guarantee but <b>the fact of being in the same boat</b> (Decision 1, minta's proposal).</p>
 </section>
 
 <section>
-  <h2><span class="no">02</span>機械の4つ（何を受け取り、何を返すか）</h2>
-  <p class="msg"><b>どれも鍵の平文を受け取らない。</b>Broker すら、要求の中身を読まずに判定を受け取る。</p>
+  <h2><span class="no">02</span>The four machines (what they take in, what they return)</h2>
+  <p class="msg"><b>None of them receives the key in the clear.</b> Even the Broker receives a judgement without reading the contents of the request.</p>
 
   <div class="tbl"><table>
-    <caption>表1　機械ごとの入出力（口は Broker の HTTP。<span class="mono">spec/permit-signature.md</span> が境界）</caption>
-    <thead><tr><th style="width:132px">機械</th><th>受け取るもの</th><th>返すもの</th><th style="width:150px">受け取らないもの</th></tr></thead>
+    <caption>Table 1&emsp;Inputs and outputs per machine (the ports are the Broker's HTTP. <span class="mono">spec/permit-signature.md</span> is the boundary)</caption>
+    <thead><tr><th style="width:132px">Machine</th><th>What it takes in</th><th>What it returns</th><th style="width:150px">What it never takes in</th></tr></thead>
     <tbody>
       <tr>
-        <td><b>エージェント</b><br>（スキルの実体）</td>
-        <td><span class="mono">POST /use</span>: 要求（method・url・keyRef・body）＋ Permit ＋ <b>2つの署名</b>（持ち主・スキル）</td>
-        <td><b>ALLOWED</b>(200) ／ <b>NEEDS_PRESS</b>(409) ／ <b>DENIED</b>(403) ／ <b>STOPPED</b>(503)。残り回数と系譜の糸の id</td>
-        <td><b>鍵の平文。</b>持てない。参照（keyRef）だけ</td>
+        <td><b>The agent</b><br>(the skill itself)</td>
+        <td><span class="mono">POST /use</span>: the request (method, url, keyRef, body) + Permit + <b>two signatures</b> (holder, skill)</td>
+        <td><b>ALLOWED</b>(200) / <b>NEEDS_PRESS</b>(409) / <b>DENIED</b>(403) / <b>STOPPED</b>(503). The remaining call budget and the id of the thread in the trail</td>
+        <td><b>The key in the clear.</b> It cannot hold it. Only the reference (keyRef)</td>
       </tr>
       <tr>
-        <td><b>Broker</b><br>（我々）</td>
-        <td>Permit・署名・要求。<b>範囲の照合と回数の管理だけ自分でやる</b></td>
-        <td>判定・系譜（追記のみ）・星の一覧（<span class="mono">/stars</span>）</td>
-        <td><b>鍵も資金も預からない。</b>重さの判断も自分では作らない</td>
+        <td><b>Broker</b><br>(us)</td>
+        <td>Permits, signatures, requests. <b>It does only the scope matching and the call-budget bookkeeping itself</b></td>
+        <td>Judgements, the trail (append only), the list of stars (<span class="mono">/stars</span>)</td>
+        <td><b>It holds neither keys nor funds.</b> It does not produce the weight judgement itself either</td>
       </tr>
       <tr>
-        <td><b>0G</b><br>（封印された推論）</td>
-        <td>要求の本文（<b>封印の中で</b>）。実測 <b>1判定 300トークン</b></td>
-        <td>重さ（<b>ふだん／大事／決定的</b>）と <span class="mono">x-request-id</span></td>
-        <td><b>我々も読めない。</b>届かなければ <b>STOPPED</b>——<b>既定値を作らない</b></td>
+        <td><b>0G</b><br>(sealed inference)</td>
+        <td>The body of the request (<b>inside the seal</b>). Measured at <b>300 tokens per judgement</b></td>
+        <td>The weight (<b>routine / important / decisive</b>) and <span class="mono">x-request-id</span></td>
+        <td><b>We cannot read it either.</b> If it does not arrive, <b>STOPPED</b>&mdash;<b>no default value is invented</b></td>
       </tr>
       <tr>
-        <td><b>World</b><br>（人であること）</td>
-        <td>本人の端末での承認（device flow）</td>
-        <td>sector 単位の<b>仮名</b>（<span class="mono">sub</span>）。断りは <span class="mono">human_denied</span>、時間切れは <span class="mono">proof_expired</span></td>
-        <td><b>何のスキルか・何の鍵か・いつ使ったか</b>は渡していない</td>
+        <td><b>World</b><br>(being a human)</td>
+        <td>Approval on the owner's own device (device flow)</td>
+        <td>A <b>pseudonym</b> per sector (<span class="mono">sub</span>). A refusal is <span class="mono">human_denied</span>, a timeout is <span class="mono">proof_expired</span></td>
+        <td><b>Which skill, which key, when it was used</b>&mdash;none of it is handed over</td>
       </tr>
       <tr>
-        <td><b>0G Storage</b><br>（系譜）</td>
-        <td>記録（誰が許し、何を要求し、通ったか止まったか）</td>
-        <td>root hash と tx</td>
-        <td><b>本文も鍵も入れない。</b>公開前提で書いている</td>
+        <td><b>0G Storage</b><br>(the trail)</td>
+        <td>Records (who permitted it, what was requested, whether it passed or was stopped)</td>
+        <td>The root hash and the tx</td>
+        <td><b>Neither bodies nor keys go in.</b> It is written on the assumption of being public</td>
       </tr>
     </tbody>
   </table></div>
-  <p class="src">口の一覧: <span class="mono">/use</span>・<span class="mono">/seal</span>・<span class="mono">/trace/:thread</span>・<span class="mono">/vouch/start</span>・<span class="mono">/vouch/finish</span>・<span class="mono">/stars/:skill</span>・<span class="mono">/health</span>（<span class="mono">broker/src/server.js</span>）。</p>
+  <p class="src">Port list: <span class="mono">/use</span>, <span class="mono">/seal</span>, <span class="mono">/trace/:thread</span>, <span class="mono">/vouch/start</span>, <span class="mono">/vouch/finish</span>, <span class="mono">/stars/:skill</span>, <span class="mono">/health</span> (<span class="mono">broker/src/server.js</span>).</p>
 </section>
 
 <section>
-  <h2><span class="no">03</span>「トークンを預ける」「保険に入る」はどうなったか</h2>
-  <p class="msg"><b>両方とも捨てた（11/6 未明・決定1）。</b>捨てた理由は時間ではなく、<b>入れると製品の主張が反転するから</b>。</p>
+  <h2><span class="no">03</span>What happened to &ldquo;staking tokens&rdquo; and &ldquo;taking out insurance&rdquo;</h2>
+  <p class="msg"><b>Both were dropped (early hours of 11/6, Decision 1).</b> The reason was not time; it was that <b>putting them in inverts the product's claim</b>.</p>
 
   <div class="tbl"><table>
-    <caption>表2　旧い設計 → いまの設計</caption>
-    <thead><tr><th style="width:150px">昔やろうとしたこと</th><th>どう壊れるか</th><th>いま代わりに置いているもの</th></tr></thead>
+    <caption>Table 2&emsp;The old design → the current design</caption>
+    <thead><tr><th style="width:150px">What we once intended</th><th>How it breaks</th><th>What stands there instead now</th></tr></thead>
     <tbody>
       <tr>
-        <td><b>預け金（トークンを預ける）</b><br>保証人が少額を預け、違反時に被害者へ回る</td>
-        <td><b>金を多く持つ人ほど信用される</b>に反転する。灯は「誰が使っているか」の事実のはずが、<b>買える順位</b>になる</td>
-        <td><b>賭けるものを鍵そのものに変えた。</b>灯を出せるのは<b>その版を自分の鍵で使っている人だけ</b>。外れたときは自分も被害を受ける</td>
+        <td><b>The deposit (staking tokens)</b><br>A guarantor deposits a small sum, which goes to the victim on a violation</td>
+        <td>It inverts into <b>the more money you hold, the more you are trusted</b>. The flame, which should be the fact of who is using it, becomes <b>a ranking you can buy</b></td>
+        <td><b>We changed what is staked to the key itself.</b> Only someone <b>using that version with their own key</b> can light a flame. If it goes wrong, they are harmed too</td>
       </tr>
       <tr>
-        <td><b>保険（利用者が保険料を払い、無事なら保証人に上乗せ）</b></td>
-        <td><b>保険業の規制に触れうる</b>【未確認のまま製品に入れられない】。さらに「金を払えば安全」という<b>誤った安心</b>を売ることになる</td>
-        <td><b>売っているのは安心ではなく記録。</b>止めた事実と、断られた事実が残る。損失の補填はしない（できるとも言わない）</td>
+        <td><b>Insurance (the user pays a premium; if nothing goes wrong, the guarantor gets a top-up)</b></td>
+        <td><b>It may run into insurance regulation</b> [it cannot go into the product while that stays unverified]. On top of that, it would mean selling the <b>false reassurance</b> that paying money makes you safe</td>
+        <td><b>What we sell is a record, not reassurance.</b> The fact of having stopped something, and the fact of having been refused, remain. We do not indemnify losses (and we do not claim we can)</td>
       </tr>
       <tr>
-        <td><b>ありがとう（投げ銭）と二次のマッチング</b></td>
-        <td>利用者どうしに金の流れができ、<b>灯が収入源になる</b>。買う動機が生まれた時点で灯の意味が消える</td>
-        <td>作らない。<b>灯は売り物にしない</b>（ビジネスモデルの「やらないこと」と同じ列）</td>
+        <td><b>Tips (&ldquo;thank you&rdquo; payments) and secondary matching</b></td>
+        <td>A money flow appears between users, and <b>the flame becomes a source of income</b>. The moment a motive to buy exists, the flame loses its meaning</td>
+        <td>We do not build it. <b>The flame is not for sale</b> (the same column as &ldquo;What we will not do&rdquo; in the business model)</td>
       </tr>
       <tr>
-        <td><b>保証の濃さ3段・ゼロ知識化</b></td>
-        <td>36時間で安全に作れない。半端な匿名化は<b>漏れていないという誤解</b>を生む</td>
-        <td>2段に落とし、仮名（World の <span class="mono">sub</span>）だけで結ぶ。<b>同じアプリの中では同じ人だと分かる</b>と正直に書く</td>
+        <td><b>Three tiers of vouch strength, and zero-knowledge</b></td>
+        <td>Cannot be built safely in 36 hours. Half-done anonymisation creates <b>the misunderstanding that nothing is leaking</b></td>
+        <td>Cut down to two tiers, linked by the pseudonym (World's <span class="mono">sub</span>) alone. We write honestly that <b>within the same app it is visible that it is the same person</b></td>
       </tr>
     </tbody>
   </table></div>
 
-  <p><b>将来やるとしたら。</b>預け金は<b>灯の重みに混ぜない別の軸</b>として（「この人はいくら賭けている」を灯と並べない）、保険は<b>第三者の保険会社に系譜を渡す形</b>で。どちらも<b>今回は作らないし、動画でも言わない</b>。聞かれたらこの表のまま答える。</p>
-  <p class="note"><b>古い図が1枚残っている。</b><span class="mono">ideation/2026-11-06-final-image.md</span> のアーキテクチャ図には <span class="mono">VouchRegistry（保証・預け金）</span> が描かれている。<b>これは決定1より前の版</b>。図は差し替えず、<b>「ここまでは預け金だった」と分かるように印を足してある</b>。</p>
+  <p><b>If we ever do them.</b> The deposit would be <b>a separate axis, never mixed into the weight of a flame</b> (&ldquo;how much this person has staked&rdquo; is never shown next to the flame); the insurance would be <b>handing the trail to a third-party insurer</b>. <b>Neither gets built this time, and neither is mentioned in the video.</b> If asked, we answer straight from this table.</p>
+  <p class="note"><b>One old diagram remains.</b> The architecture diagram in <span class="mono">ideation/2026-11-06-final-image.md</span> still draws <span class="mono">VouchRegistry (vouching, deposit)</span>. <b>That is a version from before Decision 1.</b> We did not swap the diagram out; <b>we added a mark so that it reads as &ldquo;up to here, there was a deposit&rdquo;</b>.</p>
 </section>
 
 <section>
-  <h2><span class="no">04</span>お金はどこを通るか</h2>
-  <p class="msg"><b>1本だけ。</b>利用者 → TOMOSHIBI。<b>利用者どうしの間には、金の経路が存在しない。</b></p>
+  <h2><span class="no">04</span>Where the money goes</h2>
+  <p class="msg"><b>One path only.</b> User → TOMOSHIBI. <b>Between users, no money path exists.</b></p>
 
   <div class="fig-scroll"><div class="chevrons">
-    <div class="chev">P1 が範囲を署名<small>無料</small></div>
-    <div class="chev">エージェントが使う<small>ふだんは無料</small></div>
-    <div class="chev on">重い判定<small>従量（A）</small></div>
-    <div class="chev">灯がともる<small>無料</small></div>
-    <div class="chev on">作り手が灯を掲示<small>月額（B）</small></div>
+    <div class="chev">P1 signs the scope<small>free</small></div>
+    <div class="chev">The agent uses it<small>free most of the time</small></div>
+    <div class="chev on">A heavy judgement<small>metered (A)</small></div>
+    <div class="chev">A flame is lit<small>free</small></div>
+    <div class="chev on">The maker displays the flames<small>monthly (B)</small></div>
   </div></div>
 
   <div class="tbl"><table>
-    <thead><tr><th style="width:170px">経路</th><th>あるか</th><th>理由</th></tr></thead>
+    <thead><tr><th style="width:170px">Path</th><th>Does it exist?</th><th>Reason</th></tr></thead>
     <tbody>
-      <tr><td>利用者 → TOMOSHIBI</td><td><b>ある</b>（月額・従量・企業ライセンス）</td><td>判断に値札を付ける。<b>黙っている時間には課金しない</b></td></tr>
-      <tr><td>利用者 → 利用者</td><td><b>無い</b></td><td>投げ銭も補填も作らない。作った瞬間に灯が買い物になる</td></tr>
-      <tr><td>決済額の%</td><td><b>取らない</b></td><td>取れば<b>止めるほど損をする会社</b>になる</td></tr>
-      <tr><td>預かり（鍵・資金）</td><td><b>無い</b></td><td><b>預けなくていい</b>が商品。預かれば主張が消える</td></tr>
-      <tr><td>要求の中身の販売</td><td><b>無い</b></td><td>封印の中にあり、<b>我々も読めない</b></td></tr>
+      <tr><td>User → TOMOSHIBI</td><td><b>Yes</b> (monthly, metered, enterprise licence)</td><td>A price tag on the judgement. <b>We do not charge for the silent hours</b></td></tr>
+      <tr><td>User → user</td><td><b>No</b></td><td>We build neither tips nor indemnity. The moment we do, the flame becomes something you shop for</td></tr>
+      <tr><td>A percentage of payment volume</td><td><b>We do not take it</b></td><td>Taking it makes us <b>a company that loses by stopping things</b></td></tr>
+      <tr><td>Custody (keys, funds)</td><td><b>No</b></td><td><b>You do not have to hand it over</b> is the product. Hold it and the claim disappears</td></tr>
+      <tr><td>Selling the contents of requests</td><td><b>No</b></td><td>They are inside the seal, and <b>we cannot read them either</b></td></tr>
     </tbody>
   </table></div>
 </section>
 
 <section>
-  <h2><span class="no">05</span>次のアクション</h2>
+  <h2><span class="no">05</span>Next actions</h2>
   <div class="tbl"><table>
-    <thead><tr><th>やること</th><th style="width:96px">誰</th><th style="width:120px">いつまで</th></tr></thead>
+    <thead><tr><th>Action</th><th style="width:96px">Who</th><th style="width:120px">By when</th></tr></thead>
     <tbody>
-      <tr><td><b>決定16・17 として記録する</b>（流量に%を取らない／預け金と保険は捨てたままにする）</td><td>kou</td><td>11/6 中<b>（済）</b></td></tr>
-      <tr><td><span class="mono">final-image.md</span> の預け金の図に「旧い版」の印を足す</td><td>kou</td><td>11/6 中<b>（済）</b></td></tr>
-      <tr><td>ピッチで聞かれたら表2のまま答える（預け金・保険は<b>作らない理由</b>を先に言う）</td><td>kou・minta</td><td>11/7</td></tr>
+      <tr><td><b>Record as Decision 16 and 17</b> (take no percentage of volume / keep the deposit and the insurance dropped)</td><td>kou</td><td>During 11/6 <b>(done)</b></td></tr>
+      <tr><td>Add an &ldquo;old version&rdquo; mark to the deposit diagram in <span class="mono">final-image.md</span></td><td>kou</td><td>During 11/6 <b>(done)</b></td></tr>
+      <tr><td>If asked in the pitch, answer straight from Table 2 (for the deposit and the insurance, give <b>the reason we are not building them</b> first)</td><td>kou, minta</td><td>11/7</td></tr>
     </tbody>
   </table></div>
 </section>
 
 <footer class="doc-footer">
-  <span>TOMOSHIBI — 入力と出力（2026-11-06）</span>
-  <span>関連: 2026-11-06-market-and-model.html ／ 2026-11-06-touchpoints.html ／ decisions 1・16・17</span>
+  <span>TOMOSHIBI &mdash; Inputs and outputs (2026-11-06)</span>
+  <span>Related: 2026-11-06-market-and-model.html / 2026-11-06-touchpoints.html / decisions 1, 16, 17</span>
 </footer>
 
 </div>

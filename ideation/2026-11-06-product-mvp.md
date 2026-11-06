@@ -1,234 +1,234 @@
-# プロダクトとしての MVP・技術的な難所・バックログ・計画
+# MVP as a product, the hard technical parts, backlog, and plan
 
-**一言：MVP は星でも鍵でもない。
-**「使っている AI の道具が、いつ、どう変わったか」を教えるだけのもの。**
-一人で使って価値があり、**一人で使っているだけで、網のデータが貯まる。**
+**In one line: the MVP is neither the star nor the key.
+**It is something that just tells you "when and how the AI tools you use changed."**
+It is worth using alone, and **just by using it alone, the data for the web accumulates.**
 
 ---
 
-## 1. 市場 — 数が出ている。信頼の層だけが無い
+## 1. Market — the numbers are there. Only the trust layer is missing
 
-| | 値 | 出典 |
+| | Value | Source |
 |---|---:|---|
-| 公式 MCP レジストリの稼働サーバー数（2026-10） | **43,012** | [DevToolHub](https://devtoolhub.com/mcp-registry-by-the-numbers/) |
-| 同（2026-07） | 18,843 | 同上 |
-| 月あたりの新規（2026-03 → 2026-09） | **1,894 → 11,809** | 同上 |
-| 解析した 15,465 サーバーのガバナンス | **ゼロ** | [ox.security](https://www.ox.security/ebooks/15465-mcp-servers-0-governance/) |
-| 1バージョン出したきり改訂されていない割合 | **62%** | 同上 |
-| **未登録のドメインに解決したサーバー** | **6件** | 同上 |
-| 上位50の publisher が占める割合 | **25%** | [DevToolHub](https://devtoolhub.com/mcp-registry-by-the-numbers/) |
-| 公式レジストリのスキャン | **していない** | 同上 |
+| Live servers in the official MCP registry (2026-10) | **43,012** | [DevToolHub](https://devtoolhub.com/mcp-registry-by-the-numbers/) |
+| Same (2026-07) | 18,843 | ibid. |
+| New per month (2026-03 → 2026-09) | **1,894 → 11,809** | ibid. |
+| Governance across the 15,465 servers analyzed | **Zero** | [ox.security](https://www.ox.security/ebooks/15465-mcp-servers-0-governance/) |
+| Share that shipped one version and were never revised | **62%** | ibid. |
+| **Servers resolving to unregistered domains** | **6** | ibid. |
+| Share held by the top 50 publishers | **25%** | [DevToolHub](https://devtoolhub.com/mcp-registry-by-the-numbers/) |
+| Scanning in the official registry | **None** | ibid. |
 
-### 読み方
+### How to read it
 
-**3ヶ月で 2.3 倍。月に1万2千件が増え続けている。** そして**ガバナンスはゼロ。**
+**2.3x in three months. 12,000 a month keep being added.** And **governance is zero.**
 
-**「未登録のドメインに解決したサーバーが6件」が一番こわい。**
-**誰でもそのドメインを取れば、そのサーバーになれる。**
+**"Six servers resolving to unregistered domains" is the scariest one.**
+**Anyone who grabs that domain becomes that server.**
 
-**どのパッケージ生態系も、最後は信頼の層を生やした。**
-npm には lockfile と Dependabot と Socket が、PyPI には同じものが育った。
-**MCP とスキルには、まだ何も無い。**
+**Every package ecosystem eventually grew a trust layer.**
+npm got lockfiles, Dependabot and Socket; PyPI grew the same.
+**MCP and skills have nothing yet.**
 
-**そして今回が初めて、「入れる側」が人間ではない。**
+**And this is the first time the one doing the installing is not a human.**
 
-### 市場の輪郭（推定。検証が要る）
+### The shape of the market (estimates; needs verification)
 
-- **一次**：AI エージェントで開発している人。**ここは本人が痛い**
-- **二次**：チームの道具を承認させられる人（テックリード／情シス）。**ここに予算がある**
-- **三次**：道具を作る側 43,012 人（うち上位50が25%なので、**残りは埋もれている**）。
-  **ここが流通に払う**
+- **Primary**: people building with AI agents. **This is where it actually hurts them personally**
+- **Secondary**: people made to approve the team's tools (tech leads / IT). **This is where the budget is**
+- **Tertiary**: the 43,012 people building tools (the top 50 take 25%, so **the rest are buried**).
+  **This is who pays for distribution**
 
-⚠️ **金額の推定はまだ置かない。** 根拠のない TAM は書かない。
-**出せるのは「数が指数で増えていて、トラストの層が存在しない」という事実まで。**
-
----
-
-## 2. 登場人物 — 「それな」が出る形で
-
-### アミット（32）／ 先に行く人 ← **本当の顧客**
-
-GitHub で人の dotfiles を眺めていて MCP サーバーを見つけた。`npx` で入れた。
-鍵を聞かれたので貼った。**貼ったあとで、このプロセスがホーム以下を全部読めることに気づいた。**
-消すのも面倒なので、そのままにした。
-
-**いま入っている道具は17個。何がどこまでできるか、1つも言えない。**
-
-3ヶ月前、1つが壊れて半日溶かした。原因を突き止めて、Issue を立てて、直った。
-**誰からも、何も言われなかった。**
-
-> **「毎回おれが先に踏んでるんだよな」**
-
-### サラ（38）／ テックリード ← **予算を持っている**
-
-チームの誰かが Slack で聞いてくる。「このスキル入れていいですか？」
-
-**評価する方法が無い。** ソースを読む時間も、読んで分かる保証も無い。
-**NO と言えば邪魔者。YES と言えば、責任は自分。**
-
-`#ai-tools` チャンネルは**400件**溜まっていて、誰もレビューしていない。
-
-> **「評価できないものに、承認だけさせられてる」**
-
-### ケンジ（29）／ 道具を作る側 ← **流通に払う**
-
-良いものを作った。**入らない。**
-星は買える。**買った人に負ける。** 安全だと証明する方法も無い。
-
-> **「良いものを作れば入る、は嘘だった」**
-
-### プリヤ（26）／ 選ぶだけの人 ← **顧客ではない。タダ乗りする人**
-
-誰かが先に踏んだ結果を、無料で受け取る。**それでいい。**
-**彼女のために作るのではない。彼女が助かるのは、副産物。**
-
-### 一番効く「そうだよねー」4つ
-
-1. **「鍵を貼ったあとで、こいつがホーム全部読めることに気づいた」**
-2. **「npm には Dependabot がある。MCP サーバーには無い」**
-3. **「更新してないのに、変わってる」** ← §3 の技術的な芯
-4. **「#ai-tools、400件あるけど誰も読んでない」**
+⚠️ **We are not putting a dollar estimate down yet.** We don't write a TAM with no basis.
+**What we can state goes as far as the fact that "the numbers are growing exponentially and a trust layer does not exist."**
 
 ---
 
-## 3. MVP — カナリア（星も鍵もまだ出さない）
+## 2. Cast — in a form that makes people say "that's me"
 
-### 何をするか
+### Amit (32) / the one who goes first ← **the real customer**
 
-**あなたが使っている AI の道具を毎日見にいって、
-中身が変わったら教える。それだけ。**
+Found an MCP server while browsing someone's dotfiles on GitHub. Installed it with `npx`.
+It asked for a key, so he pasted one. **After pasting it, he realized this process can read everything under his home directory.**
+Deleting it was a hassle, so he left it.
+
+**He has 17 tools installed. He cannot state what any one of them is allowed to do.**
+
+Three months ago one of them broke and he burned half a day. He tracked down the cause, filed an issue, and it got fixed.
+**Nobody said anything to him.**
+
+> **"I'm always the one stepping on it first."**
+
+### Sarah (38) / tech lead ← **holds the budget**
+
+Someone on the team asks in Slack: "Can I install this skill?"
+
+**There is no way to evaluate it.** No time to read the source, and no guarantee she'd understand it if she did.
+**Say NO and she's an obstacle. Say YES and the responsibility is hers.**
+
+The `#ai-tools` channel has **400 messages** backed up, and nobody has reviewed any of them.
+
+> **"I'm made to approve things I can't evaluate."**
+
+### Kenji (29) / the one building tools ← **pays for distribution**
+
+Built something good. **It doesn't get installed.**
+Stars can be bought. **He loses to people who bought them.** There is also no way to prove it is safe.
+
+> **"'Build something good and it gets adopted' was a lie."**
+
+### Priya (26) / the one who only chooses ← **not a customer. A free rider**
+
+She gets the result of someone else stepping on it first, for free. **That's fine.**
+**We are not building for her. Her being helped is a by-product.**
+
+### The four most effective "yeah, exactly"s
+
+1. **"After I pasted the key, I realized this thing can read my entire home directory"**
+2. **"npm has Dependabot. MCP servers have nothing"**
+3. **"It changed, and I never updated it"** ← the technical core of §3
+4. **"#ai-tools has 400 messages and nobody reads them"**
+
+---
+
+## 3. MVP — the Canary (no stars and no keys yet)
+
+### What it does
+
+**It goes and looks at the AI tools you use, every day,
+and tells you when their contents change. That's all.**
 
 ```
 $ canary watch
-17 個の道具を見ています。
+Watching 17 tools.
 
-2026-11-09  github-mcp      変化なし
-2026-11-09  notion-mcp      変化なし
-2026-11-09  web-search-mcp  ⚠ 道具の説明が変わりました
+2026-11-09  github-mcp      no change
+2026-11-09  notion-mcp      no change
+2026-11-09  web-search-mcp  ⚠ the tool description changed
                             "search(query)" → "search(query, context)"
-                            説明文に 142 文字追加
+                            142 characters added to the description
 ```
 
-### なぜこれが MVP なのか
+### Why this is the MVP
 
 | | |
 |---|---|
-| **一人で価値がある** | 網も、他人も、ハードも要らない。**初日から効く** |
-| **一人で使うだけで、網のデータが貯まる** | 「誰が何を使っているか」が副産物で集まる。**星は、あとから生える** |
-| **一番痛いところを直接突く** | 「更新してないのに変わってる」。§4 の1 |
-| **作るのが小さい** | 後述のとおり、難所は1つだけ |
+| **It is worth something alone** | No web, no other people, no hardware needed. **It works from day one** |
+| **Just using it alone accumulates the data for the web** | "Who uses what" gets collected as a by-product. **The stars grow later** |
+| **It hits the most painful spot directly** | "It changed and I never updated it." Number 1 in §4 |
+| **It is small to build** | As described below, there is only one hard part |
 
-**単独で使えるものが、集団のデータを作る。** これが設計の中心。
-**星から作ると、誰も居ない空から始めることになる。**
+**Something usable on its own creates the collective data.** This is the center of the design.
+**If you start from the stars, you start with an empty sky.**
 
-### MVP に入れないもの（意図的に）
+### What is deliberately left out of the MVP
 
-- **星**（人が集まるまで意味が無い）
-- **鍵の仲介（Broker）**（遅延が本番の壁。§4 の6）
-- **ハードウェア**（署名を偽れないことが要るのは、他人に見せ始めてから）
-- **チェーン**（最初の100人には不要）
+- **Stars** (meaningless until people gather)
+- **Key brokering (Broker)** (latency is the real wall. Number 5 in §4)
+- **Hardware** (needing signatures to be unforgeable starts once you show things to other people)
+- **Chain** (not needed for the first 100 people)
 
-**ハッカソンで作る demo は、この順番の 3番目から 5番目を先に作っている。**
-**それは賞のための順番であって、プロダクトの順番ではない。** 混同しない。
+**The demo we build at the hackathon builds items 3 to 5 of this order first.**
+**That is the order for the prizes, not the order for the product.** Don't conflate them.
 
 ---
 
-## 4. 技術的に乗り越えるところ（殺傷力の高い順）
+## 4. The technical things to get over (most lethal first)
 
-| | 難所 | なぜ難しいか | 答え | 殺す？ |
+| | Hard part | Why it is hard | Answer | Kills us? |
 |---|---|---|---|:--:|
-| **1** | **リモートの道具が変わったことを、どう検知するか** | ローカルの npm と違い、**lockfile が無い。** サーバー側が黙って変えても、手元のバージョンは動かない | **ツールの manifest（名前・説明文・引数スキーマ）をハッシュする。** 取得できるし、**プロンプトインジェクションが棲むのは説明文そのもの。** 攻撃面がちょうどハッシュの中に入る | **これが解けないと製品が無い** |
-| **2** | **「実際に使っている」をどう証明するか** | 自己申告は偽れる | **3段階で正直に落とす。** v1 クライアントの申告（弱い・そう書く）／v2 Broker が実際の呼び出しを見る／v3 TEE。**段を隠さない** | 大 |
-| **3** | **誰が何を使っているかが漏れる** | 星が公開だと、自分の道具立てが全部見える | **全件取って手元で絞る**（Anon-RPC）。**問い合わせの中身を外に出さない** | 中 |
-| **4** | **Broker が鍵を全部持つ** | 信頼点が1つに集まる | **TEE（0G Private Computer）に入れる。** 入らないうちは「信頼点である」と書く | 中 |
-| **5** | **遅延** | 道具の呼び出しの経路に入る。**50ms を超えたら外される** | **検知（MVP）は経路に入らない。** 経路に入るのは Broker から。**だから順番が後ろ** | 大（Broker 段で） |
-| **6** | **星を買われる** | Sybil | World（一人一つ） | 中 |
-| **7** | **取り消しの速さ** | 版が変わってから星が消えるまでの時間、人は守られていない | **検知の間隔がそのまま露出時間。** 日次 → 時間次 → push | 中 |
+| **1** | **How to detect that a remote tool changed** | Unlike local npm, **there is no lockfile.** If the server side changes something quietly, the version on your machine doesn't move | **Hash the tool manifest (name, description, argument schema).** You can fetch it, and **prompt injection lives in the description itself.** The attack surface falls exactly inside the hash | **Without solving this there is no product** |
+| **2** | **How to prove "actually using it"** | Self-reporting can be faked | **Degrade honestly in three stages.** v1: the client reports it (weak — say so) / v2: the Broker sees the actual calls / v3: TEE. **Don't hide which stage you're at** | High |
+| **3** | **Who uses what leaks** | If stars are public, your whole toolkit is visible | **Fetch everything and filter locally** (Anon-RPC). **Don't let the content of the query leave** | Medium |
+| **4** | **The Broker holds all the keys** | The trust points collect into one place | **Put it in a TEE (0G Private Computer).** Until it is in one, write that "it is a trust point" | Medium |
+| **5** | **Latency** | It sits in the path of a tool call. **Go over 50 ms and you get removed** | **Detection (the MVP) is not in the path.** What is in the path starts at the Broker. **Which is why it comes later** | High (at the Broker stage) |
+| **6** | **Stars get bought** | Sybil | World (one per person) | Medium |
+| **7** | **Speed of revocation** | Between the version changing and the star disappearing, people are not protected | **The detection interval is exactly the exposure window.** Daily → hourly → push | Medium |
 
-**1 が解ければ製品になる。1 が解けなければ、何も無い。**
-**そして 1 は、おそらく一番安く解ける**（manifest を取ってハッシュするだけ）。
+**Solve 1 and there is a product. Fail 1 and there is nothing.**
+**And 1 is probably the cheapest to solve** (just fetch the manifest and hash it).
 
 ---
 
-## 5. バックログ
+## 5. Backlog
 
-### 段0：ハッカソン（〜11/7）※ プロダクトの順番ではない
+### Stage 0: hackathon (through 11/7) — not the product order
 
-賞の要件から逆算した順。`ideation/2026-11-06-plan.md` のとおり。
+Ordered backwards from the prize requirements. As in `ideation/2026-11-06-plan.md`.
 
-### 段1：カナリア単体（2週間）
+### Stage 1: Canary standalone (2 weeks)
 
-| | 項目 | 価値 | 難所 |
+| | Item | Value | Hard part |
 |---|---|---|---|
-| 1.1 | 使っている MCP サーバー／スキルを数える | 「17個」を本人に見せる | 小 |
-| **1.2** | **manifest を取ってハッシュする** | **製品の芯** | **§4-1** |
-| 1.3 | 日次で回して、差分を出す | 「変わった」が分かる | 小 |
-| 1.4 | 差分を**人が読める形で**出す（説明文の diff） | **何が危ないか分かる** | 中 |
-| 1.5 | 通知（端末の通知でよい） | 気づける | 小 |
+| 1.1 | Count the MCP servers / skills in use | Show "17" to the person | Small |
+| **1.2** | **Fetch the manifest and hash it** | **The core of the product** | **§4-1** |
+| 1.3 | Run it daily and produce the diff | You can tell "it changed" | Small |
+| 1.4 | Show the diff **in a human-readable form** (diff of the description) | **You can tell what is dangerous** | Medium |
+| 1.5 | Notification (a device notification is fine) | You notice | Small |
 
-**次に進む条件：** 自分たち2人が**2週間使い続けている**こと。
-**かつ、実際の変化を1件以上、先に捕まえていること。**
-**「作ったから使う」は条件に数えない。**
+**Condition for moving on:** the two of us **have kept using it for 2 weeks**.
+**And we have caught at least one real change ahead of time.**
+**"We use it because we built it" does not count as a condition.**
 
-### 段2：先に行った人が見える（2ヶ月）
+### Stage 2: you can see who went first (2 months)
 
-| | 項目 | 価値 | 難所 |
+| | Item | Value | Hard part |
 |---|---|---|---|
-| 2.1 | 自分の「使っている」を公開するか選べる | **ここで初めて他人が出る** | 小 |
-| 2.2 | 知り合いの輪（フォロー）で絞る | 「誰の」 | 中 |
-| 2.3 | **版が変わったら、その版の表示が全員ぶん一斉に落ちる** | **山の場面そのもの** | §4-7 |
-| 2.4 | World（一人一つ） | 買えなくする | §4-6 |
-| 2.5 | 読み取りを匿名経路で | 道具立てを漏らさない | §4-3 |
+| 2.1 | Choose whether to publish your own "using it" | **This is where other people first appear** | Small |
+| 2.2 | Filter by the circle of people you know (follows) | "Whose" | Medium |
+| 2.3 | **When the version changes, that version's listing drops for everyone at once** | **The climax scene itself** | §4-7 |
+| 2.4 | World (one per person) | Makes it unbuyable | §4-6 |
+| 2.5 | Reads over an anonymous path | Doesn't leak your toolkit | §4-3 |
 
-**次に進む条件：** **知らない人10人が、4週目にも残っていること。**
-**入れた人数ではなく、残った人数で測る。**
+**Condition for moving on:** **10 people we don't know are still there in week 4.**
+**Measure the number who stayed, not the number who installed.**
 
-### 段3：鍵を通す（6ヶ月）
+### Stage 3: route the keys (6 months)
 
-| | 項目 | 価値 | 難所 |
+| | Item | Value | Hard part |
 |---|---|---|---|
-| 3.1 | Broker（範囲つきの子トークン） | **使っているが事実になる** | §4-2 |
-| 3.2 | 遅延 50ms 未満 | **外されない** | **§4-5** |
-| 3.3 | TEE に載せる | 信頼点が消える | §4-4 |
-| 3.4 | ハードウェアでの承認（Ledger） | 偽れない | 中 |
+| 3.1 | Broker (scoped child tokens) | **"Using it" becomes a fact** | §4-2 |
+| 3.2 | Latency under 50 ms | **You don't get removed** | **§4-5** |
+| 3.3 | Put it in a TEE | The trust point disappears | §4-4 |
+| 3.4 | Approval on hardware (Ledger) | Unforgeable | Medium |
 
-**次に進む条件：** **自分たちの本番の鍵を、1ヶ月通し続けられること。**
+**Condition for moving on:** **we can keep routing our own production keys through it for a month.**
 
-### 段4：払う人（それ以降）
+### Stage 4: the people who pay (after that)
 
-| 相手 | 払う理由 | 懸念 |
+| Who | Why they pay | Concern |
 |---|---|---|
-| **サラ（テックリード）** | 承認の記録が要る。**評価できないものへの説明責任が外せる** | **予算はここ。ただし「統制の道具」に寄ると、アミットが去る** |
-| **ケンジ（作る側）** | 流通。**カナリアに来てほしい** | 払った側が有利になると、買える星に戻る |
-| **アミット** | **払わない。** 彼は価値を作っている側 | 課金したら土台が消える |
+| **Sarah (tech lead)** | She needs a record of approvals. **It removes her accountability for things she can't evaluate** | **The budget is here. But lean toward being a "control tool" and Amit leaves** |
+| **Kenji (the builder)** | Distribution. **He wants the Canary to come to him** | If paying gives you an advantage, we are back to buyable stars |
+| **Amit** | **Doesn't pay.** He is the one creating the value | Charge him and the foundation disappears |
 
-**正直な緊張：** **金はサラにあり、魂はアミットにある。**
-**サラに売ってアミットを失ったら、売るものが無くなる。**
-→ **アミットには永久に無料。サラには記録と統制を売る。分けて設計する。**
+**The honest tension: the money is with Sarah, and the soul is with Amit.**
+**Sell to Sarah and lose Amit, and there is nothing left to sell.**
+→ **Free forever for Amit. Sell records and control to Sarah. Design them separately.**
 
 ---
 
-## 6. 計画（日付入り）
+## 6. Plan (with dates)
 
-| いつ | 何を | 終わりの判定 |
+| When | What | Done criterion |
 |---|---|---|
-| **11/7** | ハッカソン提出 | 提出済み |
-| **11/8–11/10** | **止まる。** 段1 をやるかを決める | 2人の ○× |
-| 11/11–11/24 | **段1：カナリア単体** | **自分たちが2週間使い続け、変化を1件捕まえた** |
-| 11/25–12/01 | 10人に配る | **4週目に残るかを見始める** |
-| 12月–1月 | **段2：先に行った人が見える** | **知らない人10人が4週目に残った** |
-| 2月–4月 | **段3：鍵を通す** | **自分たちの本番の鍵を1ヶ月通した** |
-| それ以降 | 段4 | — |
+| **11/7** | Hackathon submission | Submitted |
+| **11/8–11/10** | **Stop.** Decide whether to do Stage 1 | Yes/no from the two of us |
+| 11/11–11/24 | **Stage 1: Canary standalone** | **We kept using it for 2 weeks and caught one change** |
+| 11/25–12/01 | Hand it to 10 people | **Start watching whether they're there in week 4** |
+| Dec–Jan | **Stage 2: you can see who went first** | **10 people we don't know stayed through week 4** |
+| Feb–Apr | **Stage 3: route the keys** | **We routed our own production keys for a month** |
+| After that | Stage 4 | — |
 
-**各段の終わりの判定は、作ったかではなく、使われ続けたかで書いてある。**
-**「動いたら測らずに次へ行く」を避けるため。**
+**Each stage's done criterion is written in terms of whether it kept being used, not whether we built it.**
+**To avoid "it worked, so move on without measuring."**
 
 ---
 
-## 7. 未確認（埋めないと計画が崩れる）
+## 7. Unverified (the plan collapses if these aren't filled in)
 
-- **リモート MCP サーバーの manifest を、認証なしで取れるか**（§4-1。**製品の生死**）
-- **主要なクライアント（Claude Code / その他）から、入っている道具の一覧を機械的に取れるか**（1.1）
-- 43,012 のうち、**実際に中身が変わっているサーバーの割合**
-  （62% が1バージョンきり ＝ 残り38%は動いている。**その中で「黙って変わった」が何件か**）
-- 市場規模の金額（**いまは書かない**）
+- **Whether a remote MCP server's manifest can be fetched without authentication** (§4-1. **Life or death for the product**)
+- **Whether the list of installed tools can be fetched mechanically from the major clients (Claude Code / others)** (1.1)
+- Of the 43,012, **the share of servers whose contents actually change**
+  (62% shipped one version only = the remaining 38% are moving. **Of those, how many "changed quietly"**)
+- The dollar size of the market (**not writing it now**)

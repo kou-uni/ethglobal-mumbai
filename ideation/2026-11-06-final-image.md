@@ -1,168 +1,168 @@
-# 仕上がりのイメージ — アーキテクチャ・ビジネスモデル・ペルソナ・ジャーニー（2026-11-06）
+# The finished picture — architecture, business model, personas, journey (2026-11-06)
 
-> 提出動画の絵コンテになるように書いた叩き台。印：**[合意]** ／ **[提案]** ／ **[未確認]**
-> 考え方は `2026-11-06-philosophy.md`、機能の詳細は `2026-11-06-review.md`。
+> A first draft written so it can serve as the storyboard for the submission video. Markers: **[agreed]** / **[proposed]** / **[unverified]**
+> The thinking is in `2026-11-06-philosophy.md`; the feature details are in `2026-11-06-review.md`.
 >
-> **【この文書の 1 章と 2 章は 2026-11-06 未明より前の版】** 預け金（VouchRegistry）・ありがとう（ThanksPool）・二次のマッチング・保険料は、**決定1で捨てた**。いま賭けているのは「自分の鍵そのもの」で、**製品の中で金は1円も動かない**。最新の入出力は `2026-11-06-actors-io.html`、収益は `2026-11-06-market-and-model.html`。
+> **[Chapters 1 and 2 of this document are from before the early hours of 2026-11-06.]** The deposit (VouchRegistry), thanks (ThanksPool), secondary matching, and the insurance premium were **dropped in Decision 1**. What is staked now is "your own key itself", and **not one yen moves inside the product**. The latest inputs and outputs are in `2026-11-06-actors-io.html`; revenue is in `2026-11-06-market-and-model.html`.
 
 ---
 
-## 1. アーキテクチャ（仕上がり）
+## 1. Architecture (finished state)
 
 ```mermaid
 flowchart LR
-  subgraph USER["Priya の手元"]
+  subgraph USER["Priya's hands"]
     direction TB
-    AG["AI エージェント / スキル<br/>（信頼しない）"]
-    LG["🔐 Ledger<br/>元の鍵・範囲を画面に・押すボタン<br/>保証の署名・全部止める"]
-    WID["World ID<br/>一意の人間（ゼロ知識）"]
-    SC["🤖 スタックチャン（任意）<br/>理由を声で・警告"]
-    GR["知り合いの仮名<br/>（端末の外に出さない）"]
+    AG["AI agent / skill<br/>(not trusted)"]
+    LG["🔐 Ledger<br/>original key, scope on screen, the button to press<br/>signs guarantees, stops everything"]
+    WID["World ID<br/>a unique human (zero knowledge)"]
+    SC["🤖 Stack-chan (optional)<br/>reasons by voice, warnings"]
+    GR["Pseudonyms of acquaintances<br/>(never leave the device)"]
   end
 
-  subgraph SVC["信用の層（市場の運営者が提供）"]
+  subgraph SVC["The trust layer (provided by the marketplace operator)"]
     direction TB
-    BR["Broker<br/>範囲チェック・代理実行<br/>鍵は 2-of-2（単独で開けない）"]
-    TIER{"重さの判定<br/>ふだん／大事／決定的"}
+    BR["Broker<br/>scope check, proxy execution<br/>key is 2-of-2 (cannot open alone)"]
+    TIER{"Weight judgement<br/>routine / significant / decisive"}
   end
 
   subgraph CHAIN["0G Galileo"]
     direction TB
-    ID["ERC-8004 Identity<br/>スキルの ID"]
-    VR["VouchRegistry<br/>保証・預け金"]
-    VL["ViolationRegistry<br/>違反の証拠"]
-    QF["ThanksPool<br/>ありがとう＋二次のマッチング"]
+    ID["ERC-8004 Identity<br/>the skill's ID"]
+    VR["VouchRegistry<br/>guarantees, deposits"]
+    VL["ViolationRegistry<br/>evidence of violations"]
+    QF["ThanksPool<br/>thanks + secondary matching"]
   end
 
   subgraph ZG["0G"]
-    ST["Storage<br/>系譜（追記専用）"]
-    TE["TeeML<br/>返答を読む"]
+    ST["Storage<br/>trail (append-only)"]
+    TE["TeeML<br/>reads the responses"]
   end
 
-  ENS["ENS<br/>スキルの名前・宣言"]
-  API[("外部 API<br/>Stripe など")]
+  ENS["ENS<br/>the skill's name, declaration"]
+  API[("External API<br/>Stripe etc.")]
 
-  AG -- "use(鍵, 宛先, 操作)" --> BR
+  AG -- "use(key, destination, operation)" --> BR
   BR --> TIER
-  TIER -- "ふだん：自動" --> API
-  TIER -- "大事" --> LG
-  TIER -- "決定的" --> WID
-  LG -- 署名 --> BR
-  WID -- 証明 --> BR
-  GR -- "重みを手元で計算" --> BR
-  BR -- "範囲外 → DENIED" --> VL
-  VL -- "保証人の重みを下げる" --> VR
+  TIER -- "routine: automatic" --> API
+  TIER -- "significant" --> LG
+  TIER -- "decisive" --> WID
+  LG -- signature --> BR
+  WID -- proof --> BR
+  GR -- "weight computed locally" --> BR
+  BR -- "out of scope → DENIED" --> VL
+  VL -- "lowers the guarantor's weight" --> VR
   BR --> ST
-  API -- 返答 --> TE
-  TE -- "疑わしい（知らせるだけ）" --> SC
+  API -- response --> TE
+  TE -- "suspicious (inform only)" --> SC
   ENS --> ID
   ID --> VR
-  WID -- "1人1票" --> QF
-  QF -- 寄付 --> VR
+  WID -- "one person, one vote" --> QF
+  QF -- donation --> VR
 ```
 
-**読み方**
-- **左（Priya の手元）**：AI が届かないものだけを置く。主役は Ledger [合意]。スタックチャンは時間があれば足す [合意]
-- **真ん中（信用の層）**：運営者が提供するサービス。ただし鍵は 2-of-2 なので、運営者でも単独では開けない [提案]
-- **右（チェーン）**：保証・違反・ありがとうを、誰でも検証できる形で置く
-- **重さの判定**：ほとんどの要求は「ふだん」なので、人は何もしない。人と機器が出てくるのは大事なときだけ [提案]
+**How to read it**
+- **Left (Priya's hands)**: only the things the AI cannot reach are placed here. The Ledger is the lead [agreed]. Stack-chan is added if there is time [agreed]
+- **Middle (the trust layer)**: a service provided by the operator. But the key is 2-of-2, so not even the operator can open it alone [proposed]
+- **Right (the chain)**: guarantees, violations and thanks are placed in a form anyone can verify
+- **Weight judgement**: most requests are "routine", so the person does nothing. People and devices only appear when it is significant [proposed]
 
 ---
 
-## 2. ビジネスモデル [提案]
+## 2. Business model [proposed]
 
-### お金の流れ
+### The flow of money
 
 ```mermaid
 flowchart LR
-  OP["スキル市場の運営者<br/>（お金を払う人）"]
-  US["Priya<br/>（使う人・無料）"]
-  GU["Arjun<br/>（保証人）"]
-  DV["スキル開発者"]
-  PF["私たち<br/>（信用の層）"]
-  POOL["マッチング資金"]
+  OP["Skill marketplace operator<br/>(the one who pays)"]
+  US["Priya<br/>(the user, free)"]
+  GU["Arjun<br/>(the guarantor)"]
+  DV["Skill developer"]
+  PF["Us<br/>(the trust layer)"]
+  POOL["Matching funds"]
 
-  OP -- "利用料（API 呼び出し・月額）" --> PF
-  OP -- "マッチング資金を出す" --> POOL
-  US -- "ありがとう（投げ銭）" --> GU
-  POOL -- "二次のマッチング" --> GU
-  DV -- "登録時に預け金" --> PF
-  PF -. "違反時：開発者の預け金 → 被害者" .-> US
-  DV -. "✕ 保証人に払う道は作らない" .-x GU
+  OP -- "usage fee (per API call / monthly)" --> PF
+  OP -- "provides matching funds" --> POOL
+  US -- "thanks (tip)" --> GU
+  POOL -- "secondary matching" --> GU
+  DV -- "deposit on registration" --> PF
+  PF -. "on violation: developer's deposit → victim" .-> US
+  DV -. "✕ no path is built for paying guarantors" .-x GU
 ```
 
-| 誰 | 払う／得る | なぜそうするか |
+| Who | Pays / receives | Why they do it |
 |---|---|---|
-| **運営者（顧客）** | 利用料とマッチング資金を**払う** | 野良スキルの事故は、市場の信用を壊す（ClawHub では 2,857 件中 341 件が悪性）。良い保証が増えるほど事故が減る |
-| **Priya（使う人）** | **無料**。払いたければ「ありがとう」を送る | 使う人に払わせると、雑な管理の人ほど入ってこない |
-| **Arjun（保証人）** | ありがとうとマッチングを**得る**。自分の預け金は賭け金になる | 見る目が当たったときだけ報われる |
-| **開発者** | 登録時に預け金を**置く**。違反すれば被害者に回る | 範囲を宣言するのは開発者自身。破ったときの責任も開発者に置く |
-| **私たち** | 利用料を**得る** | 寄付からは手数料を取らない（贈与を濁さない）[提案] |
+| **Operator (the customer)** | **Pays** the usage fee and the matching funds | An incident with a stray skill destroys the marketplace's credibility (on ClawHub, 341 of 2,857 were malicious). The more good guarantees there are, the fewer incidents |
+| **Priya (the user)** | **Free**. Sends "thanks" if she wants to pay | Make users pay and the ones with sloppy management are exactly the ones who won't come in |
+| **Arjun (the guarantor)** | **Receives** thanks and matching. His own deposit becomes the stake | He is rewarded only when his judgement was right |
+| **Developer** | **Puts up** a deposit on registration. It goes to the victims on a violation | The developer is the one who declares the scope. The responsibility for breaking it is also placed on the developer |
+| **Us** | **Receive** the usage fee | We take no fee out of the donations (don't muddy a gift) [proposed] |
 
-### 顧客が買うもの
-「**この市場のスキルは、範囲外の要求をすれば止まり、証拠が残る**」という保証です。市場の運営者にとっては差別化になり、事故が起きたときに説明する材料にもなります。
+### What the customer buys
+The guarantee that "**skills in this marketplace stop if they request something out of scope, and evidence remains**". For the marketplace operator this is a differentiator, and it is also material for explaining an incident when one happens.
 
-### まだ決めていないこと
-- 利用料の単位（呼び出しごとか、月額か）と価格。**数字は1つも検証していない** [未確認]
-- Broker を TEE に載せる提供元 [未確認]
-- 寄付から手数料を取らないで回るか
-
----
-
-## 3. ペルソナ（動画の登場人物）[提案]
-
-### Priya（主役・使う人）
-- **一言**：「AI に仕事を任せたいだけ。鍵の管理なんてしたくない」
-- 30歳、小さなオンラインショップの経営者。エンジニアではない
-- AI アシスタントに Stripe とメールのキーを貼り、スキルは星の数で入れている
-- **怖いこと**：知らないうちにお客さんのデータが抜かれていること。起きても気づけないこと
-- **持っているもの**：Ledger（暗号資産用に買った）。World ID
-- **価値の瞬間**：AI が勝手に動こうとしたとき、机の上の Ledger が止めてくれる
-
-### Arjun（保証人）
-- **一言**：「良いものは勧めたい。でも、勧めて裏切られたら嫌だ」
-- 32歳、開発者。友人たちから「どのスキルがいい？」とよく聞かれる
-- **動機**：知見を寄付したい。見る目が当たっていることを、証拠付きで示したい
-- **怖いこと**：勧めたものが悪さをして、友人の信頼を失うこと
-- **価値の瞬間**：ありがとうが届く。そして、異変が起きたら最初に知れる
-
-### Meera（顧客・市場の運営者）
-- **一言**：「うちの市場の野良スキルで事故が起きたら、終わりだ」
-- 38歳、AI スキル市場の信頼・安全の責任者
-- **今の悩み**：審査をすり抜ける悪性スキルを止められない。星の評価は偽装される
-- **価値の瞬間**：事故が起きても止まり、証拠が残り、誰の責任かを説明できる
+### Not yet decided
+- The unit of the usage fee (per call or monthly) and the price. **Not one number has been verified** [unverified]
+- The provider for putting the Broker in a TEE [unverified]
+- Whether it works without taking a fee out of the donations
 
 ---
 
-## 4. カスタマージャーニー＝動画の絵コンテ [提案]
+## 3. Personas (the cast of the video) [proposed]
 
-> 動画の長さは数分の想定（ETHGlobal の上限は [未確認]）。3幕構成：**AI はもう PC の中にいる → AI が押せないボタン → 押した記録が信頼になる**
+### Priya (protagonist, the user)
+- **In one line**: "I just want to hand work to the AI. I don't want to manage keys"
+- 30, runs a small online shop. Not an engineer
+- Pastes her Stripe and email keys into the AI assistant, and installs skills by star count
+- **What she fears**: customer data being siphoned without her knowing. Not noticing even when it happens
+- **What she has**: a Ledger (bought for crypto). A World ID
+- **The moment of value**: when the AI tries to act on its own, the Ledger on the desk stops it
 
-| # | 場面 | Priya の気持ち | 画面・実機に映るもの | ナレーション／字幕 |
+### Arjun (the guarantor)
+- **In one line**: "I want to recommend good things. But I don't want to be betrayed after recommending them"
+- 32, a developer. Friends often ask him "which skill is good?"
+- **Motivation**: he wants to donate his expertise. He wants to show, with evidence, that his judgement is right
+- **What he fears**: something he recommended doing harm and losing his friends' trust
+- **The moment of value**: thanks arrives. And when something goes wrong, he learns about it first
+
+### Meera (the customer, the marketplace operator)
+- **In one line**: "If an incident happens with a stray skill in our marketplace, we're finished"
+- 38, head of trust and safety at an AI skill marketplace
+- **Her current problem**: she cannot stop malicious skills that slip past review. Star ratings are faked
+- **The moment of value**: even when an incident happens, it stops, evidence remains, and she can explain whose responsibility it was
+
+---
+
+## 4. Customer journey = the video's storyboard [proposed]
+
+> The video length is assumed to be a few minutes (ETHGlobal's limit is [unverified]). Three acts: **the AI is already inside your PC → a button the AI cannot press → the record of pressing becomes trust**
+
+| # | Scene | What Priya feels | What appears on screen / on the device | Narration / subtitle |
 |---|---|---|---|---|
-| 0 | **掴み** | 何も知らない | AI エージェントが `.env` を開き、画面の「許可」を一瞬で連打して通る | 「AI はもう、あなたの PC の中にいる」 |
-| 1 | **選ぶ** | どれが安全か分からない | スキル一覧。星の数ではなく「Arjun さんが保証（一緒に働いた）」 | 「星の数ではなく、誰の星か」 |
-| 2 | **入れる** | 面倒は嫌 | Ledger の画面に「Stripe 読み取り 5回・1時間／保証している知り合い 3人」。1回押す | 「鍵は Ledger から出ない」 |
-| 3 | **日常** | 何も意識しない | AI が自動で注文を処理している。Ledger は静か | 「ふだんは、何もしなくていい」 |
-| 4 | **事故の日（山場）** | ヒヤッとする | 野良スキルが範囲外を要求 → AI が「許可」を押そうとするが、Ledger の前で止まる → `DENIED`。（任意）スタックチャンが「このスキル、宣言してない宛先に送ろうとしてるよ」 | 「**AI は1秒に100回『許可』を押せる。このボタンだけは押せない**」 |
-| 5 | **波及** | 自分だけの話じゃなかった | 信頼の網に赤い波。違反の証拠 → Arjun の重みが下がる → Arjun が保証した他のスキルの線も細くなる。Arjun のスマホに最初に通知 | 「裏切りは、保証した人にも刻まれる」 |
-| 6 | **確かめる** | 信じられる | 審査員／視聴者が系譜をたどる（誰が許した → 何を → 何が返った）。0G の root hash | 「誰にも消せない」 |
-| 7 | **ありがとう** | 守られた | Priya が World ID で Arjun に「ありがとう」を送る。たくさんの人から少しずつ届き、二次のマッチングで太くなる | 「保証は、売るものではなく贈るもの」 |
+| 0 | **Hook** | She knows nothing | The AI agent opens `.env`, hammers the on-screen "allow" in an instant, and gets through | "The AI is already inside your PC" |
+| 1 | **Choosing** | She can't tell which is safe | A list of skills. Not the star count but "guaranteed by Arjun (worked together)" | "Not the number of stars, but whose star it is" |
+| 2 | **Installing** | She doesn't want hassle | The Ledger screen shows "Stripe read, 5 calls, 1 hour / 3 acquaintances guaranteeing". One press | "The key never leaves the Ledger" |
+| 3 | **Routine** | She doesn't think about it | The AI processes orders automatically. The Ledger is quiet | "In routine use, you don't have to do anything" |
+| 4 | **The day of the accident (climax)** | A jolt of fear | A stray skill requests something out of scope → the AI tries to press "allow" but is stopped in front of the Ledger → `DENIED`. (Optional) Stack-chan says "this skill is trying to send to a destination it never declared" | "**An AI can press 'allow' 100 times a second. This is the one button it cannot press**" |
+| 5 | **Ripple** | It wasn't just about her | A red wave across the web of trust. Evidence of the violation → Arjun's weight drops → the lines to the other skills Arjun guaranteed get thinner too. Arjun's phone is notified first | "Betrayal is inscribed on the person who guaranteed it too" |
+| 6 | **Verifying** | She can believe it | The judges / viewers trace the trail (who permitted → what → what came back). 0G's root hash | "No one can erase it" |
+| 7 | **Thanks** | She was protected | Priya sends "thanks" to Arjun with World ID. A little arrives from many people, and secondary matching thickens it | "A guarantee is not sold, it is given" |
 
-### Arjun のジャーニー（動画では 5 と 7 に挟み込む）
-1. **保証する**：使って良かったスキルに、Ledger＋World ID で保証を出す（決定的な操作なので両方）
-2. **ありがとうが届く**：守られた人から少しずつ届く。違反の無い保証が「目利きの履歴書」として積み上がる
-3. **異変を知る**：自分が保証したスキルが範囲外を要求した、と最初に通知が来る
-4. **取り下げる**：自分の記録を見て、保証を取り下げる
+### Arjun's journey (interleaved at 5 and 7 in the video)
+1. **Guaranteeing**: he issues a guarantee for a skill he used and liked, with Ledger + World ID (both, since it is a decisive operation)
+2. **Thanks arrives**: a little at a time from the people it protected. Guarantees with no violations pile up as a "résumé of judgement"
+3. **Learning of the anomaly**: he is the first to be notified that a skill he guaranteed requested something out of scope
+4. **Withdrawing**: he looks at his own record and withdraws the guarantee
 
-### Meera のジャーニー（動画の最後に1カットだけ）
-- 自分の市場の管理画面：「今月、範囲外の要求 12件を停止。証拠あり」
-- ここで、お金を払う理由を見せる
+### Meera's journey (just one cut at the end of the video)
+- Her marketplace's admin screen: "This month, 12 out-of-scope requests stopped. Evidence available"
+- This is where we show the reason to pay
 
 ---
 
-## 5. 動画で外さないこと
-- **山場は 4 の「事故の日」**。止まったことを、成功したときと同じ重さで見せる
-- **実機を映す**：Ledger の画面とボタンを、手元のアップで撮る
-- **何もしない場面（3）を入れる**：安全なのに面倒ではない、ということは見せないと伝わらない
-- スタックチャンは任意。間に合わなければ、4 の字幕で代える
+## 5. What the video must not miss
+- **The climax is 4, "the day of the accident"**. Show the stop with the same weight as a success
+- **Show the real device**: shoot the Ledger's screen and button close up, in hand
+- **Include the scene where nothing happens (3)**: that it is safe and yet not a hassle doesn't come across unless you show it
+- Stack-chan is optional. If it isn't ready, replace it with the subtitle at 4

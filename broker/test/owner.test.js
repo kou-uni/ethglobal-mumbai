@@ -25,7 +25,7 @@ const permitFor = (over = {}) => ({
   maxCalls: 5, expiry: Math.floor(Date.now() / 1000) + 3600, nonce: Math.floor(Math.random() * 1e12), ...over,
 })
 const sign = (p, who = holder) => who.signTypedData({ domain: DOMAIN, types: TYPES, primaryType: 'Permit', message: normalize(p) })
-const weigh = async () => ({ ok: true, reachable: true, tier: 'ふだん', reason: '試験', requestId: 'req_test', model: 'fake', ms: 1, usage: null })
+const weigh = async () => ({ ok: true, reachable: true, tier: 'routine', reason: 'test', requestId: 'req_test', model: 'fake', ms: 1, usage: null })
 /** World の替え玉。呼ばれた回数を数える（持ち主でない人のために本人を煩わせないことを確かめる）。 */
 const human = (nullifier) => {
   const w = { asked: 0, waitForHuman: async () => { w.asked++; return { ok: true, idToken: 't' } }, verifyIdToken: async () => ({ ok: true, nullifier }) }
@@ -89,6 +89,6 @@ describe('星を出せるのは、鍵の持ち主だけ', () => {
   test('断られたことも、同じ系譜に残る', async () => {
     const store = freshStore()
     const r = await vouch({ deviceCode: 'dc', skill: SKILL, version: '1.0.0' }, { store, world: human('0xA') })
-    assert.ok(r.at); assert.match(r.message, /星を出さない/)
+    assert.ok(r.at); assert.match(r.message, /no star is issued/)
   })
 })

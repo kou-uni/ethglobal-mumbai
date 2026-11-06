@@ -1,20 +1,20 @@
-// 系譜 — 追記のみ。消す口を作らない。
-// いまはファイル1本。0G Storage の Log 層に置き換えるときも、append だけを差し替える。
+// The trail — append only. No deletion path is provided.
+// For now it is a single file. Swapping in 0G Storage's Log layer only replaces append.
 import { appendFileSync, readFileSync, existsSync, mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
 
 export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl') {
   mkdirSync(dirname(path), { recursive: true })
-  const counts = new Map()   // `${holder}:${nonce}` → 押さえた回数
-  const owners = new Map()   // `${holder}:${nonce}` → { skill }。**holder の署名が通った要求だけ**
+  const counts = new Map()   // `${holder}:${nonce}` -> calls reserved so far
+  const owners = new Map()   // `${holder}:${nonce}` -> { skill }. **Only requests whose holder signature checked out**
   const byThread = new Map()
-  const stars = new Map()    // `${skill}:${version}` → Set(nullifier)。**版ごとに別の集合**
-  const checked = new Map()  // `${skill}:${version}` → 持ち主の署名と使用を確かめた星の数
+  const stars = new Map()    // `${skill}:${version}` -> Set(nullifier). **A separate set per version**
+  const checked = new Map()  // `${skill}:${version}` -> how many of those stars were issued after the owner check
 
   const key = (holder, nonce) => `${String(holder).toLowerCase()}:${nonce}`
   const starKey = (skill, version) => `${skill}:${version}`
 
-  // 再起動しても回数が戻らないように、起動時に読み直す
+  // Re-read at startup so a restart does not hand back a spent call budget
   if (existsSync(path)) {
     for (const l of readFileSync(path, 'utf8').split('\n').filter(Boolean)) {
       try {
@@ -29,11 +29,11 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
   }
 
   function index(rec) {
-    // nonce の持ち主は、holder の署名が通った要求だけが決める。
-    // 署名なしの要求で結び付けると、正規の要求をあとから REPLAY にできてしまう（#14-2）
+    // Only a request whose holder signature checked out decides who owns a nonce.
+    // Binding it from an unsigned request would let a legitimate request be turned into a REPLAY afterwards (#14-2)
     const k = key(rec.holder, rec.nonce)
     if (rec.holderValid && rec.skill && !owners.has(k)) owners.set(k, { skill: rec.skill })
-    // 星は版ごとに持つ。**版が変われば、前の版の星は数えられない**（一斉に消える）
+    // Stars are held per version. **When the version changes, the previous version's stars no longer count** (they all go out at once)
     if (rec.decision === 'STAR' && rec.nullifier) {
       const k = starKey(rec.skill, rec.version)
       if (!stars.has(k)) stars.set(k, new Set())
@@ -51,9 +51,9 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
     used: (holder, nonce) => counts.get(key(holder, nonce)) ?? 0,
 
     /**
-     * 回数を1つ押さえる。**実行の前に呼ぶ。** 確認と記録のあいだに await を挟まないので、
-     * 連打しても maxCalls を超えない（#14-3）。取れなければ null。
-     * 実行が失敗しても戻さない（fail-closed。細ったまま）。
+     * Reserve one call. **Call this before execution.** There is no await between the check and the write,
+     * so hammering it cannot exceed maxCalls (#14-3). Returns null if nothing is left.
+     * A failed execution does not give the call back (fail-closed: the budget stays narrowed).
      */
     reserve(holder, nonce, maxCalls) {
       const k = key(holder, nonce)
@@ -63,7 +63,7 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
       return { used: used + 1, remaining: Number(maxCalls) - used - 1 }
     },
 
-    /** 1件を刻む。回数には触れない（押さえるのは reserve の仕事）。 */
+    /** Record one entry. Does not touch the call budget (reserving is reserve's job). */
     append(rec) {
       const row = { at: new Date().toISOString(), ...rec }
       appendFileSync(path, JSON.stringify(row) + '\n')
@@ -72,8 +72,8 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
     },
 
     /**
-     * 星をひとつ取る。**同じ人は、同じ版に二度星を出せない。**
-     * 確認と記録のあいだに await を挟まない（回数と同じ理由）。取れなければ false。
+     * Claim one star. **The same person cannot star the same version twice.**
+     * No await between the check and the write (same reason as the call budget). Returns false if it cannot be claimed.
      */
     claimStar(nullifier, skill, version) {
       const k = starKey(skill, version)
@@ -86,16 +86,16 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
 
     starCount: (skill, version) => stars.get(starKey(skill, version))?.size ?? 0,
 
-    /** そのうち、持ち主の署名と実際の使用を確かめてから出た星の数。 */
+    /** Of those, how many were issued after checking the owner's signature and a real use. */
     starChecked: (skill, version) => checked.get(starKey(skill, version)) ?? 0,
 
     /**
-     * その版に星を出している人の仮名（World の識別子）。**数ではなく「誰の」を出すための口。**
-     * 仮名だけで、名前は入っていない。誰が知り合いかは、見る側の端末だけが知っている。
+     * The pseudonyms (World identifiers) of the people who starred that version. **A way to show whose, not how many.**
+     * Pseudonyms only; no names. Who among them you know is something only the viewer's own device knows.
      */
     starWho: (skill, version) => [...(stars.get(starKey(skill, version)) ?? [])],
 
-    /** 版ごとの星の数。**前の版に何個あったかも残す**（消えたことが見えるように） */
+    /** Star counts per version. **It keeps how many the previous version had too**, so that going out is visible */
     starsOf(skill) {
       const out = {}
       for (const [k, set] of stars) {

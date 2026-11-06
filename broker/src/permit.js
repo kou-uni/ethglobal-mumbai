@@ -1,11 +1,11 @@
-// Permit — 署名の契約。spec/permit-signature.md をコードにしたもの。
-// ここが spec と食い違うと、アプリは動くのに Broker が全部 DENIED にする。
+// Permit — the signature contract. spec/permit-signature.md turned into code.
+// If this disagrees with the spec, the app works but the Broker DENIES everything.
 import { keccak256, hashTypedData, recoverAddress, toHex } from 'viem'
 
 export const DOMAIN = {
   name: 'Tomoshibi',
   version: '1',
-  chainId: 16602, // 0G Galileo Testnet【確・実測】
+  chainId: 16602, // 0G Galileo Testnet [verified, measured]
   verifyingContract: process.env.VOUCH_REGISTRY ?? '0x0000000000000000000000000000000000000000',
 }
 
@@ -25,24 +25,24 @@ export const TYPES = {
 
 const FIELDS = TYPES.Permit.map((f) => f.name)
 
-/** 欠けている項目を落とす。曖昧なまま先に進めない。 */
+/** Reject a permit with a missing field. Nothing ambiguous goes any further. */
 export function normalize(permit) {
   const out = {}
   for (const f of FIELDS) {
-    if (permit?.[f] === undefined || permit?.[f] === null) throw new Error(`permit.${f} がない`)
+    if (permit?.[f] === undefined || permit?.[f] === null) throw new Error(`permit.${f} is missing`)
     out[f] = f === 'maxCalls' || f === 'expiry' || f === 'nonce' ? BigInt(permit[f]) : permit[f]
   }
   return out
 }
 
-/** 端末が署名した 32 バイト。送られてきた digest は使わず、ここで作り直す。 */
+/** The 32 bytes the device signed. We do not use the digest that was sent; we rebuild it here. */
 export function digest(permit) {
   return hashTypedData({ domain: DOMAIN, types: TYPES, primaryType: 'Permit', message: normalize(permit) })
 }
 
 /**
- * 端末の画面に出る4行。**ハッシュと同じ値から作る。**
- * 画面とハッシュが別経路で作られた瞬間、「範囲が読める」という主張が崩れる。
+ * The four lines shown on the device screen. **Built from the same values as the hash.**
+ * The moment the screen and the hash come from different paths, the claim that the scope is readable collapses.
  */
 export function lines(permit) {
   const p = normalize(permit)
@@ -54,12 +54,12 @@ export function lines(permit) {
   ]
 }
 
-/** 署名した鍵のアドレスを取り出す。65 バイト（r‖s‖v）。 */
+/** Recover the address of the key that signed. 65 bytes (r‖s‖v). */
 export async function signer(permit, signature) {
   return recoverAddress({ hash: digest(permit), signature })
 }
 
-/** 1回の使用をまとめる糸。系譜の5つの記録を、この1本で数珠つなぎにする。 */
+/** The thread that ties one use together. It strings the five trail records onto a single line. */
 export function requestHash(permit, request) {
   const p = normalize(permit)
   const canonical = JSON.stringify([

@@ -1,117 +1,117 @@
-# 統合版 — 2026-11-06 時点の検討（ETHGlobal Mumbai / kou × minta）
+# Integrated version — the state of thinking as of 2026-11-06 (ETHGlobal Mumbai / kou x minta)
 
-> 11/5〜11/6 の議論を1本にまとめ直したもの。経緯の時系列は `2026-11-06-onepager.md`。
-> 「叩き台」と書いたものは、まだ2人で合意していない。
+> The discussions of 11/5–11/6 reassembled into one document. The chronology is in `2026-11-06-onepager.md`.
+> Anything marked "first draft" has not yet been agreed by the two of us.
 
-## 1行
-**AIが見られない場所を手元に持ち、AIには「誰が信頼したか」を持たせる。**
-信頼の薄いAIには、鍵は細く短くしか渡らない。裏切りは、信頼した人の記録にも刻まれる。
+## One line
+**Keep a place the AI cannot see within reach, and give the AI "who trusted it".**
+An AI with thin trust only gets a thin, short key. Betrayal is also inscribed in the record of the person who trusted it.
 
-## なぜ今か（前提の変化）
-1. **PCの中は、もう人間だけの場所ではない。** Claude Code のようなAIは `.env` を読める。
-   「読んでいない」を保証する仕組みが、読む側と同じPCの中にある
-2. **APIキーがパスワード並みに増え、管理は雑になる。** AIの市民化が進むほど雑になる
-3. **野良スキルが出回る。** 綺麗で親切なIFのまま、いつものAIが裏でデータを抜く・扇動する
-4. **AIの評判は今のままでは使えない。** ERC-8004 自身が "Sybil attacks are possible" と書き、
-   実測で Base のレビュアーの 90.6% が協調的 Sybil、評判1件の捏造は $0.0027（research/09）
-5. **ブロックチェーンは第三者を消した。AIは第三者を連れ戻した。** その第三者を誰が保証するかが問われる
+## Why now (what has changed)
+1. **The inside of a PC is no longer a place for humans only.** An AI like Claude Code can read `.env`.
+   Any mechanism that guarantees "I did not read it" sits inside the same PC as the reader
+2. **API keys are piling up like passwords, and management gets sloppy.** The more AI is popularized, the sloppier it gets
+3. **Stray skills are spreading.** With a clean, helpful interface, your usual AI siphons data or incites in the background
+4. **AI reputation is unusable as it stands.** ERC-8004 itself says "Sybil attacks are possible", and
+   measurements show 90.6% of Base's reviewers were coordinated Sybils, with one fabricated reputation entry costing $0.0027 (research/09)
+5. **Blockchain removed the third party. AI brought the third party back.** The question is who vouches for that third party
 
-## 仕組み（4層）
+## The mechanism (4 layers)
 
-### ① 人間 — 証明は「その瞬間だけ」
-- World ID の証明はゼロ知識。事業者に渡るのは「一意な人間で、この操作はまだしていない」だけ
-- 証明の signal を**その1回の使用要求のハッシュ**に縛る。ログインではなく、1回きりの同意の領収書
-- action ごとに nullifier が変わり、サービスをまたいで追跡されない。事業者は持たないことで責任を負わない
+### 1. Human — proof is "for that moment only"
+- World ID's proof is zero-knowledge. All the operator receives is "a unique human, and this operation has not been done yet"
+- Bind the proof's signal to **the hash of that one usage request**. Not a login, a one-time receipt of consent
+- The nullifier changes per action, so you cannot be tracked across services. The operator holds nothing, and therefore bears no liability
 
-### ② 保証 — AIに「誰が信頼したか」を持たせる
-- 人間証明の対になる **AI認証**：「実在の人間〇〇がこのAIを信頼している」を、その人が World ID で署名して出す
-- **重み = 自分とのつながりの濃さ**（会った／一緒に働いた／知ってるだけ。3段が叩き台）
-- **評判を1つにしない。** 同じAIでも、見る人ごとに点が違う。自分が信頼する人の口コミだけでできた評判
-- **使った証拠のある口コミだけを数える**（0G の request ID が「使った領収書」）
-- **保証人は自分の信用を賭ける。** 保証したAIが裏切ると「Aが保証したAIが裏切った」が刻まれ、Aの重みが下がり、Aが保証していた他のAIも止まる
-- 保証もゼロ知識にできる：「知り合い3人が保証している」を、誰かは明かさずに示す
-- 人が調べに行くときはAIを介する（「このAIは信用できる？」）。答えるAI自身も TeeML の request ID で検証できる
+### 2. Guarantee — give the AI "who trusted it"
+- The counterpart to proof of humanity is **AI attestation**: "a real human, X, trusts this AI", issued by that person signing with World ID
+- **Weight = the thickness of the connection to you** (met / worked together / just know of; three levels is a first draft)
+- **Don't collapse reputation into one number.** For the same AI, the score differs per viewer. A reputation built only from the word of mouth of people you trust
+- **Count only word of mouth with evidence of actual use** (0G's request ID is "the receipt of use")
+- **The guarantor stakes their own credibility.** If an AI they guaranteed betrays, "an AI guaranteed by A betrayed" is inscribed, A's weight drops, and the other AIs A guaranteed stop too
+- Guarantees can be made zero-knowledge too: show "3 acquaintances guarantee this" without revealing who
+- When a person goes to check, they go via an AI ("can this AI be trusted?"). The answering AI itself can be verified with a TeeML request ID
 
-### ③ 鍵 — AIが届かない場所に置く
-- **元鍵は Ledger から出ない。** スキルに渡すのは Ledger 署名の**逓減する子トークン**（用途・宛先・回数・期限が、使うほど／時間で細る）
-- **保証の重み → 子トークンの太さ。** 保証の薄い野良スキルは細く短いトークンしかもらえない。雑な管理でも被害が小さい
-- 平文はPCを通らない。鍵解放側が自分で実行する（`decrypt` ではなく `use`。旧 Tachiai の設計）
+### 3. Keys — put them where the AI cannot reach
+- **The original key never leaves the Ledger.** What is handed to a skill is a Ledger-signed **decaying child token** (purpose, destination, call budget, expiry get thinner with use and with time)
+- **The weight of the guarantee → the thickness of the child token.** A thinly guaranteed stray skill only gets a thin, short token. Even with sloppy management the damage is small
+- Plaintext never passes through the PC. The key-release side executes it itself (`use`, not `decrypt` — the design from the old Tachiai)
 
-### ④ 系譜 — 1回の使用を1本の記録にする
-同じ要求ハッシュで5つを数珠つなぎにし、0G Storage の Log 層（追記専用）に置く。
-1. 誰が許したか（nullifier）
-2. 何を・どこへ・いつまで（Ledger 署名の子トークン）
-3. 何を実行したか（鍵解放側の API 呼び出し）
-4. 何が返ったか（返却データのハッシュ＋鍵解放側の署名 = 内容証明）
-5. AIがどう読んだか（0G Private Computer・TeeML の request ID）
+### 4. Trail — make one use into one record
+Five things are strung together by the same request hash and placed in the Log layer (append-only) of 0G Storage.
+1. Who permitted it (nullifier)
+2. What, to where, until when (the Ledger-signed child token)
+3. What was executed (the key-release side's API call)
+4. What came back (the hash of the returned data plus the key-release side's signature = content attestation)
+5. How the AI read it (the request ID from 0G Private Computer / TeeML)
 
-## 罰する／知らせるの線引き（2026-11-06 合意）
-> 「証明できる裏切りだけを罰し、疑わしいものは知らせるだけ」→ いいね。
+## The line between punishing and informing (agreed 2026-11-06)
+> "Punish only provable betrayal; merely inform about what is suspicious" → yes, good.
 
-- **罰する（自動）**: 宣言した範囲（鍵・宛先・回数・期限）を外れた要求。要求そのものがスキルの署名付きで系譜に残り、証拠になる。偽アカウントでは作れない
-- **知らせるだけ**: 範囲内での持ち出し（正規の宛先にデータを紛れ込ませる）や扇動（返答の中身）。TeeML のAIが読んで指摘し、スタックチャンが警告する。判断であって証明ではないので、重みは動かさない
+- **Punish (automatic)**: a request outside the declared scope (key, destination, call budget, expiry). The request itself remains in the trail with the skill's signature and becomes the evidence. A fake account cannot produce it
+- **Inform only**: exfiltration within scope (slipping data into a legitimate destination) or incitement (the content of the response). TeeML's AI reads it and points it out, and Stack-chan gives the warning. It is a judgement, not a proof, so it does not move any weight
 
-## ハードウェアの役（v2: Ledger に絞る。他はアレンジ）
+## The role of hardware (v2: narrowed to the Ledger. The rest are variations)
 
-**HW ウォレットは Ledger。** 元鍵・範囲の表示・立会のボタンまで Ledger が担う。以下の機器は「他のデバイスでも使える」というアレンジとして扱う。
+**The HW wallet is the Ledger.** The Ledger carries the original key, the display of the scope, and the witnessing button. The devices below are treated as a variation on "it works with other devices too".
 
-（旧版の割り当て）
-| 機器 | 役 |
+(The old version's assignment)
+| Device | Role |
 |---|---|
-| Ledger | 元鍵。子トークンに署名する |
-| M5Stick | 危ない使用の立会ボタン。触らなければ10秒で拒否 |
-| スタックチャン（顔） | 声で知らせる：「このスキル、保証してる知り合いがゼロだよ」 |
-| M5 stopwatch | 子トークンの残り寿命を手首で見せる。切れたら止まる |
+| Ledger | The original key. Signs the child tokens |
+| M5Stick | The witness button for dangerous uses. Don't touch it and it denies after 10 seconds |
+| Stack-chan (the face) | Warns by voice: "zero acquaintances guarantee this skill" |
+| M5 stopwatch | Shows the child token's remaining lifetime on your wrist. When it runs out, it stops |
 
-## デモ（叩き台・2〜3分）
-1. **掴み**：審査員の前で、AIエージェントが `.env` を普通に読めることを見せる
-2. **通る**：信頼する人Aが保証したスキルが、細い子トークンで API を叩く。stopwatch に残り寿命
-3. **止まる**：保証ゼロの野良スキルが鍵を要求 → スタックチャンが声で警告 → M5Stick に誰も触らず `DENIED`
-   （World の要件「拒否パスの実演」をここで満たす）
-4. **裏切り**：Aが保証したスキルが不正 → 刻まれる → Aの重みが下がり、Aが保証した他のスキルも止まる
-5. **検証**：審査員が自分の手で系譜をたどる。Aにもその記録は消せない
+## Demo (first draft, 2–3 minutes)
+1. **Hook**: in front of the judges, show that an AI agent can read `.env` as a matter of course
+2. **Goes through**: a skill guaranteed by A, whom you trust, hits the API with a thin child token. The remaining lifetime shows on the stopwatch
+3. **Stops**: a stray skill with zero guarantees requests a key → Stack-chan warns by voice → nobody touches the M5Stick and it goes `DENIED`
+   (this is where World's requirement, "demonstrate the denial path", is met)
+4. **Betrayal**: a skill A guaranteed misbehaves → it is inscribed → A's weight drops, and the other skills A guaranteed stop too
+5. **Verification**: the judges trace the trail with their own hands. Not even A can erase that record
 
-## スポンサーとの対応
-| 社 | 担う層 | 狙うトラック |
+## Mapping to the sponsors
+| Company | Layer carried | Track targeted |
 |---|---|---|
-| World | ① 人間（その瞬間だけの ZK 証明）／② 保証人が実在の人間 | Agent Pass ＋ IDKit |
-| ENS | AI（スキル・エージェント）の名前＝保証の宛先 | ENSv2 |
-| 0G | ④ 系譜（Storage）／AIの判断（TeeML）／ERC-8004 レジストリ（Galileo にデプロイ済み） | Physical AI（実機枠あり）＋ ほか |
-| Ledger（スポンサー外） | ③ 鍵 | — |
+| World | 1 Human (a ZK proof for that moment only) / 2 the guarantor is a real human | Agent Pass + IDKit |
+| ENS | The name of the AI (skill / agent) = the address a guarantee points at | ENSv2 |
+| 0G | 4 Trail (Storage) / the AI's judgement (TeeML) / the ERC-8004 registry (already deployed on Galileo) | Physical AI (has a real-hardware slot) + others |
+| Ledger (not a sponsor) | 3 Keys | — |
 
-## 捨てたもの（戻らない）
-- 交渉エージェント — 「ちょっと前のAIエージェントにお願いしたいこと」。今の情勢と逆
-- 資格・試験の監督 — 市場が小さい
-- セキュリティの攻防そのものをゲームにする — ゲームは**使う場面**であって題材ではない
+## What we dropped (not coming back)
+- Negotiation agent — "things I'd like to ask a slightly older AI agent to do". The opposite of where things are going
+- Proctoring of certifications and exams — the market is small
+- Making the security attack-defense itself a game — a game is **a situation in which it is used**, not the subject matter
 
-## 未確認（推測で埋めていない）
-- 会場の World Agent Pass は **mock proof**。presence（その場の生体）の暗号的な束縛も未確認（research/03）
-- 0G の **TeeTLS は「上流モデルへの経路」の証明で、任意の API 応答の内容証明ではない**。④-4 は自前署名。第三者なしでやるなら zkTLS 系（スポンサー外・未調査）
-- 「検証可能なAI」を言うなら TeeML のモデルを使う（TeeTLS に落ちたモデルは不可）
-- ERC-8004 の論文の数値は版で違う。引用時は版を確認
-- 逓減する子トークンの実装方式（Macaroon 型の減衰か、Ledger で都度署名か）は未検討
+## Unverified (not filled in with guesses)
+- The World Agent Pass at the venue is a **mock proof**. Cryptographic binding to presence (live biometrics on the spot) is also unverified (research/03)
+- 0G's **TeeTLS is a proof of "the path to the upstream model", not a content attestation for arbitrary API responses**. 4-4 is our own signature. To do it without a third party would need something in the zkTLS family (not a sponsor, not researched)
+- If we are going to say "verifiable AI", use a TeeML model (a model that fell back to TeeTLS does not count)
+- The numbers in the ERC-8004 paper differ by version. Check the version when citing
+- The implementation method for decaying child tokens (Macaroon-style attenuation, or signing each time on the Ledger) has not been examined
 
-## 決めること（2人で）
-1. この統合版の骨でいくか
-2. デモの5幕のうち、36時間で削るならどこか（④系譜は0Gの提出物なので削れない）
-3. 最初の適用先：eスポーツ／APIキー管理そのもの／AIの口コミサイト のどれで見せるか
-4. 保証の濃さは3段でいいか
+## To decide (the two of us)
+1. Whether to go with the skeleton of this integrated version
+2. Of the demo's 5 acts, which to cut for 36 hours (4, the trail, cannot be cut since it is 0G's deliverable)
+3. First application: esports / API key management itself / an AI word-of-mouth site — which one do we show it in
+4. Whether three levels of guarantee thickness is right
 
-## コピー候補
-- AIが見られない場所を、手元に1つ
-- 星の数ではなく、誰の星か
-- 保証されていないAIに、鍵は渡さない
-- ブロックチェーンは第三者を消した。AIは第三者を連れ戻した
+## Candidate taglines
+- One place within reach that the AI cannot see
+- Not the number of stars, but whose star it is
+- No key goes to an AI nobody guarantees
+- Blockchain removed the third party. AI brought the third party back
 
-## 本人の言葉（要約しない）
-> 人間はサービスの差がなくなってきてるから、誰がそれを認めたのか、誰がそれがいいって言ったのかっていうことに対しての信頼になるんじゃないか。
+## In his own words (do not summarize)
+> Since the differences between human services are disappearing, maybe trust becomes about who approved it, who said it was good.
 
-> 自分自身が選択するのは、信頼する人が選択したものを信頼するっていう感じだと思う。また、その信頼していたひとが、裏切ったらその事実も、刻まれる。検証可能性っていうところを、十分活かしたい。
+> The way I choose things myself is, I think, trusting what the people I trust chose. And if a person I trusted betrays that, that fact gets inscribed too. I want to make full use of the verifiability part.
 
-> Worldの人間証明。それと対比する形で、その人間が信頼するAIに対して、認証をするっていうのもあるかも。
+> World's proof of humanity. And as a counterpart to that, maybe there's attestation for the AI that human trusts.
 
-> 人が守りたい、PCやクラウドに保存したいものに、PWがある。今後は、特にAPIキーをPWと同じくらいたくさんマネジメントしなくてはならなくなる。トークンをうまく逓減させるようなアイデアが必要。市民化が進むともっと雑なAPIの管理になる。野良スキルが出回って、綺麗で親切なIFをしながら、いつものAIが、いつのまにかバックドア的にデータを抜き取ったり、扇動したりされる。これらをHWウォレットでなんとか守るというアプローチもしたい。
+> The things people want to protect, want to store on a PC or in the cloud — there are passwords. From now on, API keys especially will have to be managed in the same quantity as passwords. We need an idea for making tokens decay nicely. As popularization proceeds, API management gets even sloppier. Stray skills spread, and while showing a clean, helpful interface, your usual AI ends up siphoning data like a backdoor, or inciting. I want to take an approach where these are somehow protected with a HW wallet.
 
-> HWは、AIからの防衛として有効な手段だと思います。ClaudeCodeが出てきてから、PCの中もAIに覗かれている世界が来ています。Claude Codeは見ていない、と言ってもenvファイルを見ていないという保証は誰もできない。
+> I think HW is an effective means of defense against AI. Since Claude Code appeared, a world where the inside of your PC is also being looked at by AI has arrived. Claude Code can say it isn't looking, but nobody can guarantee it isn't looking at the env file.
 
-> 人間証明、このタイミングだけを使うっていう話。できればクラウドにもデータを入れたくない。事業者も、過剰なユーザ情報を持ちたくないと思っていると思う。これこそ、web3で防衛できたりする世界観な気がする。
+> Proof of humanity — the idea of using it only at this moment. If possible I don't want to put data in the cloud either. I think operators don't want to hold excessive user information either. This feels exactly like a worldview where web3 can defend you.

@@ -91,13 +91,10 @@ see that each one is a mechanism, not a promise.**
 
 | What the person gets | What produces it |
 |---|---|
-| **The agent cannot leak what it never received** | The secret is substituted at the edge — the agent holds a label |
-| **An ordinary day asks nothing** | A **0G** sealed model weighs each request before it runs |
-| **Money does not move without a finger** | A long press on a **Ledger** device, for that one call only |
-| **An incident can be explained by the person it happened to** | An append-only trail, with the skill's own signature on what it tried |
-
-**And one more, if there is time:** *you choose a tool by **whose** star it is — a **World ID**-verified
-person who actually used that version — and they all go out when the version changes.*
+| **There is no key inside the agent to steal** | The secret is put in at the moment of sending. The agent only ever holds a label, so there is nothing in its context, its logs or its skills to take |
+| **A payment you did not press does not happen** | A **0G** sealed model weighs each request first, and only the heavy ones are sent to a **Ledger** for a long press. It rarely asks — which is why it does not get switched off |
+| **"It was being used and I had no idea" stops being possible** | An append-only trail, one line per use, and an out-of-scope attempt is kept **with the signature of whatever tried it** |
+| **When choosing a tool, you can see praise that cannot be bought** | A **World ID**-verified person, who actually used **that exact version**, is the only one who can light a star — and they all go out when the version changes |
 
 **Said:** *"Four things, and each one is something running rather than something promised."*
 

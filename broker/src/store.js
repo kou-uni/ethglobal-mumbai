@@ -84,6 +84,12 @@ export function createStore(path = process.env.LEDGER_PATH ?? 'data/ledger.jsonl
 
     starCount: (skill, version) => stars.get(starKey(skill, version))?.size ?? 0,
 
+    /**
+     * その版に星を出している人の仮名（World の識別子）。**数ではなく「誰の」を出すための口。**
+     * 仮名だけで、名前は入っていない。誰が知り合いかは、見る側の端末だけが知っている。
+     */
+    starWho: (skill, version) => [...(stars.get(starKey(skill, version)) ?? [])],
+
     /** 版ごとの星の数。**前の版に何個あったかも残す**（消えたことが見えるように） */
     starsOf(skill) {
       const out = {}

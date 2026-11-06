@@ -220,6 +220,7 @@ export const app = createServer(async (req, res) => {
         skill,
         version,
         stars: version ? ledger.starCount(skill, version) : undefined,
+        who: version ? ledger.starWho(skill, version) : undefined,
         byVersion: ledger.starsOf(skill),
       })
     }

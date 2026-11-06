@@ -138,17 +138,19 @@ something goes wrong.
 
 # Tech stack (paste into the form, field by field)
 
-**Ethereum developer tools** — select: **viem**, **Ethers.js**.
+**Ethereum developer tools** — select: **viem**, **Ethers.js**, **Ledger**.
 Add under "other" if the list allows it: **EIP-712 typed-data signing**, **Ledger Device SDK (Rust)**.
 *What they do here:* viem signs and sends the seal transaction and recovers the signer of a permit;
-ethers is pulled in by the 0G Storage SDK.
+ethers is pulled in by the 0G Storage SDK; the Ledger is the only thing that can add a key to the
+switchboard or approve a heavy call.
 
 **Blockchain networks** — select **0G** (Galileo testnet, chainId **16602**, `0x40da`).
 Nothing else. We are not deployed on any mainnet and do not claim to be.
 
 **Programming languages** — **JavaScript**, **Rust**, **Python**.
-*Where:* JavaScript — the Broker (Node 22, no transpiler) and the three screens.
-Rust — the Ledger app (`ledger-app/`, `no_std`). Python — the USB bridge and the document generators.
+*Where:* JavaScript — the Broker (Node 24, no transpiler, no build step) and the three screens.
+Rust — the Ledger app (`ledger-app/`, `no_std`). Python — the USB bridge (`bridge/bridge.py`) and
+every figure in the repository.
 
 **Web frameworks** — **none**. Add under "other": **no framework (vanilla JS + the Node `http` module)**.
 *Why it is worth saying:* the judged screens are static files with no build step, so anyone can open
@@ -159,31 +161,37 @@ them straight from GitHub Pages and read the source in the same tab.
 wrong shape for the one artifact whose value is that it cannot be rewritten.
 
 **Design tools** — **none**. Add under "other": **hand-written SVG, generated from Python**.
-Every diagram in the repo is produced by `ideation/build-diagrams.py`,
-`build-business-model.py` and `build-hero-video.py`, so the figures cannot drift from the numbers.
+Every figure in the repository comes out of a script, from one bilingual source of copy, so the
+figures cannot drift from the system or from each other: `assets/build-figures.py` (the switchboard,
+the sequence, what accumulates, and the animated page that writes itself out — plain SMIL, no
+JavaScript), plus `ideation/build-diagrams.py`, `build-business-model.py` and `build-hero-video.py`.
 
 **Other technologies / libraries we lean on heavily**
 
 | | What it is | What it does for us |
 |---|---|---|
-| **0G Compute (TeeML)** | TEE-attested inference, Intel TDX / dstack, model `0gm-1.0-35b-a3b` | **Decides the weight of a request by reading its body — inside the seal, where its operator cannot read it.** This is in the decision loop, not a log sink |
-| **`@0gfoundation/0g-storage-ts-sdk`** | 0G Storage client | Seals the append-only trail. Flow contract `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296` |
+| **0G Compute (TeeML)** | TEE-attested inference, Intel TDX / dstack, model `0gm-1.0-35b-a3b` | **Decides the weight of a request by reading its body — inside the seal, where its operator cannot read it.** This is in the decision loop, not a log sink. No answer means the call stops; there is no fallback judgement |
+| **`@0gfoundation/0g-storage-ts-sdk`** | 0G Storage client | Seals the append-only trail, which is what makes a star checkable afterwards. Flow contract `0x22E03a6A89B950F1c82ec5e74F8eCa321a105296` |
 | **World ID** | Proof of personhood, OIDC `device_code` grant | One sector-scoped pseudonym, one star, per version — so a flame cannot be bought |
 | **`ledger_device_sdk` (Rust)** | Ledger app framework | The four lines on the device screen, and the EIP-712 digest computed **inside** the device from those same bytes |
 | **`jose`** | JWT / JWKS | Verifies the World ID token against the issuer's keys |
 | **`hidapi`** (Python) | USB HID | The bridge between the host and the device |
-| **Node.js built-in test runner** | `node --test` | 50 tests, no test framework dependency |
+| **Node.js built-in test runner** | `node --test` | **60 tests, 60 passing**, no test framework dependency |
 
 ---
 
 ## Describe how AI tools were used in your project
 
-**Claude Code (Anthropic) was used, by one of the two of us, on the half that people do not look at.**
+**Claude Code (Anthropic) and OpenCode were used, by one of the two of us, on the half that people
+do not look at.**
 
 - **`broker/src/` and `broker/test/`** — the human wrote the boundaries first, as a spec
   (`spec/permit-signature.md`), then had the AI write the implementation, then verified it with
-  tests the human read. The four refusal types, the scope match and the call-budget reservation
-  were specified before any code existed.
+  tests the human read and ran (`node --test`, 60 passing). The four refusal types, the scope match
+  and the call-budget reservation were specified before any code existed.
+- **`assets/build-figures.py` and the documentation** — the figures and `docs/HOW-IT-RUNS.md` are
+  generated and kept in step by the AI, from one bilingual source of copy, so a change to the system
+  cannot leave a figure behind.
 - **`ideation/` and `research/`** — drafting and structure. **Every number, verdict and measurement
   in those documents was produced by running something and reading the result**; anything not
   measured is marked `[unverified]` in the text.

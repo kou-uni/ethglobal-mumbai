@@ -98,8 +98,10 @@ async function ask(uses, why, rid) {
     if (!device) { emit({ type: 'declined', rid, why, error: 'the Ledger did not answer' }); return { error: 'the Ledger did not answer' } }
   }
   const fields = { skill: skillIdFrom(skill.address), version: TOOL.version, ...RANGE, maxCalls: uses, expiry: now() + 3600, nonce: Date.now() }
-  const shown = [`KEY ${KEY_LABEL}`, `TO ${RANGE.target}`, `CAN ${RANGE.scope}, up to ${uses}x`, 'ENDS in 1 hour']
-  emit({ type: 'asking', rid, why, uses, device, lines: shown })
+  // The four lines shown on the page come from lines(), the same function the Broker uses on the
+  // signed Permit. The page never writes its own version of the range.
+  const shown = lines({ holder: softHolder.address, key: KEY, ...fields })
+  emit({ type: 'asking', rid, why, uses, device, keyLabel: KEY_LABEL, lines: shown })
   let out
   if (device) {
     const r = await post(BRIDGE, '/permit', { ...fields, keyLabel: KEY_LABEL }).catch((e) => ({ status: 502, body: { error: String(e.message ?? e) } }))

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOMOSHIBI — システムスタック</title>
+<style>
+:root{--ink:#1a1a1a;--ink-2:#555555;--ink-3:#8e8e8e;--accent:#173f66;--accent-tint:#eef3f8;
+--hairline:#d9d9d9;--fill-gray:#e7e9ec;--paper:#ffffff}
+html{color-scheme:light}
+body{margin:0;background:var(--paper);color:var(--ink);
+font-family:"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic",Meiryo,sans-serif;
+font-size:15px;line-height:1.9;border-top:6px solid var(--accent);-webkit-font-smoothing:antialiased}
+.page{max-width:760px;margin:0 auto;padding:56px clamp(24px,6vw,48px) 96px}
+.doc-header{padding-bottom:28px;border-bottom:1px solid var(--ink)}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin:0 0 20px}
+h1{font-size:27px;line-height:1.5;letter-spacing:.02em;margin:0 0 12px;font-feature-settings:"palt" 1}
+.lead{font-size:14px;color:var(--ink-2);margin:0 0 24px;max-width:38em}
+.doc-meta{font-size:12px;color:var(--ink-3);display:flex;gap:24px;flex-wrap:wrap}
+.page>section{border-top:1px solid var(--hairline);padding-top:44px;margin-top:64px}
+.page>section:first-of-type{border-top:0;padding-top:0;margin-top:56px}
+h2{font-size:19px;letter-spacing:.03em;margin:0;font-feature-settings:"palt" 1}
+h2 .no{color:var(--accent);margin-right:14px;font-variant-numeric:tabular-nums}
+.msg{font-size:16px;font-weight:600;line-height:1.8;margin:18px 0 24px;max-width:36em}
+h3{font-size:15px;margin:36px 0 8px}
+p{margin:0 0 16px;max-width:42em}
+ul,ol{margin:0 0 16px;padding-left:1.4em;max-width:41em}
+li{margin-bottom:6px}
+ul{list-style:none;padding-left:1.2em}
+ul li::before{content:"–";float:left;margin-left:-1.2em;color:var(--ink-3)}
+.summary{list-style:none;margin:24px 0 0;padding:0;counter-reset:s;max-width:44em}
+.summary li{counter-increment:s;position:relative;padding-left:2.4em;margin-bottom:14px}
+.summary li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:.4em;
+font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.kpis{display:flex;flex-wrap:wrap;row-gap:24px;margin:32px 0 8px}
+.kpi{padding:2px 32px}
+.kpi:first-child{padding-left:0}
+.kpi+.kpi{border-left:1px solid var(--hairline)}
+.kpi .v{font-size:30px;font-weight:700;color:var(--accent);line-height:1.3;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:14px;font-weight:600;margin-left:2px}
+.kpi .l{font-size:11.5px;color:var(--ink-3);letter-spacing:.06em;margin-top:6px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:28px 0 8px;font-size:13px;line-height:1.6}
+caption{text-align:left;font-size:12.5px;font-weight:600;margin-bottom:10px}
+th{font-size:12px;font-weight:600;text-align:left;padding:10px 12px;
+border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);vertical-align:bottom}
+td{padding:10px 12px;border-bottom:1px solid var(--hairline);vertical-align:top}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.total td{border-top:1px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:600;background:var(--accent-tint)}
+figure{margin:32px 0 8px}
+figcaption{font-size:12.5px;font-weight:600;margin-bottom:14px}
+figure svg{width:100%;height:auto;display:block}
+svg text{font-family:inherit}
+.fig-scroll{overflow-x:auto}
+.src{font-size:11.5px;color:var(--ink-3);margin:6px 0 0}
+.note{font-size:12.5px;color:var(--ink-2);border-left:2px solid var(--hairline);padding:2px 0 2px 14px;margin:24px 0 16px;max-width:40em}
+.chevrons{display:flex;margin:28px 0 8px;min-width:520px}
+.chev{flex:1;padding:9px 10px 9px 22px;font-size:12px;font-weight:600;line-height:1.5;text-align:center;
+background:var(--fill-gray);margin-left:4px;
+clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%,12px 50%)}
+.chev:first-child{margin-left:0;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%)}
+.chev.on{background:var(--accent);color:#fff}
+.chev small{display:block;font-size:10.5px;font-weight:500;opacity:.75}
+.matrix{display:grid;grid-template-columns:var(--mx-label,140px) repeat(var(--mx-cols,2),1fr);
+gap:18px 20px;margin:28px 0 8px;min-width:560px}
+.mx-h{font-size:11.5px;font-weight:600;color:var(--ink-2);text-align:center;align-self:end;
+padding-bottom:8px;border-bottom:1px solid var(--ink)}
+.mx-label{background:var(--accent);color:#fff;display:flex;flex-direction:column;align-items:center;
+justify-content:center;text-align:center;gap:2px;font-size:12px;font-weight:700;line-height:1.5;padding:12px 10px}
+.mx-label small{font-size:10px;font-weight:600;opacity:.7;letter-spacing:.08em}
+.mx-label.alt{background:var(--fill-gray);color:var(--ink)}
+.mx-cell{font-size:12px;line-height:1.75}
+.mx-cell ul{margin:0}
+.mx-cell li{margin-bottom:5px}
+b,strong{font-weight:700}
+.em{color:var(--accent);font-weight:700}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+a{color:inherit;text-decoration:underline;text-decoration-color:var(--hairline);text-underline-offset:3px}
+a:hover{text-decoration-color:var(--accent)}
+.doc-footer{margin-top:88px;padding-top:20px;border-top:1px solid var(--hairline);
+font-size:11.5px;color:var(--ink-3);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media print{@page{size:A4;margin:16mm}
+body{border-top-width:4px}.page{max-width:none;padding:0}
+.page>section{margin-top:48px;padding-top:32px}
+table,figure,.kpis,.chevrons,.matrix{break-inside:avoid}a{text-decoration:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="doc-header">
+  <p class="eyebrow">TOMOSHIBI ／ システムスタック ／ 2026-11-06</p>
+  <h1>何の上に立っているのか — プロトコル・ツール・プロダクト</h1>
+  <p class="lead">7段ある。<b>我々が作ったのは3段だけ</b>で、残りは借りている。借りているものが落ちたとき何が起きるかと、<b>撮影当日の退避</b>まで1枚にした。</p>
+  <div class="doc-meta"><span>2026-11-06</span><span>kou</span><span>印【確】＝今日このマシンで動かして確かめた</span></div>
+</header>
+
+<section>
+  <h2>エグゼクティブサマリー</h2>
+  <ol class="summary">
+    <li><b>作ったのは3段：手元の機器アプリ・門（Broker）・画面。</b>残り4段（封印された推論／人であることの証明／台帳と保存／配信）は借りもので、<b>どれも差し替え可能な位置に置いてある</b>。</li>
+    <li><b>借りものが落ちても、嘘はつかない。</b>0G が落ちれば <span class="mono">STOPPED</span>、World が落ちれば灯が出ないだけ、Storage が落ちれば系譜は Broker に残る。<b>落ちたことを隠して通す経路は1つも無い。</b></li>
+    <li><b>今日、0G Storage への書き込みが通った【確】。</b>root <span class="mono">0x3b28…6244</span> ／ tx <span class="mono">0x8b0a…3916</span>。ガスが届いたので、系譜は<b>本当に鎖の上にある</b>。</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="no">01</span>スタック（下が土台、上が人に近い）</h2>
+  <p class="msg"><b>濃い段が我々のもの。</b>薄い段は借りもので、<b>落ちたときの振る舞いまで決めてある</b>。</p>
+  <figure>
+    <figcaption>図表1　7段のスタック</figcaption>
+    <svg viewBox="0 0 760 336" role="img" aria-label="stack">
+      <g font-size="11.5">
+      <rect x="8" y="8" width="520" height="38" fill="#173f66"/>
+      <text x="22" y="26" font-size="12" font-weight="700" fill="#ffffff">⑦ 画面</text>
+      <text x="22" y="40" font-size="10.5" fill="#ffffff" opacity="0.8">web/gate.html・index.html・trace.html ／ ui/（試作・保険）</text>
+      <text x="544" y="31" fill="#555555">ビルド無し・外部読込み無し</text>
+
+      <rect x="8" y="52" width="520" height="38" fill="#173f66"/>
+      <text x="22" y="70" font-size="12" font-weight="700" fill="#ffffff">⑥ 門（Broker）</text>
+      <text x="22" y="84" font-size="10.5" fill="#ffffff" opacity="0.8">署名の検証・範囲の照合・回数・系譜・灯　Node + viem/jose</text>
+      <text x="544" y="75" fill="#555555">唯一の信頼点。テスト50件</text>
+
+      <rect x="8" y="96" width="520" height="38" fill="#173f66"/>
+      <text x="22" y="114" font-size="12" font-weight="700" fill="#ffffff">⑤ 手元の機器（Ledger アプリ＋bridge）</text>
+      <text x="22" y="128" font-size="10.5" fill="#ffffff" opacity="0.8">Rust の自作アプリ（Flex）／ bridge.py（USB HID・127.0.0.1）</text>
+      <text x="544" y="119" fill="#555555">鍵はここから出ない</text>
+
+      <rect x="8" y="140" width="520" height="38" fill="#e7e9ec"/>
+      <text x="22" y="158" font-size="12" font-weight="700" fill="#1a1a1a">④ 署名の規格</text>
+      <text x="22" y="172" font-size="10.5" fill="#555555">EIP-712 Permit（4行＝KEY/TO/SCOPE/UNTIL）・secp256k1・m/44'/60'/0'/0/0</text>
+      <text x="544" y="163" fill="#555555">借: 規格。落ちない</text>
+
+      <rect x="8" y="184" width="520" height="38" fill="#e7e9ec"/>
+      <text x="22" y="202" font-size="12" font-weight="700" fill="#1a1a1a">③ 封印された推論（0G Private Computer / TeeML）</text>
+      <text x="22" y="216" font-size="10.5" fill="#555555">重さを決める。router-api.0g.ai/v1 ・ 0gm-1.0-35b-a3b</text>
+      <text x="544" y="207" fill="#555555">落ちたら STOPPED</text>
+
+      <rect x="8" y="228" width="520" height="38" fill="#e7e9ec"/>
+      <text x="22" y="246" font-size="12" font-weight="700" fill="#1a1a1a">② 人であることの証明（World Agent Pass）</text>
+      <text x="22" y="260" font-size="10.5" fill="#555555">OIDC device flow ・ auth.world.org ・ sector 単位の仮名（sub）</text>
+      <text x="544" y="251" fill="#555555">落ちたら灯が出ないだけ</text>
+
+      <rect x="8" y="272" width="520" height="38" fill="#e7e9ec"/>
+      <text x="22" y="290" font-size="12" font-weight="700" fill="#1a1a1a">① 台帳と保存（0G Galileo ・ 0G Storage）</text>
+      <text x="22" y="304" font-size="10.5" fill="#555555">chainId 16602 ・ 系譜の root hash と tx</text>
+      <text x="544" y="295" fill="#555555">落ちたら Broker に残す</text>
+      </g>
+      <line x1="8" y1="322" x2="752" y2="322" stroke="#d9d9d9"/>
+      <text x="8" y="334" font-size="10.5" fill="#8e8e8e">配信は GitHub Pages（画面）と cloudflared の一時 URL（Broker・撮影と審査の時間だけ）。凍結中の Funnel は触らない。</text>
+    </svg>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="no">02</span>プロトコル／ツール／プロダクト</h2>
+  <p class="msg"><b>規格は借り、道具は小さく、作るのは「境界」だけ。</b></p>
+  <div class="tbl"><table>
+    <caption>表1　層ごとの内訳（プロダクト列が、我々が書いたもの）</caption>
+    <thead><tr><th style="width:118px">層</th><th>プロトコル（規格）</th><th>ツール（使っているもの）</th><th>プロダクト（作ったもの）</th></tr></thead>
+    <tbody>
+      <tr><td><b>⑦ 画面</b></td><td>HTTP / HTML・<span class="mono">fetch</span>。QR</td><td>素の JS。<b>ビルド無し・依存無し</b>。Chrome（撮影）</td><td><span class="mono">web/gate.html・index.html・trace.html</span>／<span class="mono">ui/index.html・stars.html</span>（試作と保険）</td></tr>
+      <tr><td><b>⑥ 門</b></td><td>HTTP（<span class="mono">/use /seal /trace /vouch /stars</span>）</td><td>Node 24 ／ <span class="mono">viem 2.57</span>（署名検証）・<span class="mono">jose 6.2</span>（JWKS）・<span class="mono">ethers 6.13</span>・<span class="mono">@0gfoundation/0g-storage-ts-sdk 1.2</span></td><td><span class="mono">broker/src/</span>（permit・scope・tier・weigh・world・episode・store・server）。テスト50件</td></tr>
+      <tr><td><b>⑤ 手元</b></td><td>APDU（USB HID）</td><td>Rust ／ Ledger の Rust SDK（<span class="mono">app-boilerplate-rust</span> から）／ Python の <span class="mono">hidapi</span></td><td><span class="mono">ledger-app/</span>（Flex の自作アプリ）／<span class="mono">bridge/bridge.py</span>（127.0.0.1 の小さな口）</td></tr>
+      <tr><td><b>④ 署名</b></td><td><b>EIP-712</b>・EIP-155・secp256k1・BIP-44（<span class="mono">m/44'/60'/0'/0/0</span>）</td><td>—（規格そのもの）</td><td><span class="mono">spec/permit-signature.md</span>（Ledger と Broker の契約）・4行の作り方（<span class="mono">lines()</span>）</td></tr>
+      <tr><td><b>③ 推論</b></td><td>OpenAI 互換 <span class="mono">/chat/completions</span>（<span class="mono">x-request-id</span> が賞の要件）</td><td>0G Private Computer（TeeML）／ モデル <span class="mono">0gm-1.0-35b-a3b</span>／ 思考は切る</td><td><span class="mono">broker/src/weigh.js</span>（型文・タイムアウト30秒・<b>失敗を STOPPED に写す</b>）・<span class="mono">tier.js</span></td></tr>
+      <tr><td><b>② 身元</b></td><td><b>OIDC</b> device code grant ・ JWKS ・ pairwise（sector）の <span class="mono">sub</span></td><td>World Agent Pass（<span class="mono">auth.world.org</span>）／ World App（本人の端末）</td><td><span class="mono">broker/src/world.js</span>（<span class="mono">human_denied</span>／<span class="mono">proof_expired</span> を別物として扱う）</td></tr>
+      <tr><td><b>① 台帳</b></td><td>EVM JSON-RPC ・ 0G Storage の merkle root</td><td>0G Galileo（<span class="mono">chainId 16602</span>・<span class="mono">evmrpc-testnet.0g.ai</span>）／ indexer-turbo ／ chainscan</td><td><span class="mono">broker/src/episode.js</span>（系譜を1件ずつ追記し、<b>本文と鍵を入れない</b>）</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src">依存は4つだけ（<span class="mono">viem・jose・ethers・0g-storage-ts-sdk</span>）。画面側は依存ゼロ。<span class="mono">broker/package.json</span> より。</p>
+</section>
+
+<section>
+  <h2><span class="no">03</span>落ちたら何が起きるか</h2>
+  <p class="msg"><b>借りものが落ちる前提で、落ち方を先に決めてある。</b>「たぶん大丈夫」で通す経路は作らない。</p>
+  <div class="tbl"><table>
+    <thead><tr><th style="width:150px">落ちるもの</th><th>その瞬間の振る舞い</th><th>人に見えるもの</th><th style="width:150px">撮影当日の退避</th></tr></thead>
+    <tbody>
+      <tr><td><b>0G（推論）</b></td><td><b>判断を作らない。</b>回数も減らさない</td><td><span class="mono">STOPPED</span>「決められないので止めた」</td><td><b>退避しない。</b>むしろ図04として<b>見せる</b></td></tr>
+      <tr><td><b>World</b></td><td>灯が出ない。既にある灯は消えない</td><td>断りは <span class="mono">human_denied</span>、時間切れは <span class="mono">proof_expired</span></td><td>灯の場面は<b>録画で見せる</b>（登録が間に合わない場合）</td></tr>
+      <tr><td><b>0G Storage</b></td><td>系譜は Broker に残る（追記のみ）</td><td>「0G Storage に置けていない」と出す</td><td><b>今日 tx が通った【確】</b>ので、当日は本番で出す</td></tr>
+      <tr><td><b>実機（Ledger / bridge）</b></td><td>署名が取れない＝通らない</td><td>画面に<b>「実機の代わり」と明記</b>して代役で署名</td><td>代役（決定 Q3-b）。<b>黙って代役にしない</b></td></tr>
+      <tr><td><b>外部 API（Stripe 等）</b></td><td>代理実行は <span class="mono">EXECUTE=0</span> で止めてある</td><td>判定までを見せる</td><td>公開時は <span class="mono">SECRETS</span> 空・<span class="mono">EXECUTE</span> 切り</td></tr>
+      <tr><td><b>GitHub Pages</b></td><td>画面が開けない</td><td>—</td><td>ローカルの <span class="mono">python3 -m http.server</span> と録画</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">04</span>いま動いているもの／まだのもの</h2>
+  <div class="tbl"><table>
+    <thead><tr><th style="width:190px">段</th><th style="width:96px">状態</th><th>根拠</th></tr></thead>
+    <tbody>
+      <tr><td>③ 0G の推論</td><td><b>動く【確】</b></td><td>本番キーで6/6一致・1判定 300トークン・2.0秒</td></tr>
+      <tr><td>① 0G Storage</td><td><b>動く【確】</b></td><td><b>今日</b> root <span class="mono">0x3b28…6244</span> ／ tx <span class="mono">0x8b0a…3916</span>（ガス 約10 OG 着）</td></tr>
+      <tr><td>⑥ 門</td><td><b>動く【確】</b></td><td>テスト50件・<span class="mono">demo.mjs</span> が通る／刻む／止まる／一押しを全部出す</td></tr>
+      <tr><td>⑤ 手元の機器</td><td>実機で関門1まで</td><td>Flex で自作アプリが動いた（#16）。<b>bridge 経由の通しは未確認</b></td></tr>
+      <tr><td>② World</td><td><b>まだ</b></td><td>クライアント登録がこれから（<b>minta 担当</b>）。<span class="mono">/health</span> は <span class="mono">clientId:false</span></td></tr>
+      <tr><td>⑦ 画面</td><td>動く</td><td>GitHub Pages で公開中。実機つなぎ込みは <span class="mono">web/gate.html</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="no">05</span>次のアクション</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>やること</th><th style="width:96px">誰</th><th style="width:120px">いつまで</th></tr></thead>
+    <tbody>
+      <tr><td>World のクライアント登録 → device flow を1回通す</td><td><b>minta</b></td><td>11/6 20:00 IST</td></tr>
+      <tr><td>bridge 経由で実機の署名を門まで通す（⑤→⑥）</td><td>kou・minta</td><td>撮影前</td></tr>
+      <tr><td>撮影直前に <span class="mono">/health</span> を見て <span class="mono">simulated</span> が無いことを確認</td><td>kou</td><td>撮影前</td></tr>
+      <tr><td>公開時は <span class="mono">SECRETS</span> 空・<span class="mono">EXECUTE=0</span>・URL は公開リポジトリに書かない</td><td>kou</td><td>公開時</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer class="doc-footer">
+  <span>TOMOSHIBI — システムスタック（2026-11-06）</span>
+  <span>関連: 2026-11-06-diagrams.html ／ broker/README.md ／ spec/permit-signature.md</span>
+</footer>
+
+</div>
+</body>
+</html>

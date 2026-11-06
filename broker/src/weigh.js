@@ -11,7 +11,7 @@ import { TIERS, ROUTINE } from './tier.js'
 export const ENDPOINT = process.env.ZG_ENDPOINT ?? 'https://router-api.0g.ai/v1'
 // TeeML・tee_attested: true・TDX / dstack【実測 2026-11-06 GET /v1/models】
 export const MODEL = process.env.ZG_MODEL ?? '0gm-1.0-35b-a3b'
-const TIMEOUT_MS = Number(process.env.ZG_TIMEOUT_MS ?? 20000)
+const TIMEOUT_MS = Number(process.env.ZG_TIMEOUT_MS ?? 30000)
 const BODY_LIMIT = Number(process.env.ZG_BODY_LIMIT ?? 4000)
 
 const SYSTEM = [

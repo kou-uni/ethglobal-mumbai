@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Renders the cover image and the app screenshots with headless Chrome, at 1x, without browser chrome.
+// Renders the app screenshots with headless Chrome, at 1x, without browser chrome.
 //   node tools/shots.mjs            (needs the pages served: python3 -m http.server 8790 --directory web)
 // The app is opened with ?preview=1, so it stays on the recorded answers. Each state below is set through the
 // page's own debug handle (window.tomoshibi); the screens are the real ones, the data in them is sample data.
@@ -25,10 +25,7 @@ const size = (width, height) => send('Emulation.setDeviceMetricsOverride', { wid
 const shot = async (name, clip) => { const r = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, ...(clip ? { clip: { ...clip, scale: 1 } } : {}) }); writeFileSync(join(OUT, name), Buffer.from(r.result.data, 'base64')); console.log('wrote', name) }
 
 await send('Page.enable')
-// ── the cover, 1200×630
-await size(1200, 630)
-await send('Page.navigate', { url: 'file://' + resolve('assets/cover.html') }); await sleep(900)
-await shot('tomoshibi-cover.png')
+// The cover is no longer rendered here: assets/tomoshibi-cover.png is the cover drawn with the logo (assets/logo/cover).
 
 // ── the app, 1280 wide
 await size(1280, 900)

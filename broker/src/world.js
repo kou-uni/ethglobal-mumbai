@@ -22,10 +22,13 @@ export const WORLD_DENIED = {
 const form = (o) => new URLSearchParams(o).toString()
 
 const post = async (url, body, fetchImpl) => {
+  // A request that never comes back must not hold the whole wait: on a weak network one stalled call
+  // would otherwise leave the person confirmed in World App and the Broker never hearing of it.
   const res = await fetchImpl(url, {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded', accept: 'application/json' },
     body: form(body),
+    signal: AbortSignal.timeout(Number(process.env.WORLD_TIMEOUT_MS ?? 12000)),
   })
   const text = await res.text()
   let json = null
@@ -65,7 +68,10 @@ export async function pollOnce(deviceCode, opts = {}) {
   const secret = opts.clientSecret ?? process.env.WORLD_CLIENT_SECRET
   const body = { grant_type: DEVICE_GRANT, device_code: deviceCode, client_id: clientId }
   if (secret) body.client_secret = secret  // the client secret stays inside the Broker; it never reaches the browser
-  const r = await post(TOKEN, body, opts.fetch ?? fetch)
+  // The network failing is not an answer from World: it is "still waiting". Only World can say yes or no,
+  // and if nothing gets through before the time runs out, the wait ends as expired (never as a yes).
+  let r
+  try { r = await post(TOKEN, body, opts.fetch ?? fetch) } catch { return { ok: false, pending: true, unreachable: true } }
   const err = r.json?.error
   if (r.json?.id_token) return { ok: true, idToken: r.json.id_token }
   if (err === 'authorization_pending') return { ok: false, pending: true }

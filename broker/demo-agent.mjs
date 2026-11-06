@@ -76,6 +76,12 @@ const deviceReady = async (patient = false) => {
   }
 }
 
+// Look for the device in the background, so /health never waits on a USB exchange.
+// Not while a request is in flight, and not in the seconds after a hold, when the device is drawing.
+let quietUntil = 0
+const watch = async () => { if (!busy && Date.now() > quietUntil) await deviceReady(); setTimeout(watch, 3000) }
+setTimeout(watch, 0)
+
 let standing = null    // { permit, signature, device }
 let busy = false
 let softWait = null    // resolve(true|false) while the page's own button stands in for the Ledger
@@ -99,7 +105,8 @@ async function ask(uses, why, rid) {
     } else out = { error: 'declined' }
   }
   if (out.error) emit({ type: 'declined', rid, why, error: out.error })
-  else emit({ type: 'signed', rid, why, uses, device: out.device, holder: out.permit.holder, lines: lines(out.permit) })
+  else { quietUntil = Date.now() + 6000; if (out.device) deviceSeen = Date.now() + 6000
+    emit({ type: 'signed', rid, why, uses, device: out.device, holder: out.permit.holder, lines: lines(out.permit) }) }
   return out
 }
 
@@ -150,9 +157,9 @@ function reset() { standing = null; events.length = 0; epoch = Date.now(); if (s
 const routes = {
   'GET /health': async () => {
     let broker = null
-    try { broker = await (await fetch(BROKER + '/health', { signal: AbortSignal.timeout(4000) })).json() } catch {}
+    try { broker = await (await fetch(BROKER + '/health', { signal: AbortSignal.timeout(1500) })).json() } catch {}
     return { ok: true, broker: BROKER, brokerUp: Boolean(broker), simulated: Boolean(broker?.zg?.simulated), worldSimulated: Boolean(broker?.world?.simulated),
-      model: broker?.zg?.model, device: (await deviceReady()) || (busy && Date.now() - deviceSeen < 600000) || Date.now() - deviceSeen < 15000, lent: Boolean(standing), deaf: Boolean(DEAF),
+      model: broker?.zg?.model, device: Date.now() - deviceSeen < (busy ? 600000 : 20000), lent: Boolean(standing), deaf: Boolean(DEAF),
       tool: TOOL, range: { key: KEY_LABEL, ...RANGE, uses: STANDING_USES }, skill: skillIdFrom(skill.address), version: TOOL.version }
   },
   'GET /events': async (_, url) => { const since = Number(url.searchParams.get('since') ?? 0); return { epoch, events: events.slice(since), busy } },

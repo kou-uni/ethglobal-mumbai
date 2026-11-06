@@ -91,8 +91,8 @@
 <g id="u-world">
 <rect class="card" x="1200" y="494" width="440" height="116" rx="14" style="fill:#fffdf8"/>
 <text class="k" x="1222" y="524">WORLD ID</text>
-<text class="m" x="1222" y="550">one person, once. The only way a star</text>
-<text class="m" x="1222" y="572">is lit, and the holder's address is</text>
+<text class="m" x="1222" y="550">one person, once. The only way a light</text>
+<text class="m" x="1222" y="572">comes on, and the holder's address is</text>
 <text class="m" x="1222" y="594">never written into it</text>
 <path d="M1146 550 L1196 550" stroke="#1b1630" stroke-width="2.5" marker-end="url(#a)"/>
 <g id="b8"><circle cx="1171" cy="526" r="14" fill="#1b1630"/><text class="num" x="1171" y="531" text-anchor="middle">8</text></g>
@@ -139,7 +139,7 @@
 </g>
 <g id="o8">
 <g><circle cx="96" cy="1088" r="14" fill="#1b1630"/><text class="num" x="96" y="1093" text-anchor="middle">8</text></g>
-<text class="m" x="124" y="1094">afterwards: World ID, one person once — a star on this version</text>
+<text class="m" x="124" y="1094">afterwards: World ID, one person once — a light on this version</text>
 </g>
 </g><!--/u-order-->
 <g id="u-who">

@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TOMOSHIBI — 門（デモ画面・試作）</title>
+<style>
+:root{
+  --ink:#1a1a1a; --ink-2:#555; --ink-3:#8e8e8e;
+  --accent:#173f66;         /* 通したとき・構造 */
+  --flame:#c67c16;          /* 灯。押されるのを待っている */
+  --brick:#a33c2e;          /* 止めたとき */
+  --hairline:#d9d9d9; --fill:#e7e9ec; --paper:#fff;
+}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium",Meiryo,sans-serif;
+  font-size:14px;line-height:1.8;border-top:6px solid var(--accent);-webkit-font-smoothing:antialiased}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;letter-spacing:0}
+.wrap{max-width:1180px;margin:0 auto;padding:28px clamp(16px,4vw,32px) 72px}
+
+header{padding-bottom:18px;border-bottom:1px solid var(--ink)}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--ink-3);text-transform:uppercase;margin:0 0 10px}
+h1{font-size:22px;margin:0 0 6px;letter-spacing:.04em}
+h1 small{font-size:13px;font-weight:400;color:var(--ink-2);margin-left:10px;letter-spacing:0}
+.lead{margin:0;color:var(--ink-2);font-size:13px;max-width:46em}
+.bar{display:flex;gap:18px;flex-wrap:wrap;align-items:baseline;margin-top:14px;font-size:11.5px;color:var(--ink-3)}
+.bar b{color:var(--ink);font-weight:600}
+button{font:inherit;color:inherit;background:none;border:1px solid var(--ink);padding:7px 16px;cursor:pointer}
+button:hover{background:var(--ink);color:#fff}
+button[disabled]{border-color:var(--hairline);color:var(--ink-3);cursor:default}
+button[disabled]:hover{background:none;color:var(--ink-3)}
+button.main{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button.main:hover{background:#0f2b46}
+button.press{background:var(--flame);border-color:var(--flame);color:#fff;font-weight:700;letter-spacing:.08em}
+button.press:hover{background:#a86512}
+button.press[disabled]{background:var(--fill);border-color:var(--hairline);color:var(--ink-3)}
+.small{font-size:11.5px;color:var(--ink-3)}
+
+.cols{display:grid;grid-template-columns:270px 1fr 300px;gap:0;margin-top:26px}
+.col{padding:0 24px}
+.col+.col{border-left:1px solid var(--hairline)}
+.col:first-child{padding-left:0}
+.col:last-child{padding-right:0}
+h2{font-size:11px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;margin:0 0 16px;font-weight:600}
+
+/* 左：台本 */
+ol.script{list-style:none;margin:0 0 20px;padding:0;counter-reset:s}
+ol.script li{counter-increment:s;padding:7px 0 7px 2.2em;position:relative;border-bottom:1px solid var(--hairline);
+  color:var(--ink-3);cursor:pointer;font-size:12.5px;line-height:1.6}
+ol.script li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:7px;font-size:11px;font-weight:700}
+ol.script li.on{color:var(--ink);font-weight:600}
+ol.script li.done{color:var(--ink-2)}
+ol.script li .who{display:block;font-size:11px;font-weight:400;color:var(--ink-3)}
+.req{margin:18px 0 0;border-top:2px solid var(--ink);padding-top:12px}
+.req dt{font-size:10.5px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
+.req dd{margin:2px 0 12px;word-break:break-all}
+.say{margin:16px 0 0;padding-left:12px;border-left:2px solid var(--hairline);font-size:12.5px;color:var(--ink-2)}
+
+/* 中：門 */
+.steps{margin:0 0 26px}
+.step{display:grid;grid-template-columns:22px 1fr auto;gap:12px;align-items:start;padding:11px 0;border-bottom:1px solid var(--hairline)}
+.step .n{font-size:11px;font-weight:700;color:var(--ink-3);padding-top:3px}
+.step .t{font-size:13px;font-weight:600;color:var(--ink-3)}
+.step .d{font-size:11.5px;color:var(--ink-3);display:block;font-weight:400;line-height:1.6}
+.step .s{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--ink-3);white-space:nowrap;padding-top:3px}
+.step.live .t,.step.pass .t{color:var(--ink)}
+.step.pass .s{color:var(--accent)}
+.step.live .s{color:var(--flame)}
+.step.stop{border-bottom-color:var(--brick)}
+.step.stop .t{color:var(--ink)} .step.stop .s{color:var(--brick)}
+.step.skip .s{color:var(--ink-3)}
+
+.verdict{border-top:2px solid var(--ink);padding-top:18px;min-height:200px}
+.verdict .word{font-size:34px;font-weight:700;letter-spacing:.06em;line-height:1.2;margin:0}
+.verdict .one{font-size:15px;font-weight:600;margin:8px 0 14px;max-width:34em}
+.verdict.allowed .word{color:var(--accent)}
+.verdict.needs .word{color:var(--flame)}
+.verdict.denied .word,.verdict.stopped .word{color:var(--brick)}
+.verdict .why{font-size:12.5px;color:var(--ink-2);margin:0 0 14px;max-width:38em}
+table.facts{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+table.facts th{text-align:left;font-weight:600;color:var(--ink-3);padding:6px 10px 6px 0;white-space:nowrap;
+  border-bottom:1px solid var(--hairline);font-size:11px;letter-spacing:.06em;vertical-align:top}
+table.facts td{padding:6px 0;border-bottom:1px solid var(--hairline);word-break:break-all}
+.zg{margin-top:18px;border-top:1px solid var(--hairline);padding-top:12px;font-size:12px;color:var(--ink-2)}
+.zg b{color:var(--ink)}
+.pulse{color:var(--flame);font-weight:700}
+
+/* 右：手元と系譜 */
+.device{border:1px solid var(--ink);padding:16px;margin-bottom:8px}
+.device .cap{font-size:10.5px;letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase;margin-bottom:10px}
+.device pre{margin:0 0 14px;white-space:pre-wrap;line-height:1.9}
+.device.wait{border-color:var(--flame);border-width:2px}
+.trail{list-style:none;margin:18px 0 0;padding:0;font-size:12px}
+.trail li{padding:8px 0;border-bottom:1px solid var(--hairline);display:grid;grid-template-columns:92px 1fr;gap:10px;overflow-wrap:anywhere}
+.trail .v{font-weight:700;font-size:10.5px;letter-spacing:.02em;line-height:1.7}
+.trail .v.ALLOWED{color:var(--accent)} .trail .v.NEEDS_PRESS{color:var(--flame)}
+.trail .v.DENIED,.trail .v.STOPPED{color:var(--brick)}
+.trail .m{color:var(--ink-3);font-size:11px;display:block;word-break:break-all}
+
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--hairline);font-size:11.5px;color:var(--ink-3)}
+footer p{max-width:52em;margin:0 0 8px}
+footer b{color:var(--ink-2)}
+@media (max-width:900px){
+  .cols{grid-template-columns:1fr}
+  .col{padding:24px 0 0}
+  .col+.col{border-left:0;border-top:1px solid var(--hairline)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">TOMOSHIBI — prototype / minta さんが仕上げる前の試作</p>
+  <h1>門<small>AI が鍵を持たずに鍵を使う。止まるときは、誰が止めたかが残る</small></h1>
+  <p class="lead">左でエージェントが要求を出す。中で Broker が範囲と重さを見る。右の機器が押されるまで、鍵は使われない。</p>
+  <div class="bar">
+    <span id="mode"></span>
+    <span>0G <b id="model">—</b></span>
+    <span id="endpoint"></span>
+    <button id="toggle" style="padding:4px 12px;font-size:11.5px">生で投げる</button>
+    <button id="reset" style="padding:4px 12px;font-size:11.5px">はじめから</button>
+  </div>
+</header>
+
+<div class="cols">
+
+  <div class="col">
+    <h2>エージェント側</h2>
+    <ol class="script" id="script"></ol>
+    <dl class="req" id="req"></dl>
+    <p class="say" id="say"></p>
+    <p style="margin-top:18px"><button class="main" id="go">この要求を投げる</button></p>
+  </div>
+
+  <div class="col">
+    <h2>門（Broker）</h2>
+    <div class="steps" id="steps"></div>
+    <div class="verdict" id="verdict">
+      <p class="word" style="color:var(--ink-3)">待機</p>
+      <p class="one">左の「この要求を投げる」から始める。</p>
+      <p class="why">この門は、4通りの止まり方を区別する。通らなかった理由が「とりあえず失敗」に丸められない。</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <h2>手元の機器と、系譜</h2>
+    <div class="device" id="device">
+      <div class="cap">Ledger に出る4行</div>
+      <pre class="mono" id="lines">—</pre>
+      <button class="press" id="press" disabled>押す</button>
+      <p class="small" style="margin:10px 0 0">押すと、この1回だけの許可に署名される（使い切り）。押さなければ鍵は使われない。</p>
+    </div>
+    <h2 style="margin-top:28px">系譜（追記のみ）</h2>
+    <ul class="trail" id="trail"></ul>
+    <p class="small" id="root" style="margin-top:12px"></p>
+  </div>
+
+</div>
+
+<footer>
+  <p><b>この画面は試作。</b>デザインは minta さんが仕上げる。ここで決めているのは「何が、どの順で、どれだけ大きく見えるか」だけ。</p>
+  <p><b>0G Private Computer は飾りではない。</b>重さを決めるには要求の本文を読む必要があるが、その本文を我々に見せたくない。だから封印（TEE）の中で読ませている。判定ごとに <b>request id</b> が出て、上の表に載る。</p>
+  <p><b>届かないときは判断を作らない。</b>既定値も、その場の推測も出さない（STOPPED）。偽の判断は、通してしまうのと同じくらい悪い。</p>
+  <p id="recnote"></p>
+</footer>
+
+</div>
+
+<script>
+var DATA = /*__SCENES__*/ null;
+
+var $ = function (id) { return document.getElementById(id) }
+var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c] }) }
+
+// 画面に出す4つの止まり方。**ここが作品の中身なので、言葉を省かない**
+var FACE = {
+  ALLOWED:     { cls: 'allowed', word: '通した',   one: '範囲の中で、重さも「ふだん」。鍵は Broker の中で使われ、エージェントには渡っていない。' },
+  NEEDS_PRESS: { cls: 'needs',   word: '押されるまで通さない', one: '範囲の中だが、0G が「決定的」と読んだ。立っている許可では通さない。' },
+  DENIED:      { cls: 'denied',  word: '止めた',   one: '宣言した範囲の外。実行していない。誰が要求したかを、スキルの署名ごと刻んだ。' },
+  STOPPED:     { cls: 'stopped', word: '決められないので止めた', one: '0G に届かない。既定値も、その場の判断も作らない。回数も減らない。' },
+}
+var ORDER = ['usual', 'heavy', 'pressed', 'denied-host', 'denied-sneak', 'stopped']
+var scenes = {}, live = null, idx = 0, busy = false, pressLeft = 0, LIVE = false
+// ?s=<場面の id> で、その場面を開いた直後に1回だけ投げる（撮影・確認用の深いリンク）
+var AUTO = new URLSearchParams(location.search).get('s')
+
+function setMode() {
+  $('mode').innerHTML = LIVE
+    ? '<b style="color:var(--flame)">生</b> いま 0G に投げている'
+    : '<b>録画</b> 本番の 0G に ' + esc((DATA.recordedAt || '').slice(0, 16).replace('T', ' ')) + 'Z に投げた応答'
+  $('toggle').textContent = LIVE ? '録画に戻す' : '生で投げる'
+  $('endpoint').textContent = DATA.endpoint
+  $('model').textContent = DATA.model
+  $('recnote').innerHTML = '<b>録画の中身も作り話ではない。</b>' + esc(DATA.note) +
+    ' 録画 ' + esc(DATA.recordedAt) + ' / 模擬モード: ' + (DATA.simulated ? '有（撮影では外す）' : '無')
+}
+
+function drawScript() {
+  $('script').innerHTML = ORDER.map(function (id, i) {
+    var s = scenes[id]
+    return '<li data-i="' + i + '" class="' + (i === idx ? 'on' : i < idx ? 'done' : '') + '">' +
+      esc(s.title) + '<span class="who">' + esc(s.agent) + '</span></li>'
+  }).join('')
+  Array.prototype.forEach.call($('script').children, function (li) {
+    li.onclick = function () { if (!busy) { idx = Number(li.dataset.i); drawScene() } }
+  })
+}
+
+function drawScene() {
+  var s = scenes[ORDER[idx]]
+  drawScript()
+  var r = s.request
+  $('req').innerHTML =
+    '<dt>要求</dt><dd class="mono">' + esc(r.method) + ' ' + esc(r.url) + '</dd>' +
+    (r.body ? '<dt>本文（0G だけが封印の中で読む）</dt><dd class="mono">' + esc(r.body) + '</dd>' : '') +
+    '<dt>鍵</dt><dd class="mono">' + esc(String(r.keyRef).slice(0, 14)) + '…　※エージェントには渡らない</dd>'
+  $('say').textContent = s.say
+  $('lines').textContent = s.permitLines.join('\n')
+  $('go').textContent = ORDER[idx] === 'pressed' ? '押されたものとして投げる' : 'この要求を投げる'
+  resetSteps()
+  $('verdict').className = 'verdict'
+  $('verdict').innerHTML = '<p class="word" style="color:var(--ink-3)">待機</p><p class="one">' + esc(s.caption) + '</p>'
+}
+
+var STEPS = [
+  { t: '範囲の照合', d: '手元で署名された4行と突き合わせる（宛先・操作・鍵・期限・回数）' },
+  { t: '0G が本文を読む', d: '封印（TEE）の中だけで読む。我々も読めない' },
+  { t: '重さで分ける', d: 'ふだん / 大事 / 決定的。決定的なら、その場の一押しが要る' },
+  { t: '代理で実行', d: '鍵は Broker の中で使う。返答のハッシュを刻む' },
+]
+function resetSteps(states) {
+  $('steps').innerHTML = STEPS.map(function (s, i) {
+    var st = (states || [])[i] || { k: '', s: '—' }
+    return '<div class="step ' + st.k + '"><span class="n">' + (i + 1) + '</span>' +
+      '<span class="t">' + esc(s.t) + '<span class="d">' + esc(st.note || s.d) + '</span></span>' +
+      '<span class="s">' + esc(st.s) + '</span></div>'
+  }).join('')
+}
+
+function statesFor(b) {
+  var zg = b.zg || {}
+  var id = zg.requestId ? String(zg.requestId).split(',')[0] : null
+  if (b.decision === 'DENIED') return [
+    { k: 'stop', s: '止めた', note: (b.message || b.reason) + '（' + (b.violation ? '違反として刻んだ' : '刻まない') + '）' },
+    { k: 'skip', s: '見せていない', note: '範囲外の本文は、そもそも外に出さない。0G のクレジットも使わない' },
+    { k: '', s: '—' }, { k: '', s: '—' }]
+  if (b.decision === 'STOPPED') return [
+    { k: 'pass', s: '通過' },
+    { k: 'stop', s: '届かない', note: (zg.error || '') + '（' + (zg.ms || 0) + 'ms で諦めた）' },
+    { k: 'skip', s: '決めない', note: '重さが決まらない以上、既定値を作らない' },
+    { k: 'skip', s: '実行しない', note: '回数も減らない' }]
+  var two = { k: 'pass', s: zg.tier || '読んだ', note: '封印の中で読んだ。request id ' + (id || '—') + ' / ' + (zg.ms || '—') + 'ms' }
+  if (b.decision === 'NEEDS_PRESS') return [
+    { k: 'pass', s: '通過' }, two,
+    { k: 'stop', s: '押されるまで', note: '立っている許可（複数回使える許可）では通さない。使い切りの許可が要る' },
+    { k: 'skip', s: '実行しない', note: '鍵は使われていない' }]
+  return [{ k: 'pass', s: '通過' }, two,
+    { k: 'pass', s: zg.tier === '決定的' ? '一押し済み' : '通過', note: zg.tier === '決定的' ? '使い切りの許可で署名されている' : null },
+    { k: 'pass', s: '実行', note: '残り ' + (b.remaining != null ? b.remaining : '—') + ' 回' }]
+}
+
+function drawVerdict(b, ms) {
+  var f = FACE[b.decision] || { cls: '', word: b.decision, one: '' }
+  var zg = b.zg || {}
+  var rows = []
+  rows.push(['判定', '<b>' + esc(b.decision) + '</b>　' + esc(b.reason || '') + (b.message ? '　' + esc(b.message) : '')])
+  if (zg.tier) rows.push(['0G の読み', esc(zg.tier) + (zg.reason ? '　<span class="small">' + esc(zg.reason) + '</span>' : '')])
+  if (zg.requestId) rows.push(['request id', '<span class="mono">' + esc(zg.requestId) + '</span>'])
+  if (zg.model) rows.push(['model', '<span class="mono">' + esc(zg.model) + '</span>' + (zg.sealed ? '　封印の中で実行' : '')])
+  if (b.violation) rows.push(['違反の記録', 'スキルの署名ごと刻んだ　<span class="mono">' + esc(b.skillSigner || '') + '</span>'])
+  if (b.attestation) rows.push(['返答のハッシュ', '<span class="mono">' + esc(b.attestation.hash || b.attestation) + '</span>'])
+  rows.push(['糸（系譜）', '<span class="mono">' + esc(String(b.thread || '').slice(0, 26)) + '…</span>'])
+  rows.push(['往復', esc(ms) + ' ms' + (LIVE ? '（いま計った）' : '（録画時の実測）')])
+  $('verdict').className = 'verdict ' + f.cls
+  $('verdict').innerHTML = '<p class="word">' + esc(f.word) + '</p><p class="one">' + esc(f.one) + '</p>' +
+    '<table class="facts"><tbody>' + rows.map(function (r) {
+      return '<tr><th>' + r[0] + '</th><td>' + r[1] + '</td></tr>'
+    }).join('') + '</tbody></table>' +
+    (zg.simulated ? '<p class="zg" style="color:var(--brick)"><b>模擬モード。</b>撮影では外す</p>' : '')
+}
+
+function addTrail(b) {
+  var li = document.createElement('li')
+  var zg = b.zg || {}
+  li.innerHTML = '<span class="v ' + esc(b.decision) + '">' + esc(b.decision) + '</span>' +
+    '<span>' + esc(scenes[ORDER[idx]].title) +
+    '<span class="m mono">' + (zg.requestId ? esc(String(zg.requestId).split(',')[0]) : esc(b.reason || '')) + '</span></span>'
+  $('trail').appendChild(li)
+}
+
+var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms) }) }
+
+async function run() {
+  if (busy) return
+  busy = true; $('go').disabled = true; $('press').disabled = true
+  var id = ORDER[idx], s = scenes[id]
+  resetSteps([{ k: 'live', s: '照合中' }])
+  await sleep(320)
+  var t0 = Date.now(), b, ms
+  if (id !== 'denied-host' && id !== 'denied-sneak') {
+    resetSteps([{ k: 'pass', s: '通過' }, { k: 'live', s: '読んでいる…', note: '封印の中。ここだけが本文を見る' }])
+  }
+  if (LIVE) {
+    var bundle = id === 'pressed' ? (live.presses[pressLeft++] || null) : live[id]
+    if (!bundle) { b = { decision: 'STOPPED', reason: 'NO_BUNDLE', message: '一押し用の許可を使い切った（はじめからで戻る）', zg: {} } }
+    else {
+      try {
+        var res = await fetch(bundle.base + '/use', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(bundle.body) })
+        b = await res.json()
+      } catch (e) {
+        b = { decision: 'STOPPED', reason: 'BROKER_UNREACHABLE', message: 'Broker に届かない（' + bundle.base + '）', zg: { error: String(e) } }
+      }
+    }
+    ms = Date.now() - t0
+  } else {
+    await sleep(Math.min(((s.response.zg || {}).ms || s.ms || 400), 1800) - 320)
+    b = s.response; ms = s.ms
+  }
+  resetSteps(statesFor(b))
+  drawVerdict(b, ms)
+  addTrail(b)
+  busy = false; $('go').disabled = false
+  var waiting = b.decision === 'NEEDS_PRESS'
+  $('device').className = 'device' + (waiting ? ' wait' : '')
+  $('press').disabled = !waiting
+  if (waiting) $('lines').textContent = ((b.press || {}).lines || s.permitLines).join('\n')
+  if (!AUTO && !waiting && idx < ORDER.length - 1 && ORDER[idx + 1] !== 'pressed') { idx++; setTimeout(drawScene, 900) }
+}
+
+$('go').onclick = run
+$('press').onclick = function () { idx = ORDER.indexOf('pressed'); drawScene(); setTimeout(run, 200) }
+$('toggle').onclick = function () { LIVE = !LIVE; setMode() }
+$('reset').onclick = function () { idx = 0; pressLeft = 0; $('trail').innerHTML = ''; drawScene() }
+
+;(function init() {
+  DATA.scenes.forEach(function (s) { scenes[s.id] = s })
+  live = DATA.live || {}
+  if (AUTO && ORDER.indexOf(AUTO) >= 0) idx = ORDER.indexOf(AUTO)
+  setMode(); drawScene(); resetSteps()
+  if (AUTO) setTimeout(run, 120)
+  var seal = DATA.seal || {}
+  $('root').innerHTML = 'root hash <span class="mono">' + esc(String(seal.rootHash || '—').slice(0, 22)) + '…</span><br>' +
+    (seal.uploaded ? '0G Storage に置いた' : '0G Storage には未投下（gas 待ち。置いていないものを置いたと書かない）')
+})()
+</script>
+</body>
+</html>

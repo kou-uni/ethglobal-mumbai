@@ -19,7 +19,10 @@ tomoshibi
 絵文字では形を選べないので、**見た目は自前のマークで持つ。**
 
 ## Demo link
-暫定: `https://kou-uni.github.io/ethglobal-mumbai/`
+**`https://kou-uni.github.io/ethglobal-mumbai/ui/index.html`**【確】触れる画面（門）。
+GitHub Pages は 2026-11-06 に有効化して 200 を確認済み。灯の画面は `/ui/stars.html`。
+画面の値は本番の 0G に実際に投げた応答（録画。時刻と出どころを画面に出している）。
+会場では「生で投げる」に切り替えて、その場の request id を出す
 （GitHub Pages。Broker を公開トンネルに出せたら差し替える）
 
 ## Short description（100字以内）

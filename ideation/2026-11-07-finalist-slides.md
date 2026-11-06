@@ -31,8 +31,9 @@
 
 > **No limit. No expiry. No receipt.**
 
-**Said:** *"Most of us have pasted an API key into an AI agent this week. That key has no spending
-limit, never expires, and produces no receipt. We would never hand a credit card over like that."*
+**Said:** *"I suspect there are people in this room who pasted an API key into an AI agent this
+week. Maybe this morning. That key has no spending limit, it never expires, and it produces no
+receipt. We would never hand a credit card over like that."*
 
 **Do not put the product name on this slide.** The first twenty-five seconds belong to the problem.
 

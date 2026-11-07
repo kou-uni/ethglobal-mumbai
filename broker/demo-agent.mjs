@@ -26,7 +26,8 @@ const PORT = Number(process.env.PORT_AGENT ?? 8792)
 // On a person's own computer this listens on localhost only. A hosted copy sets HOST_AGENT=0.0.0.0 (tools/hosted-start.sh).
 const HOST = process.env.HOST_AGENT ?? '127.0.0.1'
 
-const TOOL = { name: 'billing-assistant', version: '1.0.0' }
+// TOOL_VERSION=1.0.1 ships "a new version": a light on the old one does not carry over, so the same person can light again.
+const TOOL = { name: 'billing-assistant', version: process.env.TOOL_VERSION || '1.0.0' }
 const skill = privateKeyToAccount('0x' + '33'.repeat(32))        // the tool's own key (a demo key)
 const softHolder = privateKeyToAccount('0x' + '11'.repeat(32))   // stand-in when no Ledger is plugged in
 const KEY_LABEL = 'stripe-live'

@@ -1,7 +1,7 @@
 # tomoshibi 提出動画 — 読み上げ用台本（これだけ見て録る）
 
-> 全長 **3:52**（S9 のウォークスルー 1:45 を含む）。4:00 を超えたら弾かれる。
-> 注記・削る順・スライドの直しは `2026-11-07-video-script.md`。
+> 全長 **3:52**（S8 のウォークスルー 1:45 を含む）。4:00 を超えたら弾かれる。
+> スライドは `ETHGlobalTokyo2026_1.pdf` 12枚。注記・削る順・スライドの直しは `2026-11-07-video-script.md`。
 
 | # | スライド | 時刻 |
 |---|---|---|
@@ -12,10 +12,12 @@
 | S5 | ロゴ | 0:54–1:06 |
 | S6 | Demo | 1:06–1:13 |
 | S7 | Demo 表 | 1:13–1:26 |
-| S8 | 配線図 | 1:26–1:44 |
-| S9 | Team ＋ ウォークスルー | 1:44–3:35 |
-| S9 | おわり | 3:35–3:47 |
-| S10 | エンドカード | 3:47–3:52 |
+| S8 | ウォークスルー（黒いカード） | 1:26–3:17 |
+| S9 | 配線図 | 3:17–3:35 |
+| S10 | Team: yohaku | 3:35–3:47 |
+| S11 | エンドカード | 3:47–3:52 |
+
+> S12（"One call, through the switchboard"）は動画の中のコマ。**めくらない。**
 
 ---
 
@@ -55,24 +57,25 @@ Three big moves. Anything that moves money needs the hardware wallet.
 A tool that steps outside the scope you signed is refused before it leaves the laptop.
 Routine orders pass silently.
 
-**S8 — 1:26–1:44**
+**S8 — 1:26–1:32**
+
+Here is the whole thing, running.
+
+**（1:32–3:17 — 1:45 無言。ウォークスルーを流す）**
+
+**S9 — 3:17–3:35**
 
 Three parts, three jobs — and none of them is asked to trust the others.
-Ledger holds the press. 0G weighs every request and seals the trail. World proves a person — once.
+Ledger holds the key that says yes. 0G weighs every request and seals the trail. World makes that reputation belong to one real human.
 The key never crosses the network. The permission does.
 
-**S9 — 1:44–1:50**
+**S10 — 3:35–3:47**
 
-We are nana and kou. Here is the whole thing, running.
-
-**（1:50–3:35 — 1:45 無言。ウォークスルーを流す）**
-
-**S9 おわり — 3:35–3:47**
-
+We are nana and kou.
 We are not asking anyone to hand an agent everything.
 What matters stays off the network — in your hand — and every use leaves a lineage.
 That is the world we want to help build.
 
-**S10 — 3:47–3:52**
+**S11 — 3:47–3:52**
 
 tomoshibi. Give your agent the work, not the key.

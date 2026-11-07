@@ -547,6 +547,23 @@ function paint() {
     + (mode === 'live' && window.appAgentIsRemote ? `<button data-act="disconnect">Disconnect (${esc(new URL(AGENT).hostname.split('.')[0])}…)</button>` : '')
     + (ui.confirmReset ? '<span class="chip warn">Reset for everyone?</span><button data-act="reset">Yes, start over</button><button data-act="reset-no">No</button>' : '<button data-act="reset">Start over</button>') + (st.error ? `<span class="chip warn">${esc(st.error)}</span>` : '')
   if (demo !== lastDemo) { $('demo').innerHTML = demo; lastDemo = demo }
+  paintZgLog(st)
+}
+/** Every answer 0G gave in this session, newest first: what was weighed, the weight, and the receipt (request id, tokens, time). */
+let lastZg = ''
+function paintZgLog(st) {
+  const el = $('zglog'); if (!el) return
+  el.style.bottom = ($('demo')?.offsetHeight || 40) + 'px'
+  const rows = []
+  for (const c of st.cards) for (const v of c.verdicts) { const z = v.response?.zg; if (z && !v.pressed) rows.push({ c, v, z }) }
+  rows.reverse()
+  const html = rows.length ? rows.map(({ c, v, z }) => {
+    const when = v.at ? new Date(v.at).toLocaleTimeString([], { hour12: false }) : ''
+    const tier = z.tier ? `<b class="t-${esc(z.tier)}">${esc(z.tier)}</b>` : z.error ? '<b class="t-none">no verdict</b>' : '<b class="t-none">—</b>'
+    const meta = [z.simulated ? 'MOCK · simulated' : z.model ? esc(z.model) : '', z.requestId ? `request ${esc(String(z.requestId))}` : '', z.usage?.total_tokens ? `${z.usage.prompt_tokens ?? '?'}+${z.usage.completion_tokens ?? '?'} = ${z.usage.total_tokens} tokens` : '', z.ms ? `${(z.ms / 1000).toFixed(1)} s` : '', z.sealed ? `e2ee ${esc(String(z.sealed))}` : '', z.error ? `error: ${esc(String(z.error))}` : ''].filter(Boolean).join(' · ')
+    return `<div class="zgrow"><span class="zgt">${when}</span><span class="zgw">${esc(c.what || '')}</span>${tier}<small>${z.reason ? '“' + esc(z.reason) + '” · ' : ''}${meta}</small></div>`
+  }).join('') : '<div class="zgrow"><small>Nothing weighed yet. Each tool call is sent to 0G Private Computer; its answer lands here.</small></div>'
+  if (html !== lastZg) { $('zgrows').innerHTML = html; $('zgcount').textContent = String(rows.length); lastZg = html }
 }
 /** Numbers run up from zero when their screen arrives. */
 function countUp() {

@@ -129,6 +129,14 @@ button.ghost,a.ghost{background:#fff;color:var(--ink)}button.link{all:unset;curs
 .m.sys{align-self:center;background:transparent;color:#8a849c;font-size:12.5px;padding:0}
 .m .state{display:block;margin-top:6px;font-size:12.5px;font-weight:700}.m .state.wait{color:#a8410a}.m .state.ok{color:#17694a}.m .state.bad{color:#b02a5b}
 .toast{position:fixed;right:22px;top:18px;z-index:20;cursor:pointer;animation:in .3s ease-out;margin:0}
+.zglog{position:fixed;left:0;right:0;bottom:40px;background:#241E3C;color:#fff;font-size:12px;z-index:10;border-top:1px solid rgba(255,255,255,.12)}
+.zglog summary{cursor:pointer;padding:5px 16px;list-style:none;font-weight:600;opacity:.85}.zglog summary::-webkit-details-marker{display:none}.zglog summary::before{content:'▸ ';opacity:.6}.zglog[open] summary::before{content:'▾ '}
+.zglog summary span{background:rgba(255,255,255,.14);border-radius:99px;padding:1px 8px;margin-left:6px;font-weight:500}
+#zgrows{max-height:38vh;overflow:auto;padding:0 16px 10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px}
+.zgrow{display:grid;grid-template-columns:62px 1fr auto;gap:4px 12px;align-items:baseline;padding:6px 0;border-top:1px solid rgba(255,255,255,.08)}.zgrow:first-child{border-top:0}
+.zgrow .zgt{opacity:.55}.zgrow .zgw{font-family:inherit;opacity:.95}.zgrow b{border-radius:99px;padding:1px 9px;font-weight:600;font-family:system-ui,sans-serif}
+.zgrow b.t-routine{background:#1f9d6b}.zgrow b.t-significant,.zgrow b.t-decisive{background:#F2600C}.zgrow b.t-none{background:#6f6a8a}
+.zgrow small{grid-column:2/4;opacity:.7;white-space:normal;word-break:break-all}
 .demo{position:fixed;left:0;right:0;bottom:0;background:#1B1630;color:#fff;padding:8px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12.5px;z-index:10}
 .demo b{letter-spacing:.08em;font-size:10.5px;color:#ffb98a;margin-right:4px}.demo button{all:unset;cursor:pointer;background:rgba(255,255,255,.12);border-radius:99px;padding:5px 13px;font-family:ui-rounded,system-ui,sans-serif;font-weight:700}.demo button:hover{background:rgba(255,255,255,.22)}.demo button[disabled]{opacity:.35;cursor:default}
 .demo .sp{flex:1}.demo .chip{background:rgba(255,255,255,.1);border-radius:99px;padding:3px 10px;font-size:11.5px;white-space:nowrap}.demo .chip.live{background:#1f9d6b}.demo .chip.warn{background:#a8410a}

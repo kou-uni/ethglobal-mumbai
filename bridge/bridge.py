@@ -23,6 +23,7 @@ import struct
 import sys
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 LEDGER_VENDOR = 0x2C97
@@ -89,6 +90,16 @@ class DeviceError(Exception):
     def __init__(self, code, message):
         super().__init__(message)
         self.code, self.message = code, message
+
+
+# Every call into hidapi happens on this one thread. On macOS, IOKit schedules the HID manager
+# on the run loop of the thread that first enumerates; enumerating again from another thread
+# (each HTTP request gets its own) crashes the process the moment the device list changes.
+_HID = ThreadPoolExecutor(max_workers=1, thread_name_prefix="hid")
+
+
+def on_hid(fn, *args):
+    return _HID.submit(fn, *args).result()
 
 
 class Ledger:
@@ -272,7 +283,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def _run(self, fn):
         try:
-            self._send(200, fn())
+            self._send(200, on_hid(fn))
         except DeviceError as e:
             self._send(e.code, {"ok": False, "error": e.message})
         except Exception as e:  # a USB hiccup should not take the bridge down
@@ -283,6 +294,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path.split("?")[0] == "/health":
+            if Ledger.lock.locked():   # a permit or notice is on the device: answer at once, do not queue behind it
+                return self._send(200, {"ok": True, "app": APP_NAME, "version": None, "ready": False, "busy": True})
             return self._run(health)
         self._send(404, {"error": "not found"})
 

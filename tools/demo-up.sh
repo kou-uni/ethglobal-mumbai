@@ -7,10 +7,12 @@
 set -u
 cd "$(dirname "$0")/.." || exit 1
 ROOT=$PWD; LOGS=$ROOT/.demo-logs; mkdir -p "$LOGS"
-BRIDGE_PORT=${BRIDGE_PORT:-8791}; PYTHON=${PYTHON:-python3}
+BRIDGE_PORT=${BRIDGE_PORT:-8791}
+# The bridge needs the hidapi module: `python3 -m venv bridge/.venv && bridge/.venv/bin/pip install hidapi`
+PYTHON=${PYTHON:-$([ -x bridge/.venv/bin/python ] && echo bridge/.venv/bin/python || echo python3)}
 export PATH="/opt/homebrew/bin:$PATH"
 
-stop() { for f in "$LOGS"/*.pid; do [ -f "$f" ] && kill "$(cat "$f")" 2>/dev/null; rm -f "$f"; done; }
+stop() { for f in "$LOGS"/*.pid; do [ -f "$f" ] && { pkill -P "$(cat "$f")" 2>/dev/null; kill "$(cat "$f")" 2>/dev/null; }; rm -f "$f"; done; }
 start() { name=$1; shift; ( "$@" > "$LOGS/$name.log" 2>&1 & echo $! > "$LOGS/$name.pid" ); }
 stop
 [ "${1:-}" = stop ] && { echo stopped; exit 0; }
@@ -36,7 +38,8 @@ export ZG_JSON_MODE=${ZG_JSON_MODE:-0}
 start broker   sh -c "cd broker && PORT=8797 LEDGER_PATH=data/ledger.jsonl exec node src/server.js"
 start deaf     sh -c "cd broker && ZG_OFFLINE= ZG_ENDPOINT=https://router-api.invalid/v1 PORT=8798 LEDGER_PATH=data/deaf.jsonl exec node src/server.js"
 if ! curl -s -m 2 "http://127.0.0.1:$BRIDGE_PORT/health" 2>/dev/null | grep -q '"ok"'; then
-  start bridge "$PYTHON" bridge/bridge.py --port "$BRIDGE_PORT"
+  # Kept alive: if the USB stack ever takes the bridge down, it is back within a second.
+  start bridge sh -c "while :; do \"$PYTHON\" bridge/bridge.py --port $BRIDGE_PORT; sleep 1; done"
 fi
 start agent    sh -c "cd broker && exec node demo-agent.mjs http://127.0.0.1:8797 http://127.0.0.1:$BRIDGE_PORT http://127.0.0.1:8798"
 start web      "$PYTHON" -m http.server 8790 --bind 127.0.0.1 --directory web
